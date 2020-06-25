@@ -1,0 +1,36 @@
+SELECT * 
+FROM `user` 
+WHERE role & (select bit from permission where name='user-edit')
+---
+
+SELECT u.*
+FROM tbl_Users AS u
+INNER JOIN junction_users_srcd AS u_srcd ON u_srcd.users_id = u.id
+INNER JOIN junction_systems_roles_careerlevels_departments AS srcd ON srcd.id = u_srcd.srcd_id
+INNER JOIN tbl_Roles AS ro ON ro.id = srcd.roles_id
+WHERE ro.role & ( SELECT bit FROM tbl_Permissions WHERE name = "Insert" );
+
+SELECT u.*
+FROM tbl_Users AS u
+INNER JOIN junction_users_srcd AS u_srcd ON u_srcd.users_id = u.id
+INNER JOIN junction_systems_roles_careerlevels_departments AS srcd ON srcd.id = u_srcd.srcd_id
+INNER JOIN tbl_Roles AS ro ON ro.id = srcd.roles_id
+WHERE ro.role & ( SELECT bit FROM tbl_Permissions WHERE name = "Update" );
+
+
+---
+SELECT 	u_srcd.id, 
+		u.uuid, u.name,
+		sys.code, sys.name,
+		cl.code, cl.name,		
+		ro.role, ro.name,
+		de.code, de.name
+		
+FROM junction_users_srcd AS u_srcd
+
+INNER JOIN tbl_Users as u ON u_srcd.users_id = u.id
+INNER JOIN junction_systems_roles_careerlevels_departments AS srcd ON u_srcd.srcd_id = srcd.id
+INNER JOIN tbl_Systems AS sys ON sys.id = srcd.systems_id
+INNER JOIN tbl_CareerLevel AS cl ON cl.id = srcd.careerlevels_id
+INNER JOIN tbl_Roles AS ro ON ro.id = srcd.roles_id
+INNER JOIN tbl_Departments AS de ON de.id = srcd.departments_id;
