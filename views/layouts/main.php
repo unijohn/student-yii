@@ -41,6 +41,7 @@ AppAsset::register($this);
             ['label' => 'Home', 'url' => ['/site/index']],
             ['label' => 'About', 'url' => ['/site/about']],
             ['label' => 'Contact', 'url' => ['/site/contact']],
+            
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', 'url' => ['/site/login']]
             ) : (
@@ -65,10 +66,55 @@ AppAsset::register($this);
         <?= Alert::widget() ?>
         <?= $content ?>
     </div>
-    
+
+
     <div>
       <pre>
+
+      <?php
+         if( !Yii::$app->user->isGuest )
+         {      
+         
+            $record = Yii::$app->user->identity->canInsertById( Yii::$app->user->identity->getId());            
+            if( $record )
+            {
+               print( "<br />Can Insert: " . $record['name'] . "<br />" );
+//               print_r( $record ); 
+            }                
+                   
+            $record = Yii::$app->user->identity->canUpdateById( Yii::$app->user->identity->getId());            
+            if( $record )
+            {
+               print( "<br />Can Update: " . $record['name'] . "<br />" );
+//               print_r( $record ); 
+            }               
+            
+            $record = Yii::$app->user->identity->canSoftDeleteById( Yii::$app->user->identity->getId());            
+            if( $record )
+            {
+               print( "<br />Can SoftDelete: " . $record['name'] . "<br />" );
+//               print_r( $record ); 
+            }                   
+            
+            $record = Yii::$app->user->identity->canHardDeleteById( Yii::$app->user->identity->getId());            
+            if( $record )
+            {
+               print( "<br />Can HardDelete: " . $record['name'] . "<br />" );
+//               print_r( $record ); 
+            }                
+            
+            $record = Yii::$app->user->identity->isAdministrator( Yii::$app->user->identity->getId());            
+            if( $record )
+            {
+               print( "<br />Is Administrator: " . $record['name'] . "<br />" );               
+//               print_r( $record ); 
+            }                           
+         }
+      ?>
+      
+<!--      
       <?= print_r( Yii::$app->user->identity ); ?>
+ -->
       </pre>
     </div>
 </div>
