@@ -16,21 +16,58 @@ class m200625_162031_tbl_Users extends Migration
             'id' => $this->primaryKey(),
             'uuid' => $this->string(16)->notNull(),
             'name' => $this->string(48)->notNull(),
+            'auth_key' => $this->string(32)->notNull(),
+            'access_token' => $this->string(32)->notNull(),
             
             'created_at' => $this->datetime()->notNull(),
             'updated_at' => $this->datetime(),
         ]);
         
-         $columns = [ 'uuid', 'name', 'created_at'];
+         $columns = [ 'uuid', 'name', 'auth_key', 'access_token', 'created_at'];
         
          $rows = [
-            [ 'ugadstdt', 'Undergraduate Student',       date("Y-m-d H:i:s") ],
-            [ 'gradstdt', 'Graduate Student',            date("Y-m-d H:i:s") ],
-            [ 'ugadadvr', 'Undergraduate Advisor',       date("Y-m-d H:i:s") ],
-            [ 'ugadadmn', 'Undergraduate Administrator', date("Y-m-d H:i:s") ],
-            [ 'gradadvr', 'Graduate Advisor',            date("Y-m-d H:i:s") ],
-            [ 'gradadmn', 'Graduate Administrator',      date("Y-m-d H:i:s") ],
-            [ 'adminusr', 'Administrative User',         date("Y-m-d H:i:s") ],        
+            [  
+               'ugadstdt', 'Undergraduate Student',       
+               \Yii::$app->security->generateRandomString(48), 
+               \Yii::$app->security->generateRandomString(32), 
+               date("Y-m-d H:i:s") 
+            ],
+            [ 
+               'gradstdt', 'Graduate Student',
+               \Yii::$app->security->generateRandomString(48), 
+               \Yii::$app->security->generateRandomString(32), 
+               date("Y-m-d H:i:s") 
+            ],
+            [ 
+               'ugadadvr', 'Undergraduate Advisor',       
+               \Yii::$app->security->generateRandomString(48), 
+               \Yii::$app->security->generateRandomString(32), 
+               date("Y-m-d H:i:s") 
+            ],
+            [ 
+               'ugadadmn', 'Undergraduate Administrator', 
+               \Yii::$app->security->generateRandomString(48), 
+               \Yii::$app->security->generateRandomString(32), 
+               date("Y-m-d H:i:s") 
+            ],
+            [ 
+               'gradadvr', 'Graduate Advisor',            
+               \Yii::$app->security->generateRandomString(48), 
+               \Yii::$app->security->generateRandomString(32), 
+               date("Y-m-d H:i:s") 
+            ],
+            [ 
+               'gradadmn', 'Graduate Administrator',      
+               \Yii::$app->security->generateRandomString(48), 
+               \Yii::$app->security->generateRandomString(32), 
+               date("Y-m-d H:i:s") 
+            ],
+            [ 
+               'adminusr', 'Administrative User',         
+               \Yii::$app->security->generateRandomString(48), 
+               \Yii::$app->security->generateRandomString(32), 
+               date("Y-m-d H:i:s") 
+            ],      
          ];
                 
         $this->batchInsert( 'tbl_Users', $columns, $rows );        
