@@ -2,8 +2,11 @@
 
 namespace app\models;
 
+use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
+use yii2tech\ar\position\PositionBehavior;
+use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 //class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
 class User extends ActiveRecord implements \yii\web\IdentityInterface
@@ -44,7 +47,79 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
    {
       return 'tbl_Users';
    }
+   
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+/**    
+        return [
+            'id' => Yii::t('app', 'ID'),
+            'uuid' => Yii::t('app', 'Authors ID'),
+            'name' => Yii::t('app', 'Last Edited'),
+            'auth_key' => Yii::t('app', 'Published'),
+            'access_token' => Yii::t('app', 'Title'),
+            'Description' => Yii::t('app', 'Description'),
+            'Content' => Yii::t('app', 'Content'),
+            'Format' => Yii::t('app', 'Format'),
+        ];
+ **/
+    }   
 
+   // explicitly list every field, best used when you want to make sure the changes
+   // in your DB table or model attributes do not cause your field changes (to keep API backward compatibility).
+   public function fields()
+   {
+      return [
+         // field name is the same as the attribute name
+         'id',
+      
+         // field name is "email", the corresponding attribute name is "email_address"
+         'uuid' => 'uuid',
+   
+      ];
+   }
+
+   public function behaviors()
+   {
+      return [
+         'timeStampBehavior' => [
+            'class' => TimestampBehavior::className(),
+            'attributes' => 
+            [
+               ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+               ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
+            ],
+            // if you're using datetime instead of UNIX timestamp:
+            'value' => date("Y-m-d H:i:s"),
+         ],
+         
+         'softDeleteBehavior' => [
+            'class' => SoftDeleteBehavior::className(),
+            'softDeleteAttributeValues' => 
+            [
+               'isDeleted' => true
+            ],
+            
+            // mutate native `delete()` method
+            'replaceRegularDelete' => false
+         ],         
+         
+         'positionBehavior' => [
+            'class' => PositionBehavior::className(),
+            'positionAttribute' => 'position',
+
+/**
+             'groupAttributes' => 
+             [
+                 'categoryId' // multiple lists varying by 'categoryId'
+             ],            
+ **/
+         ],         
+      ];
+   }
+   
    public static function findIdentity($id)
    {
 //      return static::findOne(['id' => $id]);
@@ -120,9 +195,9 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
     /**
      * {@inheritdoc}
      */
-    public function validateAuthKey($authKey)
+    public function validateAuthKey($auth_key)
     {
-        return $this->authKey === $auth_key;
+        return $this->$auth_key === $auth_key;
     }
 
     /**
