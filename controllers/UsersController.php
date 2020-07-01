@@ -8,11 +8,11 @@ use yii\data\ActiveDataProvider;
 use yii\data\SQLDataProvider;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\Response;
 
 use app\models\User;
-use app\models\TestUser;
 
 class UsersController extends Controller
 {
