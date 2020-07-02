@@ -1,4 +1,9 @@
 <?php
+   use yii\helpers\Html;
+   use yii\helpers\HtmlPurifier;
+   use yii\helpers\Url;   
+   
+   use yii\grid\GridView;   
 
 /* @var $this yii\web\View */
 
@@ -16,6 +21,32 @@ $this->title = 'My Yii Application';
 
     <div class="body-content">
 
+         <div class="row">
+<?= 
+GridView::widget([
+    'dataProvider' => $dataProvider,
+    'columns' => [
+//      [ 'class' => 'yii\grid\CheckboxColumn' ],
+      'id',
+      [
+         'attribute' => 'uuid',
+         'label' => 'UUID',
+         'format' => 'raw',
+         'value' => function( $data ){
+            return HTML::a( $data['uuid'], Url::toRoute( ['user/view', 'uuid' => $data['uuid'] ], true) );
+         },
+      ],
+      'name',
+      'created_at',
+      'updated_at',
+    
+    ],
+//    'showFooter' => false,
+//    'placeFooterAfterBody' => false,
+]); 
+?>  
+         </div>         
+
         <div class="row">
             <div class="col-lg-4">
                 <h2>Heading</h2>
@@ -28,6 +59,8 @@ $this->title = 'My Yii Application';
 
                 <p><a class="btn btn-default" href="http://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
             </div>
+                  
+            
             <div class="col-lg-4">
                 <h2>Heading</h2>
 

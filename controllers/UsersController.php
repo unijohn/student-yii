@@ -65,12 +65,6 @@ class UsersController extends Controller
     
    public function actionIndex()
    {
-      return $this->render('index');
-   }
-
-   public function actionList()
-   {
-   
       $count = Yii::$app->db->createCommand(
          'SELECT COUNT(*) FROM tbl_Users WHERE id >=:id ',
          [':id' => 1])->queryScalar();
@@ -96,32 +90,13 @@ class UsersController extends Controller
          'pagination' => [
             'pageSize' => 30,
          ],
-      ]);         
-         
-   
-/**      
-      $dataProvider = new ActiveDataProvider([
-         'query' => User::find(),
-         'pagination' => [
-            'pageSize' => 30,
-         ],
-      ]);
-      
-      $users = $dataProvider->getModels();   
+      ]);               
 
+      return $this->render('index', ['dataProvider' => $dataProvider]);   
+   }
 
-      print( "<pre>" );
-      print_r ( $provider );
-      print( "</pre>" );
-      
-      die();
- **/
-
-      return $this->render('list', ['dataProvider' => $dataProvider]);   
-
-      //$this->view_title = 'Test List';
-      
-      return $this->render('list', ['dataProvider' => $dataProvider, ]);
+   public function actionList()
+   {
    }   
 
 }
