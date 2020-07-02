@@ -33,6 +33,7 @@ class m200702_151044_init_rbac extends Migration
          ],
       ];
       
+      
       $careerLevelAccess = [ 
          '1' => [ 
             'name' =>         '[UGAD]',   
@@ -43,6 +44,7 @@ class m200702_151044_init_rbac extends Migration
             'description' =>  'Graduate Career Level',
          ],
       ];      
+      
       
       $departmentAccess = [ 
          '1' => [ 
@@ -70,6 +72,7 @@ class m200702_151044_init_rbac extends Migration
             'description' =>  'MCSM Department',       
          ],
       ];      
+      
       
       $actionAccess = [ 
          '1' => [ 
@@ -116,6 +119,7 @@ class m200702_151044_init_rbac extends Migration
          '[Framework]' 
       ];
       
+      
       $rolePermissions  = [ 
          $actionAccess[1]['name'],
          $actionAccess[2]['name'],
@@ -125,6 +129,7 @@ class m200702_151044_init_rbac extends Migration
          $actionAccess[6]['name'],
          $actionAccess[7]['name'],
       ];         
+      
             
       $roleAccess = [
          '1' => [ 
@@ -215,19 +220,13 @@ class m200702_151044_init_rbac extends Migration
             ],         
          ],
       ];      
-
-//      $systemsList      = [];
-//      $careerLevelList  = [];
-//      $departmentList   = [];    
-//      $actionList       = [];  
       
       $rolesList        = [];
+      $permissionsList  = [];
 
       /**
        *    Adding permissions to {auth_item}
        *******/
-
-      $permissionsList  = [];
       
       foreach( $systemsAccess as $system )
       {
@@ -285,6 +284,8 @@ class m200702_151044_init_rbac extends Migration
          $roleRole->description  = $role['description'];
          
          $auth->add($roleRole);
+         
+         $rolesList[] = $roleRole;
          
          $roleChk   = [];
 
@@ -345,7 +346,14 @@ class m200702_151044_init_rbac extends Migration
                }
             }
          }
-      }            
+      }        
+      
+//print_r( $rolesList );
+//die();    
+
+      $auth->assign( $rolesList[7], 7 );
+
+
    }
       
     /**

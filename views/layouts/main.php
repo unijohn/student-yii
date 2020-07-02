@@ -88,7 +88,7 @@ AppAsset::register($this);
       <?php
          if( !Yii::$app->user->isGuest )
          {      
-         
+/**         
             $record = Yii::$app->user->identity->canInsertById( Yii::$app->user->identity->getId());            
             if( $record )
             {
@@ -123,6 +123,7 @@ AppAsset::register($this);
                print( "<br />Is Administrator: " . $record['name'] . "<br />" );               
 //               print_r( $record ); 
             }                           
+ **/
          }
       ?>
       
