@@ -283,13 +283,11 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
    public function isAdministrator( $id )
    {
       $query_users = (new \yii\db\Query())
-         ->select([ 'u.id', 'u.uuid', 'u.name', 'u.access_token', 'u.created_at', 'u.updated_at' ])
-         ->from( 'tbl_Users u' )
-         ->innerJoin( 'junction_users_srcd u_srcd', 'u_srcd.users_id = u.id' )
-         ->innerJoin( 'junction_systems_roles_careerlevels_departments srcd', 'srcd.id = u_srcd.srcd_id' )
-         ->innerJoin( 'tbl_Roles ro', 'ro.id = srcd.roles_id' )                
-         ->where( 'u.id =:id AND ro.name =:name ' )
-            ->addParams( [':id' => $id, ':name' => 'Administrator'], )
+         ->select([ 'a_a.item_name', 'a_a.user_id' ])
+         ->from( 'auth_assignment a_a' )
+         ->innerJoin( 'tbl_Users u', 'a_a.user_id = u.id' )
+         ->where( 'u.id =:id AND a_a.item_name =:name ' )
+            ->addParams( [':id' => $id, ':name' => 'Framework-Administrator-10'], )
          ->limit(1);  
    
 /**  
