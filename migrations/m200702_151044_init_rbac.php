@@ -43,6 +43,10 @@ class m200702_151044_init_rbac extends Migration
             'name' =>         '[GRAD]',
             'description' =>  'Graduate Career Level',
          ],
+         '3' => [ 
+            'name' =>         '[PHD]',
+            'description' =>  'Doctorate Career Level',
+         ],         
       ];      
       
       
@@ -77,38 +81,43 @@ class m200702_151044_init_rbac extends Migration
       $actionAccess = [ 
          '1' => [ 
             'id'           =>  '1',
-            'name'         =>  '[Cre]', 
+            'name'         =>  '[Create]', 
             'description'  =>  'Create Permission',
          ],
          '2' => [ 
             'id'           => '2',
-            'name'         => '[Rea]', 
+            'name'         => '[Read]', 
             'description'  => 'Read-Only Permission',
          ],
          '3' => [ 
             'id'           => '3',
-            'name'         => '[Upd]', 
+            'name'         => '[Update]', 
             'description'  => 'Update Permission',
          ],
          '4' => [ 
             'id'           => '4',         
-            'name'         => '[sDel]', 
+            'name'         => '[sDelete]', 
             'description'  => 'Soft-Delete (flag) Permission',
          ],
          '5' => [ 
             'id'           => '5',         
-            'name'         => '[hDel]', 
+            'name'         => '[hDelete]', 
             'description'  => 'Hard-Delete (row removal) Permission',
          ],
          '6' => [ 
             'id'           => '6',         
-            'name'         => '[Bac]',
+            'name'         => '[Backup]',
             'description'  => 'Remote Backup Permission',
          ],
          '7' => [ 
             'id'           => '7',         
-            'name'         => '[Rol]',
+            'name'         => '[Role]',
             'description'  => 'Role Assignment Permission',
+         ],
+         '8' => [ 
+            'id'           => 8,         
+            'name'         => '[Synch]',
+            'description'  => 'Data Warehouse Sync Permissions',
          ],         
       ];
 
