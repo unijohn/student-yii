@@ -19,217 +19,230 @@ class m200702_151044_init_rbac extends Migration
        **/        
 
       $systemsAccess = [
-         '1' => [ 
-            'name' =>         '[Student]', 
-            'description' =>  'Student selfServe',
-         ],
+         '1' => [
+            'id'           => 1,
+            'name'         => '[Framework]', 
+            'description'  => 'Framework selfServe',
+         ],      
          '2' => [ 
-            'name' =>         '[Faculty]', 
-            'description' =>  'Faculty selfServe',
+            'id'           => 2,
+            'name'         => '[Student]', 
+            'description'  => 'Student selfServe',
          ],
          '3' => [ 
-            'name' =>         '[Administrative]',   
-            'description' =>  'Administration selfServe',
+            'id'           => 3,
+            'name'         => '[Faculty]', 
+            'description'  => 'Faculty selfServe',
+         ],
+         '4' => [ 
+            'id'           => 4,
+            'name'         => '[Administration]',   
+            'description'  => 'Administration selfServe',
          ],
       ];
       
       
       $careerLevelAccess = [ 
          '1' => [ 
-            'name' =>         '[UGAD]',   
-            'description' =>  'Undergraduate Career Level',  
+            'id'           => 1,
+            'name'         => '[UGAD]',   
+            'description'  => 'Undergraduate Career Level',  
          ],
-         '2' => [ 
-            'name' =>         '[GRAD]',
-            'description' =>  'Graduate Career Level',
+         '2' => [
+            'id'           => 2,
+            'name'         => '[GRAD]',
+            'description'  => 'Graduate Career Level',
          ],
          '3' => [ 
-            'name' =>         '[PHD]',
-            'description' =>  'Doctorate Career Level',
+            'id'           => 3,
+            'name'         => '[PHD]',
+            'description'  => 'Doctorate Career Level',
          ],         
       ];      
       
       
       $departmentAccess = [ 
          '1' => [ 
-            'name' =>         '[ACCT]', 
-            'description' =>  'Accounting Department', 
+            'id'              => 1,
+            'name'            => '[ACCT]', 
+            'description'     => 'Accounting Department', 
          ],
          '2' => [ 
-            'name' =>         '[ECON]',  
-            'description' =>  'Economics Department',  
+            'id'              => 2,
+            'name'            => '[ECON]',  
+            'description'     => 'Economics Department',  
          ],
          '3' => [ 
-            'name' =>         '[FIN]',    
-            'description' =>  'Finance Department',    
+            'id'              => 3,
+            'name'            => '[FIN]',    
+            'description'     => 'Finance Department',    
          ],
          '4' => [ 
-            'name' =>         '[BIT]',        
-            'description' =>  'BIT Department',        
+            'id'              => 4,
+            'name'            => '[BIT]',        
+            'description'     => 'BIT Department',        
          ],
          '5' => [ 
-            'name' =>         '[MGMT]', 
-            'description' =>  'Management Department', 
+            'id'              => 5,
+            'name'            => '[MGMT]', 
+            'description'     => 'Management Department', 
          ],
          '6' => [ 
-            'name' =>         '[MCSM]',       
-            'description' =>  'MCSM Department',       
+            'id'              => 1,
+            'name'            => '[MCSM]',       
+            'description'     => 'MCSM Department',       
          ],
-      ];      
+      ];
+      
+      
+      $featureAccess = [
+         '1' => [ 
+            'id'              => 1,
+            'name'            => '[Permit]', 
+            'description'     => 'Permit Feature',
+         ],
+         '2' => [ 
+            'id'              => 2,
+            'name'            => '[GAApp]', 
+            'description'     => 'Graduate Assistant Applications',       
+         ],
+         '3' => [ 
+            'id'              => 3,
+            'name'            => '[Sylla]', 
+            'description'     => 'Course Syllabi',
+         ],         
+      ]; 
       
       
       $actionAccess = [ 
          '1' => [ 
             'id'           =>  '1',
+            'name'         =>  '[Access]', 
+            'description'  =>  '(System) Access Permission',
+         ],
+         '2' => [ 
+            'id'           =>  '2',
             'name'         =>  '[Create]', 
             'description'  =>  'Create Permission',
          ],
-         '2' => [ 
-            'id'           => '2',
+         '3' => [ 
+            'id'           => '3',
             'name'         => '[Read]', 
             'description'  => 'Read-Only Permission',
          ],
-         '3' => [ 
-            'id'           => '3',
+         '4' => [ 
+            'id'           => '4',
             'name'         => '[Update]', 
             'description'  => 'Update Permission',
          ],
-         '4' => [ 
-            'id'           => '4',         
+         '5' => [ 
+            'id'           => '5',         
             'name'         => '[sDelete]', 
             'description'  => 'Soft-Delete (flag) Permission',
          ],
-         '5' => [ 
-            'id'           => '5',         
+         '6' => [ 
+            'id'           => '6',         
             'name'         => '[hDelete]', 
             'description'  => 'Hard-Delete (row removal) Permission',
          ],
-         '6' => [ 
-            'id'           => '6',         
+         '7' => [ 
+            'id'           => '7',         
             'name'         => '[Backup]',
             'description'  => 'Remote Backup Permission',
          ],
-         '7' => [ 
-            'id'           => '7',         
+         '8' => [ 
+            'id'           => '8',         
             'name'         => '[Role]',
             'description'  => 'Role Assignment Permission',
          ],
-         '8' => [ 
-            'id'           => 8,         
+         '9' => [ 
+            'id'           => '9',
             'name'         => '[Synch]',
             'description'  => 'Data Warehouse Sync Permissions',
          ],         
       ];
 
+     
+      $permissionsList = [];
+      
+      /**
+       *  Basic System Access Flag Creation
+       **/
+             
+      foreach( $systemsAccess as $system )
+      {
+         $newPermission = $system['name'] . $actionAccess[1]['name'];
+         $permissionsList[] = $newPermission;
+      }
 
-      $roleCareerLevels = [ 
-         $careerLevelAccess[1]['name'], 
-         $careerLevelAccess[2]['name'], 
-         '[Framework]' 
-      ];
-      
-      
-      $rolePermissions  = [ 
-         $actionAccess[1]['name'],
-         $actionAccess[2]['name'],
-         $actionAccess[3]['name'],
-         $actionAccess[4]['name'],
-         $actionAccess[5]['name'],
-         $actionAccess[6]['name'],
-         $actionAccess[7]['name'],
-      ];         
-      
-            
+
+      foreach( $careerLevelAccess as $career )
+      {
+         $newPermission = $career['name'] . $actionAccess[1]['name'];
+         $permissionsList[] = $newPermission;      
+      }
+
+
+      foreach( $departmentAccess as $department )
+      {
+         $newPermission = $department['name'] . $actionAccess[1]['name'];
+         $permissionsList[] = $newPermission;      
+      }
+
+
+      print_r( $permissionsList );
+      die();
+
+
       $roleAccess = [
-         '1' => [ 
-            'name'         => 'Student-Undergraduate-1', 
-            'description'  => $roleCareerLevels[0] . ' Student (' . 
-               $actionAccess[2]['name'] . 
-            ')',
-            'system'       => [
-               $systemsAccess[1]['name'],
+         '1' => [
+            'id'           => '1',
+            'name'         => 'Student-Undergraduate-1',
+            'permissions'  => [
+               $actionAccess[1],
+               $actionAccess[2],
             ],
+            'system'       => [
+               $systemAccess[2],          // Student   
+            ],
+            'career'       => [
+               $careerLevelAccess[1],     // UGAD
+            ],
+            'department'   => [], 
          ],
-         
-         '2' => [ 
-            'name'         => 'Student-Graduate-1', 
-            'description'  => $roleCareerLevels[1] . ' Student (' . 
-               $actionAccess[2]['name'] . 
-            ')',
-            'system'       => [
-               $systemsAccess[1]['name'],
+         '2' => [
+            'id'           => '2',
+            'name'         => 'Student-Graduate-1',
+            'permissions'  => [
+               $actionAccess[1],
+               $actionAccess[2],
             ],
+            'system'       => [
+               $systemAccess[2],          // Student   
+            ],
+            'career'       => [
+               $careerLevelAccess[2],     // GRAD
+            ],
+            'department'   => [], 
          ],
-         
-         '3' => [ 
-            'name'         => 'Academic-Advisor-' . $roleCareerLevels[0] . '-2', 
-            'description'  => $roleCareerLevels[0] . ' Academic Advisor (' . 
-               $actionAccess[1]['name'] . $actionAccess[2]['name'] . $actionAccess[3]['name'] . 
-            ')',
-            'system'       => [
-               $systemsAccess[1]['name'],
+         '3' => [
+            'id'           => '3',
+            'name'         => 'Student-Doctorate-3',
+            'permissions'  => [
+               $actionAccess[1],
+               $actionAccess[2],
             ],
-         ],         
-                  
-         '4' => [ 
-            'name'         => 'Academic-Advisor-' . $roleCareerLevels[1] . '-2', 
-            'description'  => $roleCareerLevels[1] . ' Academic Advisor (' . 
-               $actionAccess[1]['name'] . $actionAccess[2]['name'] . $actionAccess[3]['name'] . 
-            ')',
             'system'       => [
-               $systemsAccess[1]['name'],
+               $systemAccess[2],          // Student   
             ],
-         ],
-         
-         '5' => [ 
-            'name'         => 'Power-User-Academic-Advisor-' . $roleCareerLevels[0] . '-3', 
-            'description'  => $roleCareerLevels[0] . ' Academic Advisor-Power User (' . 
-               $actionAccess[1]['name'] . $actionAccess[2]['name'] . $actionAccess[3]['name'] . 
-               $actionAccess[4]['name'] .  
-            ')',
-            'system'       => [
-               $systemsAccess[1]['name'],
+            'career'       => [
+               $careerLevelAccess[2],     // PHD
             ],
-         ],
-         
-         '6' => [ 
-            'name'         => 'Power-User-Academic-Advisor-' . $roleCareerLevels[1] . '-3', 
-            'description'  => $roleCareerLevels[1] . ' Academic Advisor-Power User (' . 
-               $actionAccess[1]['name'] . $actionAccess[2]['name'] . $actionAccess[3]['name'] . 
-               $actionAccess[4]['name'] .  
-            ')',
-            'system'       => [
-               $systemsAccess[1]['name'],
-            ],
-         ],         
+            'department'   => [], 
+         ],               
+      ];
 
-         '9' => [ 
-            'name'         => 'Framework-Admin-9', 
-            'description'  => $roleCareerLevels[2] . ' Assistant Admin (' . 
-               $actionAccess[1]['name'] . $actionAccess[2]['name'] . $actionAccess[3]['name'] . $actionAccess[4]['name'] .
-               $actionAccess[6]['name'] . $actionAccess[7]['name'] .
-            ')',
-            'system'       => [
-               $systemsAccess[1]['name'],
-               $systemsAccess[2]['name'],
-               $systemsAccess[3]['name'],
-            ],
-         ],
-         
-         '10' => [ 
-            'name' =>   'Framework-Administrator-10', 
-            'description'  => $roleCareerLevels[2] . ' Admin (' . 
-               $actionAccess[1]['name'] . $actionAccess[2]['name'] . $actionAccess[3]['name'] . $actionAccess[4]['name'] .
-               $actionAccess[5]['name'] . $actionAccess[6]['name'] . $actionAccess[7]['name'] .
-            ')',
-            'system'       => [
-               '1' => $systemsAccess[1]['name'],
-               '2' => $systemsAccess[2]['name'],
-               '3' => $systemsAccess[3]['name'],
-            ],         
-         ],
-      ];      
-      
+
       $rolesList        = [];
       $permissionsList  = [];
 
@@ -241,9 +254,10 @@ class m200702_151044_init_rbac extends Migration
       {
 
          $systemChk = [
-            '1'  => strcmp( $system['name'], $systemsAccess[1]['name'] ),
-            '2'  => strcmp( $system['name'], $systemsAccess[2]['name'] ),
-            '3'  => strcmp( $system['name'], $systemsAccess[3]['name'] ),
+            '1'  => strcmp( $system['name'], $systemsAccess[1]['name'] ),  // Framework
+            '2'  => strcmp( $system['name'], $systemsAccess[2]['name'] ),  // Student
+            '3'  => strcmp( $system['name'], $systemsAccess[3]['name'] ),  // Faculty
+            '4'  => strcmp( $system['name'], $systemsAccess[3]['name'] ),  // Administration
          ];      
       
          $sysName = $system['name'];
