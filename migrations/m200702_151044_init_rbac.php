@@ -18,6 +18,15 @@ class m200702_151044_init_rbac extends Migration
        *    createPermissions:  systems level
        **/        
 
+      /**
+       *    SystemID CONSTS
+       **/ 
+      $SYS_FRAMEWORKID        = 1;
+      $SYS_STUDENTID          = 2;
+      $SYS_FACULTYID          = 3;
+      $SYS_ADMINISTRATIONID   = 4;
+
+
       $systemsAccess = [
          '1' => [
             'id'           => 1,
@@ -44,7 +53,15 @@ class m200702_151044_init_rbac extends Migration
             'description'  => 'Administration selfServe',
          ],
       ];
-      
+
+
+      /**
+       *    CareerLevelID CONSTS
+       **/ 
+      $CL_UGADID  = 1;
+      $CL_GRADID  = 2;
+      $CL_PHDID   = 3;      
+
       
       $careerLevelAccess = [ 
          '1' => [ 
@@ -66,8 +83,8 @@ class m200702_151044_init_rbac extends Migration
             'description'  => 'Doctorate Career Level',
          ],         
       ];      
-      
-      
+
+
       $departmentAccess = [ 
          '1' => [ 
             'id'              => 1,
@@ -106,7 +123,14 @@ class m200702_151044_init_rbac extends Migration
             'description'     => 'MCSM Department',       
          ],
       ];
-      
+
+
+      /**
+       *    FeatureID CONSTS
+       **/ 
+      $FEAT_PERMIT   = 1;
+      $FEAT_GAAAP    = 2;
+      $FEAT_SYLLA    = 3;    
       
       $featureAccess = [
          '1' => [ 
@@ -128,7 +152,21 @@ class m200702_151044_init_rbac extends Migration
             'description'     => 'Course Syllabi',
          ],         
       ]; 
-      
+
+
+      /**
+       *    ActionID CONSTS
+       **/ 
+      $ACT_ACCESS    = 1;
+      $ACT_CREATE    = 2;
+      $ACT_READ      = 3;
+      $ACT_UPDATE    = 4;
+      $ACT_sDELETE   = 5;
+      $ACT_hDELETE   = 6;
+      $ACT_BACKUP    = 7;
+      $ACT_ROLE      = 8;
+      $ACT_SYNCH     = 9;
+   
       
       $actionAccess = [ 
          '1' => [ 
@@ -334,10 +372,18 @@ class m200702_151044_init_rbac extends Migration
          $permAuthList[$newKey] = $newAuthItem;
       }    
 
-/**
-      print_r( $permAuthList );
-      die();
- **/
+
+      /**
+       *    ActionID CONSTS
+       **/ 
+      $ROLE_ADMIN          = 1;
+      $ROLE_UGAD_STUDENT   = 2;
+      $ROLE_GRAD_STUDENT   = 3;
+      $ROLE_PHD_STUDENT    = 4;
+      $ROLE_UGAD_ADVISOR   = 5;
+      $ROLE_GRAD_ADVISOR   = 6;
+      $ROLE_PHD_ADVISOR    = 7;
+      
  
       $roleAccess = [
          '1' => [
@@ -352,11 +398,11 @@ class m200702_151044_init_rbac extends Migration
             'description'     => 'Undergraduate Student (1)',
             'allEverything'   => false,
             'permissions'     => [
-               // 2:  Student Self Serve, 1:  Access, 1:  Permits
-               $systemsAccess[2]['key'] . $actionAccess[1]['key'] . $featureAccess[1]['key'],
+         //    2:  Student Self Serve                . 1: Access                         . 1:  Permits
+               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_ACCESS]['key'] . $featureAccess[$FEAT_PERMIT]['key'],
 
-               // 2:  Student Self Serve, 1:  Access, 1:  UGAD               
-               $systemsAccess[2]['key'] . $actionAccess[1]['key'] . $careerLevelAccess[1]['key'],
+         //    2:  Student Self Serve                . 1:  Access                        . 1:  UGAD
+               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_ACCESS]['key'] . $careerLevelAccess[$CL_UGADID]['key'],
             ],
          ],        
          '3' => [
@@ -365,11 +411,11 @@ class m200702_151044_init_rbac extends Migration
             'description'     => 'Graduate Student (1)',
             'allEverything'   => false,
             'permissions'     => [
-               // 2:  Student Self Serve, 1: Access, 1:  Permits
-               $systemsAccess[2]['key'] . $actionAccess[1]['key'] . $featureAccess[1]['key'],
+         //    2:  Student Self Serve                . 1: Access                         . 1:  Permits
+               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_ACCESS]['key'] . $featureAccess[$FEAT_PERMIT]['key'],
 
-               // 2:  Student Self Serve, 1: Access, 1:  GRAD   
-               $systemsAccess[2]['key'] . $actionAccess[1]['key'] . $careerLevelAccess[2]['key'],
+         //    2:  Student Self Serve                . 1:  Access                        . 2:  GRAD
+               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_ACCESS]['key'] . $careerLevelAccess[$CL_GRADID]['key'],
             ],
          ],
          '4' => [
@@ -378,11 +424,11 @@ class m200702_151044_init_rbac extends Migration
             'description'     => 'Doctorate Student (1)',
             'allEverything'   => false,
             'permissions'     => [
-               // 2:  Student Self Serve, 1: Access, 1:  Permits
-               $systemsAccess[2]['key'] . $actionAccess[1]['key'] . $featureAccess[1]['key'],
+         //    2:  Student Self Serve                . 1: Access                         . 1:  Permits
+               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_ACCESS]['key'] . $featureAccess[$FEAT_PERMIT]['key'],
 
-               // 2:  Student Self Serve, 1: Access, 1:  PHD   
-               $systemsAccess[2]['key'] . $actionAccess[1]['key'] . $careerLevelAccess[3]['key'],            
+         //    2:  Student Self Serve                . 1:  Access                        . 3:  PHD
+               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_ACCESS]['key'] . $careerLevelAccess[$CL_PHDID]['key'],            
             ],
          ],
          '5' => [
@@ -391,19 +437,57 @@ class m200702_151044_init_rbac extends Migration
             'description'     => 'Undergraduate Advisor (2)',
             'allEverything'   => false,
             'permissions'     => [
-               // 2:  Student Self Serve, 1: Access, 1:  Permits
-               $systemsAccess[2]['key'] . $actionAccess[1]['key'] . $featureAccess[1]['key'],
+         //    2:  Student Self Serve                . 1: Access                         . 1:  Permits
+               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_ACCESS]['key'] . $featureAccess[$FEAT_PERMIT]['key'],
 
-               // 2:  Student Self Serve, 1: Access, 1:  UGAD               
-               $systemsAccess[2]['key'] . $actionAccess[1]['key'] . $careerLevelAccess[1]['key'],
+         //    2:  Student Self Serve                . 1:  Access                        . 1:  UGAD
+               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_ACCESS]['key'] . $careerLevelAccess[$CL_UGADID]['key'],
+                      
+         //    2:  Student Self Serve                . 2: Create                         . 1:  UGAD
+               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_CREATE]['key'] . $careerLevelAccess[$CL_UGADID]['key'],
                
-               // 2:  Student Self Serve, 2: Create, 1:  UGAD               
-               $systemsAccess[2]['key'] . $actionAccess[2]['key'] . $careerLevelAccess[1]['key'],
-               
-               // 2:  Student Self Serve, 4: Update, 1:  UGAD               
-               $systemsAccess[2]['key'] . $actionAccess[4]['key'] . $careerLevelAccess[1]['key'],               
+         //    2:  Student Self Serve                . 4: Update                         . 1:  UGAD
+               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_UPDATE]['key'] . $careerLevelAccess[$CL_UGADID]['key'],
             ],
-         ],            
+         ],
+         '6' => [
+            'id'              => '6',
+            'name'            => 'Academic-Advisor-Graduate',
+            'description'     => 'Graduate Advisor (2)',
+            'allEverything'   => false,
+            'permissions'     => [
+         //    2:  Student Self Serve                . 1: Access                         . 1:  Permits
+               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_ACCESS]['key'] . $featureAccess[$FEAT_PERMIT]['key'],
+       
+         //    2:  Student Self Serve                . 1:  Access                        . 2:  GRAD
+               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_ACCESS]['key'] . $careerLevelAccess[$CL_GRADID]['key'],
+               
+         //    2:  Student Self Serve                . 2: Create                         . 2:  GRAD
+               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_CREATE]['key'] . $careerLevelAccess[$CL_GRADID]['key'],
+               
+         //    2:  Student Self Serve                . 4: Update                         . 2:  GRAD               
+               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_UPDATE]['key'] . $careerLevelAccess[$CL_GRADID]['key'],               
+            ],
+         ],         
+         '7' => [
+            'id'              => '7',
+            'name'            => 'Academic-Advisor-PhD',
+            'description'     => 'PhD Advisor (2)',
+            'allEverything'   => false,
+            'permissions'     => [
+         //    2:  Student Self Serve                . 1: Access                         . 1:  Permits
+               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_ACCESS]['key'] . $featureAccess[$FEAT_PERMIT]['key'],
+       
+         //    2:  Student Self Serve                . 1:  Access                        . 3:  PHD
+               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_ACCESS]['key'] . $careerLevelAccess[$CL_PHDID]['key'],
+               
+         //    2:  Student Self Serve                . 2: Create                         . 3:  PHD
+               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_CREATE]['key'] . $careerLevelAccess[$CL_PHDID]['key'],
+               
+         //    2:  Student Self Serve                . 4: Update                         . 3:  PHD
+               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_UPDATE]['key'] . $careerLevelAccess[$CL_PHDID]['key'],               
+            ],
+         ], 
       ];
       
         
@@ -412,6 +496,12 @@ class m200702_151044_init_rbac extends Migration
       {
          $roleRole               = $auth->createRole( $role['name'] );         
          $roleRole->description  = $role['description'];
+
+         $newRoleChild = [
+            'role'      => $roleRole,
+         ];
+         
+         $roleAuthList[] = $newRoleChild;
          
          $auth->add($roleRole);
 
@@ -425,13 +515,6 @@ class m200702_151044_init_rbac extends Migration
                foreach( $permAuthList as $permAuth )
                {
                   $auth->addChild( $roleRole, $permAuth['permission'] );
-                  
-                  $newAuthChild = [
-                     'role'         => $roleRole,
-                     'permission'   => $permAuth,
-                  ];
-                  
-                  $roleAuthList[] = $newAuthChild;
                }
             }
          }
@@ -439,12 +522,31 @@ class m200702_151044_init_rbac extends Migration
          {
             foreach( $role['permissions'] as $permItem )
             {
-               $auth->addChild( $roleRole, $permAuthList[$permItem]['permission'] );      
+               $auth->addChild( $roleRole, $permAuthList[$permItem]['permission'] );
             }
          }
       }
+      
+/**
+      print_r( $roleAuthList );
+      die();
+      
+      $ROLE_ADMIN          = 1;
+      $ROLE_UGAD_STUDENT   = 2;
+      $ROLE_GRAD_STUDENT   = 3;
+      $ROLE_PHD_STUDENT    = 4;
+      $ROLE_UGAD_ADVISOR   = 5;
+      $ROLE_GRAD_ADVISOR   = 6;
+      $ROLE_PHD_ADVISOR    = 7;      
+ **/
+
+      $auth->assign( $roleAuthList[$ROLE_ADMIN-1]['role'], 7 );
+      
+      $auth->assign( $roleAuthList[$ROLE_UGAD_STUDENT-1]['role'], 1 );
+      $auth->assign( $roleAuthList[$ROLE_GRAD_STUDENT-1]['role'], 2 );
+      $auth->assign( $roleAuthList[$ROLE_UGAD_ADVISOR-1]['role'], 3 );
+      $auth->assign( $roleAuthList[$ROLE_GRAD_ADVISOR-1]['role'], 5 );
    }
-   
    
     /**
      * {@inheritdoc}
