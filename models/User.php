@@ -4,21 +4,33 @@ namespace app\models;
 
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use yii\rbac\DbManager;
 use yii\web\IdentityInterface;
+
 use yii2tech\ar\position\PositionBehavior;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 //class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
 class User extends ActiveRecord implements \yii\web\IdentityInterface
 {
-    public $id;
-    public $uuid;
-    public $name;
-    public $auth_key;
-    public $access_token;
-    public $created_at;
-    public $updated_at;
+   public $id;
+   public $uuid;
+   public $name;
+   public $auth_key;
+   public $access_token;
+   public $created_at;
+   public $updated_at;
+    
+   private $_auth;
+   
+   public function init()
+   {
+      parent::init();
+      $this->_auth = \Yii::$app->getAuthManager();
+   }   
 
+
+/**
     private static $users = [
         '100' => [
             'id' => '100',
@@ -42,6 +54,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
             'accessToken' => '102-token',
         ],        
     ];
+ **/
 
    public static function tableName()
    {
@@ -73,10 +86,10 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
    {
       return [
          // field name is the same as the attribute name
-         'id',
+         'id'     => 'id',
       
          // field name is "email", the corresponding attribute name is "email_address"
-         'uuid' => 'uuid',
+         'uuid'   => 'uuid',
    
       ];
    }
@@ -119,11 +132,10 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
          ],         
       ];
    }
-   
+
+
    public static function findIdentity($id)
-   {
-//      return static::findOne(['id' => $id]);
-      
+   {  
       $query_users = (new \yii\db\Query())
          ->select([ 'id', 'uuid', 'name', 'access_token', 'created_at', 'updated_at' ])
          ->from( 'tbl_Users' )
@@ -139,7 +151,8 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
  
       return null;       
    }
-   
+
+
    public static function findIdentityByAccessToken($token, $type = null)
    {
       $query_users = (new \yii\db\Query())
@@ -158,6 +171,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
       return null;     
    }
 
+
    public static function findByUUID($uuid)
    {        
       $query_users = (new \yii\db\Query())
@@ -175,7 +189,8 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
  
       return null;            
    }
-   
+
+
     /**
      * {@inheritdoc}
      */
@@ -184,6 +199,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
         return $this->id;
     }
 
+
     /**
      * {@inheritdoc}
      */
@@ -191,6 +207,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
     {
         return $this->auth_key;
     }
+
 
     /**
      * {@inheritdoc}
@@ -232,15 +249,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
          ->innerJoin( 'tbl_Roles ro', 'ro.id = srcd.roles_id' )                
          ->where( 'u.id =:id AND (ro.name =:name OR ro.name OR' )
             ->addParams( [':id' => $id, ':name' => 'Approval User'], )
-         ->limit(1);  
-   
-/**  
-      $result[] = $query_users->sql;
-      $result[] = $query_users->params;
-      $result[] = $query_users->queryAll();
-
-      return $result;     
-**/
+         ->limit(1);
 
       foreach( $query_users->each() as $user_row )
       {
@@ -250,7 +259,8 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 
       return false;
    }  
-   
+
+
    public function isSuperUser( $id )
    {
       $query_users = (new \yii\db\Query())
@@ -262,14 +272,6 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
          ->where( 'u.id =:id AND ro.name =:name ' )
             ->addParams( [':id' => $id, ':name' => 'Super User'], )
          ->limit(1);  
-   
-/**  
-      $result[] = $query_users->sql;
-      $result[] = $query_users->params;
-      $result[] = $query_users->queryAll();
-
-      return $result;     
-**/
 
       foreach( $query_users->each() as $user_row )
       {
@@ -279,7 +281,8 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 
       return false;
    }        
-   
+
+
    public function isAdministrator( $id )
    {
       $query_users = (new \yii\db\Query())
@@ -289,14 +292,6 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
          ->where( 'u.id =:id AND a_a.item_name =:name ' )
             ->addParams( [':id' => $id, ':name' => 'Framework-Administrator-10'], )
          ->limit(1);  
-   
-/**  
-      $result[] = $query_users->sql;
-      $result[] = $query_users->params;
-      $result[] = $query_users->queryAll();
-
-      return $result;     
-**/
 
       foreach( $query_users->each() as $user_row )
       {
@@ -306,6 +301,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 
       return false;
    }    
+
 
 /**
  *
@@ -389,18 +385,10 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
          $user = $user_row;
          return $user;
       }
-
-/**
-      $result[] = $query_users->sql;
-      $result[] = $query_users->params;
-      $result[] = $query_users->queryAll();
-
-      return $result;     
- **/
  
       return false;
    }  
-   
+
    public function canHardDeleteById( $id )
    {
       $query_users = (new \yii\db\Query())
@@ -419,14 +407,6 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
          return $user;
       }
 
-/**
-      $result[] = $query_users->sql;
-      $result[] = $query_users->params;
-      $result[] = $query_users->queryAll();
-
-      return $result;     
- **/
- 
       return false;
    }
 }
