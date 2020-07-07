@@ -33,7 +33,7 @@ GridView::widget([
          'label' => 'UUID',
          'format' => 'raw',
          'value' => function( $data ){
-            return HTML::a( $data['uuid'], Url::toRoute( ['user/view', 'uuid' => $data['uuid'] ], true) );
+            return HTML::a( $data['uuid'], Url::toRoute( ['users/view', 'uuid' => $data['uuid'] ], true) );
          },
       ],
       'name',
