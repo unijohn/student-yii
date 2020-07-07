@@ -95,8 +95,36 @@ class UsersController extends Controller
       return $this->render('index', ['dataProvider' => $dataProvider]);   
    }
 
-   public function actionList()
+   public function actionView()
    {
+      $count = Yii::$app->db->createCommand(
+         'SELECT COUNT(*) FROM tbl_Users WHERE id >=:id ',
+         [':id' => 1])->queryScalar();
+      
+      $dataProvider = new SqlDataProvider ([
+         'sql' => 'SELECT * FROM tbl_Users WHERE id >=:id',
+         'params' => [':id' => 1],
+         'totalCount' => $count,
+         'sort' => [
+            'attributes' => [
+               'uuid' => [
+                  'default' => SORT_ASC,
+                  'label' => 'UUID',
+               ],
+               'name' => [
+                  'default' => SORT_ASC,
+                  'label' => 'Name',
+               ],
+               'created_at',
+               'updated_at',                              
+            ],
+         ],         
+         'pagination' => [
+            'pageSize' => 30,
+         ],
+      ]);               
+
+      return $this->render('view', ['dataProvider' => $dataProvider]);      
    }   
 
 }
