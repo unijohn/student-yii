@@ -83,11 +83,11 @@ AppAsset::register($this);
 
 
     <div>
+      <h2>Scratchpad</h2>
       <pre>
-      
-<!--      
-      <?= print_r( Yii::$app->user->identity ); ?>
- -->
+
+         
+
       </pre>
     </div>
 </div>

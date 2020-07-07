@@ -58,7 +58,7 @@ $auth = Yii::$app->authManager;
       print( "</li>" );
 
       print( "<ul>" );
-      print(   "<li>Role Switch Identity</li>" );
+      print(   "<li>Switch Role Identity</li>" );
       print(   "<ul>" );
       
       foreach( $auth->getRoles() as $role )
