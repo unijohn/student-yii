@@ -401,7 +401,7 @@ class m200702_151044_init_rbac extends Migration
          //    2:  Student Self Serve                . 1: Access                         . 1:  Permits
                $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_ACCESS]['key'] . $featureAccess[$FEAT_PERMIT]['key'],
 
-         //    2:  Student Self Serve                . 1:  Access                        . 1:  UGAD
+         //    2:  Student Self Serve                . 1: Access                         . 1:  UGAD
                $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_ACCESS]['key'] . $careerLevelAccess[$CL_UGADID]['key'],
             ],
          ],        
@@ -414,7 +414,7 @@ class m200702_151044_init_rbac extends Migration
          //    2:  Student Self Serve                . 1: Access                         . 1:  Permits
                $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_ACCESS]['key'] . $featureAccess[$FEAT_PERMIT]['key'],
 
-         //    2:  Student Self Serve                . 1:  Access                        . 2:  GRAD
+         //    2:  Student Self Serve                . 1: Access                         . 2:  GRAD
                $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_ACCESS]['key'] . $careerLevelAccess[$CL_GRADID]['key'],
             ],
          ],
@@ -427,7 +427,7 @@ class m200702_151044_init_rbac extends Migration
          //    2:  Student Self Serve                . 1: Access                         . 1:  Permits
                $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_ACCESS]['key'] . $featureAccess[$FEAT_PERMIT]['key'],
 
-         //    2:  Student Self Serve                . 1:  Access                        . 3:  PHD
+         //    2:  Student Self Serve                . 1: Access                         . 3:  PHD
                $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_ACCESS]['key'] . $careerLevelAccess[$CL_PHDID]['key'],            
             ],
          ],
@@ -440,7 +440,7 @@ class m200702_151044_init_rbac extends Migration
          //    2:  Student Self Serve                . 1: Access                         . 1:  Permits
                $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_ACCESS]['key'] . $featureAccess[$FEAT_PERMIT]['key'],
 
-         //    2:  Student Self Serve                . 1:  Access                        . 1:  UGAD
+         //    2:  Student Self Serve                . 1: Access                         . 1:  UGAD
                $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_ACCESS]['key'] . $careerLevelAccess[$CL_UGADID]['key'],
                       
          //    2:  Student Self Serve                . 2: Create                         . 1:  UGAD
@@ -540,7 +540,9 @@ class m200702_151044_init_rbac extends Migration
       $ROLE_PHD_ADVISOR    = 7;      
  **/
 
-      $auth->assign( $roleAuthList[$ROLE_ADMIN-1]['role'], 7 );
+      $frameworkRole = $auth->getRole('Framework-Administrator');
+
+      $auth->assign( $frameworkRole, 7 );
       
       $auth->assign( $roleAuthList[$ROLE_UGAD_STUDENT-1]['role'], 1 );
       $auth->assign( $roleAuthList[$ROLE_GRAD_STUDENT-1]['role'], 2 );
