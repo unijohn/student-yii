@@ -58,8 +58,21 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 
    public static function tableName()
    {
-      return 'tbl_Users';
+      return '{{tbl_Users}}';
    }
+
+
+   public static function getUserTableName()
+   {
+      return User::tableName();
+   }
+   
+
+   public static function getTempAuthAssignmentTableName()
+   {
+      return "{{tbl_TempAuthAssignment}}";
+   }     
+    
    
     /**
      * @inheritdoc
@@ -138,7 +151,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
    {  
       $query_users = (new \yii\db\Query())
          ->select([ 'id', 'uuid', 'name', 'access_token', 'created_at', 'updated_at' ])
-         ->from( 'tbl_Users' )
+         ->from( User::getUserTableName() )
          ->where( 'id=:id' )
             ->addParams( [':id' => $id] )
          ->limit(1);     
@@ -157,7 +170,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
    {
       $query_users = (new \yii\db\Query())
          ->select([ 'id', 'uuid', 'name', 'access_token', 'created_at', 'updated_at' ])
-         ->from( 'tbl_Users' )
+         ->from( User::getUserTableName() )
          ->where( 'uuid=:uuid' )
             ->addParams( [':accessToken' => $token] )
          ->limit(1);     
@@ -176,7 +189,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
    {        
       $query_users = (new \yii\db\Query())
          ->select([ 'id', 'uuid', 'name', 'access_token', 'created_at', 'updated_at' ])
-         ->from( 'tbl_Users' )
+         ->from( User::getUserTableName() )
          ->where( 'uuid=:uuid' )
             ->addParams( [':uuid' => $uuid] )
          ->limit(1);     
@@ -244,6 +257,59 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
     }
 
 
+/**
+ *
+ *  This section handles role and/or user identity swapping for testing purposes
+ *
+ */
+
+    /**
+     * Ultimate permission checker to ensure (10) level access is available if that 
+     * administrative user is temporarily assigned to a lower level role
+     *
+     * @param integer $id tbl_Users.id 
+     * @return bool if user is a framework administrator
+     */
+   public function isFrameworkAdministrator( $id )
+   {
+      $query_users = (new \yii\db\Query())
+         ->select([ 'taa.item_name', 'taa.user_id' ])
+         ->from(  'tbl_TempAuthAssignment taa' )
+         ->where( 'taa.user_id =:user_id and item_name like :name and deleted_at IS NULL ' )
+            ->addParams( [':user_id' => $id, ':name' => 'Framework-Administrator'], )
+         ->limit(1);
+
+      foreach( $query_users->each() as $user_row )
+      {
+         return true;
+      }
+
+      return false;
+   }
+   
+    /**
+     * Checker to determine if user is assigned a temporary role
+     *
+     * @param integer $id tbl_Users.id 
+     * @return bool if user has active temporary role record
+     */
+   public function isAssignedTemporaryRole( $id )
+   {
+      $query_users = (new \yii\db\Query())
+         ->select([ 'taa.item_name', 'taa.user_id' ])
+         ->from(  'tbl_TempAuthAssignment taa' )
+         ->where( 'taa.user_id =:user_id  and deleted_at IS NULL ' )
+            ->addParams( [':user_id' => $id, ], )
+         ->limit(1);
+
+      foreach( $query_users->each() as $user_row )
+      {
+         return true;
+      }
+
+      return false;
+   }   
+   
 
 /**
  *

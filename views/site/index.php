@@ -3,7 +3,9 @@
    use yii\helpers\HtmlPurifier;
    use yii\helpers\Url;   
    
-   use yii\grid\GridView;   
+   use yii\grid\GridView;
+   
+   use app\models\User; 
 
 /* @var $this yii\web\View */
 
@@ -30,10 +32,17 @@ $auth = Yii::$app->authManager;
     *  Framework section of the dashboard
     **/
 
+   $userId           = Yii::$app->user->identity->getId();
+
+   $isFrameworkAdmin = Yii::$app->user->identity->isFrameworkAdministrator( $userId );
+   $isAssignedRole   = Yii::$app->user->identity->isAssignedTemporaryRole( $userId );
+
    if (
       \Yii::$app->user->can('[Framework][Access][Permit]' )  ||
       \Yii::$app->user->can('[Framework][Access][GAApp]'  )  ||
-      \Yii::$app->user->can('[Framework][Access][Sylla]'  ) 
+      \Yii::$app->user->can('[Framework][Access][Sylla]'  )  ||
+      
+      $isFrameworkAdmin
    ) {
  ?>
 
@@ -50,7 +59,9 @@ $auth = Yii::$app->authManager;
    if (
       \Yii::$app->user->can('[Framework][Role][Permit]' )  ||
       \Yii::$app->user->can('[Framework][Role][GAApp]'  )  ||
-      \Yii::$app->user->can('[Framework][Role][Sylla]'  ) 
+      \Yii::$app->user->can('[Framework][Role][Sylla]'  )  ||
+      
+      $isFrameworkAdmin
    ) 
    {
       print( "<li>" );
@@ -61,15 +72,25 @@ $auth = Yii::$app->authManager;
       print(   "<li>Switch Role Identity</li>" );
       print(   "<ul>" );
       
-      foreach( $auth->getRoles() as $role )
+      if( $isAssignedRole )
       {
-         if( strpos( $role->description, "(10)" ) === false )
+         print( "<li>" );
+         print( HTML::a( 'Restore Role', Url::toRoute( ['framework/resetrole', 'reset' => 'reset',], true) ) );
+         print( "</li>" );      
+      }
+      else
+      {      
+         foreach( $auth->getRoles() as $role )
          {
-            print( "<li>" );
-            print( HTML::a( $role->description, Url::toRoute( ['framework/inspector', 'role' => $role->name,], true) ) );
-            print( "</li>" );
+            if( strpos( $role->description, "(10)" ) === false )
+            {
+               print( "<li>" );
+               print( HTML::a( $role->description, Url::toRoute( ['framework/testrole', 'role' => $role->name,], true) ) );
+               print( "</li>" );
+            }
          }
       }
+      
       print(   "</ul>" );
       print( "</ul>" );      
    }
@@ -77,7 +98,9 @@ $auth = Yii::$app->authManager;
    if (
       \Yii::$app->user->can('[Framework][Synch][Permit]' )  ||
       \Yii::$app->user->can('[Framework][Synch][GAApp]'  )  ||
-      \Yii::$app->user->can('[Framework][Synch][Sylla]'  ) 
+      \Yii::$app->user->can('[Framework][Synch][Sylla]'  )  ||
+      
+      $isFrameworkAdmin
    ) 
    {
       print( "<li>" );   
@@ -88,7 +111,9 @@ $auth = Yii::$app->authManager;
    if (
       \Yii::$app->user->can('[Framework][Backup][Permit]' )  ||
       \Yii::$app->user->can('[Framework][Backup][GAApp]'  )  ||
-      \Yii::$app->user->can('[Framework][Backup][Sylla]'  ) 
+      \Yii::$app->user->can('[Framework][Backup][Sylla]'  )  ||
+      
+      $isFrameworkAdmin
    ) 
    {
       print( "<li>" );

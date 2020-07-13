@@ -119,7 +119,7 @@ class FrameworkController extends Controller
          {
             $currentRoles = $auth->getRolesByUser($userId);
             
-            $currentRole->revokePermanentRoles( $userId );
+            $currentRole->revokeRoles( $userId );
          
             foreach( $currentRoles as $key => $roles )
             {
@@ -128,7 +128,6 @@ class FrameworkController extends Controller
                   'description'  => $roles->description,
                ];
             }
-
 
             if( $currentRole->assignTemporaryRole( $newRole ) )
             {            
@@ -183,7 +182,7 @@ class FrameworkController extends Controller
       }      
       
       $userId  = Yii::$app->user->identity->getId();
-      $newRole = $request->get( 'role', 'missing' );
+      $reset   = $request->get( 'reset', 'missing' );
    
 /*      
       if( !empty( $userId ) && isset( $userId ) )
@@ -197,7 +196,9 @@ class FrameworkController extends Controller
       }
  */
  
-      $currentRole = new TempAuthAssignment();
+      $restoreRole = new TempAuthAssignment();
+      
+      $isRestored = $restoreRole->restorePermanentRoles();
 
  /**
       print_r( $newRole . PHP_EOL );
