@@ -32,10 +32,20 @@ $auth = Yii::$app->authManager;
     *  Framework section of the dashboard
     **/
 
-   $userId           = Yii::$app->user->identity->getId();
+   $userId = -1;
+   $isFrameworkAdmin = false;
+   $isAssignedRole   = false;
 
-   $isFrameworkAdmin = Yii::$app->user->identity->isFrameworkAdministrator( $userId );
-   $isAssignedRole   = Yii::$app->user->identity->isAssignedTemporaryRole( $userId );
+
+   /**
+    *  Quick fix for cookie timeout
+    **/
+   if( !is_null( Yii::$app->user->identity ) )
+   {
+      $userId           = Yii::$app->user->identity->getId();
+      $isFrameworkAdmin = Yii::$app->user->identity->isFrameworkAdministrator( $userId );
+      $isAssignedRole   = Yii::$app->user->identity->isAssignedTemporaryRole( $userId );      
+   }
 
    if (
       \Yii::$app->user->can('[Framework][Access][Permit]' )  ||
