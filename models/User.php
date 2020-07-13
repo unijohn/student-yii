@@ -209,13 +209,26 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
     }
 
 
-    /**
-     * {@inheritdoc}
-     */
-    public function validateAuthKey($auth_key)
-    {
-        return $this->$auth_key === $auth_key;
-    }
+   /**
+   * {@inheritdoc}
+   */
+   public function validateAuthKey($auth_key)
+   {
+      if( empty( $auth_key ) || !isset( $auth_key ) )
+      {
+         /**
+          *  Quick fix for cookie timeout
+          *
+          *    app\models\User::validateAuthKey(null)
+          *    yii\web\User::getIdentityAndDurationFromCookie()
+          *    yii\web\User::loginByCookie()
+          **/
+      
+         return false;
+      }
+   
+      return $this->$auth_key === $auth_key;
+   }
 
     /**
      * Validates password
