@@ -526,29 +526,17 @@ class m200702_151044_init_rbac extends Migration
             }
          }
       }
-      
-/**
-      print_r( $roleAuthList );
-      die();
-      
-      $ROLE_ADMIN          = 1;
-      $ROLE_UGAD_STUDENT   = 2;
-      $ROLE_GRAD_STUDENT   = 3;
-      $ROLE_PHD_STUDENT    = 4;
-      $ROLE_UGAD_ADVISOR   = 5;
-      $ROLE_GRAD_ADVISOR   = 6;
-      $ROLE_PHD_ADVISOR    = 7;      
- **/
 
       $frameworkRole = $auth->getRole('Framework-Administrator');
 
-      $auth->assign( $frameworkRole, 7 );
+      $auth->assign( $auth->getRole('Framework-Administrator'), 7 );
       
-      $auth->assign( $roleAuthList[$ROLE_UGAD_STUDENT-1]['role'], 1 );
-      $auth->assign( $roleAuthList[$ROLE_GRAD_STUDENT-1]['role'], 2 );
-      $auth->assign( $roleAuthList[$ROLE_UGAD_ADVISOR-1]['role'], 3 );
-      $auth->assign( $roleAuthList[$ROLE_GRAD_ADVISOR-1]['role'], 5 );
+      $auth->assign( $auth->getRole('Student-Undergraduate'),           1 );
+      $auth->assign( $auth->getRole('Student-Graduate'),                2 );
+      $auth->assign( $auth->getRole('Academic-Advisor-Undergraduate'),  3 );
+      $auth->assign( $auth->getRole('Academic-Advisor-Graduate'),       5 ); 
    }
+
    
     /**
      * {@inheritdoc}

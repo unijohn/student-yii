@@ -17,7 +17,7 @@ class m200625_162031_tbl_Users extends Migration
 
    protected function getTempRoleTableName()
    {
-      return "{{%tbl_TempAssignmentTable}}";
+      return "{{%tbl_TempAuthAssignment}}";
    }   
 
 
