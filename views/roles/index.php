@@ -7,14 +7,13 @@
 
 /* @var $this yii\web\View */
 
-$this->title = 'My Yii Application';
-
+$this->title = 'Framework | Roles | Index';
 $auth = Yii::$app->authManager;
 ?>
 <div class="site-index">
 
     <div class="jumbotron">
-        <h1>Congratulations! Framework/Index</h1>
+        <h1>Congratulations! <?php print( $this->title ); ?></h1>
 
         <p class="lead">You have successfully created your Yii-powered application.</p>
 

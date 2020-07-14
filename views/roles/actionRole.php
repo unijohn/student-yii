@@ -4,14 +4,14 @@
 
 use yii\helpers\Html;
 
-$this->title = 'Test Me';
+$this->title = 'Framework | Roles | Action';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-about">
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        This is the Framework / Test Role page. You may modify the following file to customize its content:
+        This is the <? print( $this->title ); ?> page. You may modify the following file to customize its content:
     </p>
     
 <?php
