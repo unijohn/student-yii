@@ -74,6 +74,8 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
    // in your DB table or model attributes do not cause your field changes (to keep API backward compatibility).
    public function fields()
    {
+
+/**
       return [
          // field name is the same as the attribute name
          'id'     => 'id',
@@ -82,6 +84,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
          'uuid'   => 'uuid',
    
       ];
+ **/
    }
 
    public function behaviors()
@@ -126,11 +129,21 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 
    public function rules()
    {
+   
+/**   
+         'id'           => $this->primaryKey(),
+         'uuid'         => $this->string(16)->notNull(),
+         'name'         => $this->string(48)->notNull(),
+         'is_active'    => $this->integer()->notNull(),
+         'auth_key'     => $this->string(32)->notNull(),
+         'access_token' => $this->string(32)->notNull(),
+         
+         'created_at'   => $this->datetime()->notNull(),
+         'updated_at'   => $this->datetime(),    
+ **/
+   
       return [
-         [['uuid'], 'string'],
-         [['is_active'], 'integer'],
-         [['created_at'], 'safe'],
-         [['updated_at'], 'safe'],         
+         [['uuid', 'name', 'is_active', 'auth_key', 'access_token', 'created_at'], 'required' ],
       ];
    }
    

@@ -89,7 +89,7 @@ class UsersController extends Controller
       $data             = [];
       $dataProvider     = [];
 
-      $userModel              = new User();
+      $userModel        = new User();
       
       /**
        *  Quick fix for cookie timeout
@@ -105,10 +105,7 @@ class UsersController extends Controller
       } 
 
       $userModel->uuid        = ArrayHelper::getValue($request->get(), 'User.uuid',      '');
-      $userModel->is_active   = ArrayHelper::getValue($request->get(), 'User.is_active', '-1');            
-
-//print_r($request->post() );
-//die();
+      $userModel->is_active   = ArrayHelper::getValue($request->get(), 'User.is_active', '-1');
 
       $count = Yii::$app->db->createCommand(
          'SELECT COUNT(*) FROM tbl_Users WHERE id >=:id ',
@@ -196,17 +193,30 @@ class UsersController extends Controller
       
       if( $this->_isUserIdentityEmpty )
       {
-         return $this->render('index', [
+         return $this->render('user-view', [
             'data' => $data, 
             'dataProvider' => $dataProvider,
             'model'        => $userModel,
          ]);   
       } 
 
-      return $this->render('index', [
+      $user = User::find()
+         ->where(['uuid' => $request->get('uuid', '')])
+         ->limit(1)->one();
+         
+
+         
+/**
+      print( "<h1>What</h1><pre>" );   
+      print_r( $user);
+      print( "</pre>" );
+      die();
+ **/
+
+      return $this->render('user-view', [
             'data' => $data, 
             'dataProvider' => $dataProvider,
-            'model'        => $userModel,
+            'model'        => $user,
       ]);      
    }   
 }
