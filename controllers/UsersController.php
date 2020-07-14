@@ -77,11 +77,10 @@ class UsersController extends Controller
     }
 
    /**
-    * Displays homepage.
+    * Displays listing of all users in the system.
     *
     * @return string
     */
-
    public function actionIndex()
    {
       $auth    = Yii::$app->authManager;
@@ -98,7 +97,7 @@ class UsersController extends Controller
       
       if( $this->_isUserIdentityEmpty )
       {
-         return $this->render('users', [
+         return $this->render('users-listing', [
             'data' => $data, 
             'dataProvider' => $dataProvider,
             'model'        => $userModel,
@@ -168,10 +167,46 @@ class UsersController extends Controller
          ],
       ]); 
 
-      return $this->render('users', [
+      return $this->render('users-listing', [
             'data' => $data, 
             'dataProvider' => $dataProvider,
             'model'        => $userModel,
       ]);      
    }
+   
+
+   /**
+    * Displays listing of all users in the system.
+    *
+    * @return string
+    */
+   public function actionView()
+   {
+      $auth    = Yii::$app->authManager;
+      $request = Yii::$app->request;
+      
+      $data             = [];
+      $dataProvider     = [];
+
+      $userModel              = new User();
+      
+      /**
+       *  Quick fix for cookie timeout
+       **/
+      
+      if( $this->_isUserIdentityEmpty )
+      {
+         return $this->render('index', [
+            'data' => $data, 
+            'dataProvider' => $dataProvider,
+            'model'        => $userModel,
+         ]);   
+      } 
+
+      return $this->render('index', [
+            'data' => $data, 
+            'dataProvider' => $dataProvider,
+            'model'        => $userModel,
+      ]);      
+   }   
 }
