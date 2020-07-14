@@ -75,7 +75,7 @@ $auth = Yii::$app->authManager;
    ) 
    {
       print( "<li>" );
-      print( HTML::a( "User Management", Url::toRoute( ['framework/index', ], true) ) );
+      print( HTML::a( "User Management", Url::toRoute( ['framework/users', ], true) ) );
       print( "</li>" );
 
       print( "<ul>" );

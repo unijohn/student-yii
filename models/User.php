@@ -2,6 +2,8 @@
 
 namespace app\models;
 
+use Yii;
+use yii\base\model;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\rbac\DbManager;
@@ -16,6 +18,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
    public $id;
    public $uuid;
    public $name;
+   public $is_active;
    public $auth_key;
    public $access_token;
    public $created_at;
@@ -28,33 +31,6 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
       parent::init();
       $this->_auth = \Yii::$app->getAuthManager();
    }   
-
-
-/**
-    private static $users = [
-        '100' => [
-            'id' => '100',
-            'username' => 'admin',
-            'password' => 'admin',
-            'authKey' => 'test100key',
-            'accessToken' => '100-token',
-        ],
-        '101' => [
-            'id' => '101',
-            'username' => 'demo',
-            'password' => 'demo',
-            'authKey' => 'test101key',
-            'accessToken' => '101-token',
-        ],
-        '102' => [
-            'id' => '102',
-            'username' => 'testme',
-            'password' => 'testme',
-            'authKey' => 'test102key',
-            'accessToken' => '102-token',
-        ],        
-    ];
- **/
 
    public static function tableName()
    {
@@ -79,18 +55,19 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
      */
     public function attributeLabels()
     {
-/**    
+ 
         return [
-            'id' => Yii::t('app', 'ID'),
-            'uuid' => Yii::t('app', 'Authors ID'),
-            'name' => Yii::t('app', 'Last Edited'),
-            'auth_key' => Yii::t('app', 'Published'),
-            'access_token' => Yii::t('app', 'Title'),
-            'Description' => Yii::t('app', 'Description'),
-            'Content' => Yii::t('app', 'Content'),
-            'Format' => Yii::t('app', 'Format'),
+//            'id' => Yii::t('app', 'ID'),
+            'uuid'         => Yii::t('app', 'UUID'),
+            '$is_active'   => Yii::t('app', 'Account Status'),
+            
+//            'auth_key' => Yii::t('app', 'Published'),
+//            'access_token' => Yii::t('app', 'Title'),
+//            'Description' => Yii::t('app', 'Description'),
+//            'Content' => Yii::t('app', 'Content'),
+//            'Format' => Yii::t('app', 'Format'),
         ];
- **/
+
     }   
 
    // explicitly list every field, best used when you want to make sure the changes
@@ -146,6 +123,17 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
       ];
    }
 
+
+   public function rules()
+   {
+      return [
+         [['uuid'], 'string'],
+         [['is_active'], 'integer'],
+         [['created_at'], 'safe'],
+         [['updated_at'], 'safe'],         
+      ];
+   }
+   
 
    public static function findIdentity($id)
    {  

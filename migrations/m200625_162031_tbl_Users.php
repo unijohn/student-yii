@@ -90,6 +90,9 @@ class m200625_162031_tbl_Users extends Migration
    */
    public function safeUp()
    {
+      $STATUS_INACTIVE   = 0;
+      $STATUS_ACTIVE     = 1;
+   
       $authManager = $this->getAuthManager();
 
       $tableOptions = null;
@@ -104,66 +107,74 @@ class m200625_162031_tbl_Users extends Migration
       $created_at = $time;
       
       $this->createTable($this->getTempRoleTableName(), [
-         'id' => $this->primaryKey(),      
-         'item_name' => $this->string(64)->notNull(),
-         'temp_item_name' => $this->string(64)->notNull(),         
-         'user_id' => $this->string(64)->notNull(),
-         'created_at' => $this->integer()->notNull(),
-         'deleted_at' => $this->integer(),                 
+         'id'              => $this->primaryKey(),      
+         'item_name'       => $this->string(64)->notNull(),
+         'temp_item_name'  => $this->string(64)->notNull(),         
+         'user_id'         => $this->string(64)->notNull(),
+         'created_at'      => $this->integer()->notNull(),
+         'deleted_at'      => $this->integer(),                 
       ], $tableOptions);
       
       $this->createTable($this->getUserTableName(), [
-         'id' => $this->primaryKey(),
-         'uuid' => $this->string(16)->notNull(),
-         'name' => $this->string(48)->notNull(),
-         'auth_key' => $this->string(32)->notNull(),
+         'id'           => $this->primaryKey(),
+         'uuid'         => $this->string(16)->notNull(),
+         'name'         => $this->string(48)->notNull(),
+         'is_active'    => $this->integer()->notNull(),
+         'auth_key'     => $this->string(32)->notNull(),
          'access_token' => $this->string(32)->notNull(),
          
-         'created_at' => $this->datetime()->notNull(),
-         'updated_at' => $this->datetime(),
+         'created_at'   => $this->datetime()->notNull(),
+         'updated_at'   => $this->datetime(),
       ], $tableOptions);
       
-      $columns = [ 'uuid', 'name', 'auth_key', 'access_token', 'created_at'];
+      $columns = [ 'uuid', 'name', 'is_active', 'auth_key', 'access_token', 'created_at'];
 
       $rows = [
          [  
-            'ugadstdt', 'Undergraduate Student',       
+            'ugadstdt', 'Undergraduate Student', 
+            $STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48), 
             \Yii::$app->security->generateRandomString(32), 
             $created_at,
          ],
          [ 
             'gradstdt', 'Graduate Student',
+            $STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48), 
             \Yii::$app->security->generateRandomString(32), 
             $created_at,
          ],
          [ 
-            'ugadadvr', 'Undergraduate Advisor',       
+            'ugadadvr', 'Undergraduate Advisor',
+            $STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48), 
             \Yii::$app->security->generateRandomString(32), 
             $created_at,
          ],
          [ 
-            'ugadadmn', 'Undergraduate Administrator', 
+            'ugadadmn', 'Undergraduate Administrator',
+            $STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48), 
             \Yii::$app->security->generateRandomString(32), 
             $created_at,
          ],
          [ 
-            'gradadvr', 'Graduate Advisor',            
+            'gradadvr', 'Graduate Advisor',
+            $STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48), 
             \Yii::$app->security->generateRandomString(32), 
             $created_at,
          ],
          [ 
-            'gradadmn', 'Graduate Administrator',      
+            'gradadmn', 'Graduate Administrator',
+            $STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48), 
             \Yii::$app->security->generateRandomString(32), 
             $created_at,
          ],
          [ 
-            'adminusr', 'Administrative User',         
+            'adminusr', 'Administrative User',
+            $STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48), 
             \Yii::$app->security->generateRandomString(32), 
             $created_at,
