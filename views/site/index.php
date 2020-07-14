@@ -75,7 +75,7 @@ $auth = Yii::$app->authManager;
    ) 
    {
       print( "<li>" );
-      print( HTML::a( "User Management", Url::toRoute( ['framework/users', ], true) ) );
+      print( HTML::a( "User Management", Url::toRoute( ['users/index', ], true) ) );
       print( "</li>" );
 
       print( "<ul>" );
@@ -85,7 +85,7 @@ $auth = Yii::$app->authManager;
       if( $isAssignedRole )
       {
          print( "<li>" );
-         print( HTML::a( 'Restore Role', Url::toRoute( ['framework/resetrole', 'reset' => 'reset',], true) ) );
+         print( HTML::a( 'Restore Role', Url::toRoute( ['roles/reset', 'reset' => 'reset',], true) ) );
          print( "</li>" );      
       }
       else
@@ -95,7 +95,7 @@ $auth = Yii::$app->authManager;
             if( strpos( $role->description, "(10)" ) === false )
             {
                print( "<li>" );
-               print( HTML::a( $role->description, Url::toRoute( ['framework/testrole', 'role' => $role->name,], true) ) );
+               print( HTML::a( $role->description, Url::toRoute( ['roles/switch', 'role' => $role->name,], true) ) );
                print( "</li>" );
             }
          }

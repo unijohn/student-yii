@@ -4,18 +4,37 @@ namespace app\controllers;
 
 use Yii;
 
+
 use yii\data\ActiveDataProvider;
 use yii\data\SQLDataProvider;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
-use yii\helpers\Url;
+use yii\helpers\ArrayHelper;
+use yii\rbac\DbManager;
 use yii\web\Controller;
 use yii\web\Response;
 
+
 use app\models\User;
+use app\models\UserSearch;
 
 class UsersController extends Controller
 {
+   private $_isUserIdentityEmpty;
+
+   public function init()
+   {
+      parent::init();
+      
+      $this->_isUserIdentityEmpty = false;
+      
+      if( is_null( Yii::$app->user->identity ) )
+      {
+         $this->_isUserIdentityEmpty = true;
+      }
+   }   
+
+
     /**
      * {@inheritdoc}
      */
@@ -62,17 +81,68 @@ class UsersController extends Controller
     *
     * @return string
     */
-    
+
    public function actionIndex()
    {
+      $auth    = Yii::$app->authManager;
+      $request = Yii::$app->request;
+      
+      $data             = [];
+      $dataProvider     = [];
+
+      $userModel              = new User();
+      
+      /**
+       *  Quick fix for cookie timeout
+       **/
+      
+      if( $this->_isUserIdentityEmpty )
+      {
+         return $this->render('users', [
+            'data' => $data, 
+            'dataProvider' => $dataProvider,
+            'model'        => $userModel,
+         ]);   
+      } 
+
+      $userModel->uuid        = ArrayHelper::getValue($request->get(), 'User.uuid',      '');
+      $userModel->is_active   = ArrayHelper::getValue($request->get(), 'User.is_active', '-1');            
+
+//print_r($request->post() );
+//die();
+
       $count = Yii::$app->db->createCommand(
          'SELECT COUNT(*) FROM tbl_Users WHERE id >=:id ',
          [':id' => 1])->queryScalar();
       
+/**
+     
+      $sql  =  "SELECT  id, uuid, name, is_active, ";
+      $sql .=  "        datetime(created_at, 'unixepoch') as created_at, datetime(updated_at, 'unixepoch') as updated_at " ;
+      $sql .= "FROM tbl_Users WHERE id >=:id ";
+ **/
+       
+      $sql  = "SELECT  id, uuid, name, is_active, created_at, updated_at " ;
+      $sql .= "FROM tbl_Users WHERE id >=:id ";
+      
+      $params[':id'] = 1;
+
+      if( strlen($userModel->uuid) > 0 )
+      {
+         $sql .= "AND uuid LIKE :uuid ";
+         $params[':uuid'] = '%' . $userModel->uuid . '%';      
+      }
+      
+      if( $userModel->is_active > -1 && strlen($userModel->is_active) > 0 )
+      {
+         $sql .= "AND is_active =:is_active ";
+         $params[':is_active'] = $userModel->is_active;
+      }
+      
       $dataProvider = new SqlDataProvider ([
-         'sql' => 'SELECT * FROM tbl_Users WHERE id >=:id',
-         'params' => [':id' => 1],
-         'totalCount' => $count,
+         'sql'          => $sql,
+         'params'       => $params,
+         'totalCount'   => $count,
          'sort' => [
             'attributes' => [
                'uuid' => [
@@ -83,6 +153,12 @@ class UsersController extends Controller
                   'default' => SORT_ASC,
                   'label' => 'Name',
                ],
+/**               
+               'is_active' => [
+                  'default' => SORT_ASC,
+                  'label' => 'Status',
+               ],
+ **/               
                'created_at',
                'updated_at',                              
             ],
@@ -90,41 +166,12 @@ class UsersController extends Controller
          'pagination' => [
             'pageSize' => 30,
          ],
-      ]);               
+      ]); 
 
-      return $this->render('index', ['dataProvider' => $dataProvider]);   
+      return $this->render('users', [
+            'data' => $data, 
+            'dataProvider' => $dataProvider,
+            'model'        => $userModel,
+      ]);      
    }
-
-   public function actionView()
-   {
-      $count = Yii::$app->db->createCommand(
-         'SELECT COUNT(*) FROM tbl_Users WHERE id >=:id ',
-         [':id' => 1])->queryScalar();
-      
-      $dataProvider = new SqlDataProvider ([
-         'sql' => 'SELECT * FROM tbl_Users WHERE id >=:id',
-         'params' => [':id' => 1],
-         'totalCount' => $count,
-         'sort' => [
-            'attributes' => [
-               'uuid' => [
-                  'default' => SORT_ASC,
-                  'label' => 'UUID',
-               ],
-               'name' => [
-                  'default' => SORT_ASC,
-                  'label' => 'Name',
-               ],
-               'created_at',
-               'updated_at',                              
-            ],
-         ],         
-         'pagination' => [
-            'pageSize' => 30,
-         ],
-      ]);               
-
-      return $this->render('view', ['dataProvider' => $dataProvider]);      
-   }   
-
 }
