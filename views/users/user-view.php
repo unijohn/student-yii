@@ -10,7 +10,8 @@
    
 
    $this->title = 'Framework | User | View | Update';
-   $this->params['breadcrumbs'][] = $this->title;
+   $this->params['breadcrumbs'][] = [ 'label' => $this->title, 'url' =>['index']];
+   
    
    $formatter = \Yii::$app->formatter;   
 ?>
