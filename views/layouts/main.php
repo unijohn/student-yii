@@ -49,12 +49,7 @@ AppAsset::register($this);
          $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
       }
       else
-      {
-         if( Yii::$app->user->identity->isAdministrator( Yii::$app->user->identity->getId() ) )
-         {
-            $menuItems[] = ['label' => 'Users', 'url' => ['/users/index']];
-         }   
-         
+      {  
          $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(
