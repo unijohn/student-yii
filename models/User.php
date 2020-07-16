@@ -12,6 +12,9 @@ use yii\web\IdentityInterface;
 use yii2tech\ar\position\PositionBehavior;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
+use app\models\AuthAssignment;
+use app\models\AuthItem;
+
 //class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
 class User extends ActiveRecord implements \yii\web\IdentityInterface
 {
@@ -23,14 +26,17 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
    public $access_token;
    public $created_at;
    public $updated_at;
-    
+
+
    private $_auth;
-   
+
+
    public function init()
    {
       parent::init();
       $this->_auth = \Yii::$app->getAuthManager();
    }   
+
 
    public static function tableName()
    {
@@ -148,6 +154,12 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
    }
    
 
+/**
+ *
+ *    \yii\web\IdentityInterface Section
+ *
+ **/   
+
    public static function findIdentity($id)
    {  
       $query_users = (new \yii\db\Query())
@@ -257,12 +269,24 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
         return true;
     }
 
+/**
+ *
+ *    Relationships & Model section
+ *
+ **/   
+
+   public function getRoles()
+   {
+      return $this->hasMany(AuthAssignment::className(), [ 'user_id' => 'id' ] );
+   }
+
 
 /**
  *
  *  This section handles role and/or user identity swapping for testing purposes
  *
  */
+
 
     /**
      * Ultimate permission checker to ensure (10) level access is available if that 
@@ -287,7 +311,8 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 
       return false;
    }
-   
+
+
     /**
      * Checker to determine if user is assigned a temporary role
      *
@@ -310,183 +335,4 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 
       return false;
    }   
-   
-
-/**
- *
- *  This section handles basic role checking to see if a user holds a particular role
- *  before determining if they have access to this system
- *
- */
-
-   public function isApprovalUser( $id )
-   {
-      $query_users = (new \yii\db\Query())
-         ->select([ 'u.id', 'u.uuid', 'u.name', 'u.access_token', 'u.created_at', 'u.updated_at' ])
-         ->from( 'tbl_Users u' )
-         ->innerJoin( 'junction_users_srcd u_srcd', 'u_srcd.users_id = u.id' )
-         ->innerJoin( 'junction_systems_roles_careerlevels_departments srcd', 'srcd.id = u_srcd.srcd_id' )
-         ->innerJoin( 'tbl_Roles ro', 'ro.id = srcd.roles_id' )                
-         ->where( 'u.id =:id AND (ro.name =:name OR ro.name OR' )
-            ->addParams( [':id' => $id, ':name' => 'Approval User'], )
-         ->limit(1);
-
-      foreach( $query_users->each() as $user_row )
-      {
-         $user = $user_row;
-         return $user;
-      }
-
-      return false;
-   }  
-
-
-   public function isSuperUser( $id )
-   {
-      $query_users = (new \yii\db\Query())
-         ->select([ 'u.id', 'u.uuid', 'u.name', 'u.access_token', 'u.created_at', 'u.updated_at' ])
-         ->from( 'tbl_Users u' )
-         ->innerJoin( 'junction_users_srcd u_srcd', 'u_srcd.users_id = u.id' )
-         ->innerJoin( 'junction_systems_roles_careerlevels_departments srcd', 'srcd.id = u_srcd.srcd_id' )
-         ->innerJoin( 'tbl_Roles ro', 'ro.id = srcd.roles_id' )                
-         ->where( 'u.id =:id AND ro.name =:name ' )
-            ->addParams( [':id' => $id, ':name' => 'Super User'], )
-         ->limit(1);  
-
-      foreach( $query_users->each() as $user_row )
-      {
-         $user = $user_row;
-         return $user;
-      }
-
-      return false;
-   }        
-
-
-   public function isAdministrator( $id )
-   {
-      $query_users = (new \yii\db\Query())
-         ->select([ 'a_a.item_name', 'a_a.user_id' ])
-         ->from( 'auth_assignment a_a' )
-         ->innerJoin( 'tbl_Users u', 'a_a.user_id = u.id' )
-         ->where( 'u.id =:id AND a_a.item_name =:name ' )
-            ->addParams( [':id' => $id, ':name' => 'Framework-Administrator-10'], )
-         ->limit(1);  
-
-      foreach( $query_users->each() as $user_row )
-      {
-         $user = $user_row;
-         return $user;
-      }
-
-      return false;
-   }    
-
-
-/**
- *
- *  This section handles feature permissions for quick, easy way to determine if a user can perform a particular function
- *  before determining if they have access to this system
- *
- */
-
-   public function canInsertById( $id )
-   {
-      $query_users = (new \yii\db\Query())
-         ->select([ 'u.id', 'u.uuid', 'u.name', 'u.access_token', 'u.created_at', 'u.updated_at' ])
-         ->from( 'tbl_Users u' )
-         ->innerJoin( 'junction_users_srcd u_srcd', 'u_srcd.users_id = u.id' )
-         ->innerJoin( 'junction_systems_roles_careerlevels_departments srcd', 'srcd.id = u_srcd.srcd_id' )
-         ->innerJoin( 'tbl_Roles ro', 'ro.id = srcd.roles_id' )                
-         ->where( 'u.id =:id AND ro.role & ( SELECT bit FROM tbl_Permissions WHERE name =:action )' )
-            ->addParams( [':id' => $id, ':action' => 'Insert'], )
-         ->limit(1);  
-   
-      foreach( $query_users->each() as $user_row )
-      {
-         $user = $user_row;
-         return $user;
-      }
-
-/**
-      $result[] = $query_users->sql;
-      $result[] = $query_users->params;
-      $result[] = $query_users->queryAll();
-
-      return $result;     
- **/
- 
-      return false;
-   }   
-   
-   public function canUpdateById( $id )
-   {
-      $query_users = (new \yii\db\Query())
-         ->select([ 'u.id', 'u.uuid', 'u.name', 'u.access_token', 'u.created_at', 'u.updated_at' ])
-         ->from( 'tbl_Users u' )
-         ->innerJoin( 'junction_users_srcd u_srcd', 'u_srcd.users_id = u.id' )
-         ->innerJoin( 'junction_systems_roles_careerlevels_departments srcd', 'srcd.id = u_srcd.srcd_id' )
-         ->innerJoin( 'tbl_Roles ro', 'ro.id = srcd.roles_id' )                
-         ->where( 'u.id =:id AND ro.role & ( SELECT bit FROM tbl_Permissions WHERE name =:action )' )
-            ->addParams( [':id' => $id, ':action' => 'Update'], )
-         ->limit(1);  
-   
-      foreach( $query_users->each() as $user_row )
-      {
-         $user = $user_row;
-         return $user;
-      }
-
-/**
-      $result[] = $query_users->sql;
-      $result[] = $query_users->params;
-      $result[] = $query_users->queryAll();
-
-      return $result;     
- **/
- 
-      return false;
-   }   
-   
-   public function canSoftDeleteById( $id )
-   {
-      $query_users = (new \yii\db\Query())
-         ->select([ 'u.id', 'u.uuid', 'u.name', 'u.access_token', 'u.created_at', 'u.updated_at' ])
-         ->from( 'tbl_Users u' )
-         ->innerJoin( 'junction_users_srcd u_srcd', 'u_srcd.users_id = u.id' )
-         ->innerJoin( 'junction_systems_roles_careerlevels_departments srcd', 'srcd.id = u_srcd.srcd_id' )
-         ->innerJoin( 'tbl_Roles ro', 'ro.id = srcd.roles_id' )                
-         ->where( 'u.id =:id AND ro.role & ( SELECT bit FROM tbl_Permissions WHERE name =:action )' )
-            ->addParams( [':id' => $id, ':action' => 'Flag-Delete'], )
-         ->limit(1);  
-   
-      foreach( $query_users->each() as $user_row )
-      {
-         $user = $user_row;
-         return $user;
-      }
- 
-      return false;
-   }  
-
-   public function canHardDeleteById( $id )
-   {
-      $query_users = (new \yii\db\Query())
-         ->select([ 'u.id', 'u.uuid', 'u.name', 'u.access_token', 'u.created_at', 'u.updated_at' ])
-         ->from( 'tbl_Users u' )
-         ->innerJoin( 'junction_users_srcd u_srcd', 'u_srcd.users_id = u.id' )
-         ->innerJoin( 'junction_systems_roles_careerlevels_departments srcd', 'srcd.id = u_srcd.srcd_id' )
-         ->innerJoin( 'tbl_Roles ro', 'ro.id = srcd.roles_id' )                
-         ->where( 'u.id =:id AND ro.role & ( SELECT bit FROM tbl_Permissions WHERE name =:action )' )
-            ->addParams( [':id' => $id, ':action' => 'Full-Delete'], )
-         ->limit(1);  
-   
-      foreach( $query_users->each() as $user_row )
-      {
-         $user = $user_row;
-         return $user;
-      }
-
-      return false;
-   }
 }
