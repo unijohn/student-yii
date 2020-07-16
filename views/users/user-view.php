@@ -31,32 +31,29 @@
    print( "<P> updated_at: " . $formatter->asDate( $model->updated_at, 'MM-dd-yyyy HH:mm:ss' ) . "</p>" );    
  ?>
  
-   <h2>Assigned Roles</h2>
+   <h3>Drop User Roles</h3>
+   <div id='users-roles-add-form'>      
+      <?= $this->render('_users-roles-drop', ['data' => $data, 'model' => $model->roles]); ?>      
+   </div>  
    
-<?php
-    
-   foreach( $model->roles as $role )
-      print( "<P>" . $role->item_name . "</p>" );
-   
+<?php   
+/**
    print( "<pre>" );
    foreach( $allRoles as $role )
       print( "<p>" . $role->name. "</p>" );
    print( "</pre>" );
-         
-
-/*   
+           
    print( "<pre>" );
    print_r( $allRoles );     
    print( "</pre>" );
- */
+ **/
  
 ?>
 
-      <h3>[Inside] _users-role-add</h3>
+      <h3>Add User Roles</h3>
       <div id='users-roles-add-form'>      
-         <?= $this->render('_users-roles-add', ['model' => $allRoles]); ?>      
+         <?= $this->render('_users-roles-add', ['data' => $data, 'model' => $allRoles]); ?>      
       </div>
-      <h3>[Eo] _users-role-add</h3>
 
       <code><?= __FILE__ ?></code>
          

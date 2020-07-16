@@ -23,11 +23,10 @@
          This is the <?php print( $this->title ); ?> page. You may modify the following file to customize its content:
       </p>
 
-      <h2>[Inside]_users-search</h2>
+      <h2>Find Users</h2>
       <div id=users-search-form'>      
 <?= $this->render('_users-search', ['model' => $model]); ?>      
       </div>
-      <h2>[Eo]_users-search</h2>
     
       <div class="body-content">
          <div class="row">
