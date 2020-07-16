@@ -15,8 +15,11 @@ use yii\web\Controller;
 use yii\web\Response;
 
 
+use app\models\AuthAssignment;
+use app\models\AuthItem;
 use app\models\User;
 use app\models\UserSearch;
+
 
 class UsersController extends Controller
 {
@@ -185,7 +188,9 @@ class UsersController extends Controller
       $data             = [];
       $dataProvider     = [];
 
-      $userModel              = new User();
+      $userModel        = new User();
+      $roleModel        = new AuthAssignment();
+      $authItemModel    = new AuthItem();
       
       /**
        *  Quick fix for cookie timeout
@@ -197,14 +202,26 @@ class UsersController extends Controller
             'data' => $data, 
             'dataProvider' => $dataProvider,
             'model'        => $userModel,
+            'roles'        => $roleModel,
+            'allRoles'     => $authItemModel,
          ]);   
       } 
+
 
       $user = User::find()
          ->where(['uuid' => $request->get('uuid', '')])
          ->limit(1)->one();
-         
 
+      $roles      = AuthAssignment::find();
+
+      
+      $assignedRoles = [];
+      foreach( $user->roles as $role )
+      {
+         $assignedRoles[] = $role->item_name;
+      }
+      
+      $allRoles   = AuthItem::findbyUnassignedRoles($assignedRoles);      
          
 /**
       print( "<h1>What</h1><pre>" );   
@@ -217,6 +234,8 @@ class UsersController extends Controller
             'data' => $data, 
             'dataProvider' => $dataProvider,
             'model'        => $user,
+            'roles'        => $roles,
+            'allRoles'     => $allRoles,
       ]);      
    }   
 }
