@@ -101,8 +101,9 @@ class UsersController extends Controller
        *  Quick fix for cookie timeout
        **/
 
-      $userModel->uuid        = ArrayHelper::getValue($this->_request->get(), 'User.uuid',      '');
-      $userModel->is_active   = ArrayHelper::getValue($this->_request->get(), 'User.is_active', '-1');
+      $userModel->uuid           = ArrayHelper::getValue($this->_request->get(), 'User.uuid',      '');
+      $userModel->is_active      = ArrayHelper::getValue($this->_request->get(), 'User.is_active', '-1');
+      $data['paginationCount']   = $this->_request->get( 'pagination_count', 10 );
 
       $count = Yii::$app->db->createCommand(
          'SELECT COUNT(*) FROM tbl_Users WHERE id >=:id ',
@@ -157,12 +158,12 @@ class UsersController extends Controller
             ],
          ],         
          'pagination' => [
-            'pageSize' => 30,
+            'pageSize' => $data['paginationCount'],
          ],
       ]); 
 
       return $this->render('users-listing', [
-            'data' => $data, 
+            'data'         => $data, 
             'dataProvider' => $dataProvider,
             'model'        => $userModel,
       ]);      
