@@ -22,13 +22,33 @@
       <p>
          This is the <?php print( $this->title ); ?> page. You may modify the following file to customize its content:
       </p>
-
-      <h2>Find Users</h2>
-      <div id=users-search-form'>      
-<?= $this->render('_users-search', ['model' => $model]); ?>      
-      </div>
     
       <div class="body-content">
+         <div class="row">      
+            <div class="col-lg-4">
+               <h2>Find Users</h2>
+               <div id='users-search-form'>      
+                  <?= $this->render('_users-search', ['model' => $model, 'pagination_count' => $data['paginationCount'] ]); ?>      
+               </div>
+            </div>
+            <div class="col-lg-4">
+               <h2>Add Users</h2>
+               <div id='users-add-form'>      
+                  &nbsp;
+               </div>
+            </div>
+            <div class="col-lg-4">
+               <h2>[Users TBD]</h2>
+               <div id='users-tbd-form'>      
+                  &nbsp;
+               </div>
+            </div>
+         </div>            
+
+         <div class="row">
+            &nbsp;
+         </div>      
+      
          <div class="row">
          
 <?=
