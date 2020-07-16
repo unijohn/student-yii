@@ -178,7 +178,35 @@ class m200625_162031_tbl_Users extends Migration
             \Yii::$app->security->generateRandomString(48), 
             \Yii::$app->security->generateRandomString(32), 
             $created_at,
-         ],      
+         ],
+         [ 
+            'gridview_01', 'Gridview_01',
+            $STATUS_ACTIVE,
+            \Yii::$app->security->generateRandomString(48), 
+            \Yii::$app->security->generateRandomString(32), 
+            $created_at,
+         ],    
+         [ 
+            'gridview_02', 'Gridview_02',
+            $STATUS_ACTIVE,
+            \Yii::$app->security->generateRandomString(48), 
+            \Yii::$app->security->generateRandomString(32), 
+            $created_at,
+         ],    
+         [ 
+            'gridview_03', 'Gridview_03',
+            $STATUS_ACTIVE,
+            \Yii::$app->security->generateRandomString(48), 
+            \Yii::$app->security->generateRandomString(32), 
+            $created_at,
+         ], 
+         [ 
+            'gridview_04', 'Gridview_04',
+            $STATUS_ACTIVE,
+            \Yii::$app->security->generateRandomString(48), 
+            \Yii::$app->security->generateRandomString(32), 
+            $created_at,
+         ],                                           
       ];
       
       $this->batchInsert( $this->getUserTableName(), $columns, $rows );        
