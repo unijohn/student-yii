@@ -7,13 +7,11 @@ use yii\widgets\ActiveForm;
 /* @var $model app\models\PostSearch */
 /* @var $form yii\widgets\ActiveForm */
 
-
    $item_name = [];
-   
    foreach( $model as $role )
    {
-//      print_r( $role);
-      $item_name[$role['name']] = $role['description']; 
+//      print_r($role );
+      $item_name[$role->item_name] = $role->item_name; 
    }  
 ?>
 
@@ -22,10 +20,10 @@ use yii\widgets\ActiveForm;
          'action' => ['save'],
          'method' => 'post',
       ]); ?>
-   
-   <div class="form-group field-authitem-name">
-      <?= Html::dropDownList('authitem[name]', null, $item_name, [
-            'id'     => 'authitem-name',
+
+   <div class="form-group field-authassignment-item_name">
+      <?= Html::dropDownList('authassignment[item_name]', null, $item_name, [
+            'id'     => 'authassignment-item_name',
             'prompt' => 'Select Role', 
             'class'  => 'form-control'
          ]) 
@@ -33,10 +31,10 @@ use yii\widgets\ActiveForm;
       <div class="help-block"></div>
    </div>
 
-   <div class="form-group">      
-      <?= Html::submitButton('Add Role',  ['class' => 'btn btn-primary']) ?>
-      <?= Html::hiddenInput('addRole',    'addRole') ?>
-      <?= Html::hiddenInput('uuid',       $data['uuid']) ?>          
+   <div class="form-group">
+      <?= Html::submitButton('Drop Role', ['class' => 'btn btn-primary']) ?>
+      <?= Html::hiddenInput('dropRole',   'dropRole') ?>
+      <?= Html::hiddenInput('uuid',       $data['uuid']) ?>      
    </div>
    
    <?php ActiveForm::end(); ?>
