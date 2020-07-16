@@ -10,7 +10,11 @@
    
 
    $this->title = 'Framework | Users | Index';
-   $this->params['breadcrumbs'][] = $this->title;
+   $this->params['breadcrumbs'][] = $this->title;  
+   
+   /*
+    * Revisit issue where cookie times out
+    */
 ?>
 
    <div class="site-about">
@@ -19,39 +23,41 @@
          This is the <?php print( $this->title ); ?> page. You may modify the following file to customize its content:
       </p>
 
+      <h2>[Inside]_users-search</h2>
       <div id=users-search-form'>      
 <?= $this->render('_users-search', ['model' => $model]); ?>      
       </div>
+      <h2>[Eo]_users-search</h2>
     
       <div class="body-content">
          <div class="row">
          
-<?= 
-GridView::widget([
-    'dataProvider'   => $dataProvider,
-    'columns' => [
-//      [ 'class' => 'yii\grid\CheckboxColumn' ],
-      [
-         'attribute' => 'id',
-         'label'     => 'ID',
-      ],
-      [
-         'attribute' => 'uuid',
-         'label' => 'UUID',
-         'format' => 'raw',
-         'value' => function( $data ){
-            return HTML::a( $data['uuid'], Url::toRoute( ['users/view', 'uuid' => $data['uuid'] ], true) );
-         },
-      ],
-      'name',
-      
-      'created_at:datetime',
-      'updated_at:datetime',
-    
-    ],
-//    'showFooter' => false,
-//    'placeFooterAfterBody' => false,
-]); 
+<?=
+   GridView::widget([
+       'dataProvider'   => $dataProvider,
+       'columns' => [
+//         [ 'class' => 'yii\grid\CheckboxColumn' ],
+         [
+            'attribute' => 'id',
+            'label'     => 'ID',
+         ],
+         [
+            'attribute' => 'uuid',
+            'label' => 'UUID',
+            'format' => 'raw',
+            'value' => function( $data ){
+               return HTML::a( $data['uuid'], Url::toRoute( ['users/view', 'uuid' => $data['uuid'] ], true) );
+            },
+         ],
+         'name',
+         
+         'created_at:datetime',
+         'updated_at:datetime',
+       
+       ],
+//       'showFooter' => false,
+//       'placeFooterAfterBody' => false,
+   ]); 
 ?>  
          </div>       
 
