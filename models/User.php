@@ -149,7 +149,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
  **/
    
       return [
-         [['uuid', 'name', 'is_active', 'auth_key', 'access_token', 'created_at'], 'required' ],
+//         [[ 'name', 'is_active', 'auth_key', 'access_token', 'created_at'], 'required' ],
       ];
    }
    
