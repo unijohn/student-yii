@@ -34,7 +34,7 @@
             <div class="col-lg-4">
                <h2>Add Users</h2>
                <div id='users-add-form'>      
-                  &nbsp;
+                  <?= $this->render('_users-view-add', ['model' => $model, ]); ?>  
                </div>
             </div>
             <div class="col-lg-4">

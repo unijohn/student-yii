@@ -229,21 +229,58 @@ class UsersController extends Controller
     */
    public function actionAdd()
    {
-      $data             = [];
-      $dataProvider     = [];
+      $this->_userModel->uuid       = ArrayHelper::getValue($this->_request->post(), 'User.uuid', '' );
+      $this->_userModel->name       = $this->_userModel->uuid;
+      $this->_userModel->is_active  = 1;      
+      $this->_userModel->created_at = time();
+            
+      $this->_userModel->generateAuthKey();
+      $this->_userModel->generateAccessToken();
+      
+      $this->_data['addUser']          = ArrayHelper::getValue($this->_request->post(), 'User.addUser',     '' );
+      $this->_data['lookupUser']       = ArrayHelper::getValue($this->_request->post(), 'User.lookupUser',  '' );
+      $this->_data['paginationCount']  = $this->_request->get( 'pagination_count', 10 );
+      $this->_data['errors']           = [];   
 
-      $userModel        = new User();
-      $roleModel        = new AuthAssignment();
-      $authItemModel    = new AuthItem();
-
+      print( "<pre>" );
       print_r( $this->_request->post() );
+      print_r( $this->_data );      
+      
+      print( "is_not_empty: " . !empty( $this->_data['addUser'] ) . PHP_EOL );
+      print( "is_set: "       . isset(  $this->_data['addUser'] ) . PHP_EOL );      
+      
+      if( isset($this->_data['addUser'] ) && !empty( $this->_data['addUser'] ) )
+      {
+         $this->_data['saveUser'] = false;
+      
+         if( isset($this->_userModel->uuid ) && !empty( $this->_userModel->uuid ) )
+         {
+            $this->_data['saveUser'] = $this->_userModel->save();
+         }
+         else
+         {
+            $this->_data['errors']['uuid'] = "is null";
+         }
+      }
 
+      if( $this->_data['saveUser'] )
+      {
+         Yii::$app->response->redirect(['users/index']);
+      }
+      else
+      {
+         print( "Save failed:"  );
+         print_r( $this->_data['errors'] );
+         die();
+      }
 
+/**
       return $this->render('users-listing', [
-            'data'         => $data, 
-            'dataProvider' => $dataProvider,
-            'model'        => $userModel,
+            'data'         => $this->_data, 
+            'dataProvider' => $this->_dataProvider,
+            'model'        => $this->_userModel,
       ]);   
+ **/
    }
    
    /**

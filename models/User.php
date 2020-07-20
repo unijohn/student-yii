@@ -9,7 +9,7 @@ use yii\db\ActiveRecord;
 use yii\rbac\DbManager;
 use yii\web\IdentityInterface;
 
-use yii2tech\ar\position\PositionBehavior;
+//use yii2tech\ar\position\PositionBehavior;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 use app\models\AuthAssignment;
@@ -18,6 +18,10 @@ use app\models\AuthItem;
 //class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
 class User extends ActiveRecord implements \yii\web\IdentityInterface
 {
+/**
+   Using these declarations breaks the ActiveRecord functionality 
+   I have no idea why as of right now.
+
    public $id;
    public $uuid;
    public $name;
@@ -26,10 +30,11 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
    public $access_token;
    public $created_at;
    public $updated_at;
-
+ **/
 
    private $_auth;
 
+   const SCENARIO_ADD_USER = 'addUser';
 
    public function init()
    {
@@ -64,8 +69,8 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
  
         return [
 //            'id' => Yii::t('app', 'ID'),
-            'uuid'         => Yii::t('app', 'UUID'),
-            '$is_active'   => Yii::t('app', 'Account Status'),
+            'uuid'      => Yii::t('app', 'UUID'),
+            'is_active' => Yii::t('app', 'Account Status'),
             
 //            'auth_key' => Yii::t('app', 'Published'),
 //            'access_token' => Yii::t('app', 'Title'),
@@ -74,7 +79,8 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 //            'Format' => Yii::t('app', 'Format'),
         ];
 
-    }   
+    }
+
 
    // explicitly list every field, best used when you want to make sure the changes
    // in your DB table or model attributes do not cause your field changes (to keep API backward compatibility).
@@ -93,6 +99,10 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
  **/
    }
 
+
+    /**
+     * @inheritdoc
+     */
    public function behaviors()
    {
       return [
@@ -104,7 +114,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
                ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
             ],
             // if you're using datetime instead of UNIX timestamp:
-            'value' => date("Y-m-d H:i:s"),
+            'value' => time(),
          ],
          
          'softDeleteBehavior' => [
@@ -117,49 +127,97 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
             // mutate native `delete()` method
             'replaceRegularDelete' => false
          ],         
-         
+/**         
          'positionBehavior' => [
             'class' => PositionBehavior::className(),
             'positionAttribute' => 'position',
-
-/**
              'groupAttributes' => 
              [
                  'categoryId' // multiple lists varying by 'categoryId'
              ],            
- **/
-         ],         
+         ],
+ **/         
       ];
    }
 
 
+    /**
+     * @inheritdoc
+     */
+   public function scenarios()
+   {
+      $scenarios = parent::scenarios();
+      $scenarios[self::SCENARIO_ADD_USER] =[ 
+         'uuid', 'name', 'is_active', 'auth_key', 'access_token', 'created_at' 
+      ];
+      
+      return $scenarios;
+   }   
+
+
+    /**
+     * @inheritdoc
+     */
    public function rules()
    {
-   
-/**   
-         'id'           => $this->primaryKey(),
-         'uuid'         => $this->string(16)->notNull(),
-         'name'         => $this->string(48)->notNull(),
-         'is_active'    => $this->integer()->notNull(),
-         'auth_key'     => $this->string(32)->notNull(),
-         'access_token' => $this->string(32)->notNull(),
-         
-         'created_at'   => $this->datetime()->notNull(),
-         'updated_at'   => $this->datetime(),    
- **/
-   
       return [
-//         [[ 'name', 'is_active', 'auth_key', 'access_token', 'created_at'], 'required' ],
+         [ 'uuid', 'string', 'min' => 2, 'max' => 16 ],
+         [ 'uuid', 'unique' ],
+         [ 'uuid', 'default', 'value' => null ],
+         
+         [ 'name', 'string', 'min' => 2, 'max' => 48 ],
+
+         [ 'is_active', 'integer'  ],
+
+         [['auth_key', 'access_token', 'created_at'], 'required' ],
       ];
    }
-   
+
 
 /**
  *
  *    \yii\web\IdentityInterface Section
  *
- **/   
+ **/
+ 
+    /**
+     * @inheritdoc
+     */ 
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) 
+        {
+            if ($this->isNewRecord) 
+            {
 
+            }
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
+     * Generates "remember me" authentication key
+     */
+    public function generateAuthKey()
+    {
+        $this->auth_key = Yii::$app->security->generateRandomString(48);
+    }
+
+
+    /**
+     * Generates "remember me" authentication key
+     */
+    public function generateAccessToken()
+    {
+        $this->access_token = Yii::$app->security->generateRandomString(32);
+    }
+
+
+    /**
+     * @inheritdoc
+     */
    public static function findIdentity($id)
    {  
       $query_users = (new \yii\db\Query())
