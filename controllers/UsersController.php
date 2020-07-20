@@ -24,7 +24,13 @@ use app\models\UserSearch;
 class UsersController extends Controller
 {
    private $_auth;
+   private $_authItemModel;
+   private $_data;
+   private $_dataProvider;
    private $_request;
+   private $_roleModel;
+   private $_userModel;
+   
 
    public function init()
    {
@@ -40,7 +46,14 @@ class UsersController extends Controller
       }
       
       $this->_auth      = Yii::$app->authManager;
-      $this->_request   = Yii::$app->request;      
+      $this->_request   = Yii::$app->request;  
+      
+      $this->_data             = [];
+      $this->_dataProvider     = [];
+
+      $this->_userModel        = new User();
+      $this->_roleModel        = new AuthAssignment();
+      $this->_authItemModel    = new AuthItem();
    }   
 
 
@@ -92,18 +105,18 @@ class UsersController extends Controller
     */
    public function actionIndex()
    {      
-      $data             = [];
-      $dataProvider     = [];
+//      $data             = [];
+//      $dataProvider     = [];
 
-      $userModel        = new User();
+//      $userModel        = new User();
       
       /**
        *  Quick fix for cookie timeout
        **/
 
-      $userModel->uuid           = ArrayHelper::getValue($this->_request->get(), 'User.uuid',      '');
-      $userModel->is_active      = ArrayHelper::getValue($this->_request->get(), 'User.is_active', '-1');
-      $data['paginationCount']   = $this->_request->get( 'pagination_count', 10 );
+      $this->_userModel->uuid           = ArrayHelper::getValue($this->_request->get(), 'User.uuid',      '');
+      $this->_userModel->is_active      = ArrayHelper::getValue($this->_request->get(), 'User.is_active', '-1');
+      $this->_data['paginationCount']   = $this->_request->get( 'pagination_count', 10 );
 
       $count = Yii::$app->db->createCommand(
          'SELECT COUNT(*) FROM tbl_Users WHERE id >=:id ',
@@ -121,19 +134,19 @@ class UsersController extends Controller
       
       $params[':id'] = 1;
 
-      if( strlen($userModel->uuid) > 0 )
+      if( strlen($this->_userModel->uuid) > 0 )
       {
          $sql .= "AND uuid LIKE :uuid ";
-         $params[':uuid'] = '%' . $userModel->uuid . '%';      
+         $params[':uuid'] = '%' . $this->_userModel->uuid . '%';      
       }
       
-      if( $userModel->is_active > -1 && strlen($userModel->is_active) > 0 )
+      if( $this->_userModel->is_active > -1 && strlen($this->_userModel->is_active) > 0 )
       {
          $sql .= "AND is_active =:is_active ";
-         $params[':is_active'] = $userModel->is_active;
+         $params[':is_active'] = $this->_userModel->is_active;
       }
       
-      $dataProvider = new SqlDataProvider ([
+      $this->_dataProvider = new SqlDataProvider ([
          'sql'          => $sql,
          'params'       => $params,
          'totalCount'   => $count,
@@ -158,14 +171,14 @@ class UsersController extends Controller
             ],
          ],         
          'pagination' => [
-            'pageSize' => $data['paginationCount'],
+            'pageSize' => $this->_data['paginationCount'],
          ],
       ]); 
 
       return $this->render('users-listing', [
-            'data'         => $data, 
-            'dataProvider' => $dataProvider,
-            'model'        => $userModel,
+            'data'         => $this->_data, 
+            'dataProvider' => $this->_dataProvider,
+            'model'        => $this->_userModel,
       ]);      
    }
    
@@ -177,29 +190,21 @@ class UsersController extends Controller
     */
    public function actionView()
    {  
-      $data             = [];
-      $dataProvider     = [];
+      $this->_data['uuid']     = $this->_request->get('uuid', '');
 
-      $userModel        = new User();
-      $roleModel        = new AuthAssignment();
-      $authItemModel    = new AuthItem();
-      
-
-      $data['uuid']     = $this->_request->get('uuid', '');
-
-      $userModel = User::find()
-         ->where(['uuid' => $data['uuid'] ])
+      $this->_userModel = User::find()
+         ->where(['uuid' => $this->_data['uuid'] ])
          ->limit(1)->one();
 
-      $roleModel  = AuthAssignment::find();
+      $this->_roleModel  = AuthAssignment::find();
       
       $assignedRoles = [];
-      foreach( $userModel->roles as $role )
+      foreach( $this->_userModel->roles as $role )
       {
          $assignedRoles[] = $role->item_name;
       }
       
-      $authItemModel   = AuthItem::findbyUnassignedRoles($assignedRoles);      
+      $this->_authItemModel   = AuthItem::findbyUnassignedRoles($assignedRoles);      
          
 /**
       print( "<h1>What</h1><pre>" );   
@@ -209,14 +214,37 @@ class UsersController extends Controller
  **/
 
       return $this->render('user-view', [
-            'data' => $data, 
-            'dataProvider' => $dataProvider,
-            'model'        => $userModel,
-            'roles'        => $roleModel,
-            'allRoles'     => $authItemModel,
+            'data'         => $this->_data, 
+            'dataProvider' => $this->_dataProvider,
+            'model'        => $this->_userModel,
+            'roles'        => $this->_roleModel,
+            'allRoles'     => $this->_authItemModel,
       ]);      
    }
-   
+
+   /**
+    * Adding new User and Role information
+    *
+    * @return (TBD)
+    */
+   public function actionAdd()
+   {
+      $data             = [];
+      $dataProvider     = [];
+
+      $userModel        = new User();
+      $roleModel        = new AuthAssignment();
+      $authItemModel    = new AuthItem();
+
+      print_r( $this->_request->post() );
+
+
+      return $this->render('users-listing', [
+            'data'         => $data, 
+            'dataProvider' => $dataProvider,
+            'model'        => $userModel,
+      ]);   
+   }
    
    /**
     * Saving changes to User and Role information
@@ -225,58 +253,50 @@ class UsersController extends Controller
     */
    public function actionSave()
    {  
-      $data             = [];
-      $dataProvider     = [];
-
-      $userModel        = new User();
-      $roleModel        = new AuthAssignment();
-      $authItemModel    = new AuthItem();
-
-      $data['uuid']           = $this->_request->post('uuid',     '' );
-      $data['addRole']        = $this->_request->post('addRole',  '' );
-      $data['dropRole']       = $this->_request->post('dropRole', '' );
-      $data['authitem']       = $this->_request->post('authitem', '' );
-      $data['authassignment'] = $this->_request->post('authassignment', '' );      
-      
+      $this->_data['uuid']           = $this->_request->post('uuid',     '' );
+      $this->_data['addRole']        = $this->_request->post('addRole',  '' );
+      $this->_data['dropRole']       = $this->_request->post('dropRole', '' );
+      $this->_data['authitem']       = $this->_request->post('authitem', '' );
+      $this->_data['authassignment'] = $this->_request->post('authassignment', '' );      
       
       //$this->_auth->assign( $auth->getRole('Academic-Advisor-Graduate'),       5 ); 
 
       print_r( $this->_request->post() );
 
-      $userModel = User::find()
-         ->where(['uuid' => $data['uuid'] ])
+      $this->_userModel = User::find()
+         ->where(['uuid' => $this->_data['uuid'] ])
          ->limit(1)->one();
 
-      print( $userModel->id . PHP_EOL );
+      print( $this->_userModel->id . PHP_EOL );
 
-      if( strlen( $data['addRole'] ) > 0 )
+      if( strlen( $this->_data['addRole'] ) > 0 )
       {
          print( "addRole > 0" );
-         $this->_auth->assign( $this->_auth->getRole($data['authitem']['name']), $userModel->id ); 
+         $this->_auth->assign( $this->_auth->getRole($this->_data['authitem']['name']), $this->_userModel->id ); 
       }
 
-      if( strlen( $data['dropRole'] ) > 0 )
+      if( strlen( $this->_data['dropRole'] ) > 0 )
       {
          print( "dropRole > 0" );
-         $this->_auth->revoke ( $this->_auth->getRole($data['authassignment']['item_name']), $userModel->id ); 
+         $this->_auth->revoke ( $this->_auth->getRole($this->_data['authassignment']['item_name']), $this->_userModel->id ); 
       }
 
       $roleModel  = AuthAssignment::find();
       
       $assignedRoles = [];
-      foreach( $userModel->roles as $role )
+      foreach( $this->_userModel->roles as $role )
       {
          $assignedRoles[] = $role->item_name;
       }
       
-      $authItemModel   = AuthItem::findbyUnassignedRoles($assignedRoles);      
+      $this->_authItemModel   = AuthItem::findbyUnassignedRoles($assignedRoles);      
 
       return $this->render('user-view', [
-         'data' => $data, 
-         'dataProvider' => $dataProvider,
-         'model'        => $userModel,
-         'roles'        => $roleModel,
-         'allRoles'     => $authItemModel,
+         'data'         => $this->_data, 
+         'dataProvider' => $this->_dataProvider,
+         'model'        => $this->_userModel,
+         'roles'        => $this->_roleModel,
+         'allRoles'     => $this->_authItemModel,
       ]);
    }
 }
