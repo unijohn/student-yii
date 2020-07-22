@@ -13,6 +13,8 @@ use yii\web\Controller;
 use yii\web\Response;
 
 
+use app\models\AuthAssignment;
+use app\models\AuthItem;
 use app\models\User;
 use app\models\UserSearch;
 use app\models\TempAuthAssignment;
@@ -20,18 +22,51 @@ use app\models\TempAuthAssignment;
 
 class RolesController extends Controller
 {
-   private $_isUserIdentityEmpty;
+   private $_auth;
+   private $_authItemModel;
+   private $_data;
+   private $_dataProvider;
+   private $_newRole;
+   private $_request;
+   private $_reset;
+   private $_roleModel;
+   private $_user;
+   private $_userId;
+   private $_userModel;
+   
 
    public function init()
    {
       parent::init();
       
-      $this->_isUserIdentityEmpty = false;
+      /**
+       *  Quick fix for cookie timeout
+       **/      
       
-      if( is_null( Yii::$app->user->identity ) )
+      $this->_user      = Yii::$app->user;      
+      
+      if( is_null( $this->_user->identity ) )
       {
-         $this->_isUserIdentityEmpty = true;
+         /* /site/index works but trying to learn named routes syntax */
+         return $this->redirect(['/site/index']);
       }
+      
+      $this->_auth      = Yii::$app->authManager;
+      $this->_request   = Yii::$app->request;  
+      
+      $this->_data             = [];
+
+      $this->_userModel        = new User();
+      $this->_roleModel        = new AuthAssignment();
+      $this->_authItemModel    = new AuthItem();
+
+      /**
+       *    Capturing the possible get() variables used in this controller
+       **/    
+
+      $this->_newRole   = $this->_request->get( 'role', '' );
+      $this->_reset     = $this->_request->get( 'reset', 'missing' );      
+      $this->_userId    = $this->_user->identity->getId(); 
    }   
 
 
@@ -69,6 +104,7 @@ class RolesController extends Controller
         ];
     }
 
+
     /**
      * Displays homepage.
      *
@@ -78,33 +114,16 @@ class RolesController extends Controller
     {
         return $this->render('index');
     }
-    
+
+
    /**
    * [Documentation needed]
    *
    * @return [value]
    */
    public function actionSwitch()
-   {
-      $auth    = Yii::$app->authManager;
-      $request = Yii::$app->request;
-      
-      $data = [];
-
-      /**
-       *  Quick fix for cookie timeout
-       **/
-      
-      if( $this->_isUserIdentityEmpty )
-      {
-         return $this->render('testRole', [
-            'data' => $data,
-         ]);   
-      }      
-      
-      $userId  = Yii::$app->user->identity->getId();
-      $newRole = $request->get( 'role', 'missing' );
-   
+   {            
+  
 /*      
       if( !empty( $userId ) && isset( $userId ) )
       {      
@@ -118,22 +137,17 @@ class RolesController extends Controller
  */
  
       $currentRole = new TempAuthAssignment();
-
- /**
-      print_r( $newRole . PHP_EOL );
-      print_r( "atR(): " . $currentRole->assignTemporaryRole( $newRole ) );
-      die();  
-  **/
       
-      if( !empty( $userId ) && isset( $userId ) )
+      if( !empty( $this->_userId ) && isset( $this->_userId ) &&
+          !empty( $this->_newRole ) && isset( $this->_newRole ) )
       { 
-         $isStored = $currentRole->storePermanentRoles( $userId, $request->get('role') );      
+         $isStored = $currentRole->storePermanentRoles( $this->_userId, $this->_newRole );      
       
          if( $isStored )
          {
-            $currentRoles = $auth->getRolesByUser($userId);
+            $currentRoles = $this->_auth->getRolesByUser( $this->_userId );
             
-            $currentRole->revokeRoles( $userId );
+            $currentRole->revokeRoles( $this->_userId );
          
             foreach( $currentRoles as $key => $roles )
             {
@@ -143,32 +157,69 @@ class RolesController extends Controller
                ];
             }
 
-            if( $currentRole->assignTemporaryRole( $newRole ) )
+            if( $currentRole->assignTemporaryRole( $this->_newRole ) )
             {            
-               $data['newRole'][$newRole] = [
+               $data['newRole'][$this->_newRole] = [
                   'type'            => 1,
-                  'description'     => $newRole,
+                  'description'     => $this->_newRole,
                ];
+               
+               $this->_data['success']['Switch Role'] = [
+                  'value'        => "was successful",
+                  'bValue'       => true,
+                  'htmlTag'      => 'h4',
+                  'class'        => 'alert alert-success',
+                  'type'         => 1,
+                  'description'  => $this->_newRole,      
+               ];
+               
+               $this->_data['success'][$this->_newRole] = [
+                  'value'     => "is now the role for this account.",
+                  'bValue'    => true,
+               ];                
+               
             }
             else 
             {
-               $data['newRole'][$newRole] = [
-                  'type'            => -1,
-                  'description'     => 'assignTempRoleFailed',
+               $this->_data['errors']['Switch Role'] = [
+                  'value'     => "was unsuccessful",
+                  'htmlTag'   => 'h4',
+                  'class'     => 'alert alert-danger',
                ];
+      
+               $this->_data['errors']['Temp Role'] = [
+                  'value' => "assignment failed",      
+               ];                        
             }
          }
          else
-         {
-            $data['getRole']['TempRoleAssigned'] = [ 
-               'type'            => 'N/A',
-               'description'     => 'Unable to complete; restore roles before assuming another role',
-            ];  
+         {  
+            $this->_data['errors']['Switch Role'] = [
+               'value'     => "was unsuccessful",
+               'htmlTag'   => 'h4',
+               'class'     => 'alert alert-danger',
+            ];
+   
+            $this->_data['errors']['Temp Role'] = [
+               'value' => "is already assigned; restore role before assuming a new role",      
+            ];            
          }          
       }
+      else
+      {
+         $this->_data['errors']['Switch Role'] = [
+            'value'     => "was unsuccessful",
+            'htmlTag'   => 'h4',
+            'class'     => 'alert alert-danger',
+         ];
+
+         $this->_data['errors']['userId-newRole'] = [
+            'value' => "are missing",      
+         ];
+      }
       
-      return $this->render('actionRole', [
-         'data' => $data,
+      return $this->render('/site/index', [
+         'data' => $this->_data,
       ]);      
    }
    
@@ -180,43 +231,40 @@ class RolesController extends Controller
    */
    public function actionReset()
    {
-      $auth    = Yii::$app->authManager;
-      $request = Yii::$app->request;
-      
-      $data = [];
-
-      /**
-       *  Quick fix for cookie timeout
-       **/
-      
-      if( $this->_isUserIdentityEmpty )
-      {
-         return $this->render('testRole', [
-            'data' => $data,
-         ]);   
-      }      
-      
-      $userId  = Yii::$app->user->identity->getId();
-      $reset   = $request->get( 'reset', 'missing' );
-   
-/*      
-      if( !empty( $userId ) && isset( $userId ) )
-      {      
-         $data = 
-         [
-            'getRoles' => [ 
-               $auth->getRolesByUser($userId)
-            ],
-         ];
-      }
- */
- 
       $restoreRole = new TempAuthAssignment();
       
       $isRestored = $restoreRole->restorePermanentRoles();
+      
+      if( $isRestored )
+      {
+         $this->_data['success']['Restore Roles'] = [
+            'value'        => "was successful",
+            'bValue'       => true,
+            'htmlTag'      => 'h4',
+            'class'        => 'alert alert-success', 
+         ];
+         
+         $this->_data['success']['Restore Permanent Roles'] = [
+            'value' => "was successful",
+         ];   
+      }
+      else
+      {
+         $this->_data['errors']['Restore Roles'] = [
+            'value'     => "was unsuccessful",
+            'bValue'    => false,
+            'htmlTag'   => 'h4',
+            'class'     => 'alert alert-danger',
+         ];
+
+         if( !$restoreRole->existsTemporaryEntries() )
+            $this->_data['errors']['Temp Role'] = [
+               'value' => "are not assigned; nothing to reset.",
+            ];
+      }  
    
-      return $this->render('actionRole', [
-         'data' => $data,
+      return $this->render('/site/index', [
+         'data' => $this->_data,
       ]);      
    }
 }
