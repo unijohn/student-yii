@@ -42,6 +42,7 @@ class UsersController extends Controller
       
       if( is_null( Yii::$app->user->identity ) )
       {
+         /* /site/index works but trying to learn named routes syntax */
          return $this->redirect(['home']);
       }
       
@@ -54,6 +55,26 @@ class UsersController extends Controller
       $this->_userModel        = new User();
       $this->_roleModel        = new AuthAssignment();
       $this->_authItemModel    = new AuthItem();
+      
+      $this->_data['filterForm']['uuid']              = ArrayHelper::getValue($this->_request->get(), 'User.uuid',      '');
+      $this->_data['filterForm']['is_active']         = ArrayHelper::getValue($this->_request->get(), 'User.is_active', -1);
+      $this->_data['filterForm']['paginationCount']   = $this->_request->get( 'pagination_count', 10 );
+      
+      /**
+       *    Capturing the possible post() variables used in this controller
+       **/      
+      
+      $this->_data['post']['uuid']           = $this->_request->post('uuid',     '' );
+      
+      if( strlen( $this->_data['post']['uuid'] ) < 1 )
+      {
+         $this->_data['post']['uuid']        = ArrayHelper::getValue($this->_request->post(), 'User.uuid', '' ); 
+      }
+      
+      $this->_data['post']['addRole']        = $this->_request->post('addRole',        '' );
+      $this->_data['post']['dropRole']       = $this->_request->post('dropRole',       '' );
+      $this->_data['post']['authitem']       = $this->_request->post('authitem',       '' );
+      $this->_data['post']['authassignment'] = $this->_request->post('authassignment', '' );                      
    }   
 
 
@@ -99,31 +120,20 @@ class UsersController extends Controller
     }
 
    /**
-    * Displays listing of all users in the system.
+    * Centralizing the query for building the User GridView
     *
-    * @return string
+    * @return SqlDataProvider
     */
-   public function actionIndex()
-   {      
-//      $data             = [];
-//      $dataProvider     = [];
-
-//      $userModel        = new User();
+    
+   private function getUserGridView()
+   {
+      $params[':id']          = 1; 
       
-      /**
-       *  Quick fix for cookie timeout
-       **/
-
-      $this->_userModel->uuid           = ArrayHelper::getValue($this->_request->get(), 'User.uuid',      '');
-      $this->_userModel->is_active      = ArrayHelper::getValue($this->_request->get(), 'User.is_active', '-1');
-      $this->_data['paginationCount']   = $this->_request->get( 'pagination_count', 10 );
-
       $count = Yii::$app->db->createCommand(
          'SELECT COUNT(*) FROM tbl_Users WHERE id >=:id ',
-         [':id' => 1])->queryScalar();
+         [':id' => $params[':id']])->queryScalar();
       
 /**
-     
       $sql  =  "SELECT  id, uuid, name, is_active, ";
       $sql .=  "        datetime(created_at, 'unixepoch') as created_at, datetime(updated_at, 'unixepoch') as updated_at " ;
       $sql .= "FROM tbl_Users WHERE id >=:id ";
@@ -131,22 +141,20 @@ class UsersController extends Controller
        
       $sql  = "SELECT  id, uuid, name, is_active, created_at, updated_at " ;
       $sql .= "FROM tbl_Users WHERE id >=:id ";
-      
-      $params[':id'] = 1;
 
-      if( strlen($this->_userModel->uuid) > 0 )
+      if( strlen ($this->_data['filterForm']['uuid'] ) > 0 )
       {
          $sql .= "AND uuid LIKE :uuid ";
-         $params[':uuid'] = '%' . $this->_userModel->uuid . '%';      
+         $params[':uuid'] = '%' . $this->_data['filterForm']['uuid'] . '%';      
       }
       
-      if( $this->_userModel->is_active > -1 && strlen($this->_userModel->is_active) > 0 )
+      if(  $this->_data['filterForm']['is_active'] > -1 && strlen(  $this->_data['filterForm']['is_active'] ) > 0 )
       {
          $sql .= "AND is_active =:is_active ";
-         $params[':is_active'] = $this->_userModel->is_active;
+         $params[':is_active']   = $this->_data['filterForm']['is_active'];         
       }
       
-      $this->_dataProvider = new SqlDataProvider ([
+      $UserSDP = new SqlDataProvider ([
          'sql'          => $sql,
          'params'       => $params,
          'totalCount'   => $count,
@@ -171,10 +179,78 @@ class UsersController extends Controller
             ],
          ],         
          'pagination' => [
-            'pageSize' => $this->_data['paginationCount'],
+            'pageSize' => $this->_data['filterForm']['paginationCount'],
          ],
       ]); 
+      
+      return $UserSDP;
+   }
 
+   /**
+    * Displays listing of all users in the system.
+    *
+    * @return string
+    */
+   public function actionIndex()
+   {
+      $this->_dataProvider = $this->getUserGridView();
+/**   
+      $params[':id']          = 1; 
+      
+      $count = Yii::$app->db->createCommand(
+         'SELECT COUNT(*) FROM tbl_Users WHERE id >=:id ',
+         [':id' => $params[':id']])->queryScalar();
+      
+
+      $sql  =  "SELECT  id, uuid, name, is_active, ";
+      $sql .=  "        datetime(created_at, 'unixepoch') as created_at, datetime(updated_at, 'unixepoch') as updated_at " ;
+      $sql .= "FROM tbl_Users WHERE id >=:id ";
+
+       
+      $sql  = "SELECT  id, uuid, name, is_active, created_at, updated_at " ;
+      $sql .= "FROM tbl_Users WHERE id >=:id ";
+
+      if( strlen ($this->_data['filterForm']['uuid'] ) > 0 )
+      {
+         $sql .= "AND uuid LIKE :uuid ";
+         $params[':uuid'] = '%' . $this->_data['filterForm']['uuid'] . '%';      
+      }
+      
+      if(  $this->_data['filterForm']['is_active'] > -1 && strlen(  $this->_data['filterForm']['is_active'] ) > 0 )
+      {
+         $sql .= "AND is_active =:is_active ";
+         $params[':is_active']   = $this->_data['filterForm']['is_active'];         
+      }
+      
+      $this->_dataProvider = new SqlDataProvider ([
+         'sql'          => $sql,
+         'params'       => $params,
+         'totalCount'   => $count,
+         'sort' => [
+            'attributes' => [
+               'uuid' => [
+                  'default' => SORT_ASC,
+                  'label' => 'UUID',
+               ],
+               'name' => [
+                  'default' => SORT_ASC,
+                  'label' => 'Name',
+               ],
+**               
+               'is_active' => [
+                  'default' => SORT_ASC,
+                  'label' => 'Status',
+               ],
+ **              
+               'created_at',
+               'updated_at',                              
+            ],
+         ],         
+         'pagination' => [
+            'pageSize' => $this->_data['filterForm']['paginationCount'],
+         ],
+      ]); 
+ **/
       return $this->render('users-listing', [
             'data'         => $this->_data, 
             'dataProvider' => $this->_dataProvider,
@@ -205,13 +281,6 @@ class UsersController extends Controller
       }
       
       $this->_authItemModel   = AuthItem::findbyUnassignedRoles($assignedRoles);      
-         
-/**
-      print( "<h1>What</h1><pre>" );   
-      print_r( $user);
-      print( "</pre>" );
-      die();
- **/
 
       return $this->render('user-view', [
             'data'         => $this->_data, 
@@ -229,58 +298,75 @@ class UsersController extends Controller
     */
    public function actionAdd()
    {
-      $this->_userModel->uuid       = ArrayHelper::getValue($this->_request->post(), 'User.uuid', '' );
-      $this->_userModel->name       = $this->_userModel->uuid;
-      $this->_userModel->is_active  = 1;      
-      $this->_userModel->created_at = time();
-            
-      $this->_userModel->generateAuthKey();
-      $this->_userModel->generateAccessToken();
-      
+      $this->_dataProvider = $this->getUserGridView();   
+   
       $this->_data['addUser']          = ArrayHelper::getValue($this->_request->post(), 'User.addUser',     '' );
       $this->_data['lookupUser']       = ArrayHelper::getValue($this->_request->post(), 'User.lookupUser',  '' );
-      $this->_data['paginationCount']  = $this->_request->get( 'pagination_count', 10 );
+      $this->_data['saveUser']         = false;
       $this->_data['errors']           = [];   
-
-      print( "<pre>" );
-      print_r( $this->_request->post() );
-      print_r( $this->_data );      
+   
+      $this->_userModel->uuid          = ArrayHelper::getValue($this->_request->post(), 'User.uuid', '' );
       
-      print( "is_not_empty: " . !empty( $this->_data['addUser'] ) . PHP_EOL );
-      print( "is_set: "       . isset(  $this->_data['addUser'] ) . PHP_EOL );      
+      $uuidExists = User::existsUUID( $this->_userModel->uuid );
       
-      if( isset($this->_data['addUser'] ) && !empty( $this->_data['addUser'] ) )
+      if( $uuidExists )
       {
-         $this->_data['saveUser'] = false;
-      
-         if( isset($this->_userModel->uuid ) && !empty( $this->_userModel->uuid ) )
+         if( isset( $this->_data['addUser'] ) && !empty( $this->_data['addUser'] ) )
          {
-            $this->_data['saveUser'] = $this->_userModel->save();
+            $this->_data['errors']['Add User'] = [
+               'value'     => "was unsuccessful",
+               'htmlTag'   => 'h4',
+            ];
+
          }
-         else
-         {
-            $this->_data['errors']['uuid'] = "is null";
+         $this->_data['errors']['uuid'] = [
+            'value' => "already exists",      
+         ];
+      }
+      else
+      {
+         $this->_userModel->name       = $this->_userModel->uuid;
+         $this->_userModel->is_active  = 1;      
+         $this->_userModel->created_at = time();
+            
+         $this->_userModel->generateAuthKey();
+         $this->_userModel->generateAccessToken();
+      } 
+      
+      if( !$uuidExists )
+      {      
+         if( isset($this->_data['addUser'] ) && !empty( $this->_data['addUser'] ) )
+         {        
+            if( isset($this->_userModel->uuid ) && !empty( $this->_userModel->uuid ) )
+            {
+               $this->_data['saveUser'] = $this->_userModel->save();
+            }
+            else
+            {
+               $this->_data['errors']['Add User'] = [
+                  'value'     => "was unsuccessful",
+                  'htmlTag'   => 'h4',
+               ];
+               
+               $this->_data['errors']['uuid'] = [
+                  'value'     => "is null",
+
+               ];               
+            }
          }
       }
 
       if( $this->_data['saveUser'] )
       {
-         Yii::$app->response->redirect(['users/index']);
-      }
-      else
-      {
-         print( "Save failed:"  );
-         print_r( $this->_data['errors'] );
-         die();
+         //Yii::$app->response->redirect(['users/index']);
+         $this->_data['success']['addUser'] = true;
       }
 
-/**
       return $this->render('users-listing', [
             'data'         => $this->_data, 
             'dataProvider' => $this->_dataProvider,
             'model'        => $this->_userModel,
       ]);   
- **/
    }
    
    /**
