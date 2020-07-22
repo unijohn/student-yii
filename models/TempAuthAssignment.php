@@ -114,6 +114,33 @@ class TempAuthAssignment extends ActiveRecord
       ];
    }
    
+   
+   /**
+     * Checks to see if a termporary roles has already been assigned
+     *
+     * @param integer $id tbl_Users.id 
+     * @return bool if user has switched to another role
+     */
+   public function existsTemporaryEntries()
+   {
+      $userId  = Yii::$app->user->identity->getId();   
+
+      if( empty( $userId ) || !isset( $userId ) )  
+      {
+         return false;
+      }
+   
+
+      $activeTempAssignmentCount = TempAuthAssignment::find()
+         ->where([
+            'user_id'            => $userId,
+            'deleted_at'         => null,
+         ])
+         ->count();            
+      
+      return ( $activeTempAssignmentCount > 0 );
+   }
+
 
     /**
      * Stores original role assignments when swapping to a different
