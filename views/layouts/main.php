@@ -68,13 +68,76 @@ AppAsset::register($this);
       
    ?>
 
-    <div class="container">
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]) ?>
-        <?= Alert::widget() ?>
-        <?= $content ?>
-    </div>
+   <div class="container">
+      <?= Breadcrumbs::widget([
+         'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+      ]) ?>
+      
+<?php
+      
+      if( isset( $this->params['data'] ) && !empty( $this->params['data']  ) )
+      {
+     
+         if( isset( $this->params['data']['errors'] ) && !empty( $this->params['data']['errors'] ) )
+         {
+            $data['errors'] = $this->params['data']['errors'];
+         
+            print( "<div class='alert alert-danger' role='alert'> " . PHP_EOL );
+                
+            foreach( $data['errors'] as $key => $value )
+            {
+               $htmlTagOpen   = "";
+               $htmlTagClose  = "<br />";
+            
+               $errorName = $key;
+      
+               if( isset( $data['errors'][$key]['htmlTag'] ) && !empty( $data['errors'][$key]['htmlTag'] ) )
+               {
+                  $htmlTagOpen   = "<"    . $data['errors'][$key]['htmlTag'] . ">";
+                  $htmlTagClose  = "</"   . $data['errors'][$key]['htmlTag'] . ">";             
+               }
+       
+               print( $htmlTagOpen . "<strong>" . $errorName . " </strong> " . $data['errors'][$key]['value'] . $htmlTagClose . PHP_EOL);
+            }
+            
+            print( "</div> " . PHP_EOL );      
+         }
+      
+         if( isset( $this->params['data']['success'] ) && !empty( $this->params['data']['success'] ) )
+         {
+            $data['success'] = $this->params['data']['success'];
+         
+            print( "<div class='alert alert-success' role='alert'> " . PHP_EOL );
+                
+            foreach( $data['success'] as $key => $value )
+            {
+               $htmlTagOpen   = "";
+               $htmlTagClose  = "<br />";
+            
+               $errorName = $key;
+      
+               if( isset( $data['success'][$key]['htmlTag'] ) && !empty( $data['success'][$key]['htmlTag'] ) )
+               {
+                  $htmlTagOpen   = "<"    . $data['success'][$key]['htmlTag'] . ">";
+                  $htmlTagClose  = "</"   . $data['success'][$key]['htmlTag'] . ">";             
+               }
+               
+               print( $htmlTagOpen . "<strong>" . $errorName . " </strong> " . $data['success'][$key]['value'] . $htmlTagClose . PHP_EOL);
+            }
+            
+            print( "</div> " . PHP_EOL );      
+         } 
+  
+/*         
+         print( "<pre>" );
+         print_r( $this->params['data'] );
+         print( "</pre>" );
+*/             
+      }
+?>
+   
+   <?= $content ?>
+   </div>
 
 
     <div>
