@@ -43,7 +43,7 @@ class UsersController extends Controller
       if( is_null( Yii::$app->user->identity ) )
       {
          /* /site/index works but trying to learn named routes syntax */
-         return $this->redirect(['home']);
+         return $this->redirect(['/site/index']);
       }
       
       $this->_auth      = Yii::$app->authManager;
@@ -194,63 +194,7 @@ class UsersController extends Controller
    public function actionIndex()
    {
       $this->_dataProvider = $this->getUserGridView();
-/**   
-      $params[':id']          = 1; 
-      
-      $count = Yii::$app->db->createCommand(
-         'SELECT COUNT(*) FROM tbl_Users WHERE id >=:id ',
-         [':id' => $params[':id']])->queryScalar();
-      
 
-      $sql  =  "SELECT  id, uuid, name, is_active, ";
-      $sql .=  "        datetime(created_at, 'unixepoch') as created_at, datetime(updated_at, 'unixepoch') as updated_at " ;
-      $sql .= "FROM tbl_Users WHERE id >=:id ";
-
-       
-      $sql  = "SELECT  id, uuid, name, is_active, created_at, updated_at " ;
-      $sql .= "FROM tbl_Users WHERE id >=:id ";
-
-      if( strlen ($this->_data['filterForm']['uuid'] ) > 0 )
-      {
-         $sql .= "AND uuid LIKE :uuid ";
-         $params[':uuid'] = '%' . $this->_data['filterForm']['uuid'] . '%';      
-      }
-      
-      if(  $this->_data['filterForm']['is_active'] > -1 && strlen(  $this->_data['filterForm']['is_active'] ) > 0 )
-      {
-         $sql .= "AND is_active =:is_active ";
-         $params[':is_active']   = $this->_data['filterForm']['is_active'];         
-      }
-      
-      $this->_dataProvider = new SqlDataProvider ([
-         'sql'          => $sql,
-         'params'       => $params,
-         'totalCount'   => $count,
-         'sort' => [
-            'attributes' => [
-               'uuid' => [
-                  'default' => SORT_ASC,
-                  'label' => 'UUID',
-               ],
-               'name' => [
-                  'default' => SORT_ASC,
-                  'label' => 'Name',
-               ],
-**               
-               'is_active' => [
-                  'default' => SORT_ASC,
-                  'label' => 'Status',
-               ],
- **              
-               'created_at',
-               'updated_at',                              
-            ],
-         ],         
-         'pagination' => [
-            'pageSize' => $this->_data['filterForm']['paginationCount'],
-         ],
-      ]); 
- **/
       return $this->render('users-listing', [
             'data'         => $this->_data, 
             'dataProvider' => $this->_dataProvider,
@@ -304,6 +248,7 @@ class UsersController extends Controller
       $this->_data['lookupUser']       = ArrayHelper::getValue($this->_request->post(), 'User.lookupUser',  '' );
       $this->_data['saveUser']         = false;
       $this->_data['errors']           = [];   
+      $this->_data['success']          = [];
    
       $this->_userModel->uuid          = ArrayHelper::getValue($this->_request->post(), 'User.uuid', '' );
       
@@ -316,6 +261,7 @@ class UsersController extends Controller
             $this->_data['errors']['Add User'] = [
                'value'     => "was unsuccessful",
                'htmlTag'   => 'h4',
+               'class'     => 'alert alert-danger',
             ];
 
          }
@@ -346,11 +292,11 @@ class UsersController extends Controller
                $this->_data['errors']['Add User'] = [
                   'value'     => "was unsuccessful",
                   'htmlTag'   => 'h4',
+                  'class'     => 'alert alert-danger',
                ];
                
                $this->_data['errors']['uuid'] = [
                   'value'     => "is null",
-
                ];               
             }
          }
@@ -358,8 +304,17 @@ class UsersController extends Controller
 
       if( $this->_data['saveUser'] )
       {
-         //Yii::$app->response->redirect(['users/index']);
-         $this->_data['success']['addUser'] = true;
+         $this->_data['success']['Add User'] = [
+            'value'     => "was successful",
+            'bValue'    => true,
+            'htmlTag'   => 'h4',
+            'class'     => 'alert alert-success',
+         ];
+         
+         $this->_data['success'][$this->_userModel->uuid] = [
+            'value'     => "was added",
+            'bValue'    => true,
+         ];         
       }
 
       return $this->render('users-listing', [

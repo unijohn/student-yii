@@ -53,15 +53,47 @@
             print( "<h4>" . $key2  . "</h4>" );          
  **/         
             print( $htmlTagOpen . "<strong>" . $errorName . " </strong> " . $data['errors'][$key]['value'] . $htmlTagClose . PHP_EOL);
-
-/**            
-         }
- **/
-
       }
       
       print( "</div> " . PHP_EOL );      
    }
+   
+   if( isset( $data['success'] ) && !empty( $data['success'] ) )
+   {
+      print( "<div class='alert alert-success' role='alert'> " . PHP_EOL );
+          
+      foreach( $data['success'] as $key => $value )
+      {
+         $htmlTagOpen   = "";
+         $htmlTagClose  = "<br />";
+      
+         $errorName = $key;
+
+         if( isset( $data['success'][$key]['htmlTag'] ) && !empty( $data['success'][$key]['htmlTag'] ) )
+         {
+            $htmlTagOpen   = "<"    . $data['success'][$key]['htmlTag'] . ">";
+            $htmlTagClose  = "</"   . $data['success'][$key]['htmlTag'] . ">";             
+         }
+
+/**      
+         foreach( $data['errors'][$key1] as $key2 => $value2 )
+         {
+            $htmlTagOpen   = "";
+            $htmlTagClose  = "";
+               
+            if( strcmp( $key2, 'htmlTag' ) == 0 )
+            {
+               $htmlTagOpen   = "<"    . $data['errors'][$key2] . ">";
+               $htmlTagClose  = "</"   . $data['errors'][$key2] . ">";          
+            }
+         
+            print( "<h4>" . $key2  . "</h4>" );          
+ **/         
+            print( $htmlTagOpen . "<strong>" . $errorName . " </strong> " . $data['success'][$key]['value'] . $htmlTagClose . PHP_EOL);
+      }
+      
+      print( "</div> " . PHP_EOL );      
+   }   
  ?>
       
       <p>
