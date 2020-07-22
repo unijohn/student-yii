@@ -19,6 +19,51 @@
 
    <div class="site-about">
       <h1><?= Html::encode($this->title) ?></h1>
+      
+<?php
+   if( isset( $data['errors'] ) && !empty( $data['errors'] ) )
+   {
+      print( "<div class='alert alert-danger' role='alert'> " . PHP_EOL );
+          
+      foreach( $data['errors'] as $key => $value )
+      {
+         $htmlTagOpen   = "";
+         $htmlTagClose  = "<br />";
+      
+         $errorName = $key;
+
+         if( isset( $data['errors'][$key]['htmlTag'] ) && !empty( $data['errors'][$key]['htmlTag'] ) )
+         {
+            $htmlTagOpen   = "<"    . $data['errors'][$key]['htmlTag'] . ">";
+            $htmlTagClose  = "</"   . $data['errors'][$key]['htmlTag'] . ">";             
+         }
+
+/**      
+         foreach( $data['errors'][$key1] as $key2 => $value2 )
+         {
+            $htmlTagOpen   = "";
+            $htmlTagClose  = "";
+               
+            if( strcmp( $key2, 'htmlTag' ) == 0 )
+            {
+               $htmlTagOpen   = "<"    . $data['errors'][$key2] . ">";
+               $htmlTagClose  = "</"   . $data['errors'][$key2] . ">";          
+            }
+         
+            print( "<h4>" . $key2  . "</h4>" );          
+ **/         
+            print( $htmlTagOpen . "<strong>" . $errorName . " </strong> " . $data['errors'][$key]['value'] . $htmlTagClose . PHP_EOL);
+
+/**            
+         }
+ **/
+
+      }
+      
+      print( "</div> " . PHP_EOL );      
+   }
+ ?>
+      
       <p>
          This is the <?php print( $this->title ); ?> page. You may modify the following file to customize its content:
       </p>
@@ -28,7 +73,7 @@
             <div class="col-lg-4">
                <h2>Find Users</h2>
                <div id='users-search-form'>      
-                  <?= $this->render('_users-search', ['model' => $model, 'pagination_count' => $data['paginationCount'] ]); ?>      
+                  <?= $this->render('_users-search', ['model' => $model, 'pagination_count' => $data['filterForm']['paginationCount'] ]); ?>      
                </div>
             </div>
             <div class="col-lg-4">
