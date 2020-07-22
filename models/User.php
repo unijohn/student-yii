@@ -273,6 +273,23 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
  
       return null;            
    }
+   
+   public static function existsUUID($uuid)
+   {        
+      $query_users = (new \yii\db\Query())
+         ->select([ 'id', 'uuid', 'name', 'access_token', 'created_at', 'updated_at' ])
+         ->from( User::getUserTableName() )
+         ->where( 'uuid=:uuid' )
+            ->addParams( [':uuid' => $uuid] )
+         ->limit(1);     
+     
+      foreach( $query_users->each() as $user_row )
+      {
+         return true;
+      }
+ 
+      return false;            
+   }   
 
 
     /**
