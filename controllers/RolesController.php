@@ -11,6 +11,7 @@ use yii\helpers\ArrayHelper;
 use yii\rbac\DbManager;
 use yii\web\Controller;
 use yii\web\Response;
+use yii\web\View;
 
 
 use app\models\AuthAssignment;
@@ -33,6 +34,7 @@ class RolesController extends Controller
    private $_user;
    private $_userId;
    private $_userModel;
+   private $_view;
    
 
    public function init()
@@ -53,6 +55,7 @@ class RolesController extends Controller
       
       $this->_auth      = Yii::$app->authManager;
       $this->_request   = Yii::$app->request;  
+      $this->_view      = Yii::$app->view;
       
       $this->_data             = [];
 
@@ -217,6 +220,8 @@ class RolesController extends Controller
             'value' => "are missing",      
          ];
       }
+
+      $this->_view->params['data'] = $this->_data;
       
       return $this->render('/site/index', [
          'data' => $this->_data,
@@ -262,6 +267,8 @@ class RolesController extends Controller
                'value' => "are not assigned; nothing to reset.",
             ];
       }  
+
+      $this->_view->params['data'] = $this->_data;
    
       return $this->render('/site/index', [
          'data' => $this->_data,
