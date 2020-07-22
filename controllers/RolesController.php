@@ -264,7 +264,7 @@ class RolesController extends Controller
 
          if( !$restoreRole->existsTemporaryEntries() )
             $this->_data['errors']['Temp Role'] = [
-               'value' => "are not assigned; nothing to reset.",
+               'value' => "is not assigned; nothing to reset.",
             ];
       }  
 
