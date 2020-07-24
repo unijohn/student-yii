@@ -9,6 +9,9 @@ nbproject
 .project
 .settings
 
+# PHP local errors file
+php_errors.log
+
 # windows thumbnail cache
 Thumbs.db
 
