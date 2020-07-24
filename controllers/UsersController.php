@@ -18,7 +18,7 @@ use yii\web\Response;
 use app\models\AuthAssignment;
 use app\models\AuthItem;
 use app\models\User;
-use app\models\UserSearch;
+//use app\models\UserSearch;
 
 
 class UsersController extends Controller
@@ -32,6 +32,9 @@ class UsersController extends Controller
    private $_userModel;
    
 
+    /**
+     * {@inheritdoc}
+     */
    public function init()
    {
       parent::init();
@@ -81,7 +84,6 @@ class UsersController extends Controller
     /**
      * {@inheritdoc}
      */
-     
 /**      
     public function behaviors()
     {   
