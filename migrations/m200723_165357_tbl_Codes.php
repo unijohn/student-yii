@@ -11,6 +11,12 @@ class m200723_165357_tbl_Codes extends Migration
    {
       return "{{%tbl_Codes}}";
    }
+   
+   
+   protected function getCodesChildTableName()
+   {
+      return "{{%tbl_CodesChild}}";
+   }   
 
 
    /**
@@ -49,17 +55,37 @@ class m200723_165357_tbl_Codes extends Migration
    }  
 
 
+   protected function buildFkClause($delete = '', $update = '')
+   {
+      if ($this->isMSSQL()) 
+      {
+         return '';
+      }
+      
+      if ($this->isOracle()) 
+      {
+         return ' ' . $delete;
+      }
+      
+      return implode(' ', ['', $delete, $update]);
+   }
+
+
    /**
    * {@inheritdoc}
    */
    public function safeUp()
    {
-      $TYPE_PERMIT      = 1;  
-      
+      $TYPE_PERMIT      = 1;
+      $TYPE_DEPARTMENT  = 2;
+      $TYPE_CAREERLEVEL = 3;
+      $TYPE_MASTERS     = 4;
+
       $STATUS_INACTIVE  = 0;
       $STATUS_ACTIVE    = 1;    
-   
+
       $tableOptions = null;
+
       if ($this->isMySQL()) 
       {
          // http://stackoverflow.com/questions/766809/whats-the-difference-between-utf8-general-ci-and-utf8-unicode-ci
@@ -81,7 +107,18 @@ class m200723_165357_tbl_Codes extends Migration
          'deleted_at'      => $this->integer(),                 
       ], $tableOptions);
 
-      $columns = [ 'type', 'code', 'description', 'is_active', 'created_at', 'updated_at' ];
+      $this->createTable($this->getCodesChildTableName(), [
+         'parent'          => $this->integer()->notNull(),
+         'child'           => $this->integer()->notNull(),
+         'PRIMARY KEY ([[parent]], [[child]])',
+         'FOREIGN KEY ([[parent]]) REFERENCES ' . $this->getTableName() . ' ([[id]])' .
+         $this->buildFkClause('ON DELETE CASCADE', 'ON UPDATE CASCADE'),
+         'FOREIGN KEY ([[child]]) REFERENCES ' . $this->getTableName()  . ' ([[id]])' .
+         $this->buildFkClause('ON DELETE CASCADE', 'ON UPDATE CASCADE'),
+      ], $tableOptions);
+
+      $codeColumns      = [ 'type', 'code', 'description', 'is_active', 'created_at', 'updated_at' ];
+      $codeChildColumns = [ 'parent', 'child' ];
 
       $permitRows = [
          [  
@@ -153,8 +190,88 @@ class m200723_165357_tbl_Codes extends Migration
             $created_at, $updated_at,
          ],
       ];
+ 
       
-      $this->batchInsert( $this->getTableName(), $columns, $permitRows );            
+      $departmentRows = [
+         [  
+            $TYPE_DEPARTMENT, 'ACCT', 'Accounting', $STATUS_ACTIVE,
+            $created_at, $updated_at,
+         ],
+         [  
+            $TYPE_DEPARTMENT, 'BITM', 'Bit_Info_Tech', $STATUS_ACTIVE,
+            $created_at, $updated_at,
+         ],
+         [  
+            $TYPE_DEPARTMENT, 'ECON', 'Economics', $STATUS_ACTIVE,
+            $created_at, $updated_at,
+         ],
+         [  
+            $TYPE_DEPARTMENT, 'FIR', 'Finance', $STATUS_ACTIVE,
+            $created_at, $updated_at,
+         ],
+         [  
+            $TYPE_DEPARTMENT, 'MCSM', 'Mktg_Supply_Chain', $STATUS_ACTIVE,
+            $created_at, $updated_at,
+         ],
+         [  
+            $TYPE_DEPARTMENT, 'MGMT', 'Management', $STATUS_ACTIVE,
+            $created_at, $updated_at,
+         ],
+      ];
+
+
+      $careerLevelRows = [
+         [  
+            $TYPE_CAREERLEVEL, 'UGAD', 'Undergraduate',  $STATUS_ACTIVE,
+            $created_at, $updated_at,
+         ],
+         [  
+            $TYPE_CAREERLEVEL, 'GRAD', 'Graduate',       $STATUS_ACTIVE,
+            $created_at, $updated_at,
+         ],
+         [  
+            $TYPE_CAREERLEVEL, 'PHD',  'Doctorate',      $STATUS_ACTIVE,
+            $created_at, $updated_at,
+         ],
+      ];
+
+      
+      $mastersRows = [
+         [  
+            $TYPE_MASTERS, 'MAECON',   'MA_ECON',     $STATUS_ACTIVE,
+            $created_at, $updated_at,
+         ],
+         [  
+            $TYPE_MASTERS, 'MSACCT',   'MS_ACCT',     $STATUS_ACTIVE,
+            $created_at, $updated_at,
+         ],
+         [  
+            $TYPE_MASTERS, 'MSIS',     'MS_IS',       $STATUS_ACTIVE,
+            $created_at, $updated_at,
+         ],
+         [  
+            $TYPE_MASTERS, 'MSBAFIR',  'MSBA_FIR',    $STATUS_ACTIVE,
+            $created_at, $updated_at,
+         ],
+         [  
+            $TYPE_MASTERS, 'EMBA',     'EXEC_MBA',    $STATUS_ACTIVE,
+            $created_at, $updated_at,
+         ],
+         [  
+            $TYPE_MASTERS, 'PMBA',     'PROF_MBA',    $STATUS_ACTIVE,
+            $created_at, $updated_at,
+         ],
+         [  
+            $TYPE_MASTERS, 'OMBA',     'ONLINE_MBA',  $STATUS_ACTIVE,
+            $created_at, $updated_at,
+         ],
+      ];  
+
+      
+      $this->batchInsert( $this->getTableName(), $codeColumns, $permitRows      );
+      $this->batchInsert( $this->getTableName(), $codeColumns, $departmentRows  );
+      $this->batchInsert( $this->getTableName(), $codeColumns, $careerLevelRows );
+      $this->batchInsert( $this->getTableName(), $codeColumns, $mastersRows     );
    }
 
 
@@ -166,6 +283,7 @@ class m200723_165357_tbl_Codes extends Migration
 //        echo "m200723_165357_tbl_PermitCodes cannot be reverted.\n";
 
         $this->dropTable($this->getTableName());
+        $this->dropTable($this->getCodesChildTableName());        
 
 //        return false;
     }
