@@ -193,6 +193,13 @@ $auth = Yii::$app->authManager;
     
    print( "<ul>" );
 
+   if (\Yii::$app->user->can('[Framework][Access][Permit]')  )
+   {
+      print( "<li>" );
+      print( HTML::a( "Permit Management", Url::toRoute( ['permits/manage-admin/index', ], true) ) );
+      print( "</li>" );    
+   } 
+
    if (
       \Yii::$app->user->can('[Framework][Access][Permit]' )  ||
       \Yii::$app->user->can('[Student][Access][Permit]'   ) 
