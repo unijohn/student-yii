@@ -11,7 +11,7 @@
 
 $this->title = 'My Yii Application';
 
-$auth = Yii::$app->authManager;
+$auth    = Yii::$app->authManager;
 ?>
 <div class="site-index">
 

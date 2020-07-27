@@ -11,6 +11,9 @@ use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 
 AppAsset::register($this);
+
+$cookies = Yii::$app->request->cookies;
+$session = Yii::$app->session;
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -143,8 +146,13 @@ AppAsset::register($this);
     <div>
       <h2>Scratchpad</h2>
       <pre>
+<?php
+//   print_r( $cookies );
+ ?>
 
-         
+<?php
+//   print_r( $session );
+ ?>
 
       </pre>
     </div>
