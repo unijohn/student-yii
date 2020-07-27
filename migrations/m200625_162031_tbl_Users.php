@@ -115,6 +115,8 @@ class m200625_162031_tbl_Users extends Migration
          'deleted_at'      => $this->integer(),                 
       ], $tableOptions);
       
+      $this->createIndex('idx_TempAuthAssignment_user_id', $this->getTempRoleTableName(), 'user_id');      
+      
       $this->createTable($this->getUserTableName(), [
          'id'           => $this->primaryKey(),
          'uuid'         => $this->string(16)->notNull(),
