@@ -5,19 +5,32 @@ use yii\db\Migration;
 /**
  * Class m200723_165357_tbl_PermitCodes
  */
-class m200723_165357_tbl_Codes extends Migration
+class m200723_165357_tbl_SystemCodes extends Migration
 {
    protected function getTableName()
    {
-      return "{{%tbl_Codes}}";
+      return "{{%tbl_SystemCodes}}";
    }
    
    
    protected function getCodesChildTableName()
    {
-      return "{{%tbl_CodesChild}}";
+      return "{{%tbl_SystemCodesChild}}";
    }   
 
+
+//   protected function getCodesChild
+
+/**
+ *    To Do List (for my scattered mine)
+ *    . Feature Management Logic
+ *    . SystemsCodeChild Many-to-Many method(s)
+ *    . Add/Remove Tags for System Codes
+ *    . Permit Codes Gridview
+ *    . Permit Codes Gridview - Search
+ *    . Site-wide Role / Permission Logic with [Manage] permission
+ **/
+ 
 
    /**
    * @return bool
@@ -104,7 +117,7 @@ class m200723_165357_tbl_Codes extends Migration
          'is_active'       => $this->integer()->notNull(),
          'created_at'      => $this->integer()->notNull(),
          'updated_at'      => $this->integer()->notNull(),         
-         'deleted_at'      => $this->integer(),                 
+         'deleted_at'      => $this->integer(),
       ], $tableOptions);
 
       $this->createTable($this->getCodesChildTableName(), [
@@ -116,6 +129,9 @@ class m200723_165357_tbl_Codes extends Migration
          'FOREIGN KEY ([[child]]) REFERENCES ' . $this->getTableName()  . ' ([[id]])' .
          $this->buildFkClause('ON DELETE CASCADE', 'ON UPDATE CASCADE'),
       ], $tableOptions);
+      
+      $this->createIndex('idx_SystemCodes_type', $this->getTableName(), 'type');
+      $this->createIndex('idx_SystemCodes_code', $this->getTableName(), 'code');      
 
       $codeColumns      = [ 'type', 'code', 'description', 'is_active', 'created_at', 'updated_at' ];
       $codeChildColumns = [ 'parent', 'child' ];
@@ -266,12 +282,34 @@ class m200723_165357_tbl_Codes extends Migration
             $created_at, $updated_at,
          ],
       ];  
+      
+      $codeChildColumns = [ 'parent', 'child' ];
 
+/**
+ *    Sample Assignments
+ *
+ *    1: 1, A, ISSUED
+ *    ..24: 3, UGAD, Undergraduate
+ *    ..25: 3, GRAD, Graduate
+ *    ..26: 3, PHD,  Doctorate
+ *
+ *    17: 1, Z, PENDING
+ *    ..24: 3, UGAD, Undergraduate
+ *    ..25: 3, GRAD, Graduate
+ *    ..26: 3, PHD,  Doctorate 
+ **/
+
+      $permitChildRows = [      
+         [ 1, 24], [ 1, 25], [ 1, 26],
+         [17, 24], [17, 25], [17, 26],
+      ];
       
       $this->batchInsert( $this->getTableName(), $codeColumns, $permitRows      );
       $this->batchInsert( $this->getTableName(), $codeColumns, $departmentRows  );
       $this->batchInsert( $this->getTableName(), $codeColumns, $careerLevelRows );
       $this->batchInsert( $this->getTableName(), $codeColumns, $mastersRows     );
+      
+      $this->batchInsert( $this->getCodesChildTableName(), $codeChildColumns, $permitChildRows     );      
    }
 
 

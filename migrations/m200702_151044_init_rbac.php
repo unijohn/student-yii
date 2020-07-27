@@ -150,7 +150,7 @@ class m200702_151044_init_rbac extends Migration
             'key'             => '[Sylla]',            
             'name'            => '[Sylla]', 
             'description'     => 'Course Syllabi',
-         ],         
+         ],
       ]; 
 
 
@@ -166,6 +166,7 @@ class m200702_151044_init_rbac extends Migration
       $ACT_BACKUP    = 7;
       $ACT_ROLE      = 8;
       $ACT_SYNCH     = 9;
+      $ACT_MANAGE    = 10;
    
       
       $actionAccess = [ 
@@ -221,8 +222,14 @@ class m200702_151044_init_rbac extends Migration
             'id'           => '9',
             'key'          => '[Synch]',            
             'name'         => '[Synch]',
-            'description'  => 'Data Warehouse Sync Permissions',
-         ],         
+            'description'  => 'Data Warehouse Sync Permission',
+         ],
+         '10' => [ 
+            'id'           => '10',
+            'key'          => '[Manage]',            
+            'name'         => '[Manage]',
+            'description'  => 'System-Feature Management Permission',
+         ],     
       ];
 
      
