@@ -6,7 +6,6 @@ use Yii;
 use yii\base\model;
 use yii\rbac\DbManager;
 
-
 use app\models\User;
 use app\models\AuthItem;
 

@@ -2,11 +2,9 @@
 
 namespace app\models;
 
-
 use Yii;
 use yii\base\model;
 use yii\rbac\DbManager;
-
 
 use app\models\AuthAssignment;
 

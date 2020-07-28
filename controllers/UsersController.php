@@ -4,7 +4,6 @@ namespace app\controllers;
 
 use Yii;
 
-
 use yii\data\ActiveDataProvider;
 use yii\data\SQLDataProvider;
 use yii\filters\AccessControl;
@@ -13,7 +12,6 @@ use yii\helpers\ArrayHelper;
 use yii\rbac\DbManager;
 use yii\web\Controller;
 use yii\web\Response;
-
 
 use app\models\AuthAssignment;
 use app\models\AuthItem;
