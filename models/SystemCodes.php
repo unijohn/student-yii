@@ -2,10 +2,11 @@
 
 namespace app\models;
 
-
 use Yii;
 use yii\base\model;
-use yii\rbac\DbManager;
+use yii\behaviors\TimestampBehavior;
+
+use app\models\SystemCodesChild;
 
 
 class SystemCodes extends \yii\db\ActiveRecord
@@ -38,7 +39,7 @@ class SystemCodes extends \yii\db\ActiveRecord
    public static function tableName()
    {
       return '{{tbl_SystemCodes}}';
-   }  
+   }    
     
    
    /**
@@ -73,7 +74,31 @@ class SystemCodes extends \yii\db\ActiveRecord
    */
    public function behaviors()
    {
-      return [     
+      return [
+         'timeStampBehavior' => [
+            'class' => TimestampBehavior::className(),
+            'attributes' => 
+            [
+               ActiveRecord::EVENT_BEFORE_INSERT => ['created_at',],
+               ActiveRecord::EVENT_BEFORE_DELETE => ['deleted_at',],
+            ],
+            // if you're using datetime instead of UNIX timestamp:
+            'value' => time(),
+         ],
+
+/**
+         'softDeleteBehavior' => [
+            'class' => SoftDeleteBehavior::className(),
+            'softDeleteAttributeValues' => 
+            [
+               'isDeleted' => true
+            ],
+            
+            // mutate native `delete()` method
+            'replaceRegularDelete' => false
+         ],
+ **/
+ 
       ];
    }
 
@@ -96,9 +121,36 @@ class SystemCodes extends \yii\db\ActiveRecord
      */
    public static function findbyPermit()
    {
-      return AuthItem::find()
+      return SystemCodes::find()
          ->where(['type' => SystemCodes::TYPE_PERMIT ])
          ->all();
+   }
+   
+
+    /**
+     * TBD
+     *
+     * @returns model filtered by TYPE_MASTERS
+     */
+   public static function findPermitTags()
+   {
+      $tbl_systemsCodes       = $this->tableName();
+      $tbl_SystemCodesChild   = SystemCodesChild::tableName();
+   
+      $query_codes = ( new \yii\db\Query() )
+         ->select([  'sc.type', 'sc.code', 'sc.description', 'sc2.type', 'sc2.code', 'sc2.description' ])
+         ->from(     $tbl_systemsCodes . ' sc' )
+         ->innerJoin( $tbl_SystemCodesChild,       $tbl_SystemCodesChild . '.parent = sc.id' )
+         ->innerJoin( $tbl_systemsCodes . ' sc2',  $tbl_SystemCodesChild . '.child = sc2.id' ) )
+         ->where(['sc.type =:sc_type AND sc.is_active =:sc_is_active AND sc2.is_active =:sc2_is_active' ])
+            ->addParams([ 
+               ':sc_type'        => $id, 
+               ':sc_is_active'   => SystemCodesChild::STATUS_ACTIVE,
+               ':sc2_is_active'  => SystemCodesChild::STATUS_ACTIVE, 
+            ])
+         ->all();
+
+      return $query_codes;
    }
 
 
@@ -109,7 +161,7 @@ class SystemCodes extends \yii\db\ActiveRecord
      */
    public static function findbyDepartment()
    {
-      return AuthItem::find()
+      return SystemCodes::find()
          ->where(['type' => SystemCodes::TYPE_DEPARTMENT ])
          ->all();
    }
@@ -122,7 +174,7 @@ class SystemCodes extends \yii\db\ActiveRecord
      */
    public static function findbyCareerLevel()
    {
-      return AuthItem::find()
+      return SystemCodes::find()
          ->where(['type' => SystemCodes::TYPE_CAREERLEVEL ])
          ->all();
    }
@@ -135,10 +187,11 @@ class SystemCodes extends \yii\db\ActiveRecord
      */
    public static function findbyMasters()
    {
-      return AuthItem::find()
+      return SystemCodes::find()
          ->where(['type' => SystemCodes::TYPE_MASTERS ])
          ->all();
    }
+
    
 
 /*
@@ -166,10 +219,11 @@ class SystemCodes extends \yii\db\ActiveRecord
  *
  **/   
 
-/*
-   public function getAssignments()
+   public function getCodeChildren()
    {
-      return $this->hasMany(AuthAssignment::className(), [ 'item_name' => 'name' ] );
+      return 
+      return $this->hasMany(SystemCodesAssignment::className(), [ 'child' => 'id' ] );
    }
- */
+ 
+
 }
