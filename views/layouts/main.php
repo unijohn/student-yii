@@ -3,12 +3,14 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
+use app\assets\AppAsset;
 use app\widgets\Alert;
+
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
-use app\assets\AppAsset;
+
 
 AppAsset::register($this);
 
@@ -75,7 +77,7 @@ $session = Yii::$app->session;
       <?= Breadcrumbs::widget([
          'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
       ]) ?>
-      
+
 <?php
       
       if( isset( $this->params['data'] ) && !empty( $this->params['data']  ) )
@@ -83,9 +85,11 @@ $session = Yii::$app->session;
      
          if( isset( $this->params['data']['errors'] ) && !empty( $this->params['data']['errors'] ) )
          {
-            $data['errors'] = $this->params['data']['errors'];
          
+            $data['errors'] = $this->params['data']['errors'];
+
             print( "<div class='alert alert-danger' role='alert'> " . PHP_EOL );
+            print( "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>" );
                 
             foreach( $data['errors'] as $key => $value )
             {
@@ -93,7 +97,18 @@ $session = Yii::$app->session;
                $htmlTagClose  = "<br />";
             
                $errorName = $key;
-      
+
+/**
+ *  Example of using Yii's built-in Alert widget
+ *
+ *
+               Yii::$app->session->setFlash('error', 'This is the message');
+               
+               echo Alert::widget([
+                  'options' => ['class' => 'error'],
+               ]);         
+ **/
+
                if( isset( $data['errors'][$key]['htmlTag'] ) && !empty( $data['errors'][$key]['htmlTag'] ) )
                {
                   $htmlTagOpen   = "<"    . $data['errors'][$key]['htmlTag'] . ">";
@@ -102,7 +117,7 @@ $session = Yii::$app->session;
        
                print( $htmlTagOpen . "<strong>" . $errorName . " </strong> " . $data['errors'][$key]['value'] . $htmlTagClose . PHP_EOL);
             }
-            
+
             print( "</div> " . PHP_EOL );      
          }
       
@@ -111,6 +126,7 @@ $session = Yii::$app->session;
             $data['success'] = $this->params['data']['success'];
          
             print( "<div class='alert alert-success' role='alert'> " . PHP_EOL );
+            print( "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>" );            
                 
             foreach( $data['success'] as $key => $value )
             {
