@@ -123,11 +123,10 @@ class UsersController extends Controller
     * Centralizing the query for building the User GridView
     *
     * @return SqlDataProvider
-    */
-    
+    */ 
    private function getUserGridView()
    {
-      $params[':id']          = 1; 
+      $params[':id'] = 1; 
       
       $count = Yii::$app->db->createCommand(
          'SELECT COUNT(*) FROM tbl_Users WHERE id >=:id ',
@@ -204,7 +203,7 @@ class UsersController extends Controller
    
 
    /**
-    * Displays listing of all users in the system.
+    * Displays selected UUID ( 1 record ).
     *
     * @return string
     */
@@ -234,6 +233,7 @@ class UsersController extends Controller
             'allRoles'     => $this->_authItemModel,
       ]);      
    }
+
 
    /**
     * Adding new User and Role information

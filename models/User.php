@@ -16,7 +16,7 @@ use app\models\AuthAssignment;
 use app\models\AuthItem;
 
 //class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
-class User extends ActiveRecord implements \yii\web\IdentityInterface
+class User extends ActiveRecord implements IdentityInterface
 {
 /**
    Using these declarations breaks the ActiveRecord functionality 
