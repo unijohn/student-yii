@@ -19,14 +19,17 @@ use app\models\SystemCodesChild;
 
 class PermitsController extends Controller
 {
-{
    private $_auth;
    private $_data;
    private $_dataProvider;
    private $_request;
-   private $_permitModel;
-   private $_tagsModel;
+   private $_codesModel;
+   private $_codeChildModel;
 
+
+    /**
+     * {@inheritdoc}
+     */
    public function init()
    {
       parent::init();
@@ -47,62 +50,36 @@ class PermitsController extends Controller
       $this->_data             = [];
       $this->_dataProvider     = [];
 
-      $this->_permitModel     = new SystemCodes();
-      $this->_tagsModel       = new AuthAssignment();
-
-/**
-      $this->_data['filterForm']['uuid']              = ArrayHelper::getValue($this->_request->get(), 'User.uuid',      '');
-      $this->_data['filterForm']['is_active']         = ArrayHelper::getValue($this->_request->get(), 'User.is_active', -1);
-      $this->_data['filterForm']['paginationCount']   = $this->_request->get( 'pagination_count', 10 );
- **/
+      $this->_codesModel      = new SystemCodes();
+      $this->_codeChildModel  = new SystemCodesChild();
       
       /**
        *    Capturing the possible post() variables used in this controller
        **/      
-
-/**
-      $this->_data['post']['uuid']           = $this->_request->post('uuid',     '' );
-
-      if( strlen( $this->_data['post']['uuid'] ) < 1 )
-      {
-         $this->_data['post']['uuid']        = ArrayHelper::getValue($this->_request->post(), 'User.uuid', '' ); 
-      }
-
-      $this->_data['post']['addRole']        = $this->_request->post('addRole',        '' );
-      $this->_data['post']['dropRole']       = $this->_request->post('dropRole',       '' );
-      $this->_data['post']['authitem']       = $this->_request->post('authitem',       '' );
-      $this->_data['post']['authassignment'] = $this->_request->post('authassignment', '' );
- **/
    }   
-   
+
+     
     /**
      * {@inheritdoc}
      */
-     
-/**      
     public function behaviors()
-    {   
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout'],
-                'rules' => [
-                    [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
-        ];
-    }
- **/    
+    {  
+       return [
+           'verbs' => [
+               'class' => VerbFilter::className(),
+               'actions' => [
+                   'index'  => ['get'],
+/**                
+                   'view'   => ['get'],
+                   'create' => ['get', 'post'],
+                   'update' => ['get', 'put', 'post'],
+                   'delete' => ['post', 'delete'],
+ **/
+               ],
+           ],
+      ];
+   }
+   
 
     /**
      * {@inheritdoc}
@@ -116,14 +93,14 @@ class PermitsController extends Controller
         ];
     }
 
-    /**
-     * Displays homepage.
-     *
-     * @return string
-     */
-    public function actionIndex()
-    {
-        return $this->render('index');
-    }
 
+   /**
+   * Displays homepage.
+   *
+   * @return string
+   */
+   public function actionIndex()
+   {
+      return $this->render('index');
+   }
 }

@@ -32,10 +32,10 @@
    print( "<P> updated_at: " . $formatter->asDate( $model->updated_at, 'MM-dd-yyyy HH:mm:ss' ) . "</p>" );    
  ?>
  
-   <h3>Drop User Roles</h3>
-   <div id='users-roles-add-form'>      
-      <?= $this->render('_users-roles-drop', ['data' => $data, 'model' => $model->roles]); ?>      
-   </div>  
+      <h3>Drop User Roles</h3>
+      <div id='users-roles-drop-form'>      
+         <?= $this->render('_users-roles-drop', ['data' => $data, 'model' => $model->roles]); ?>      
+      </div>  
    
 <?php   
 /**
@@ -48,7 +48,6 @@
    print_r( $allRoles );     
    print( "</pre>" );
  **/
- 
 ?>
 
       <h3>Add User Roles</h3>

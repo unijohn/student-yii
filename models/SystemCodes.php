@@ -5,11 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\model;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 
 use app\models\SystemCodesChild;
 
 
-class SystemCodes extends \yii\db\ActiveRecord
+class SystemCodes extends ActiveRecord
 {
    const TYPE_PERMIT       = 1;
    const TYPE_DEPARTMENT   = 2;
@@ -24,7 +25,7 @@ class SystemCodes extends \yii\db\ActiveRecord
    public $type;
    public $code;
    public $description;
-   public $is_active
+   public $is_active;
    public $created_at;
    public $updated_at;
    public $deleted_at;   
@@ -130,9 +131,9 @@ class SystemCodes extends \yii\db\ActiveRecord
     /**
      * TBD
      *
-     * @returns model filtered by TYPE_MASTERS
+     * @returns model filtered by TYPE_PERMIT
      */
-   public static function findPermitTags()
+   public static function findAllPermitTags()
    {
       $tbl_systemsCodes       = $this->tableName();
       $tbl_SystemCodesChild   = SystemCodesChild::tableName();
@@ -141,16 +142,76 @@ class SystemCodes extends \yii\db\ActiveRecord
          ->select([  'sc.type', 'sc.code', 'sc.description', 'sc2.type', 'sc2.code', 'sc2.description' ])
          ->from(     $tbl_systemsCodes . ' sc' )
          ->innerJoin( $tbl_SystemCodesChild,       $tbl_SystemCodesChild . '.parent = sc.id' )
-         ->innerJoin( $tbl_systemsCodes . ' sc2',  $tbl_SystemCodesChild . '.child = sc2.id' ) )
+         ->innerJoin( $tbl_systemsCodes . ' sc2',  $tbl_SystemCodesChild . '.child = sc2.id' )
          ->where(['sc.type =:sc_type AND sc.is_active =:sc_is_active AND sc2.is_active =:sc2_is_active' ])
             ->addParams([ 
-               ':sc_type'        => $id, 
-               ':sc_is_active'   => SystemCodesChild::STATUS_ACTIVE,
-               ':sc2_is_active'  => SystemCodesChild::STATUS_ACTIVE, 
+               ':sc_type'        => SystemCodes::TYPE_PERMIT, 
+               ':sc_is_active'   => SystemCodes::STATUS_ACTIVE,
+               ':sc2_is_active'  => SystemCodes::STATUS_ACTIVE, 
             ])
          ->all();
 
       return $query_codes;
+   }
+   
+   
+    /**
+     * TBD
+     *
+     * @param integer Row $id value for code entry
+     * @returns model filtered by TYPE_PERMIT || false if $id is invalid
+     */
+   public static function findPermitTagsById( $id = -1 )
+   {
+      if( $id < 0 || strval($id) === 0 )
+      {
+         return false;
+      }
+   
+      $tbl_SystemsCodes       = SystemCodes::tableName();
+      $tbl_SystemCodesChild   = SystemCodesChild::tableName();
+   
+      $query_codes = ( new \yii\db\Query() )
+         ->select([  'sc.id', 'sc.type', 'sc.code', 'sc.description', 'sc2.id', 'sc2.type', 'sc2.code', 'sc2.description' ])
+         ->from(     $tbl_SystemsCodes . ' sc' )
+         ->innerJoin( $tbl_SystemCodesChild,       $tbl_SystemCodesChild . '.parent = sc.id' )
+         ->innerJoin( $tbl_SystemsCodes . ' sc2',  $tbl_SystemCodesChild . '.child = sc2.id' )
+         ->where(['sc.id' => $id ])
+         ->andWhere([ 'sc.type'        => SystemCodes::TYPE_PERMIT ])
+         ->andWhere([ 'sc.is_active'   => SystemCodes::STATUS_ACTIVE ])
+         ->andWhere([ 'sc2.is_active'  => SystemCodes::STATUS_ACTIVE ])
+         ->all();
+
+      return $query_codes;
+   }
+
+/*
+   public static function findbyUnassignedRoles( $assignedRoles = '' )
+   {
+      return AuthItem::find()
+         ->where([ 'type' => AuthItem::TYPE_ROLE ]) 
+         ->andWhere([ 'not in' , 'name', $assignedRoles ])
+         ->all();         
+   }   
+
+   public static function findbyPermissions()
+   {
+      return AuthItem::find()
+         ->where(['type' => AuthItem::TYPE_PERMISSION ])
+         ->all();
+   }
+ */
+
+    /**
+     * TBD
+     *
+     * @returns model filtered by all entries that are not TYPE_PERMIT
+     */
+   public static function findPermitTagOptions()
+   {
+      return SystemCodes::find()
+         ->where([ '!=', 'type',  SystemCodes::TYPE_PERMIT ])
+         ->all();
    }
 
 
@@ -169,7 +230,7 @@ class SystemCodes extends \yii\db\ActiveRecord
 
     /**
      * TBD
-     *
+     *     
      * @returns model filtered by TYPE_CAREERLEVEL
      */
    public static function findbyCareerLevel()
@@ -221,7 +282,6 @@ class SystemCodes extends \yii\db\ActiveRecord
 
    public function getCodeChildren()
    {
-      return 
       return $this->hasMany(SystemCodesAssignment::className(), [ 'child' => 'id' ] );
    }
  
