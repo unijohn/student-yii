@@ -75,7 +75,19 @@ class UsersController extends Controller
       $this->_data['post']['addRole']        = $this->_request->post('addRole',        '' );
       $this->_data['post']['dropRole']       = $this->_request->post('dropRole',       '' );
       $this->_data['post']['authitem']       = $this->_request->post('authitem',       '' );
-      $this->_data['post']['authassignment'] = $this->_request->post('authassignment', '' );                      
+      $this->_data['post']['authassignment'] = $this->_request->post('authassignment', '' );        
+      
+      $this->_data['uuid']           = $this->_request->post('uuid',     '' );
+      $this->_data['addRole']        = $this->_request->post('addRole',  '' );
+      $this->_data['dropRole']       = $this->_request->post('dropRole', '' );
+      $this->_data['authitem']       = $this->_request->post('authitem', '' );
+      $this->_data['authassignment'] = $this->_request->post('authassignment', '' );    
+      
+      $this->_data['addUser']          = ArrayHelper::getValue($this->_request->post(), 'User.addUser',     '' );
+      $this->_data['lookupUser']       = ArrayHelper::getValue($this->_request->post(), 'User.lookupUser',  '' );
+      $this->_data['saveUser']         = false;
+      $this->_data['errors']           = [];   
+      $this->_data['success']          = [];
    }   
 
 
@@ -244,12 +256,6 @@ class UsersController extends Controller
    {
       $this->_dataProvider = $this->getUserGridView();   
    
-      $this->_data['addUser']          = ArrayHelper::getValue($this->_request->post(), 'User.addUser',     '' );
-      $this->_data['lookupUser']       = ArrayHelper::getValue($this->_request->post(), 'User.lookupUser',  '' );
-      $this->_data['saveUser']         = false;
-      $this->_data['errors']           = [];   
-      $this->_data['success']          = [];
-   
       $this->_userModel->uuid          = ArrayHelper::getValue($this->_request->post(), 'User.uuid', '' );
       
       $uuidExists = User::existsUUID( $this->_userModel->uuid );
@@ -330,33 +336,74 @@ class UsersController extends Controller
     * @return (TBD)
     */
    public function actionSave()
-   {  
-      $this->_data['uuid']           = $this->_request->post('uuid',     '' );
-      $this->_data['addRole']        = $this->_request->post('addRole',  '' );
-      $this->_data['dropRole']       = $this->_request->post('dropRole', '' );
-      $this->_data['authitem']       = $this->_request->post('authitem', '' );
-      $this->_data['authassignment'] = $this->_request->post('authassignment', '' );      
-      
-      //$this->_auth->assign( $auth->getRole('Academic-Advisor-Graduate'),       5 ); 
-
-      print_r( $this->_request->post() );
+   {       
+//      $this->_auth->assign( $auth->getRole('Academic-Advisor-Graduate'),       5 ); 
+//      print_r( $this->_request->post() );
 
       $this->_userModel = User::find()
          ->where(['uuid' => $this->_data['uuid'] ])
          ->limit(1)->one();
 
-      print( $this->_userModel->id . PHP_EOL );
+//      print( $this->_userModel->id . PHP_EOL );
 
       if( strlen( $this->_data['addRole'] ) > 0 )
       {
-         print( "addRole > 0" );
-         $this->_auth->assign( $this->_auth->getRole($this->_data['authitem']['name']), $this->_userModel->id ); 
+         if( $this->_auth->assign( $this->_auth->getRole($this->_data['authitem']['name']), $this->_userModel->id ) )
+         {
+            $this->_data['success']['Add Role'] = [
+               'value'        => "was successful",
+               'bValue'       => true,
+               'htmlTag'      => 'h4',
+               'class'        => 'alert alert-success', 
+            ];
+            
+            $this->_data['success']['Add Role To User'] = [
+               'value' => "was successful",
+            ];
+         }
+         else
+         {
+            $this->_data['errors']['Add Role'] = [
+               'value'     => "was unsuccessful",
+               'bValue'    => false,
+               'htmlTag'   => 'h4',
+               'class'     => 'alert alert-danger',
+            ];
+            
+            $this->_data['errors']['Remove Role From User'] = [
+               'value' => "was not successful; no roles were added.",
+            ];
+         }           
       }
 
       if( strlen( $this->_data['dropRole'] ) > 0 )
       {
-         print( "dropRole > 0" );
-         $this->_auth->revoke ( $this->_auth->getRole($this->_data['authassignment']['item_name']), $this->_userModel->id ); 
+         if( $this->_auth->revoke( $this->_auth->getRole($this->_data['authassignment']['item_name']), $this->_userModel->id ) )
+         {
+            $this->_data['success']['Remove Role'] = [
+               'value'        => "was successful",
+               'bValue'       => true,
+               'htmlTag'      => 'h4',
+               'class'        => 'alert alert-success', 
+            ];
+            
+            $this->_data['success']['Remove Role From User'] = [
+               'value' => "was successful",
+            ];
+         }
+         else
+         {
+            $this->_data['errors']['Remove Role'] = [
+               'value'     => "was unsuccessful",
+               'bValue'    => false,
+               'htmlTag'   => 'h4',
+               'class'     => 'alert alert-danger',
+            ];
+            
+            $this->_data['errors']['Remove Role From User'] = [
+               'value' => "was not successful; no roles were removed.",
+            ];
+         }  
       }
 
       $roleModel  = AuthAssignment::find();

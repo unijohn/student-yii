@@ -18,6 +18,9 @@
 
    <div class="site-about">
       <h1><?= Html::encode($this->title) ?></h1>
+      
+      <?= $this->render('/common/_alert', ['data' => $data]); ?>      
+      
       <p>
          This is the <?= Html::encode($this->title) ?> page. You may modify the following file to customize its content:
       </p>
