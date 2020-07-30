@@ -90,7 +90,7 @@ $auth    = Yii::$app->authManager;
       print( "<li>" );
       print( HTML::a( "User Management", Url::toRoute( ['users/index', ], true) ) );
       print( "</li>" );
-
+      
       print( "<ul>" );
       print(   "<li>Switch Role Identity</li>" );
       print(   "<ul>" );
@@ -117,7 +117,20 @@ $auth    = Yii::$app->authManager;
       print(   "</ul>" );
       print( "</ul>" );      
    }
-   
+
+   if (
+      \Yii::$app->user->can('[Framework][Synch][Permit]' )  ||
+      \Yii::$app->user->can('[Framework][Synch][GAApp]'  )  ||
+      \Yii::$app->user->can('[Framework][Synch][Sylla]'  )  ||
+      
+      $isFrameworkAdmin
+   ) 
+   {
+      print( "<li>" );
+      print( HTML::a( "System Code Management", Url::toRoute( ['framework/index', ], true) ) );
+      print( "</li>" );
+   }
+
    if (
       \Yii::$app->user->can('[Framework][Synch][Permit]' )  ||
       \Yii::$app->user->can('[Framework][Synch][GAApp]'  )  ||
