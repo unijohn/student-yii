@@ -18,6 +18,9 @@
 
    <div class="site-about">
       <h1><?= Html::encode($this->title) ?></h1>
+
+      <?= $this->render('/common/_alert', ['data' => $data]); ?>
+      
       <p>
          This is the <?= Html::encode($this->title) ?> page. You may modify the following file to customize its content:
       </p>
@@ -32,25 +35,12 @@
    print( "<P> deleted_at: "  . $formatter->asDate( $model->deleted_at, 'MM-dd-yyyy HH:mm:ss' ) . "</p>" );    
  ?>
  
-      <h3>Drop Permit Tags</h3>
+      <h3>Drop Permit Tag</h3>
       <div id='permits-tags-drop-form'>      
          <?= $this->render('_permits-tags-drop', ['data' => $data, 'model' => $tags]); ?>
       </div>  
-   
-<?php   
-/**
-   print( "<pre>" );
-   foreach( $allRoles as $role )
-      print( "<p>" . $role->name. "</p>" );
-   print( "</pre>" );
-           
-   print( "<pre>" );
-   print_r( $allRoles );     
-   print( "</pre>" );
- **/
-?>
 
-      <h3>Add Permit Tags</h3>
+      <h3>Add Permit Tag</h3>
       <div id='permits-tags-add-form'>      
          <?= $this->render('_permits-tags-add', ['data' => $data, 'model' => $allTags]); ?>
       </div>

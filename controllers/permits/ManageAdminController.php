@@ -24,10 +24,14 @@ class ManageAdminController extends Controller
    private $_auth;
    private $_data;
    private $_dataProvider;
+   private $_db;
    private $_request;
    private $_codesModel;
    private $_codeChildModel;
    private $_tagsModel;
+
+   private $_tbl_SystemCodes;
+   private $_tbl_SystemCodesChild;
 
     /**
      * {@inheritdoc}
@@ -47,17 +51,42 @@ class ManageAdminController extends Controller
       }
       
       $this->_auth      = Yii::$app->authManager;
+      $this->_db        = Yii::$app->db;
       $this->_request   = Yii::$app->request;  
       
       $this->_data             = [];
       $this->_dataProvider     = [];
 
-      $this->_codesModel      = new SystemCodes();
-      $this->_codeChildModel  = new SystemCodesChild();
+      $this->_codesModel            = new SystemCodes();
+      $this->_codeChildModel        = new SystemCodesChild();
+      
+      $this->_tbl_SystemCodes       = SystemCodes::tableName();
+      $this->_tbl_SystemCodesChild  = SystemCodesChild::tableName();
       
       /**
        *    Capturing the possible post() variables used in this controller
-       **/      
+       **/
+      $this->_data['id']               = $this->_request->post('id',       '' );
+      
+      if( strlen( $this->_data['id'] ) < 1 )
+      {
+         $this->_data['id']     = $this->_request->get('id', ''); 
+      }
+      
+      if( strlen( $this->_data['id'] ) > 0 )
+      {
+         $this->_codesModel = SystemCodes::find()
+            ->where(['id' => $this->_data['id'] ])
+            ->limit(1)->one();
+            
+         $this->_tagsModel       = SystemCodes::findPermitTagsById( $this->_data['id'] );
+         $this->_codeChildModel  = SystemCodes::findUnassignedPermitTagOptions( $this->_data['id']);
+      }
+       
+      $this->_data['tagid']            = $this->_request->post('tagid',    '' );      
+      $this->_data['addTag']           = $this->_request->post('addTag',   '' );
+      $this->_data['dropTag']          = $this->_request->post('dropTag',  '' );       
+         
    }   
    
     /**
@@ -111,32 +140,12 @@ class ManageAdminController extends Controller
    {
       $params[':type']  = 1; 
       
-      $count = Yii::$app->db->createCommand(
-         'SELECT COUNT(*) FROM tbl_SystemCodes WHERE type =:type ',
+      $count = $this->_db->createCommand(
+         "SELECT COUNT(*) FROM " . $this->_tbl_SystemCodes . " WHERE type =:type ",
          [':type' => $params[':type']])->queryScalar();
-      
-/**
-      $sql  =  "SELECT  id, uuid, name, is_active, ";
-      $sql .=  "        datetime(created_at, 'unixepoch') as created_at, datetime(updated_at, 'unixepoch') as updated_at " ;
-      $sql .= "FROM tbl_Users WHERE id >=:id ";
- **/
-       
+           
       $sql  = "SELECT  id, code, description, is_active, created_at, updated_at " ;
-      $sql .= "FROM tbl_SystemCodes WHERE type =:type ";
-
-/**
-      if( strlen ($this->_data['filterForm']['uuid'] ) > 0 )
-      {
-         $sql .= "AND uuid LIKE :uuid ";
-         $params[':uuid'] = '%' . $this->_data['filterForm']['uuid'] . '%';      
-      }
-      
-      if(  $this->_data['filterForm']['is_active'] > -1 && strlen(  $this->_data['filterForm']['is_active'] ) > 0 )
-      {
-         $sql .= "AND is_active =:is_active ";
-         $params[':is_active']   = $this->_data['filterForm']['is_active'];         
-      }
- **/
+      $sql .= "FROM " . $this->_tbl_SystemCodes . " WHERE type =:type ";
       
       $PermitSDP = new SqlDataProvider ([
          'sql'          => $sql,
@@ -201,15 +210,6 @@ class ManageAdminController extends Controller
     */
    public function actionView()
    {  
-      $this->_data['id']     = $this->_request->get('id', '');
-
-      $this->_codesModel = SystemCodes::find()
-         ->where(['id' => $this->_data['id'] ])
-         ->limit(1)->one();
-
-      $this->_tagsModel       = SystemCodes::findPermitTagsById( $this->_data['id'] );
-      $this->_codeChildModel  = SystemCodes::findPermitTagOptions();
-
       return $this->render('permit-view', [
             'data'         => $this->_data, 
             'dataProvider' => $this->_dataProvider,
@@ -218,4 +218,173 @@ class ManageAdminController extends Controller
             'allTags'      => $this->_codeChildModel,
       ]);      
    }
+   
+   
+   /**
+    * Saving changes to Permit and Tag information
+    *
+    * @return (TBD)
+    */
+   public function actionSave()
+   {  
+      $isError = false;
+
+/**
+print( "<pre>");
+print_r( $this->_request->post() );
+die();
+ **/
+ 
+      $tagRelationExists = SystemCodesChild::find()
+         ->where([ 'parent' => $this->_data['id'] ])
+         ->andWhere([ 'child' => $this->_data['tagid'] ])
+         ->limit(1)
+         ->one(); 
+         
+      $tagChild = SystemCodes::find()
+         ->where([ 'id' => $this->_data['tagid'] ])
+         ->limit(1)
+         ->one();
+
+      if( strlen( $this->_data['addTag'] ) > 0 )
+      {
+         if( !is_null( $tagRelationExists ) )
+         {        
+            $this->_data['errors']['Add Tag'] = [
+               'value'     => "was unsuccessful",
+               'bValue'    => false,
+               'htmlTag'   => 'h4',
+               'class'     => 'alert alert-danger',
+            ];
+            
+            $this->_data['errors'][$tagChild['description']] = [
+               'value' => "was not added; relationship already exists.",
+            ];
+            
+            $isError = true;
+         }
+
+         if( !$isError )
+         {
+            if( $this->addTag( $this->_data['tagid'], $this->_data['id'] ) )
+            { 
+               $tag = SystemCodes::find()
+                  ->where([ 'id' => $this->_data['tagid'] ])
+                  ->limit(1)
+                  ->one();
+            
+               $this->_data['success']['Add Tag'] = [
+                  'value'        => "was successful",
+                  'bValue'       => true,
+                  'htmlTag'      => 'h4',
+                  'class'        => 'alert alert-success', 
+               ];
+               
+               $this->_data['success'][$tagChild['description']] = [
+                  'value' => "was added",
+               ];
+            }
+            else
+            {
+               $this->_data['errors']['Add Tag'] = [
+                  'value'     => "was unsuccessful",
+                  'bValue'    => false,
+                  'htmlTag'   => 'h4',
+                  'class'     => 'alert alert-danger',
+               ];
+               
+               $this->_data['errors']['Add Permit Tag'] = [
+                  'value' => "was not successful; no tags were added.",
+               ];
+            }
+         }    
+      }
+
+      if( strlen( $this->_data['dropTag'] ) > 0 )
+      {
+         if( $this->removeTag( $this->_data['tagid'], $this->_data['id'] ) )
+         {
+            $this->_data['success']['Remove Tag'] = [
+               'value'        => "was successful",
+               'bValue'       => true,
+               'htmlTag'      => 'h4',
+               'class'        => 'alert alert-success', 
+            ];
+            
+            $this->_data['success'][$tagChild['description']] = [
+               'value' => "was removed",
+            ];
+         }
+         else
+         {
+            $this->_data['errors']['Remove Tag'] = [
+               'value'     => "was unsuccessful",
+               'bValue'    => false,
+               'htmlTag'   => 'h4',
+               'class'     => 'alert alert-danger',
+            ];
+            
+            $this->_data['errors'][$tagChild['description']] = [
+               'value' => "was not successful; no tags were removed.",
+            ];
+         }  
+      }
+
+      $this->_tagsModel       = SystemCodes::findPermitTagsById( $this->_data['id'] );
+
+      return $this->render('permit-view', [
+            'data'         => $this->_data, 
+            'dataProvider' => $this->_dataProvider,
+            'model'        => $this->_codesModel,
+            'tags'         => $this->_tagsModel,
+            'allTags'      => $this->_codeChildModel,
+      ]);  
+   }   
+   
+
+   /**
+    * Adds tag assigned to Permit
+    *
+    * @return bool if rows deleted are > 0
+    */
+    public function addTag($tagId, $permitId)
+    {
+/**
+   Need to add error catching later or handle it in action before getting this far
+  
+        if ($this->isEmptyUserId($userId)) {
+            return false;
+        }
+        
+        unset($this->_checkAccessAssignments[(string) $userId]);
+ **/
+
+        return $this->_db->createCommand()
+            ->insert($this->_tbl_SystemCodesChild, ['parent' => (integer) $permitId, 'child' => (integer) $tagId])
+            ->execute() > 0;
+    }
+
+
+   /**
+    * Removes tag assigned to Permit
+    *
+    * @return bool if rows deleted are > 0
+    */
+    public function removeTag($tagId, $permitId)
+    {
+/**
+   Need to add error catching later or handle it in action before getting this far
+  
+        if ($this->isEmptyUserId($userId)) {
+            return false;
+        }
+        
+        unset($this->_checkAccessAssignments[(string) $userId]);
+ **/
+
+        return $this->_db->createCommand()
+            ->delete($this->_tbl_SystemCodesChild, ['parent' => (integer) $permitId, 'child' => (integer) $tagId])
+            ->execute() > 0;
+    }
+
 }

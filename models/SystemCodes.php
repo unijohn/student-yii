@@ -202,16 +202,45 @@ class SystemCodes extends ActiveRecord
    }
  */
 
+
     /**
      * TBD
      *
      * @returns model filtered by all entries that are not TYPE_PERMIT
      */
-   public static function findPermitTagOptions()
+   public static function findPermitTagOptions( $id = -1 )
    {
       return SystemCodes::find()
          ->where([ '!=', 'type',  SystemCodes::TYPE_PERMIT ])
          ->all();
+   }
+
+
+    /**
+     * TBD
+     *
+     * @param integer Row $id value for code entry
+     * @returns model filtered by TYPE_PERMIT || false if $id is invalid
+     */
+   public static function findUnassignedPermitTagOptions( $id = -1 )
+   {
+      if( $id < 0 || strval($id) === 0 )
+      {
+         return false;
+      }
+   
+      $tbl_SystemsCodes       = SystemCodes::tableName();
+      $tbl_SystemCodesChild   = SystemCodesChild::tableName();
+   
+      $query_codes = ( new \yii\db\Query() )
+         ->select([  'sc.id', 'sc.type', 'sc.code', 'sc.description', 'sc.is_active' ])
+         ->from(     $tbl_SystemsCodes       . ' sc' )
+         ->leftJoin( $tbl_SystemCodesChild   . ' scc', 'scc.child = sc.id' )
+         ->where( 'sc.type !=:type AND ( scc.parent !=:id OR scc.parent IS NULL )' )
+            ->addParams( [':type' => SystemCodes::TYPE_PERMIT, ':id' => $id], )
+         ->all();
+
+      return $query_codes;
    }
 
 

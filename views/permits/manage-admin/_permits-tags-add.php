@@ -8,32 +8,28 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 
 
-//print( "<pre>" );
-
    $tags = [];
    foreach( $model as $tag )
    {
       $tags[$tag['id']] = $tag['code'] . ' : ' . $tag['description']; 
-//      print_r( $tag );
    }  
-   
-//die();
 ?>
 
-<div class="permits-tags-add-div">
+<div id="permits-tags-add-div">
    <?php $form = ActiveForm::begin([
          'action' => ['save'],
          'method' => 'post',
       ]); ?>
+   <?= Html::hiddenInput('id',   $data['id']) ?>
    
-   <div class="form-group field-tag-code">
-      <?= Html::dropDownList('tag[id]', null, $tags, [
+   <div id="field-tag-code" class="form-group field-tag-code">
+      <?= Html::dropDownList('tagid', null, $tags, [
             'id'     => 'tag-code',
             'prompt' => 'Select Tag', 
             'class'  => 'form-control'
          ]) 
       ?>
-      <div class="help-block"></div>
+      <div id="field-tag-code-help-block" class="help-block"></div>
    </div>
 
    <div class="form-group">      
