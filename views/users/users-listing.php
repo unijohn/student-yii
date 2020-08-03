@@ -37,7 +37,7 @@
             <div class="col-lg-4">
                <h2>Add Users</h2>
                <div id='users-add-form'>      
-                  <?= $this->render('_users-view-add', ['model' => $model, ]); ?>  
+                  <?= $this->render('_users-listing-add', ['model' => $model, ]); ?>  
                </div>
             </div>
             <div class="col-lg-4">
