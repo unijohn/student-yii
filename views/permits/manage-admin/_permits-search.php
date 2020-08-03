@@ -12,7 +12,7 @@ use yii\widgets\ActiveForm;
    $pageCount['50']  = 50;
    $pageCount['100'] = 100;
    
-   $isActive['-1']    = 'Select Status';
+   $isActive['-1']   = 'Select Status';
    $isActive['1']    = 'Active';
    $isActive['0']    = 'Inactive';
 ?>
