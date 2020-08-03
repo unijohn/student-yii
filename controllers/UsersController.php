@@ -330,6 +330,7 @@ class UsersController extends Controller
       ]);   
    }
    
+   
    /**
     * Saving changes to User and Role information
     *
