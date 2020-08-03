@@ -20,7 +20,7 @@ class SystemCodes extends ActiveRecord
    const STATUS_INACTIVE   = 0;
    const STATUS_ACTIVE     = 1;
 
-/*
+/**
    public $id;
    public $type;
    public $code;
@@ -29,7 +29,8 @@ class SystemCodes extends ActiveRecord
    public $created_at;
    public $updated_at;
    public $deleted_at;   
- */
+ **/
+
 
    public function init()
    {
@@ -80,8 +81,9 @@ class SystemCodes extends ActiveRecord
             'class' => TimestampBehavior::className(),
             'attributes' => 
             [
-               ActiveRecord::EVENT_BEFORE_INSERT => ['created_at',],
-               ActiveRecord::EVENT_BEFORE_DELETE => ['deleted_at',],
+               ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+               ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],           
+               ActiveRecord::EVENT_BEFORE_DELETE => ['deleted_at'],
             ],
             // if you're using datetime instead of UNIX timestamp:
             'value' => time(),
@@ -126,7 +128,7 @@ class SystemCodes extends ActiveRecord
          ->where(['type' => SystemCodes::TYPE_PERMIT ])
          ->all();
    }
-   
+      
 
     /**
      * TBD
@@ -185,23 +187,6 @@ class SystemCodes extends ActiveRecord
       return $query_codes;
    }
 
-/*
-   public static function findbyUnassignedRoles( $assignedRoles = '' )
-   {
-      return AuthItem::find()
-         ->where([ 'type' => AuthItem::TYPE_ROLE ]) 
-         ->andWhere([ 'not in' , 'name', $assignedRoles ])
-         ->all();         
-   }   
-
-   public static function findbyPermissions()
-   {
-      return AuthItem::find()
-         ->where(['type' => AuthItem::TYPE_PERMISSION ])
-         ->all();
-   }
- */
-
 
     /**
      * TBD
@@ -232,14 +217,42 @@ class SystemCodes extends ActiveRecord
       $tbl_SystemsCodes       = SystemCodes::tableName();
       $tbl_SystemCodesChild   = SystemCodesChild::tableName();
    
+
+      $query_codes = ( new \yii\db\Query() )
+         ->select([  'sc.id', 'sc.type', 'sc.code', 'sc.description', 'sc.is_active' ])
+         ->from(     $tbl_SystemsCodes       . ' sc' )
+         ->where( 'type !=:type AND id NOT IN ( SELECT child from ' . $tbl_SystemCodesChild .' WHERE parent = :id )' )
+            ->addParams([ ':type' => SystemCodes::TYPE_PERMIT, ':id' => $id ])
+         ->all();
+
+/**
       $query_codes = ( new \yii\db\Query() )
          ->select([  'sc.id', 'sc.type', 'sc.code', 'sc.description', 'sc.is_active' ])
          ->from(     $tbl_SystemsCodes       . ' sc' )
          ->leftJoin( $tbl_SystemCodesChild   . ' scc', 'scc.child = sc.id' )
-         ->where( 'sc.type !=:type AND ( scc.parent !=:id OR scc.parent IS NULL )' )
-            ->addParams( [':type' => SystemCodes::TYPE_PERMIT, ':id' => $id], )
-         ->all();
+         ->where( 'sc.type !=:type AND scc.child IS NULL ' )
+            ->addParams([':type' => SystemCodes::TYPE_PERMIT ]);
 
+//      $query_sub2    = SystemCodesChild::find()->select('child')->where([ 'child' => 1 ]);
+
+      $query_codes2 = ( new \yii\db\Query() )
+         ->select([  'sc.id', 'sc.type', 'sc.code', 'sc.description', 'sc.is_active' ])
+         ->from(     $tbl_SystemCodesChild   . ' scc' )
+         ->leftJoin( $tbl_SystemCodesChild   . ' scc2', 'scc.child = scc2.child' )
+         ->innerJoin( $tbl_SystemsCodes      . ' sc ',  'sc.id = scc.child' )
+         ->where( 'scc2.parent !=:id AND scc.child NOT IN ( SELECT child FROM ' . $tbl_SystemCodesChild . ' WHERE parent =:parent )'  )
+            ->addParams([':id' => $id, ':parent' => $id ]);
+
+      $query_codes->union( $query_codes2 );
+      
+      
+//      print( "<pre>" );
+      foreach( $query_codes->all() as $user_row )
+      {
+//         print_r( $user_row );
+      }
+//      die();
+ **/
       return $query_codes;
    }
 

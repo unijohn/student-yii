@@ -91,7 +91,14 @@ class ManageAdminController extends Controller
       $this->_data['addTag']           = $this->_request->post('addTag',   '' );
       $this->_data['dropTag']          = $this->_request->post('dropTag',  '' );    
       
-      $this->_data['addPermit']        = ArrayHelper::getValue($this->_request->post(), 'Permit.addPermit',     '' );   
+      $this->_data['addPermit']        = ArrayHelper::getValue($this->_request->post(), 'Permit.addPermit',    '' );
+      $this->_data['savePermit']       = ArrayHelper::getValue($this->_request->post(), 'Permit.savePermit',   '' );
+      
+      $this->_data['SystemCodes']['id']            = ArrayHelper::getValue($this->_request->post(),   'SystemCodes.id',          '');
+      $this->_data['SystemCodes']['code']          = ArrayHelper::getValue($this->_request->post(),   'SystemCodes.code',        '');
+      $this->_data['SystemCodes']['description']   = ArrayHelper::getValue($this->_request->post(),   'SystemCodes.description', '');
+      $this->_data['SystemCodes']['is_active']     = ArrayHelper::getValue($this->_request->post(),   'SystemCodes.is_active',   -1);
+      $this->_data['SystemCodes']['updated_at']    = time();
          
    }   
    
@@ -281,10 +288,7 @@ class ManageAdminController extends Controller
          {        
             if( isset($this->_codesModel->code ) && !empty( $this->_codesModel->code ) )
             {
-   
-               $this->_data['savePermit'] = $this->_codesModel->save();
-               
-                    
+               $this->_data['savePermit'] = $this->_codesModel->save();   
             }
             else
             {
@@ -433,8 +437,47 @@ die();
             ];
          }  
       }
+      
+      if( isset($this->_data['savePermit'] ) && !empty( $this->_data['savePermit'] ) )
+      {
+         $updateModel      = SystemCodes::findOne( $this->_data['SystemCodes']['id'] );
 
+         $updateModel->code         = $this->_data['SystemCodes']['code'];
+         $updateModel->description  = $this->_data['SystemCodes']['description'];
+
+         $updateColumns = $updateModel->getDirtyAttributes();
+
+         $updateModel->is_active    = $this->_data['SystemCodes']['is_active'];
+
+         $this->_data['savePermit'] = $updateModel->save();   
+         
+         if( isset($this->_data['savePermit'] ) && !empty( $this->_data['savePermit'] ) )
+         {
+            $this->_data['success']['Save Permit'] = [
+               'value'     => "was successful",
+               'bValue'    => true,
+               'htmlTag'   => 'h4',
+               'class'     => 'alert alert-success',
+            ];
+            
+            
+            foreach( $updateColumns as $key => $val )
+            {     
+               $keyIndex = ucfirst( strtolower(str_replace( "_", " ", $key )) );
+            
+               $this->_data['success'][$keyIndex] = [
+                  'value'     => "was updated ",
+                  'bValue'    => true,
+               ];                     
+            }
+         }      
+      }
+
+      $this->_codesModel      = $this->_codesModel->findOne( $this->_data['id'] );
       $this->_tagsModel       = SystemCodes::findPermitTagsById( $this->_data['id'] );
+      
+      $this->_codeChildModel  = SystemCodes::findUnassignedPermitTagOptions( $this->_data['id']);
+
 
       return $this->render('permit-view', [
             'data'         => $this->_data, 
