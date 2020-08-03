@@ -20,7 +20,7 @@ class SystemCodes extends ActiveRecord
    const STATUS_INACTIVE   = 0;
    const STATUS_ACTIVE     = 1;
 
-
+/*
    public $id;
    public $type;
    public $code;
@@ -29,7 +29,7 @@ class SystemCodes extends ActiveRecord
    public $created_at;
    public $updated_at;
    public $deleted_at;   
-
+ */
 
    public function init()
    {
@@ -283,24 +283,25 @@ class SystemCodes extends ActiveRecord
    }
 
    
-
-/*
-   public static function findbyUnassignedRoles( $assignedRoles = '' )
-   {
-      return AuthItem::find()
-         ->where([ 'type' => AuthItem::TYPE_ROLE ]) 
-         ->andWhere([ 'not in' , 'name', $assignedRoles ])
-         ->all();         
+   public static function existsPermit($code)
+   {        
+      $query_permits = (new \yii\db\Query())
+         ->select([ 'id', 'type', 'code', 'description', 'created_at', 'updated_at' ])
+         ->from( SystemCodes::tableName() )
+         ->where( 'code=:code AND type =:type ' )
+            ->addParams([
+               ':code' => $code, 
+               ':type' => SystemCodes::TYPE_PERMIT, 
+            ])
+         ->limit(1);     
+     
+      foreach( $query_permits->each() as $permit_row )
+      {
+         return true;
+      }
+ 
+      return false;            
    }   
-
-
-   public static function findbyPermissions()
-   {
-      return AuthItem::find()
-         ->where(['type' => AuthItem::TYPE_PERMISSION ])
-         ->all();
-   }
- */
    
    
 /**

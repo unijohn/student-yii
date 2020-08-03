@@ -82,10 +82,16 @@ class ManageAdminController extends Controller
          $this->_tagsModel       = SystemCodes::findPermitTagsById( $this->_data['id'] );
          $this->_codeChildModel  = SystemCodes::findUnassignedPermitTagOptions( $this->_data['id']);
       }
+      
+      $this->_data['filterForm']['code']              = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.code',      '');
+      $this->_data['filterForm']['is_active']         = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.is_active', -1);
+      $this->_data['filterForm']['paginationCount']   = $this->_request->get( 'pagination_count', 10 );
        
       $this->_data['tagid']            = $this->_request->post('tagid',    '' );      
       $this->_data['addTag']           = $this->_request->post('addTag',   '' );
-      $this->_data['dropTag']          = $this->_request->post('dropTag',  '' );       
+      $this->_data['dropTag']          = $this->_request->post('dropTag',  '' );    
+      
+      $this->_data['addPermit']        = ArrayHelper::getValue($this->_request->post(), 'Permit.addPermit',     '' );   
          
    }   
    
@@ -147,6 +153,18 @@ class ManageAdminController extends Controller
       $sql  = "SELECT  id, code, description, is_active, created_at, updated_at " ;
       $sql .= "FROM " . $this->_tbl_SystemCodes . " WHERE type =:type ";
       
+      if(  $this->_data['filterForm']['is_active'] > -1 && strlen(  $this->_data['filterForm']['is_active'] ) > 0 )
+      {
+         $sql .= "AND is_active =:is_active ";
+         $params[':is_active']   = $this->_data['filterForm']['is_active'];         
+      }
+      
+      if(  $this->_data['filterForm']['code'] > -1 && strlen(  $this->_data['filterForm']['code'] ) > 0 )
+      {
+         $sql .= "AND code =:code ";
+         $params[':code']   = $this->_data['filterForm']['code'];         
+      }
+      
       $PermitSDP = new SqlDataProvider ([
          'sql'          => $sql,
          'params'       => $params,
@@ -173,7 +191,7 @@ class ManageAdminController extends Controller
             ],
          ],         
          'pagination' => [
-            'pageSize' => 10,
+            'pageSize' => $this->_data['filterForm']['paginationCount'],
          ],
 /**                  
          'pagination' => [
@@ -219,7 +237,93 @@ class ManageAdminController extends Controller
       ]);      
    }
    
+
+   /**
+    * Adding new Permit information
+    *
+    * @return (TBD)
+    */
+   public function actionAdd()
+   {
+      $this->_dataProvider = $this->getPermitGridView();
+      
+      $this->_codesModel->code = ArrayHelper::getValue($this->_request->post(), 'SystemCodes.code', '' );
+      
+      $idExists = SystemCodes::existsPermit( $this->_codesModel->code );
+      
+      if( $idExists )
+      {
+         if( isset( $this->_data['addPermit'] ) && !empty( $this->_data['addPermit'] ) )
+         {
+            $this->_data['errors']['Add Permit'] = [
+               'value'     => "was unsuccessful",
+               'htmlTag'   => 'h4',
+               'class'     => 'alert alert-danger',
+            ];
+
+         }
+         $this->_data['errors']['code'] = [
+            'value' => "already exists",      
+         ];
+      }
+      else
+      {
+         $this->_codesModel->type         = SystemCodes::TYPE_PERMIT;
+         $this->_codesModel->description  = $this->_codesModel->code;
+         $this->_codesModel->is_active    = 1;      
+         $this->_codesModel->created_at   = time();
+         $this->_codesModel->updated_at   = time(); 
+      } 
+      
+      if( !$idExists )
+      {          
+         if( isset($this->_data['addPermit'] ) && !empty( $this->_data['addPermit'] ) )
+         {        
+            if( isset($this->_codesModel->code ) && !empty( $this->_codesModel->code ) )
+            {
    
+               $this->_data['savePermit'] = $this->_codesModel->save();
+               
+                    
+            }
+            else
+            {
+               $this->_data['errors']['Add Permit'] = [
+                  'value'     => "was unsuccessful",
+                  'htmlTag'   => 'h4',
+                  'class'     => 'alert alert-danger',
+               ];
+               
+               $this->_data['errors']['code'] = [
+                  'value'     => "is null",
+               ];               
+            }
+         }
+      }
+
+      if( isset($this->_data['savePermit'] ) && !empty( $this->_data['savePermit'] ) )
+      {
+         $this->_data['success']['Add Permit'] = [
+            'value'     => "was successful",
+            'bValue'    => true,
+            'htmlTag'   => 'h4',
+            'class'     => 'alert alert-success',
+         ];
+         
+         $this->_data['success'][$this->_codesModel->code] = [
+            'value'     => "was added",
+            'bValue'    => true,
+         ];         
+      }
+
+      return $this->render('permits-listing', [
+            'data'         => $this->_data, 
+            'dataProvider' => $this->_dataProvider,
+            'model'        => $this->_codesModel,
+      ]); 
+   }
+
+
    /**
     * Saving changes to Permit and Tag information
     *
