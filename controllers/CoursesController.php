@@ -78,28 +78,21 @@ class CoursesController extends Controller
             
 //         $this->_tagsModel       = SystemCodes::findPermitTagsById( $this->_data['id'] );
 //         $this->_codeChildModel  = SystemCodes::findUnassignedPermitTagOptions( $this->_data['id']);
-      }
-      
-      
-/**      
-      $this->_data['post']['addRole']        = $this->_request->post('addRole',        '' );
-      $this->_data['post']['dropRole']       = $this->_request->post('dropRole',       '' );
-      $this->_data['post']['authitem']       = $this->_request->post('authitem',       '' );
-      $this->_data['post']['authassignment'] = $this->_request->post('authassignment', '' );        
-      
-      $this->_data['uuid']           = $this->_request->post('uuid',     '' );
-      $this->_data['addRole']        = $this->_request->post('addRole',  '' );
-      $this->_data['dropRole']       = $this->_request->post('dropRole', '' );
-      $this->_data['authitem']       = $this->_request->post('authitem', '' );
-      $this->_data['authassignment'] = $this->_request->post('authassignment', '' );    
-      
-      $this->_data['addUser']          = ArrayHelper::getValue($this->_request->post(), 'User.addUser',     '' );
-      $this->_data['lookupUser']       = ArrayHelper::getValue($this->_request->post(), 'User.lookupUser',  '' );
-      $this->_data['saveUser']         = false;
- **/     
+      }   
+ 
+      $this->_data['tagid']            = $this->_request->post('tagid',    '' );      
+      $this->_data['addTag']           = $this->_request->post('addTag',   '' );
+      $this->_data['dropTag']          = $this->_request->post('dropTag',  '' );     
  
       $this->_data['addCourse']        = ArrayHelper::getValue($this->_request->post(), 'Course.addCourse',    '' );
       $this->_data['saveCourse']       = ArrayHelper::getValue($this->_request->post(), 'Course.saveCourse',   '' );
+      
+      $this->_data['Courses']['id']             = ArrayHelper::getValue($this->_request->post(),   'Courses.id',              '');
+      $this->_data['Courses']['subject_area']   = ArrayHelper::getValue($this->_request->post(),   'Courses.subject_area',    '');
+      $this->_data['Courses']['course_number']  = ArrayHelper::getValue($this->_request->post(),   'Courses.course_number',   '');
+      $this->_data['Courses']['section_number'] = ArrayHelper::getValue($this->_request->post(),   'Courses.section_number',  '');      
+      $this->_data['Courses']['is_active']      = ArrayHelper::getValue($this->_request->post(),   'Courses.is_active',       -1);
+      $this->_data['Courses']['is_hidden']      = ArrayHelper::getValue($this->_request->post(),   'Courses.is_hidden',       -1);      
   
       $this->_data['errors']           = [];   
       $this->_data['success']          = [];
@@ -440,97 +433,233 @@ class CoursesController extends Controller
    
    
    /**
-    * Saving changes to User and Role information
+    * Saving changes to Course and Tag information
     *
     * @return (TBD)
     */
    public function actionSave()
-   {       
-//      $this->_auth->assign( $auth->getRole('Academic-Advisor-Graduate'),       5 ); 
-//      print_r( $this->_request->post() );
+   {  
+      $isError = false;
 
-      $this->_userModel = User::find()
-         ->where(['uuid' => $this->_data['uuid'] ])
-         ->limit(1)->one();
+/**
+print( "<pre>");
+print_r( $this->_request->post() );
+die();
+ **/
+ 
+/**
+      $tagRelationExists = SystemCodesChild::find()
+         ->where([ 'parent' => $this->_data['id'] ])
+         ->andWhere([ 'child' => $this->_data['tagid'] ])
+         ->limit(1)
+         ->one(); 
+         
+      $tagChild = SystemCodes::find()
+         ->where([ 'id' => $this->_data['tagid'] ])
+         ->limit(1)
+         ->one();
 
-//      print( $this->_userModel->id . PHP_EOL );
 
-      if( strlen( $this->_data['addRole'] ) > 0 )
+      if( strlen( $this->_data['addTag'] ) > 0 )
       {
-         if( $this->_auth->assign( $this->_auth->getRole($this->_data['authitem']['name']), $this->_userModel->id ) )
-         {
-            $this->_data['success']['Add Role'] = [
-               'value'        => "was successful",
-               'bValue'       => true,
-               'htmlTag'      => 'h4',
-               'class'        => 'alert alert-success', 
-            ];
-            
-            $this->_data['success']['Add Role To User'] = [
-               'value' => "was successful",
-            ];
-         }
-         else
-         {
-            $this->_data['errors']['Add Role'] = [
+         if( !is_null( $tagRelationExists ) )
+         {        
+            $this->_data['errors']['Add Tag'] = [
                'value'     => "was unsuccessful",
                'bValue'    => false,
                'htmlTag'   => 'h4',
                'class'     => 'alert alert-danger',
             ];
             
-            $this->_data['errors']['Remove Role From User'] = [
-               'value' => "was not successful; no roles were added.",
+            $this->_data['errors'][$tagChild['description']] = [
+               'value' => "was not added; relationship already exists.",
             ];
-         }           
+            
+            $isError = true;
+         }
+
+         if( !$isError )
+         {
+            if( $this->addTag( $this->_data['tagid'], $this->_data['id'] ) )
+            { 
+               $tag = SystemCodes::find()
+                  ->where([ 'id' => $this->_data['tagid'] ])
+                  ->limit(1)
+                  ->one();
+            
+               $this->_data['success']['Add Tag'] = [
+                  'value'        => "was successful",
+                  'bValue'       => true,
+                  'htmlTag'      => 'h4',
+                  'class'        => 'alert alert-success', 
+               ];
+               
+               $this->_data['success'][$tagChild['description']] = [
+                  'value' => "was added",
+               ];
+            }
+            else
+            {
+               $this->_data['errors']['Add Tag'] = [
+                  'value'     => "was unsuccessful",
+                  'bValue'    => false,
+                  'htmlTag'   => 'h4',
+                  'class'     => 'alert alert-danger',
+               ];
+               
+               $this->_data['errors']['Add Permit Tag'] = [
+                  'value' => "was not successful; no tags were added.",
+               ];
+            }
+         }    
       }
 
-      if( strlen( $this->_data['dropRole'] ) > 0 )
+      if( strlen( $this->_data['dropTag'] ) > 0 )
       {
-         if( $this->_auth->revoke( $this->_auth->getRole($this->_data['authassignment']['item_name']), $this->_userModel->id ) )
+         if( $this->removeTag( $this->_data['tagid'], $this->_data['id'] ) )
          {
-            $this->_data['success']['Remove Role'] = [
+            $this->_data['success']['Remove Tag'] = [
                'value'        => "was successful",
                'bValue'       => true,
                'htmlTag'      => 'h4',
                'class'        => 'alert alert-success', 
             ];
             
-            $this->_data['success']['Remove Role From User'] = [
-               'value' => "was successful",
+            $this->_data['success'][$tagChild['description']] = [
+               'value' => "was removed",
             ];
          }
          else
          {
-            $this->_data['errors']['Remove Role'] = [
+            $this->_data['errors']['Remove Tag'] = [
                'value'     => "was unsuccessful",
                'bValue'    => false,
                'htmlTag'   => 'h4',
                'class'     => 'alert alert-danger',
             ];
             
-            $this->_data['errors']['Remove Role From User'] = [
-               'value' => "was not successful; no roles were removed.",
+            $this->_data['errors'][$tagChild['description']] = [
+               'value' => "was not successful; no tags were removed.",
             ];
          }  
-      }
-
-      $roleModel  = AuthAssignment::find();
+      }  
+ **/      
       
-      $assignedRoles = [];
-      foreach( $this->_userModel->roles as $role )
+      if( isset($this->_data['saveCourse'] ) && !empty( $this->_data['saveCourse'] ) )
       {
-         $assignedRoles[] = $role->item_name;
-      }
-      
-      $this->_authItemModel   = AuthItem::findbyUnassignedRoles($assignedRoles);      
+         $this->_coursesModel->id               = ArrayHelper::getValue($this->_request->post(), 'Courses.id',   '' );
+         $this->_coursesModel->subject_area     = ArrayHelper::getValue($this->_request->post(), 'Courses.subject_area',   '' );
+         $this->_coursesModel->course_number    = ArrayHelper::getValue($this->_request->post(), 'Courses.course_number',  '' ); 
+         $this->_coursesModel->section_number   = ArrayHelper::getValue($this->_request->post(), 'Courses.section_number', '' );       
+   
+         $exitEarly = false;
 
-      return $this->render('user-view', [
-         'data'         => $this->_data, 
-         'dataProvider' => $this->_dataProvider,
-         'model'        => $this->_userModel,
-         'roles'        => $this->_roleModel,
-         'allRoles'     => $this->_authItemModel,
-      ]);
-   }
+         if( !isset( $this->_coursesModel->subject_area ) || empty( $this->_coursesModel->subject_area ) )
+         {
+            $this->_data['errors']['Save Course'] = [
+               'value'     => "was unsuccessful",
+               'htmlTag'   => 'h4',
+               'class'     => 'alert alert-danger',
+            ];
+   
+            $this->_data['errors']['subject'] = [
+               'value' => "is blank",      
+            ];      
+            
+            $exitEarly = true;
+         }
+         
+         if( !isset( $this->_coursesModel->course_number ) || empty( $this->_coursesModel->course_number ) )
+         {
+            $this->_data['errors']['Save Course'] = [
+               'value'     => "was unsuccessful",
+               'htmlTag'   => 'h4',
+               'class'     => 'alert alert-danger',
+            ];
+   
+            $this->_data['errors']['course'] = [
+               'value' => "is blank",      
+            ];      
+            
+            $exitEarly = true;
+         }      
+         
+         if( !isset( $this->_coursesModel->section_number ) || empty( $this->_coursesModel->section_number ) )
+         {
+            $this->_data['errors']['Save Course'] = [
+               'value'     => "was unsuccessful",
+               'htmlTag'   => 'h4',
+               'class'     => 'alert alert-danger',
+            ];
+   
+            $this->_data['errors']['section'] = [
+               'value' => "is blank",      
+            ];      
+   
+            $exitEarly = true;
+         }        
+   
+         if( $exitEarly )
+         {  
+            return $this->render('course-view', [
+                  'data'         => $this->_data, 
+                  'dataProvider' => $this->_dataProvider,
+                  'model'        => $this->_coursesModel,
+      //            'tags'         => $this->_tagsModel,
+      //            'allTags'      => $this->_codeChildModel,
+            ]);  
+         }      
+      
+         $updateModel      = Courses::findOne( $this->_coursesModel->id );
+ 
+         $updateModel->subject_area    = $this->_data['Courses']['subject_area'];
+         $updateModel->course_number   = $this->_data['Courses']['course_number'];
+         $updateModel->section_number  = $this->_data['Courses']['section_number'];         
+
+         $updateColumns = $updateModel->getDirtyAttributes();
+
+         $updateModel->is_active    = $this->_data['Courses']['is_active'];
+         $updateModel->is_hidden    = $this->_data['Courses']['is_hidden'];
+
+         $this->_data['savePermit'] = $updateModel->save();   
+         
+         if( isset($this->_data['savePermit'] ) && !empty( $this->_data['savePermit'] ) )
+         {
+         
+            if( count( $updateColumns ) > 0 )
+            {
+               $this->_data['success']['Save Permit'] = [
+                  'value'     => "was successful",
+                  'bValue'    => true,
+                  'htmlTag'   => 'h4',
+                  'class'     => 'alert alert-success',
+               ];
+               
+               foreach( $updateColumns as $key => $val )
+               {     
+                  $keyIndex = ucfirst( strtolower(str_replace( "_", " ", $key )) );
+               
+                  $this->_data['success'][$keyIndex] = [
+                     'value'     => "was updated ",
+                     'bValue'    => true,
+                  ];                     
+               }
+            }
+         }  
+      }    
+
+      $this->_coursesModel      = $this->_coursesModel->findOne( $this->_data['id']  );
+      
+//      $this->_tagsModel       = SystemCodes::findPermitTagsById( $this->_data['id'] );
+//      $this->_codeChildModel  = SystemCodes::findUnassignedPermitTagOptions( $this->_data['id']);
+
+
+      return $this->render('course-view', [
+            'data'         => $this->_data, 
+            'dataProvider' => $this->_dataProvider,
+            'model'        => $this->_coursesModel,
+//            'tags'         => $this->_tagsModel,
+//            'allTags'      => $this->_codeChildModel,
+      ]);  
+   }   
 }

@@ -10,7 +10,7 @@
 
    use yii\widgets\ActiveForm;
    
-   $this->title = 'Permits | Manage-Admin | View | Update';
+   $this->title = 'Framework | Courses | View | Update';
    $this->params['breadcrumbs'][] = [ 'label' => $this->title, 'url' =>['index']];
    
    $formatter = \Yii::$app->formatter;
@@ -73,7 +73,7 @@
             <div class="help-block"></div>
          </div>
          
-         <div class="form-group form-inline field-description">
+         <div class="form-group form-inline field-course_number">
             <label class="control-label" for="Courses[course_number]">Course</label>
             <?= Html::input('text', 'Courses[course_number]', $model->course_number, 
                [
@@ -85,8 +85,8 @@
             <div class="help-block"></div>
          </div>
          
-         <div class="form-group form-inline field-description">
-            <label class="control-label" for="Courses[section_number]">Course</label>
+         <div class="form-group form-inline field-section_number">
+            <label class="control-label" for="Courses[section_number]">Section</label>
             <?= Html::input('text', 'Courses[section_number]', $model->section_number, 
                [
                   'id'     => 'section_number', 
