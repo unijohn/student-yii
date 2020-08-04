@@ -120,6 +120,18 @@ $auth    = Yii::$app->authManager;
 
    if (
       \Yii::$app->user->can('[Framework][Synch][Permit]' )  ||
+      \Yii::$app->user->can('[Framework][Synch][Sylla]'  )  ||
+      
+      $isFrameworkAdmin
+   ) 
+   {
+      print( "<li>" );
+      print( HTML::a( "Course Management", Url::toRoute( ['courses/index', ], true) ) );
+      print( "</li>" );
+   }
+
+   if (
+      \Yii::$app->user->can('[Framework][Synch][Permit]' )  ||
       \Yii::$app->user->can('[Framework][Synch][GAApp]'  )  ||
       \Yii::$app->user->can('[Framework][Synch][Sylla]'  )  ||
       
@@ -300,6 +312,7 @@ $auth    = Yii::$app->authManager;
    ) {
  ?>
 
+<!--
             <div class="col-lg-4">
                 <h2>Graduate Assistant Applications</h2>
                 
@@ -389,11 +402,9 @@ $auth    = Yii::$app->authManager;
     *  Eo GAApp section of the dashboard
     **/
  ?>
- 
-
-
-
+-->   
         </div>
+     
 
     </div>
 </div>
