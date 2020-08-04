@@ -21,19 +21,8 @@ class SystemCodes extends ActiveRecord
    const STATUS_ACTIVE     = 1;
    
    const STATUS_HIDDEN     = 0;
-   const STATUS_VISIBLE    = 1;   
-
-/**
-   public $id;
-   public $type;
-   public $code;
-   public $description;
-   public $is_active;
-   public $created_at;
-   public $updated_at;
-   public $deleted_at;   
- **/
-
+   const STATUS_VISIBLE    = 1;
+   
 
    public function init()
    {
@@ -330,6 +319,4 @@ class SystemCodes extends ActiveRecord
    {
       return $this->hasMany(SystemCodesAssignment::className(), [ 'child' => 'id' ] );
    }
- 
-
 }
