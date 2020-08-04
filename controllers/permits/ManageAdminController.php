@@ -206,11 +206,6 @@ class ManageAdminController extends Controller
          'pagination' => [
             'pageSize' => $this->_data['filterForm']['paginationCount'],
          ],
-/**                  
-         'pagination' => [
-            'pageSize' => $this->_data['filterForm']['paginationCount'],
-         ],
- **/
       ]); 
       
       return $PermitSDP;
@@ -285,8 +280,6 @@ class ManageAdminController extends Controller
          $this->_codesModel->description  = $this->_codesModel->code;
          $this->_codesModel->is_active    = SystemCodes::STATUS_ACTIVE;      
          $this->_codesModel->is_hidden    = SystemCodes::STATUS_VISIBLE;      
-         $this->_codesModel->created_at   = time();
-         $this->_codesModel->updated_at   = time(); 
       } 
       
       if( !$idExists )

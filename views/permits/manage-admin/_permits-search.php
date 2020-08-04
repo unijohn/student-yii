@@ -29,7 +29,13 @@ use yii\widgets\ActiveForm;
     
    <div class="form-group field-code">
       <label class="control-label" for="SystemCodes[code]">Code</label>
-      <?= Html::input('text', 'SystemCodes[code]', $code, ['id' => 'code', 'class' => 'form-control']) ?>   
+      <?= Html::input('text', 'SystemCodes[code]', $code, 
+         [
+            'id'     => 'code', 
+            'class'  => 'form-control',
+            'style'  => 'width: 60%;float:right;', 
+         ]) 
+      ?>   
       <div class="help-block"></div>
    </div>
          
@@ -40,6 +46,7 @@ use yii\widgets\ActiveForm;
          [
             'id'     => 'is_active',
             'class'  => 'form-control',
+            'style'  => 'width: 60%;float:right;',             
          ]) 
       ?>
       <div class="help-block"></div>
@@ -52,6 +59,7 @@ use yii\widgets\ActiveForm;
          [
             'id'     => 'is_hidden',
             'class'  => 'form-control',
+            'style'  => 'width: 60%;float:right;',             
          ]) 
       ?>
       <div class="help-block"></div>
@@ -64,14 +72,15 @@ use yii\widgets\ActiveForm;
          [
             'id'     => 'pagination_count',
             'class'  => 'form-control',
+            'style'  => 'width: 60%;float:right;',             
          ]) 
       ?>
       <div class="help-block"></div>
    </div>
 
-    <div class="form-group">
-        <?= Html::submitButton('Search',  ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Reset', ['/permits/manage-admin/index'], ['class'=>'btn btn-default']) ?>
+    <div class="form-group" style="float:right;">
+        <?= Html::submitButton('Search',  ['class' => 'btn btn-primary', 'style' => 'margin-right: 20px; width: 95px;']) ?>
+        <?= Html::a('Reset', ['/permits/manage-admin/index'], ['class'=>'btn btn-default', 'style' => 'width: 95px;']) ?>        
     </div>
 
     <?php ActiveForm::end(); ?>

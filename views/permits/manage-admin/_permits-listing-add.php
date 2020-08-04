@@ -15,14 +15,22 @@ use yii\widgets\ActiveForm;
         'method' => 'post',
     ]); ?>
 
-    <?=  $form->field($model, 'code') ?>
+    <?=  $form->field($model, 'code' )
+            ->textInput( 
+            [
+               'id'     => 'code', 
+               'class'  => 'form-control',
+               'style'  => 'width: 60%;float:right;', 
+            ] 
+         ) ?>
 
    <div class="form-group">
       <?= Html::submitButton('Add Permit', [
          'class'  => 'btn btn-primary',
          'id'     => 'addPermitBtn',
          'name'   => 'Permit[addPermit]',
-         'value'  => 'addPermit'
+         'value'  => 'addPermit',
+         'style'  => 'width: 60%;float:right;',     
       ]) ?>
 
 <!--        
