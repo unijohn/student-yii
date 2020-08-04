@@ -66,6 +66,9 @@ class m200723_165357_tbl_SystemCodes extends Migration
    }  
 
 
+   /**
+   * @return string
+   */ 
    protected function buildFkClause($delete = '', $update = '')
    {
       if ($this->isMSSQL()) 
