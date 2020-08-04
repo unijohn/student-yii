@@ -85,6 +85,7 @@ class ManageAdminController extends Controller
       
       $this->_data['filterForm']['code']              = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.code',      '');
       $this->_data['filterForm']['is_active']         = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.is_active', -1);
+      $this->_data['filterForm']['is_hidden']         = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.is_hidden', -1);      
       $this->_data['filterForm']['paginationCount']   = $this->_request->get( 'pagination_count', 10 );
        
       $this->_data['tagid']            = $this->_request->post('tagid',    '' );      
@@ -98,8 +99,7 @@ class ManageAdminController extends Controller
       $this->_data['SystemCodes']['code']          = ArrayHelper::getValue($this->_request->post(),   'SystemCodes.code',        '');
       $this->_data['SystemCodes']['description']   = ArrayHelper::getValue($this->_request->post(),   'SystemCodes.description', '');
       $this->_data['SystemCodes']['is_active']     = ArrayHelper::getValue($this->_request->post(),   'SystemCodes.is_active',   -1);
-      $this->_data['SystemCodes']['updated_at']    = time();
-         
+      $this->_data['SystemCodes']['is_hidden']     = ArrayHelper::getValue($this->_request->post(),   'SystemCodes.is_hidden',   -1);      
    }   
    
     /**
@@ -157,13 +157,19 @@ class ManageAdminController extends Controller
          "SELECT COUNT(*) FROM " . $this->_tbl_SystemCodes . " WHERE type =:type ",
          [':type' => $params[':type']])->queryScalar();
            
-      $sql  = "SELECT  id, code, description, is_active, created_at, updated_at " ;
+      $sql  = "SELECT  id, code, description, is_active, is_hidden, created_at, updated_at " ;
       $sql .= "FROM " . $this->_tbl_SystemCodes . " WHERE type =:type ";
       
       if(  $this->_data['filterForm']['is_active'] > -1 && strlen(  $this->_data['filterForm']['is_active'] ) > 0 )
       {
          $sql .= "AND is_active =:is_active ";
          $params[':is_active']   = $this->_data['filterForm']['is_active'];         
+      }
+      
+      if(  $this->_data['filterForm']['is_hidden'] > -1 && strlen(  $this->_data['filterForm']['is_hidden'] ) > 0 )
+      {
+         $sql .= "AND is_hidden =:is_hidden ";
+         $params[':is_hidden']   = $this->_data['filterForm']['is_hidden'];         
       }
       
       if(  $this->_data['filterForm']['code'] > -1 && strlen(  $this->_data['filterForm']['code'] ) > 0 )
@@ -277,7 +283,8 @@ class ManageAdminController extends Controller
       {
          $this->_codesModel->type         = SystemCodes::TYPE_PERMIT;
          $this->_codesModel->description  = $this->_codesModel->code;
-         $this->_codesModel->is_active    = 1;      
+         $this->_codesModel->is_active    = SystemCodes::STATUS_ACTIVE;      
+         $this->_codesModel->is_hidden    = SystemCodes::STATUS_VISIBLE;      
          $this->_codesModel->created_at   = time();
          $this->_codesModel->updated_at   = time(); 
       } 
@@ -448,6 +455,7 @@ die();
          $updateColumns = $updateModel->getDirtyAttributes();
 
          $updateModel->is_active    = $this->_data['SystemCodes']['is_active'];
+         $updateModel->is_hidden    = $this->_data['SystemCodes']['is_hidden'];
 
          $this->_data['savePermit'] = $updateModel->save();   
          

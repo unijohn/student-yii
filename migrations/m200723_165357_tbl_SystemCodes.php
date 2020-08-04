@@ -93,7 +93,10 @@ class m200723_165357_tbl_SystemCodes extends Migration
       $TYPE_MASTERS     = 4;
 
       $STATUS_INACTIVE  = 0;
-      $STATUS_ACTIVE    = 1;    
+      $STATUS_ACTIVE    = 1;
+      
+      $STATUS_HIDDEN    = 0;
+      $STATUS_VISIBLE   = 1;  
 
       $tableOptions = null;
 
@@ -113,6 +116,7 @@ class m200723_165357_tbl_SystemCodes extends Migration
          'code'            => $this->string(8)->notNull(),
          'description'     => $this->string(64),         
          'is_active'       => $this->integer()->notNull(),
+         'is_hidden'       => $this->integer()->notNull(),         
          'created_at'      => $this->integer()->notNull(),
          'updated_at'      => $this->integer()->notNull(),         
          'deleted_at'      => $this->integer(),
@@ -131,76 +135,76 @@ class m200723_165357_tbl_SystemCodes extends Migration
       $this->createIndex('idx_SystemCodes_type', $this->getTableName(), 'type');
       $this->createIndex('idx_SystemCodes_code', $this->getTableName(), 'code');      
 
-      $codeColumns      = [ 'type', 'code', 'description', 'is_active', 'created_at', 'updated_at' ];
+      $codeColumns      = [ 'type', 'code', 'description', 'is_active', 'is_hidden', 'created_at', 'updated_at' ];
       $codeChildColumns = [ 'parent', 'child' ];
 
       $permitRows = [
          [  
-            $TYPE_PERMIT, 'A', 'ISSUED', $STATUS_ACTIVE,
+            $TYPE_PERMIT, 'A', 'ISSUED', $STATUS_ACTIVE, $STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_PERMIT, 'B', 'PRIOR_ISSUED', $STATUS_ACTIVE,
+            $TYPE_PERMIT, 'B', 'PRIOR_ISSUED', $STATUS_ACTIVE, $STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_PERMIT, 'C', 'DENIED_PREREQ', $STATUS_ACTIVE,
+            $TYPE_PERMIT, 'C', 'DENIED_PREREQ', $STATUS_ACTIVE, $STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_PERMIT, 'D', 'DENIED_UPPER', $STATUS_ACTIVE,
+            $TYPE_PERMIT, 'D', 'DENIED_UPPER', $STATUS_ACTIVE, $STATUS_VISIBLE,
             $created_at, $updated_at,
          ],       
          [  
-            $TYPE_PERMIT, 'E', 'DENIED_MAX_UPPER', $STATUS_ACTIVE,
+            $TYPE_PERMIT, 'E', 'DENIED_MAX_UPPER', $STATUS_ACTIVE, $STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_PERMIT, 'F', 'TRANSCRIPT_REQ', $STATUS_ACTIVE,
+            $TYPE_PERMIT, 'F', 'TRANSCRIPT_REQ', $STATUS_ACTIVE, $STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_PERMIT, 'G', 'DENIED_FULL', $STATUS_ACTIVE,
+            $TYPE_PERMIT, 'G', 'DENIED_FULL', $STATUS_ACTIVE, $STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_PERMIT, 'H', 'DENIED_NOT_NEEDED', $STATUS_ACTIVE,
+            $TYPE_PERMIT, 'H', 'DENIED_NOT_NEEDED', $STATUS_ACTIVE, $STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_PERMIT, 'I', 'DENIED_HONORS_REQ', $STATUS_ACTIVE,
+            $TYPE_PERMIT, 'I', 'DENIED_HONORS_REQ', $STATUS_ACTIVE, $STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_PERMIT, 'J', '', $STATUS_INACTIVE,
+            $TYPE_PERMIT, 'J', '', $STATUS_INACTIVE, $STATUS_HIDDEN,
             $created_at, $updated_at,
          ], 
          [  
-            $TYPE_PERMIT, 'K', 'CODE_CHANGED', $STATUS_ACTIVE,
+            $TYPE_PERMIT, 'K', 'CODE_CHANGED', $STATUS_ACTIVE, $STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_PERMIT, 'L', '', $STATUS_INACTIVE,
+            $TYPE_PERMIT, 'L', '', $STATUS_INACTIVE, $STATUS_HIDDEN,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_PERMIT, 'M', 'DENIED_NOT_OFFERED', $STATUS_ACTIVE,
+            $TYPE_PERMIT, 'M', 'DENIED_NOT_OFFERED', $STATUS_ACTIVE, $STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_PERMIT, 'N', 'DENIED_DEADLINE', $STATUS_ACTIVE,
+            $TYPE_PERMIT, 'N', 'DENIED_DEADLINE', $STATUS_ACTIVE, $STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_PERMIT, 'P', 'REQUEST_PENDING', $STATUS_ACTIVE,
+            $TYPE_PERMIT, 'P', 'REQUEST_PENDING', $STATUS_ACTIVE, $STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_PERMIT, 'Q', 'ISSUED_ANY_SECTION', $STATUS_ACTIVE,
+            $TYPE_PERMIT, 'Q', 'ISSUED_ANY_SECTION', $STATUS_ACTIVE, $STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_PERMIT, 'Z', 'PENDING', $STATUS_ACTIVE,
+            $TYPE_PERMIT, 'Z', 'PENDING', $STATUS_ACTIVE, $STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
       ];
@@ -208,27 +212,27 @@ class m200723_165357_tbl_SystemCodes extends Migration
       
       $departmentRows = [
          [  
-            $TYPE_DEPARTMENT, 'ACCT', 'Accounting', $STATUS_ACTIVE,
+            $TYPE_DEPARTMENT, 'ACCT', 'Accounting', $STATUS_ACTIVE, $STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_DEPARTMENT, 'BITM', 'Bit_Info_Tech', $STATUS_ACTIVE,
+            $TYPE_DEPARTMENT, 'BITM', 'Bit_Info_Tech', $STATUS_ACTIVE, $STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_DEPARTMENT, 'ECON', 'Economics', $STATUS_ACTIVE,
+            $TYPE_DEPARTMENT, 'ECON', 'Economics', $STATUS_ACTIVE, $STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_DEPARTMENT, 'FIR', 'Finance', $STATUS_ACTIVE,
+            $TYPE_DEPARTMENT, 'FIR', 'Finance', $STATUS_ACTIVE, $STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_DEPARTMENT, 'MCSM', 'Mktg_Supply_Chain', $STATUS_ACTIVE,
+            $TYPE_DEPARTMENT, 'MCSM', 'Mktg_Supply_Chain', $STATUS_ACTIVE, $STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_DEPARTMENT, 'MGMT', 'Management', $STATUS_ACTIVE,
+            $TYPE_DEPARTMENT, 'MGMT', 'Management', $STATUS_ACTIVE, $STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
       ];
@@ -236,15 +240,15 @@ class m200723_165357_tbl_SystemCodes extends Migration
 
       $careerLevelRows = [
          [  
-            $TYPE_CAREERLEVEL, 'UGAD', 'Undergraduate',  $STATUS_ACTIVE,
+            $TYPE_CAREERLEVEL, 'UGAD', 'Undergraduate',  $STATUS_ACTIVE, $STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_CAREERLEVEL, 'GRAD', 'Graduate',       $STATUS_ACTIVE,
+            $TYPE_CAREERLEVEL, 'GRAD', 'Graduate',       $STATUS_ACTIVE, $STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_CAREERLEVEL, 'PHD',  'Doctorate',      $STATUS_ACTIVE,
+            $TYPE_CAREERLEVEL, 'PHD',  'Doctorate',      $STATUS_ACTIVE, $STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
       ];
@@ -252,31 +256,31 @@ class m200723_165357_tbl_SystemCodes extends Migration
       
       $mastersRows = [
          [  
-            $TYPE_MASTERS, 'MAECON',   'MA_ECON',     $STATUS_ACTIVE,
+            $TYPE_MASTERS, 'MAECON',   'MA_ECON',     $STATUS_ACTIVE, $STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_MASTERS, 'MSACCT',   'MS_ACCT',     $STATUS_ACTIVE,
+            $TYPE_MASTERS, 'MSACCT',   'MS_ACCT',     $STATUS_ACTIVE, $STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_MASTERS, 'MSIS',     'MS_IS',       $STATUS_ACTIVE,
+            $TYPE_MASTERS, 'MSIS',     'MS_IS',       $STATUS_ACTIVE, $STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_MASTERS, 'MSBAFIR',  'MSBA_FIR',    $STATUS_ACTIVE,
+            $TYPE_MASTERS, 'MSBAFIR',  'MSBA_FIR',    $STATUS_ACTIVE, $STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_MASTERS, 'EMBA',     'EXEC_MBA',    $STATUS_ACTIVE,
+            $TYPE_MASTERS, 'EMBA',     'EXEC_MBA',    $STATUS_ACTIVE, $STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_MASTERS, 'PMBA',     'PROF_MBA',    $STATUS_ACTIVE,
+            $TYPE_MASTERS, 'PMBA',     'PROF_MBA',    $STATUS_ACTIVE, $STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_MASTERS, 'OMBA',     'ONLINE_MBA',  $STATUS_ACTIVE,
+            $TYPE_MASTERS, 'OMBA',     'ONLINE_MBA',  $STATUS_ACTIVE, $STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
       ];  

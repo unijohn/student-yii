@@ -35,6 +35,7 @@
                      'model'     => $model, 
                      'code'      => $data['filterForm']['code'],
                      'is_active' => $data['filterForm']['is_active'], 
+                     'is_hidden' => $data['filterForm']['is_hidden'], 
                      'pagination_count' => $data['filterForm']['paginationCount'] 
                   ]); ?>      
                </div>

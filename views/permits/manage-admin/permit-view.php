@@ -18,6 +18,10 @@
 //   $isActive['-1']   = 'Select Status';
    $isActive['1']    = 'Active';
    $isActive['0']    = 'Inactive';   
+   
+//   $isHidden['-1']   = 'Select Status';
+   $isHidden['1']    = 'Visible';
+   $isHidden['0']    = 'Hidden';   
 ?>
 
    <div class="site-about">
@@ -70,11 +74,23 @@
          </div>
             
          <div class="form-group field-is_active">
-         <label class="control-label" for="is_active">Code Status</label>
+         <label class="control-label" for="is_active">Is Active</label>
             <?= Html::dropDownList('SystemCodes[is_active]', $model->is_active, 
                $isActive,
                [
                   'id'     => 'is_active',
+                  'class'  => 'form-control',
+               ]) 
+            ?>
+            <div class="help-block"></div>
+         </div>
+         
+         <div class="form-group field-is_hidden">
+         <label class="control-label" for="is_hidden">Is Visible</label>
+            <?= Html::dropDownList('SystemCodes[is_hidden]', $model->is_hidden, 
+               $isHidden,
+               [
+                  'id'     => 'is_hidden',
                   'class'  => 'form-control',
                ]) 
             ?>
