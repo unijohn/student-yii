@@ -23,6 +23,11 @@ class SystemCodes extends ActiveRecord
    const STATUS_HIDDEN     = 0;
    const STATUS_VISIBLE    = 1;
    
+   const SCENARIO_INSERT   = 'insert';
+   const SCENARIO_UPDATE   = 'update';
+   
+
+   private $_changedAttributes;
 
    public function init()
    {
@@ -101,11 +106,58 @@ class SystemCodes extends ActiveRecord
    /**
    * @inheritdoc
    */
+   public function scenarios()
+   {
+      $scenarios = parent::scenarios();
+      $scenarios[self::SCENARIO_INSERT] = [];
+      $scenarios[self::SCENARIO_UPDATE] = [ 'type', 'code', 'description', 'is_active', 'is_hidden' ];
+   
+      return $scenarios;
+   }
+
+
+   /**
+   * @inheritdoc
+   */
    public function rules()
    {
       return [
+//         ['type', 'default', 'value'    => SystemCodes::STATUS_ACTIVE ],
+//         ['type', 'integer', 'min'      => SystemCodes::STATUS_INACTIVE ],
+         ['type', 'filter',  'filter'   => 'intval'],
+
+//         ['is_active', 'default', 'value'    => SystemCodes::STATUS_ACTIVE ],
+//         ['is_active', 'integer', 'min'      => SystemCodes::STATUS_INACTIVE ],
+         ['is_active', 'filter',  'filter'   => 'intval'],
+
+//         ['is_hidden', 'default', 'value'    => SystemCodes::STATUS_VISIBLE ],
+//         ['is_hidden', 'integer', 'min'      => SystemCodes::STATUS_HIDDEN ],         
+         ['is_hidden', 'filter',  'filter'   => 'intval'],
+         
+         [['is_active', 'is_hidden'], 'required', 'on' => self::SCENARIO_UPDATE ],
+      
 //         [['name', 'type', ], 'required' ],
       ];
+   }
+
+    /**
+     * TBD
+     *
+     * @returns array[] attributes updated after save
+     */
+   public function afterSave($insert, $changedAttributes) 
+   {
+      parent::afterSave($insert, $changedAttributes);
+   
+      if(!$insert) 
+      {
+         if( is_null( $this->_changedAttributes ) || empty( $this->_changedAttributes ) )
+            $this->_changedAttributes = $changedAttributes;
+            
+         return $this->_changedAttributes;
+      }
+      
+      return [];
    }
 
 
