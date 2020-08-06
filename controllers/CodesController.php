@@ -13,18 +13,17 @@ use yii\rbac\DbManager;
 use yii\web\Controller;
 use yii\web\Response;
 
-use app\models\Courses;
-//use app\models\UserSearch;
+use app\models\SystemCodes;
+use app\models\SystemCodesChild;
 
-
-class CoursesController extends Controller
+class CodesController extends Controller
 {
    private $_auth;
    private $_data;
    private $_dataProvider;
    private $_db;
    private $_request;
-   private $_coursesModel;
+   private $_systemCodes;
    
 
     /**
@@ -50,14 +49,12 @@ class CoursesController extends Controller
       $this->_data             = [];
       $this->_dataProvider     = [];
 
-      $this->_coursesModel     = new Courses();
-      
+      $this->_systemCodes     = new SystemCodes();
   
-      $this->_data['filterForm']['subject_area']      = ArrayHelper::getValue($this->_request->get(), 'Courses.subject_area',    '');
-      $this->_data['filterForm']['course_number']     = ArrayHelper::getValue($this->_request->get(), 'Courses.course_number',   '');      
-      $this->_data['filterForm']['is_active']         = ArrayHelper::getValue($this->_request->get(), 'Courses.is_active',       -1);
-      $this->_data['filterForm']['is_hidden']         = ArrayHelper::getValue($this->_request->get(), 'Courses.is_hidden',       -1);      
-      $this->_data['filterForm']['paginationCount']   = $this->_request->get( 'pagination_count', 25 );
+      $this->_data['filterForm']['type']              = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.type',        '');    
+      $this->_data['filterForm']['is_active']         = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.is_active',   -1);
+      $this->_data['filterForm']['is_hidden']         = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.is_hidden',   -1);      
+      $this->_data['filterForm']['paginationCount']   = $this->_request->get( 'pagination_count', 10 );
 
       
       /**
@@ -72,27 +69,29 @@ class CoursesController extends Controller
       
       if( strlen( $this->_data['id'] ) > 0 )
       {
-         $this->_coursesModel = Courses::find()
+         $this->_systemCodes = SystemCodes::find()
             ->where(['id' => $this->_data['id'] ])
             ->limit(1)->one();
             
 //         $this->_tagsModel       = SystemCodes::findPermitTagsById( $this->_data['id'] );
 //         $this->_codeChildModel  = SystemCodes::findUnassignedPermitTagOptions( $this->_data['id']);
       }   
- 
+
+/** 
       $this->_data['tagid']            = $this->_request->post('tagid',    '' );      
       $this->_data['addTag']           = $this->_request->post('addTag',   '' );
       $this->_data['dropTag']          = $this->_request->post('dropTag',  '' );     
- 
-      $this->_data['addCourse']        = ArrayHelper::getValue($this->_request->post(), 'Course.addCourse',    '' );
-      $this->_data['saveCourse']       = ArrayHelper::getValue($this->_request->post(), 'Course.saveCourse',   '' );
+ **/
+  
+      $this->_data['addSystemCode']    = ArrayHelper::getValue($this->_request->post(), 'SystemCodes.addSystemCode',    '' );
+      $this->_data['saveSystemCode']   = ArrayHelper::getValue($this->_request->post(), 'SystemCodes.saveSystemCode',   '' );
       
-      $this->_data['Courses']['id']             = ArrayHelper::getValue($this->_request->post(),   'Courses.id',              '');
-      $this->_data['Courses']['subject_area']   = ArrayHelper::getValue($this->_request->post(),   'Courses.subject_area',    '');
-      $this->_data['Courses']['course_number']  = ArrayHelper::getValue($this->_request->post(),   'Courses.course_number',   '');
-      $this->_data['Courses']['section_number'] = ArrayHelper::getValue($this->_request->post(),   'Courses.section_number',  '');      
-      $this->_data['Courses']['is_active']      = ArrayHelper::getValue($this->_request->post(),   'Courses.is_active',       -1);
-      $this->_data['Courses']['is_hidden']      = ArrayHelper::getValue($this->_request->post(),   'Courses.is_hidden',       -1);      
+      $this->_data['SystemCodes']['id']            = ArrayHelper::getValue($this->_request->post(),   'SystemCodes.id',          '');
+      $this->_data['SystemCodes']['type']          = ArrayHelper::getValue($this->_request->post(),   'SystemCodes.type',        '');
+      $this->_data['SystemCodes']['code']          = ArrayHelper::getValue($this->_request->post(),   'SystemCodes.code',        '');
+      $this->_data['SystemCodes']['description']   = ArrayHelper::getValue($this->_request->post(),   'SystemCodes.description', '');      
+      $this->_data['SystemCodes']['is_active']     = ArrayHelper::getValue($this->_request->post(),   'SystemCodes.is_active',   -1);
+      $this->_data['SystemCodes']['is_hidden']     = ArrayHelper::getValue($this->_request->post(),   'SystemCodes.is_hidden',   -1);      
   
       $this->_data['errors']           = [];   
       $this->_data['success']          = [];
@@ -144,39 +143,29 @@ class CoursesController extends Controller
     *
     * @return SqlDataProvider
     */ 
-   private function getCoursesGridView()
+   private function getCodesGridView()
    {
-      $tableNm = Courses::tableName();
+      $tableNm = SystemCodes::tableName();
       
       $params  = [];
       
 //      $params[':table_name']  = Courses::tableName();
 //      $params[':id']          = 1;     
 
-      $sql  = "SELECT  id, subject_area, course_number, section_number, is_active, is_hidden, created_at, updated_at " ;
-      $sql .= "FROM " . $tableNm . " WHERE length(id) > 0 ";
+      $sql  = "SELECT  id, type, code, description, is_active, is_hidden, created_at, updated_at " ;
+      $sql .= "FROM " . $tableNm . " WHERE id > 0 ";
 
       $countSQL  = "SELECT COUNT(*) " ;
-      $countSQL .= "FROM " . $tableNm . " WHERE length(id) > 0 ";
+      $countSQL .= "FROM " . $tableNm . " WHERE id > 0 ";
 
-      if( strlen ($this->_data['filterForm']['subject_area'] ) > 0 )
+      if(  $this->_data['filterForm']['type'] > 0 && strlen(  $this->_data['filterForm']['type'] ) > 0 )      
       {
-         $andWhere = "AND subject_area LIKE :subject_area ";
+         $andWhere = "AND type =:type ";
       
          $sql        .= $andWhere;
          $countSQL   .= $andWhere;
          
-         $params[':subject_area'] = '%' . $this->_data['filterForm']['subject_area'] . '%';      
-      }
-      
-      if( strlen ($this->_data['filterForm']['course_number'] ) > 0 )
-      {
-         $andWhere = "AND course_number LIKE :course_number ";
-      
-         $sql        .= $andWhere;
-         $countSQL   .= $andWhere;
-         
-         $params[':course_number'] = '%' . $this->_data['filterForm']['course_number'] . '%';      
+         $params[':type']   = $this->_data['filterForm']['type'];   
       }
       
       if(  $this->_data['filterForm']['is_active'] > -1 && strlen(  $this->_data['filterForm']['is_active'] ) > 0 )
@@ -202,7 +191,7 @@ class CoursesController extends Controller
          $params,
       )->queryScalar();      
       
-      $CoursesSDP = new SqlDataProvider ([
+      $CodesSDP = new SqlDataProvider ([
          'sql'          => $sql,
          'params'       => $params,
          'totalCount'   => $count,
@@ -215,19 +204,19 @@ class CoursesController extends Controller
                   'default' => SORT_ASC,
                   'label' => 'ID',
                ],
-               'subject_area' => [
+               'type' => [
                   'default' => SORT_ASC,
-                  'label' => 'Subject',
+                  'label' => 'Type',
                ],
 
-               'course_number' => [
+               'code' => [
                   'default' => SORT_ASC,
-                  'label' => 'Course',
+                  'label' => 'Code',
                ],
 
-               'section_number' => [
+               'description' => [
                   'default' => SORT_ASC,
-                  'label' => 'Section',
+                  'label' => 'Description',
                ],               
 /**               
                'is_active' => [
@@ -245,7 +234,7 @@ class CoursesController extends Controller
          ],
       ]); 
       
-      return $CoursesSDP;
+      return $CodesSDP;
    }
 
 
@@ -256,12 +245,12 @@ class CoursesController extends Controller
     */
    public function actionIndex()
    {
-      $this->_dataProvider = $this->getCoursesGridView();
+      $this->_dataProvider = $this->getCodesGridView();
 
-      return $this->render('courses-listing', [
+      return $this->render('codes-listing', [
             'data'         => $this->_data, 
             'dataProvider' => $this->_dataProvider,
-            'model'        => $this->_coursesModel,
+            'model'        => $this->_systemCodes,
       ]);      
    }
    
@@ -273,10 +262,10 @@ class CoursesController extends Controller
     */
    public function actionView()
    {  
-      return $this->render('course-view', [
+      return $this->render('codes-view', [
             'data'         => $this->_data, 
             'dataProvider' => $this->_dataProvider,
-            'model'        => $this->_coursesModel,
+            'model'        => $this->_systemCodes,
 //            'tags'         => $this->_tagsModel,
 //            'allTags'      => $this->_codeChildModel,
       ]);      
@@ -427,13 +416,13 @@ class CoursesController extends Controller
       return $this->render('courses-listing', [
             'data'         => $this->_data, 
             'dataProvider' => $this->_dataProvider,
-            'model'        => $this->_coursesModel,
+            'model'        => $this->_systemCodes,
       ]); 
    }
    
    
    /**
-    * Saving changes to Course and Tag information
+    * Saving changes to System Codes and associated information
     *
     * @return (TBD)
     */
@@ -545,54 +534,58 @@ die();
       }  
  **/      
       
-      if( isset($this->_data['saveCourse'] ) && !empty( $this->_data['saveCourse'] ) )
+      if( isset($this->_data['saveSystemCode'] ) && !empty( $this->_data['saveSystemCode'] ) )
       {
-         $this->_coursesModel->id               = ArrayHelper::getValue($this->_request->post(), 'Courses.id',   '' );
-         $this->_coursesModel->subject_area     = ArrayHelper::getValue($this->_request->post(), 'Courses.subject_area',   '' );
-         $this->_coursesModel->course_number    = ArrayHelper::getValue($this->_request->post(), 'Courses.course_number',  '' ); 
-         $this->_coursesModel->section_number   = ArrayHelper::getValue($this->_request->post(), 'Courses.section_number', '' );       
+         $this->_systemCodes->id          = ArrayHelper::getValue($this->_request->post(), 'SystemCodes.id',            '' );
+         $this->_systemCodes->type        = ArrayHelper::getValue($this->_request->post(), 'SystemCodes.type',          '' );
+         $this->_systemCodes->code        = ArrayHelper::getValue($this->_request->post(), 'SystemCodes.code',          '' ); 
+         $this->_systemCodes->description = ArrayHelper::getValue($this->_request->post(), 'SystemCodes.description',   '' );       
    
          $exitEarly = false;
 
-         if( !isset( $this->_coursesModel->subject_area ) || empty( $this->_coursesModel->subject_area ) )
+         if( !isset( $this->_systemCodes->type ) || empty( $this->_systemCodes->type ) )
          {
-            $this->_data['errors']['Save Course'] = [
+            $this->_data['errors']['Save System Code'] = [
                'value'     => "was unsuccessful",
                'htmlTag'   => 'h4',
                'class'     => 'alert alert-danger',
             ];
-   
-            $this->_data['errors']['subject'] = [
-               'value' => "is blank",      
+
+            /**
+               Unsure what kind of error will be caught here; TBD
+             **/
+             
+            $this->_data['errors']['type'] = [
+               'value' => "is invalid",      
             ];      
             
             $exitEarly = true;
          }
          
-         if( !isset( $this->_coursesModel->course_number ) || empty( $this->_coursesModel->course_number ) )
+         if( !isset( $this->_systemCodes->code ) || empty( $this->_systemCodes->code ) )
          {
-            $this->_data['errors']['Save Course'] = [
+            $this->_data['errors']['Save System Code'] = [
                'value'     => "was unsuccessful",
                'htmlTag'   => 'h4',
                'class'     => 'alert alert-danger',
             ];
    
-            $this->_data['errors']['course'] = [
+            $this->_data['errors']['code'] = [
                'value' => "is blank",      
             ];      
             
             $exitEarly = true;
          }      
          
-         if( !isset( $this->_coursesModel->section_number ) || empty( $this->_coursesModel->section_number ) )
+         if( !isset( $this->_systemCodes->description ) || empty( $this->_systemCodes->description ) )
          {
-            $this->_data['errors']['Save Course'] = [
+            $this->_data['errors']['Save System Code'] = [
                'value'     => "was unsuccessful",
                'htmlTag'   => 'h4',
                'class'     => 'alert alert-danger',
             ];
    
-            $this->_data['errors']['section'] = [
+            $this->_data['errors']['description'] = [
                'value' => "is blank",      
             ];      
    
@@ -601,33 +594,38 @@ die();
    
          if( $exitEarly )
          {  
-            return $this->render('course-view', [
+            return $this->render('codes-view', [
                   'data'         => $this->_data, 
                   'dataProvider' => $this->_dataProvider,
-                  'model'        => $this->_coursesModel,
+                  'model'        => $this->_systemCodes,
       //            'tags'         => $this->_tagsModel,
       //            'allTags'      => $this->_codeChildModel,
             ]);  
          }      
       
-         $updateModel      = Courses::findOne( $this->_coursesModel->id );
- 
-         $updateModel->subject_area    = $this->_data['Courses']['subject_area'];
-         $updateModel->course_number   = $this->_data['Courses']['course_number'];
-         $updateModel->section_number  = $this->_data['Courses']['section_number'];         
-
-         $updateColumns = $updateModel->getDirtyAttributes();
-
-         $updateModel->is_active    = $this->_data['Courses']['is_active'];
-         $updateModel->is_hidden    = $this->_data['Courses']['is_hidden'];
-
-         $this->_data['savePermit'] = $updateModel->save();   
+         $updateModel      = SystemCodes::findOne( $this->_systemCodes->id );
          
-         if( isset($this->_data['savePermit'] ) && !empty( $this->_data['savePermit'] ) )
+         $updateModel->scenario = SystemCodes::SCENARIO_UPDATE;         
+ 
+         $updateModel->code         = $this->_data['SystemCodes']['code'];
+         $updateModel->description  = $this->_data['SystemCodes']['description'];         
+
+         //$updateColumns = $updateModel->getDirtyAttributes();     
+
+         $updateModel->type         = $this->_data['SystemCodes']['type'];
+         $updateModel->is_active    = $this->_data['SystemCodes']['is_active'];
+         $updateModel->is_hidden    = $this->_data['SystemCodes']['is_hidden'];
+
+         $this->_data['saveSystemCode'] = $updateModel->save();   
+         
+         $updateColumns = $updateModel->afterSave( false, $this->_data['saveSystemCode']);
+
+         if( $this->_data['saveSystemCode'] && is_array( $updateColumns ) )
          {
+            
             if( count( $updateColumns ) > 0 )
             {
-               $this->_data['success']['Save Permit'] = [
+               $this->_data['success']['Save System Code'] = [
                   'value'     => "was successful",
                   'bValue'    => true,
                   'htmlTag'   => 'h4',
@@ -638,27 +636,95 @@ die();
                {     
                   $keyIndex = ucfirst( strtolower(str_replace( "_", " ", $key )) );
                
-                  $this->_data['success'][$keyIndex] = [
-                     'value'     => "was updated ",
-                     'bValue'    => true,
-                  ];                     
+                  if( $key !== "updated_at" && $key !== "deleted_at" )
+                  {
+         
+                     $lookupNew = $this->keyLookup( $key, $val );
+                     $lookupOld = $this->keyLookup( $key, $this->_data['SystemCodes'][$key] );                     
+                  
+                     $this->_data['success'][$keyIndex] = [
+                        'value'     => "was updated ( " . $lookupNew[$key] . " -> " . $lookupOld[$key] . " )",
+                        'bValue'    => true,
+                     ];
+                  }
                }
             }
          }  
       }    
 
-      $this->_coursesModel      = $this->_coursesModel->findOne( $this->_data['id']  );
+      $this->_systemCodes      = $this->_systemCodes->findOne( $this->_data['id']  );
       
 //      $this->_tagsModel       = SystemCodes::findPermitTagsById( $this->_data['id'] );
 //      $this->_codeChildModel  = SystemCodes::findUnassignedPermitTagOptions( $this->_data['id']);
 
 
-      return $this->render('course-view', [
+      return $this->render('codes-view', [
             'data'         => $this->_data, 
             'dataProvider' => $this->_dataProvider,
-            'model'        => $this->_coursesModel,
+            'model'        => $this->_systemCodes,
 //            'tags'         => $this->_tagsModel,
 //            'allTags'      => $this->_codeChildModel,
       ]);  
    }   
+   
+   /**
+    * TBD
+    *
+    * @return (TBD)
+    */
+   private function keyLookup( $key, $value )
+   {
+   
+      $codeType['1']     = "Permit";
+      $codeType['2']     = "Department";
+      $codeType['3']     = "CareerLevel";
+      $codeType['4']     = "Masters";         
+      
+      $isActive['-1']   = 'Select Status';
+      $isActive['1']    = 'Active';
+      $isActive['0']    = 'Inactive';
+      
+      $isHidden['1']    = 'Visible';
+      $isHidden['0']    = 'Hidden';    
+      
+      $valLookup        = [];      
+      
+      if( $key === "type" )
+      {
+         if( intval($value) === 1 )
+         {
+            $valLookup[$key] = "Permit";
+         }
+         else if( intval($value) === 2 )
+         {
+            $valLookup[$key] = "Department";
+         }
+         else if( intval($value) === 3 )
+         {
+            $valLookup[$key] = "CareerLevel";
+         }
+         else if( intval($value) === 4 )
+         {
+            $valLookup[$key] = "Masters";
+         }
+         else
+         {
+            $valLookup[$key] = "Undocumented value : " . $value;
+         }                                    
+      }
+      else if( $key === "is_active" )
+      {
+         $valLookup[$key] = $value ? "Active" : "Inactive";      
+      }
+      else if( $key === "is_hidden" )
+      {
+         $valLookup[$key] = $value ? "Visible" : "Hidden";      
+      }
+      else
+      {
+         $valLookup[$key] = "Unknown key : " . $key;        
+      }
+   
+      return $valLookup;
+   }
 }
