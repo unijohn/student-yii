@@ -139,7 +139,7 @@ $auth    = Yii::$app->authManager;
    ) 
    {
       print( "<li>" );
-      print( HTML::a( "System Code Management", Url::toRoute( ['framework/index', ], true) ) );
+      print( HTML::a( "System Code Management", Url::toRoute( ['codes/index', ], true) ) );
       print( "</li>" );
    }
 
@@ -315,6 +315,7 @@ $auth    = Yii::$app->authManager;
 <!--
             <div class="col-lg-4">
                 <h2>Graduate Assistant Applications</h2>
+  -->
                 
 <?php
    if (\Yii::$app->user->can('[Framework][Access][Permit]')  )
@@ -402,9 +403,8 @@ $auth    = Yii::$app->authManager;
     *  Eo GAApp section of the dashboard
     **/
  ?>
--->   
-        </div>
-     
+ 
 
+        </div>
     </div>
 </div>
