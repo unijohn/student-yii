@@ -454,22 +454,25 @@ die();
          
          if( isset($this->_data['savePermit'] ) && !empty( $this->_data['savePermit'] ) )
          {
-            $this->_data['success']['Save Permit'] = [
-               'value'     => "was successful",
-               'bValue'    => true,
-               'htmlTag'   => 'h4',
-               'class'     => 'alert alert-success',
-            ];
-            
-            
-            foreach( $updateColumns as $key => $val )
-            {     
-               $keyIndex = ucfirst( strtolower(str_replace( "_", " ", $key )) );
-            
-               $this->_data['success'][$keyIndex] = [
-                  'value'     => "was updated ",
+            if( count( $updateColumns ) > 0 )
+            {         
+               $this->_data['success']['Save Permit'] = [
+                  'value'     => "was successful",
                   'bValue'    => true,
-               ];                     
+                  'htmlTag'   => 'h4',
+                  'class'     => 'alert alert-success',
+               ];
+               
+               
+               foreach( $updateColumns as $key => $val )
+               {     
+                  $keyIndex = ucfirst( strtolower(str_replace( "_", " ", $key )) );
+               
+                  $this->_data['success'][$keyIndex] = [
+                     'value'     => "was updated ",
+                     'bValue'    => true,
+                  ];                     
+               }
             }
          }      
       }
