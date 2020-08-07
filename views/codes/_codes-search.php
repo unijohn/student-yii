@@ -80,7 +80,7 @@ use app\controllers\CodesController;
 
    <div class="form-group form-inline field-pagination_count">
    <label class="control-label" for="pagination_count"># per Page</label>
-      <?= Html::dropDownList('pagination_count', $pagination_count, 
+      <?= Html::dropDownList('SystemCodes[pagination_count]', $pagination_count, 
          $pageCount,
          [
             'id'     => 'pagination_count',
