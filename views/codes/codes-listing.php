@@ -43,7 +43,7 @@
             <div class="col-lg-4">
                <h2>Add System Codes</h2>
                <div id='systemcodes-add-form'>      
-
+                  <?= $this->render('_codes-listing-add', ['model' => $model, ]); ?>  
                </div>
             </div>
             <div class="col-lg-4">

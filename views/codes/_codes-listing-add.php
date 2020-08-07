@@ -3,51 +3,57 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
+use app\controllers\CodesController;
+
 /* @var $this yii\web\View */
 /* @var $model app\models\PostSearch */
 /* @var $form yii\widgets\ActiveForm */
 
+$codeType   = CodesController::getDropDownOpts( 'type', true );
+
 ?>
 
-<div class="users-add-new-user">
+<div class="codes-add-new-code">
     <?php $form = ActiveForm::begin([
         'action' => ['add'],
         'method' => 'post',
     ]); ?>
 
-    <?=  $form->field($model, 'subject_area' )
-            ->textInput( 
+    <?=  $form->field($model, 'type' )
+            ->dropdownList( $codeType,
             [
-               'id'     => 'subject_area', 
+               'id'     => 'type', 
                'class'  => 'form-control',
                'style'  => 'width: 60%;float:right;', 
             ] 
-         ) ?>
+         ) 
+    ?>
          
-    <?=  $form->field($model, 'course_number' )
+    <?=  $form->field($model, 'code' )
             ->textInput( 
             [
-               'id'     => 'course_number', 
+               'id'     => 'code', 
                'class'  => 'form-control',
                'style'  => 'width: 60%;float:right;', 
             ] 
-         ) ?>
+         ) 
+    ?>
          
-    <?=  $form->field($model, 'section_number' )
+    <?=  $form->field($model, 'description' )
             ->textInput( 
             [
-               'id'     => 'section_number', 
+               'id'     => 'description', 
                'class'  => 'form-control',
                'style'  => 'width: 60%;float:right;', 
             ] 
          ) ?>     
 
    <div class="form-group">
-      <?= Html::submitButton('Add Course', [
+      <?= Html::submitButton('Add System Code', [
          'class'  => 'btn btn-primary',
-         'id'     => 'addCourseBtn',
-         'name'   => 'Course[addCourse]',
-         'value'  => 'addCourse',
+         'id'     => 'addSystemCodesBtn',
+         'name'   => 'SystemCodes[insert]',
+         'value'  => 'insert',
          'style'  => 'width: 60%;float:right;',     
       ]) ?>
 

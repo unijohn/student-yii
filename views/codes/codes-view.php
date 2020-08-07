@@ -10,24 +10,16 @@
 
    use yii\widgets\ActiveForm;
    
+   use app\controllers\CodesController;   
+   
    $this->title = 'Framework | System Codes | View | Update';
    $this->params['breadcrumbs'][] = [ 'label' => $this->title, 'url' =>['index']];
    
    $formatter = \Yii::$app->formatter;
-   
-//   $codeType['-1']    = "Select Type";
-   $codeType['1']     = "Permit";
-   $codeType['2']     = "Department";
-   $codeType['3']     = "CareerLevel";
-   $codeType['4']     = "Masters";      
-   
-//   $isActive['-1']   = 'Select Status';
-   $isActive['1']    = 'Active';
-   $isActive['0']    = 'Inactive';   
-   
-//   $isHidden['-1']   = 'Select Status';
-   $isHidden['1']    = 'Visible';
-   $isHidden['0']    = 'Hidden';   
+  
+   $codeType   = CodesController::getDropDownOpts( 'type'      );
+   $isActive   = CodesController::getDropDownOpts( 'is_active' );
+   $isHidden   = CodesController::getDropDownOpts( 'is_hidden' );   
 ?>
 
    <div class="site-about">
@@ -147,8 +139,8 @@
             <?= Html::submitButton('Save Changes', [
                'class'  => 'btn btn-primary',
                'id'     => 'saveSystemCodesBtn',
-               'name'   => 'SystemCodes[saveSystemCode]',
-               'value'  => 'saveSystemCode'
+               'name'   => 'SystemCodes[update]',
+               'value'  => 'update'
             ]) ?>
          </div>
          

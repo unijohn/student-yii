@@ -3,28 +3,16 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
+use app\controllers\CodesController;
+
 /* @var $this yii\web\View */
 /* @var $model app\models\PostSearch */
 /* @var $form yii\widgets\ActiveForm */
 
-   $pageCount['10']  = 10;
-   $pageCount['25']  = 25;
-   $pageCount['50']  = 50;
-   $pageCount['100'] = 100;
-   
-   $codeType['-1']    = "Select Type";
-   $codeType['1']     = "Permit";
-   $codeType['2']     = "Department";
-   $codeType['3']     = "CareerLevel";
-   $codeType['4']     = "Masters";         
-   
-   $isActive['-1']   = 'Select Status';
-   $isActive['1']    = 'Active';
-   $isActive['0']    = 'Inactive';
-   
-   $isHidden['-1']   = 'Select Status';
-   $isHidden['1']    = 'Visible';
-   $isHidden['0']    = 'Hidden';   
+   $pageCount  = CodesController::getDropDownOpts( 'pageCount' );
+   $codeType   = CodesController::getDropDownOpts( 'type',        true );
+   $isActive   = CodesController::getDropDownOpts( 'is_active',   true );
+   $isHidden   = CodesController::getDropDownOpts( 'is_hidden',   true );
 ?>
 
 <style>
