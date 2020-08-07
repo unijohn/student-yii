@@ -9,7 +9,7 @@ use yii\widgets\ActiveForm;
 
 ?>
 
-<div class="users-add-new-user">
+<div class="courses-add-new-course">
     <?php $form = ActiveForm::begin([
         'action' => ['add'],
         'method' => 'post',
