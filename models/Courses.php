@@ -126,6 +126,11 @@ class Courses extends ActiveRecord
    }
 
 
+   /**
+    * Determining if this course already exists in the system
+    *
+    * @return (TBD)
+    */
    public static function existsCourse($id)
    {        
       $query_courses = (new \yii\db\Query())
