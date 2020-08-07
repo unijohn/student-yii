@@ -423,6 +423,8 @@ class CoursesController extends Controller
             'bValue'    => true,
          ];         
       }
+      
+      $this->_dataProvider = $this->getCoursesGridView();      
 
       return $this->render('courses-listing', [
             'data'         => $this->_data, 
