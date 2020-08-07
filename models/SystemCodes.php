@@ -109,7 +109,7 @@ class SystemCodes extends ActiveRecord
    public function scenarios()
    {
       $scenarios = parent::scenarios();
-      $scenarios[self::SCENARIO_INSERT] = [];
+      $scenarios[self::SCENARIO_INSERT] = [ 'type', 'code', 'description', 'is_active', 'is_hidden' ];
       $scenarios[self::SCENARIO_UPDATE] = [ 'type', 'code', 'description', 'is_active', 'is_hidden' ];
    
       return $scenarios;
@@ -122,16 +122,16 @@ class SystemCodes extends ActiveRecord
    public function rules()
    {
       return [
-//         ['type', 'default', 'value'    => SystemCodes::STATUS_ACTIVE ],
-//         ['type', 'integer', 'min'      => SystemCodes::STATUS_INACTIVE ],
+         ['type', 'default', 'value'    => SystemCodes::TYPE_PERMIT ],
+         ['type', 'integer', 'min'      => SystemCodes::TYPE_PERMIT ],
          ['type', 'filter',  'filter'   => 'intval'],
 
-//         ['is_active', 'default', 'value'    => SystemCodes::STATUS_ACTIVE ],
-//         ['is_active', 'integer', 'min'      => SystemCodes::STATUS_INACTIVE ],
+         ['is_active', 'default', 'value'    => SystemCodes::STATUS_ACTIVE ],
+         ['is_active', 'integer', 'min'      => SystemCodes::STATUS_INACTIVE ],
          ['is_active', 'filter',  'filter'   => 'intval'],
 
-//         ['is_hidden', 'default', 'value'    => SystemCodes::STATUS_VISIBLE ],
-//         ['is_hidden', 'integer', 'min'      => SystemCodes::STATUS_HIDDEN ],         
+         ['is_hidden', 'default', 'value'    => SystemCodes::STATUS_VISIBLE ],
+         ['is_hidden', 'integer', 'min'      => SystemCodes::STATUS_HIDDEN ],         
          ['is_hidden', 'filter',  'filter'   => 'intval'],
          
          [['is_active', 'is_hidden'], 'required', 'on' => self::SCENARIO_UPDATE ],
@@ -339,9 +339,42 @@ class SystemCodes extends ActiveRecord
          ->all();
    }
 
+
+   /**
+    * Determines if this system code already exists in the system
+    *
+    * @return (TBD)
+    */
+   public static function existsSystemCode( $type = -1, $code = "" )
+   {        
+      $query_codes = (new \yii\db\Query())
+         ->select([ 'id', 'type', 'code', 'description', 'created_at', 'updated_at' ])
+         ->from( SystemCodes::tableName() )
+         ->where( 'code=:code AND type =:type ' )
+            ->addParams([
+               ':code' => $code, 
+               ':type' => $type, 
+            ])
+         ->limit(1);     
+     
+      foreach( $query_codes->each() as $code_row )
+      {
+         return true;
+      }
+ 
+      return false;              
+   }   
    
+   /**
+    * Determines if this permit already exists in the system
+    *
+    * @return (TBD)
+    */
    public static function existsPermit($code)
    {        
+      return self::existsSystemCode( TYPE_PERMIT, $code );
+   
+/**   
       $query_permits = (new \yii\db\Query())
          ->select([ 'id', 'type', 'code', 'description', 'created_at', 'updated_at' ])
          ->from( SystemCodes::tableName() )
@@ -358,6 +391,7 @@ class SystemCodes extends ActiveRecord
       }
  
       return false;            
+ **/      
    }   
    
    
