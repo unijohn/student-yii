@@ -18,13 +18,39 @@ use app\models\SystemCodesChild;
 
 class CodesController extends Controller
 {
-   const dropDownOptsKeys   = [ 'pageCount', 'type', 'is_active', 'is_hidden' ];
+   const dropDownOptsKeys  = [ 'pageCount', 'type', 'is_active', 'is_hidden' ];
+   
+   const dropDownOpts      = [
+      'pageCount' => [
+         '10'  => '10',
+         '25'  => '25',
+         '50'  => '50',
+         '100' => '100',
+      ],
+      'type' => [
+         '-1'  => 'Select Type',
+         '1'   => 'Permit',
+         '2'   => 'Department',
+         '3'   => 'CareerLevel',
+         '4'   => 'Masters',
+      ],
+      'is_active' => [
+         '-1'  => 'Select Status',
+         '0'   => 'Inactive',
+         '1'   => 'Active',
+
+      ],
+      'is_hidden' => [
+         '-1'  => 'Select Status',
+         '0'   => 'Hidden',
+         '1'   => 'Visible',
+      ],
+   ];
 
    private $_auth;
    private $_data;
    private $_dataProvider;
    private $_db;
-   private $_dropDownOptsKeys;
    private $_request;
    private $_systemCodes;
 
@@ -54,14 +80,11 @@ class CodesController extends Controller
 
       $this->_systemCodes        = new SystemCodes();
       
-
-      
       $this->_data['filterForm']['type']              = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.type',        '');    
       $this->_data['filterForm']['is_active']         = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.is_active',   -1);
-      $this->_data['filterForm']['is_hidden']         = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.is_hidden',   -1);      
-      $this->_data['filterForm']['paginationCount']   = $this->_request->get( 'pagination_count', 10 );
+      $this->_data['filterForm']['is_hidden']         = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.is_hidden',   -1);
+      $this->_data['filterForm']['paginationCount']   = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.is_hidden',   10);
 
-      
       /**
        *    Capturing the possible post() variables used in this controller
        **/
@@ -160,9 +183,6 @@ class CodesController extends Controller
       $tableNm = SystemCodes::tableName();
       
       $params  = [];
-      
-//      $params[':table_name']  = Courses::tableName();
-//      $params[':id']          = 1;     
 
       $sql  = "SELECT  id, type, code, description, is_active, is_hidden, created_at, updated_at " ;
       $sql .= "FROM " . $tableNm . " WHERE id > 0 ";
@@ -301,6 +321,21 @@ class CodesController extends Controller
 
       if( isset( $this->_data['SystemCodes']['insert'] ) && !empty( $this->_data['SystemCodes']['insert'] ) )
       {
+         if( $this->_systemCodes->type < 1 )
+         {
+            $this->_data['errors']['Add System Code'] = [
+               'value'     => "was unsuccessful",
+               'htmlTag'   => 'h4',
+               'class'     => 'alert alert-danger',
+            ];
+            
+            $this->_data['errors']['type'] = [
+               'value' => "was not selected",      
+            ];      
+            
+            $exitEarly = true;
+         }
+
          if( !isset( $this->_systemCodes->code ) || empty( $this->_systemCodes->code ) )
          {
             $this->_data['errors']['Add System Code'] = [
@@ -318,7 +353,6 @@ class CodesController extends Controller
       
          if( !isset( $this->_systemCodes->description ) || empty( $this->_systemCodes->description ) )
          {
-
             $this->_data['errors']['Add System Code'] = [
                'value'     => "was unsuccessful",
                'htmlTag'   => 'h4',
@@ -355,12 +389,15 @@ class CodesController extends Controller
             ];
 
             $keyError          = $this->keyLookup( 'type', $this->_systemCodes->type );
-            $keyError['type'] .= " ( " . $this->_systemCodes->code . " )";
+            $keyError .= " ( " . $this->_systemCodes->code . " )";
 
-            $this->_data['errors'][$keyError['type']] = [
+            $this->_data['errors'][$keyError] = [
                'value' => "already exists",      
             ];
-            
+
+            /**
+             *    if inserting a new record, set the filter to that new record's type as a UX feature
+             **/  
             $this->_data['filterForm']['type'] = $this->_systemCodes->type;
          }
          
@@ -371,16 +408,13 @@ class CodesController extends Controller
          ]);          
       }
       
-      $updateModel            = new SystemCodes();
-      
-      $updateModel->scenario  = SystemCodes::SCENARIO_INSERT;      
+      $updateModel               = new SystemCodes();
+      $updateModel->scenario     = SystemCodes::SCENARIO_INSERT;      
 
       $updateModel->type         = $this->_data['SystemCodes']['type'];
       $updateModel->code         = $this->_data['SystemCodes']['code'];
       $updateModel->description  = $this->_data['SystemCodes']['description'];
-//      $updateModel->is_active    = SystemCodes::STATUS_ACTIVE;  
-//      $updateModel->is_hidden    = SystemCodes::STATUS_VISIBLE;      
-
+      
       $this->_data['SystemCodes']['insert'] = $updateModel->save();   
          
 //      $updateColumns = $updateModel->afterSave( false, $this->_data['addSystemCode']);
@@ -407,9 +441,9 @@ class CodesController extends Controller
          ];
          
          $keySuccess          = $this->keyLookup( 'type', $this->_systemCodes->type );            
-         $keySuccess['type'] .= " ( " . $this->_systemCodes->code . " )";         
+         $keySuccess .= " ( " . $this->_systemCodes->code . " )";         
          
-         $this->_data['success'][$keySuccess['type']] = [
+         $this->_data['success'][$keySuccess] = [
             'value'     => "was added",
             'bValue'    => true,
          ];  
@@ -649,7 +683,7 @@ die();
                
                foreach( $updateColumns as $key => $val )
                {     
-                  $keyIndex = ucfirst( strtolower(str_replace( "_", " ", $key )) );
+                  $keyIndex = ucwords( strtolower(str_replace( "_", " ", $key )) );
                
                   if( $key !== "updated_at" && $key !== "deleted_at" )
                   {
@@ -662,10 +696,10 @@ die();
                         'bValue'    => true,
                      ];
                      
-                     if( strpos( $lookupNew[$key], "Unknown key" ) !== 0 )
+                     if( strpos( $lookupNew, "Unknown" ) !== 0 )
                      {
                         $this->_data['success'][$keyIndex] = [
-                           'value'  => "was updated ( " . $lookupNew[$key] . " -> " . $lookupOld[$key] . " )",
+                           'value'  => "was updated ( " . $lookupNew . " -> " . $lookupOld . " )",
                         ];
                      }
                   }
@@ -696,58 +730,36 @@ die();
     */
    private function keyLookup( $key, $value )
    {
-   
-      $codeType['1']     = "Permit";
-      $codeType['2']     = "Department";
-      $codeType['3']     = "CareerLevel";
-      $codeType['4']     = "Masters";         
-      
-      $isActive['-1']   = 'Select Status';
-      $isActive['1']    = 'Active';
-      $isActive['0']    = 'Inactive';
-      
-      $isHidden['1']    = 'Visible';
-      $isHidden['0']    = 'Hidden';    
-      
-      $valLookup        = [];      
+      $codeType   = CodesController::getDropDownOpts( 'type'      );
+      $isActive   = CodesController::getDropDownOpts( 'is_active' );
+      $isHidden   = CodesController::getDropDownOpts( 'is_hidden' );       
       
       if( $key === "type" )
       {
-         if( intval($value) === 1 )
-         {
-            $valLookup[$key] = "Permit";
-         }
-         else if( intval($value) === 2 )
-         {
-            $valLookup[$key] = "Department";
-         }
-         else if( intval($value) === 3 )
-         {
-            $valLookup[$key] = "CareerLevel";
-         }
-         else if( intval($value) === 4 )
-         {
-            $valLookup[$key] = "Masters";
-         }
+         if( isset( $codeType[$value] ) && !empty( $codeType[$value] ) )
+            return $codeType[$value];
+
          else
-         {
-            $valLookup[$key] = "Undocumented value : " . $value;
-         }                                    
+            return "Unknown value : " . $key . " :: " . $value;                                 
       }
       else if( $key === "is_active" )
       {
-         $valLookup[$key] = $value ? "Active" : "Inactive";      
+         if( isset( $isActive[$value] ) && !empty( $isActive[$value] ) )
+            return $isActive[$value];
+
+         else
+            return "Unknown value : " . $key . " :: " . $value;  
       }
       else if( $key === "is_hidden" )
       {
-         $valLookup[$key] = $value ? "Visible" : "Hidden";      
-      }
-      else
-      {
-         $valLookup[$key] = "Unknown key : " . $key;        
+         if( isset( $isHidden[$value] ) && !empty( $isHidden[$value] ) )
+            return $isHidden[$value];
+
+         else
+            return "Unknown value : " . $key . " :: " . $value;       
       }
    
-      return $valLookup;
+      return "Unknown key : " . $key . " :: " . $value;
    }
    
    /**
@@ -757,7 +769,7 @@ die();
     */
    public static function getDropDownOpts( $key = "", $prompt = false)
    {
-      $dropDownOpts     = [];   
+      $dropDownOpts     = self::dropDownOpts;   
    
       if( !isset( $key ) || empty( $key ) )
       {
@@ -768,41 +780,10 @@ die();
          return $dropDownOpts;
       }      
       
-      $dropDownOpts['pageCount'] = [
-         '10'  => '10',
-         '25'  => '25',
-         '50'  => '50',
-         '100' => '100',
-      ];
-      
-      $dropDownOpts['type'] = [
-         '-1'  => 'Select Type',
-         '1'   => 'Permit',
-         '2'   => 'Department',
-         '3'   => 'CareerLevel',
-         '4'   => 'Masters',
-      ];
-      
-      $dropDownOpts['is_active'] = [
-         '-1'  => 'Select Status',
-         '0'   => 'Inactive',
-         '1'   => 'Active',
-
-      ];    
-      
-      $dropDownOpts['is_hidden'] = [
-         '-1'  => 'Select Status',
-         '0'   => 'Hidden',
-         '1'   => 'Visible',
-
-      ];
-      
       if( !$prompt )
       {
          if( isset( $dropDownOpts[$key] ) )
-         {
-            unset( $dropDownOpts[$key][-1] );
-         }
+            unset( $dropDownOpts[$key][-1] );            
       }
 
       return $dropDownOpts[$key];
