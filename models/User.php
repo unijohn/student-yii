@@ -376,7 +376,7 @@ class User extends ActiveRecord implements IdentityInterface
          ->select([ 'taa.item_name', 'taa.user_id' ])
          ->from(  'tbl_TempAuthAssignment taa' )
          ->where( 'taa.user_id =:user_id and item_name like :name and deleted_at IS NULL ' )
-            ->addParams( [':user_id' => $id, ':name' => 'Framework-Administrator'], )
+            ->addParams( [':user_id' => $id, ':name' => 'Framework-Administrator'] )
          ->limit(1);
 
       foreach( $query_users->each() as $user_row )
@@ -400,7 +400,7 @@ class User extends ActiveRecord implements IdentityInterface
          ->select([ 'taa.item_name', 'taa.user_id' ])
          ->from(  'tbl_TempAuthAssignment taa' )
          ->where( 'taa.user_id =:user_id  and deleted_at IS NULL ' )
-            ->addParams( [':user_id' => $id, ], )
+            ->addParams( [':user_id' => $id, ] )
          ->limit(1);
 
       foreach( $query_users->each() as $user_row )

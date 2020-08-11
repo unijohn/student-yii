@@ -2,10 +2,10 @@
 
 namespace app\controllers;
 
-use Yii;
+use yii;
 
 use yii\data\ActiveDataProvider;
-use yii\data\SQLDataProvider;
+use yii\data\SqlDataProvider;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
@@ -40,7 +40,6 @@ class UsersController extends Controller
       /**
        *  Quick fix for cookie timeout
        **/      
-      
       if( is_null( Yii::$app->user->identity ) )
       {
          /* /site/index works but trying to learn named routes syntax */
@@ -191,7 +190,7 @@ class UsersController extends Controller
          ],         
          'pagination' => [
             'pageSize' => $this->_data['filterForm']['paginationCount'],
-         ],
+         ]
       ]); 
       
       return $UserSDP;
