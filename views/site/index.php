@@ -320,7 +320,7 @@ $auth    = Yii::$app->authManager;
 <?php
    if (\Yii::$app->user->can('[Framework][Access][Permit]')  )
    {
-      print( "<h3>Administrator [10]</h3>" );
+//      print( "<h3>Administrator [10]</h3>" );
    } 
  ?>
 
@@ -336,9 +336,9 @@ $auth    = Yii::$app->authManager;
       \Yii::$app->user->can('[Student][Access][GRAD]'   ) 
    ) 
    {
-      print( "<li>" );
-      print( HTML::a( "Submit an Application", Url::toRoute( ['gaapps/index', ], true) ) );
-      print( "</li>" );      
+//      print( "<li>" );
+//      print( HTML::a( "Submit an Application", Url::toRoute( ['gaapps/index', ], true) ) );
+//      print( "</li>" );      
    }
 
 /**    
@@ -358,9 +358,9 @@ $auth    = Yii::$app->authManager;
       \Yii::$app->user->can('[Student][Update][GRAD]'     ) 
    ) 
    {
-      print( "<li>" );   
-      print( HTML::a( "Review Application", Url::toRoute( ['gaapps/index', ], true) ) );   
-      print( "</li>" );
+//      print( "<li>" );   
+//      print( HTML::a( "Review Application", Url::toRoute( ['gaapps/index', ], true) ) );   
+//      print( "</li>" );
    }
 
    if (
@@ -368,9 +368,9 @@ $auth    = Yii::$app->authManager;
       \Yii::$app->user->can('[Student][Role][GRAD]'    )
    ) 
    {
-      print( "<li>" );
-      print( HTML::a( "User Management", Url::toRoute( ['gaapps/index', ], true) ) );
-      print( "</li>" );      
+//      print( "<li>" );
+//      print( HTML::a( "User Management", Url::toRoute( ['gaapps/index', ], true) ) );
+//      print( "</li>" );      
    }   
    
    if (
@@ -378,23 +378,24 @@ $auth    = Yii::$app->authManager;
       \Yii::$app->user->can('[Student][Backup][GRAD]'     )   
    ) 
    {
-      print( "<li>" );
-      print( HTML::a( "Data Backup", Url::toRoute( ['gaapps/index', ], true) ) );    
-      print( "</li>" );
+//      print( "<li>" );
+//      print( HTML::a( "Data Backup", Url::toRoute( ['gaapps/index', ], true) ) );    
+//      print( "</li>" );
    }     
    
-   print( "</ul>" );
+//   print( "</ul>" );
    
    /****
     **  Eo GAApp section of the dashboard :: Action Access
     ****/   
  ?>   
 
-
+<!--
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
                     dolore magna aliqua.</p>
 
                 <p><a class="btn btn-default" href="http://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
+  -->
             </div>
 <?php
 }    
