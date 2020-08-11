@@ -15,11 +15,11 @@ class AuthItem extends \yii\db\ActiveRecord
    const TYPE_PERMISSION   = 2;
 
 
-   public $name;
-   public $type;
-   public $description;
-   public $created_at;
-   public $updated_at;
+//   public $name;
+//   public $type;
+//   public $description;
+//   public $created_at;
+//   public $updated_at;
 
 
    public function init()

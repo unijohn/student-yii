@@ -5,7 +5,7 @@ namespace app\controllers;
 use Yii;
 
 use yii\data\ActiveDataProvider;
-use yii\data\SQLDataProvider;
+use yii\data\SqlDataProvider;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
@@ -220,7 +220,7 @@ class CodesController extends Controller
       
       $count = Yii::$app->db->createCommand(
          $countSQL,
-         $params,
+         $params
       )->queryScalar();      
       
       $CodesSDP = new SqlDataProvider ([

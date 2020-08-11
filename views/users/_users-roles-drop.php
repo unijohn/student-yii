@@ -48,6 +48,7 @@
 
 <div id="users-roles-drop-div" style="margin-bottom: 12px;min-height: 45px;">
 <?php
+
    foreach( $model as $role )
    {
       $form = ActiveForm::begin([

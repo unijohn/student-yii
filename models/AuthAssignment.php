@@ -12,8 +12,8 @@ use app\models\AuthItem;
 
 class AuthAssignment extends \yii\db\ActiveRecord
 {
-   public $item_name;
-   public $user_id;
+//   public $item_name;
+//   public $user_id;
 
 
    public function init()
