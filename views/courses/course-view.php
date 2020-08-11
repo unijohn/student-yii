@@ -147,13 +147,13 @@
          <?php ActiveForm::end(); ?> 
       </div>
  
-      <h3>Drop Permit Tag</h3>
-      <div id='permits-tags-drop-form'>      
+      <h3>Drop System Code Tag</h3>
+      <div id='system-codes-tags-drop-form'>      
 
       </div>  
 
-      <h3>Add Permit Tag</h3>
-      <div id='permits-tags-add-form'>      
+      <h3>Add System Code Tag</h3>
+      <div id='system-codes-tags-add-form'>      
 
       </div>
 
