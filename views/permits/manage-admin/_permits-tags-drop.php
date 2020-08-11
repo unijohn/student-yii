@@ -27,7 +27,7 @@
    <?= Html::hiddenInput('dropTag', 'dropTag')   ?>         
 
    <div id="field-tag-code" class="form-group field-tag-code" style="float: left; margin-right: 12px;">
-      <?= Html::submitButton($tag['description'] . '  [&times;]', ['class' => 'btn btn-primary', 'value' => $tag['id']], ) ?>
+      <?= Html::submitButton($tag['description'] . '  [&times;]', ['class' => 'btn btn-primary', 'value' => $tag['id']] ) ?>
       
       <div id="field-tag-code-help-block<?php echo( $tag['id'] ); ?>" class="help-block"></div>
    </div>
