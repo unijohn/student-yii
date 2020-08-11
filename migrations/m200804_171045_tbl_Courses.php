@@ -110,7 +110,7 @@ class m200804_171045_tbl_Courses extends Migration
       
       $courseColumns = [ 'id', 'subject_area', 'course_number', 'section_number', 'is_active', 'is_hidden', 'created_at', 'updated_at' ];
       
-      $courseRows = [
+      $courseRows1 = [
          [ 'ACCT2010001', 'ACCT', '2010', '001',  $STATUS_ACTIVE,  $STATUS_VISIBLE,  $created_at,  $updated_at,  ],
          [ 'ACCT2010002', 'ACCT', '2010', '002',  $STATUS_ACTIVE,  $STATUS_VISIBLE,  $created_at,  $updated_at,  ],
          [ 'ACCT2010003', 'ACCT', '2010', '003',  $STATUS_ACTIVE,  $STATUS_VISIBLE,  $created_at,  $updated_at,  ],
@@ -412,6 +412,9 @@ class m200804_171045_tbl_Courses extends Migration
          [ 'BA8800002', 'BA', '8800', '002',  $STATUS_ACTIVE,  $STATUS_VISIBLE,  $created_at,  $updated_at,  ],
          [ 'BA8800003', 'BA', '8800', '003',  $STATUS_ACTIVE,  $STATUS_VISIBLE,  $created_at,  $updated_at,  ],
          [ 'BA8800004', 'BA', '8800', '004',  $STATUS_ACTIVE,  $STATUS_VISIBLE,  $created_at,  $updated_at,  ],
+      ];
+
+      $courseRows2 = [      
          [ 'BA8800005', 'BA', '8800', '005',  $STATUS_ACTIVE,  $STATUS_VISIBLE,  $created_at,  $updated_at,  ],
          [ 'BA8800006', 'BA', '8800', '006',  $STATUS_ACTIVE,  $STATUS_VISIBLE,  $created_at,  $updated_at,  ],
          [ 'BA8800007', 'BA', '8800', '007',  $STATUS_ACTIVE,  $STATUS_VISIBLE,  $created_at,  $updated_at,  ],
@@ -813,6 +816,9 @@ class m200804_171045_tbl_Courses extends Migration
          [ 'FIR6710001', 'FIR', '6710', '001',  $STATUS_ACTIVE,  $STATUS_VISIBLE,  $created_at,  $updated_at,  ],
          [ 'FIR6710410', 'FIR', '6710', '410',  $STATUS_ACTIVE,  $STATUS_VISIBLE,  $created_at,  $updated_at,  ],
          [ 'FIR6720001', 'FIR', '6720', '001',  $STATUS_ACTIVE,  $STATUS_VISIBLE,  $created_at,  $updated_at,  ],
+      ];
+      
+      $courseRows3 = [      
          [ 'FIR6720101', 'FIR', '6720', '101',  $STATUS_ACTIVE,  $STATUS_VISIBLE,  $created_at,  $updated_at,  ],
          [ 'FIR6720M50', 'FIR', '6720', 'M50',  $STATUS_ACTIVE,  $STATUS_VISIBLE,  $created_at,  $updated_at,  ],
          [ 'FIR6721001', 'FIR', '6721', '001',  $STATUS_ACTIVE,  $STATUS_VISIBLE,  $created_at,  $updated_at,  ],
@@ -1213,6 +1219,9 @@ class m200804_171045_tbl_Courses extends Migration
          [ 'MIS6672001', 'MIS', '6672', '001',  $STATUS_ACTIVE,  $STATUS_VISIBLE,  $created_at,  $updated_at,  ],
          [ 'MIS6672410', 'MIS', '6672', '410',  $STATUS_ACTIVE,  $STATUS_VISIBLE,  $created_at,  $updated_at,  ],
          [ 'MIS7030141', 'MIS', '7030', '141',  $STATUS_ACTIVE,  $STATUS_VISIBLE,  $created_at,  $updated_at,  ],
+      ];
+      
+      $courseRows4 = [      
          [ 'MIS7030201', 'MIS', '7030', '201',  $STATUS_ACTIVE,  $STATUS_VISIBLE,  $created_at,  $updated_at,  ],
          [ 'MIS7070001', 'MIS', '7070', '001',  $STATUS_ACTIVE,  $STATUS_VISIBLE,  $created_at,  $updated_at,  ],
          [ 'MIS7160001', 'MIS', '7160', '001',  $STATUS_ACTIVE,  $STATUS_VISIBLE,  $created_at,  $updated_at,  ],
@@ -1502,7 +1511,17 @@ class m200804_171045_tbl_Courses extends Migration
          [ 'SCMS8540001', 'SCMS', '8540', '001',  $STATUS_ACTIVE,  $STATUS_VISIBLE,  $created_at,  $updated_at,  ],        
       ];
 
-      $this->batchInsert( $this->getTableName(), $courseColumns, $courseRows      );      
+      /**
+       *
+       * Encounters SQLSTATE[HY000]: General error: 1 too many terms in compound SELECT
+       * on Oracle Linux 7; error does not occur on Windows 10
+       *
+       **/
+
+      $this->batchInsert( $this->getTableName(), $courseColumns, $courseRows1 );  
+      $this->batchInsert( $this->getTableName(), $courseColumns, $courseRows2 );
+      $this->batchInsert( $this->getTableName(), $courseColumns, $courseRows3 );
+      $this->batchInsert( $this->getTableName(), $courseColumns, $courseRows4 );                  
    }
    
    /**

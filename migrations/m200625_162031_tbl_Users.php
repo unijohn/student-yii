@@ -6,6 +6,9 @@ use yii\rbac\DbManager;
 
 /**
  * Class m200625_162031_tbl_Users
+ *
+ * NOTE: Run this command to initate the AuthManager tables
+ *   yii migrate --migrationPath=@yii/rbac/migrations/
  */
 class m200625_162031_tbl_Users extends Migration
 {
