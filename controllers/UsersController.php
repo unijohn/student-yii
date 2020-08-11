@@ -15,8 +15,9 @@ use yii\web\Response;
 
 use app\models\AuthAssignment;
 use app\models\AuthItem;
+use app\models\SystemCodes;
+use app\models\SystemCodesChild;
 use app\models\User;
-//use app\models\UserSearch;
 
 
 class UsersController extends Controller
@@ -29,7 +30,9 @@ class UsersController extends Controller
    private $_roleModel;
    private $_userModel;
    
-
+   private $_tbl_SystemCodes;
+   private $_tbl_SystemCodesChild;   
+   
     /**
      * {@inheritdoc}
      */
@@ -55,6 +58,9 @@ class UsersController extends Controller
       $this->_userModel        = new User();
       $this->_roleModel        = new AuthAssignment();
       $this->_authItemModel    = new AuthItem();
+      
+      $this->_tbl_SystemCodes       = SystemCodes::tableName();
+      $this->_tbl_SystemCodesChild  = SystemCodesChild::tableName();      
       
       $this->_data['filterForm']['uuid']              = ArrayHelper::getValue($this->_request->get(), 'User.uuid',      '');
       $this->_data['filterForm']['is_active']         = ArrayHelper::getValue($this->_request->get(), 'User.is_active', -1);
@@ -142,13 +148,7 @@ class UsersController extends Controller
       $count = Yii::$app->db->createCommand(
          'SELECT COUNT(*) FROM tbl_Users WHERE id >=:id ',
          [':id' => $params[':id']])->queryScalar();
-      
-/**
-      $sql  =  "SELECT  id, uuid, name, is_active, ";
-      $sql .=  "        datetime(created_at, 'unixepoch') as created_at, datetime(updated_at, 'unixepoch') as updated_at " ;
-      $sql .= "FROM tbl_Users WHERE id >=:id ";
- **/
-       
+            
       $sql  = "SELECT  id, uuid, name, is_active, created_at, updated_at " ;
       $sql .= "FROM tbl_Users WHERE id >=:id ";
 
@@ -241,8 +241,8 @@ class UsersController extends Controller
             'dataProvider' => $this->_dataProvider,
             'model'        => $this->_userModel,
             'roles'        => $this->_roleModel,
-            'allRoles'     => $this->_authItemModel,
-      ]);      
+            'allRoles'     => $this->_authItemModel
+      ]);
    }
 
 
