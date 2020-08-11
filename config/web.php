@@ -10,7 +10,7 @@ $config = [
     **/
 
     'id' => 'basic',
-    'name' => 'FCBE Online Services',
+    'name' => 'FCBE Workdesk',
     'language' => 'en-US',
     'charset' => 'UTF-8',    
     
