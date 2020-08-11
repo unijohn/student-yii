@@ -199,7 +199,7 @@ class CoursesController extends Controller
       
       $count = Yii::$app->db->createCommand(
          $countSQL,
-         $params,
+         $params
       )->queryScalar();      
       
       $CoursesSDP = new SqlDataProvider ([
