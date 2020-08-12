@@ -34,6 +34,8 @@ class User extends ActiveRecord implements IdentityInterface
 
    private $_auth;
 
+   /** TEST HERE **/
+
    const SCENARIO_ADD_USER = 'addUser';
 
    public function init()
