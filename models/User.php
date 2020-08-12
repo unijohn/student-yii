@@ -66,7 +66,6 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function attributeLabels()
     {
- 
         return [
 //            'id' => Yii::t('app', 'ID'),
             'uuid'      => Yii::t('app', 'UUID'),
@@ -78,7 +77,6 @@ class User extends ActiveRecord implements IdentityInterface
 //            'Content' => Yii::t('app', 'Content'),
 //            'Format' => Yii::t('app', 'Format'),
         ];
-
     }
 
 
