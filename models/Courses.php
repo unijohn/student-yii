@@ -144,10 +144,10 @@ class Courses extends ActiveRecord
      
       foreach( $query_courses->each() as $course_row )
       {
-         return true;
+         return new static( $course_row );
       }
  
-      return false;            
+      return null;            
    }   
    
 /**
