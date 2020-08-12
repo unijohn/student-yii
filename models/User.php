@@ -242,8 +242,8 @@ class User extends ActiveRecord implements IdentityInterface
       $query_users = (new \yii\db\Query())
          ->select([ 'id', 'uuid', 'name', 'access_token', 'created_at', 'updated_at' ])
          ->from( User::getUserTableName() )
-         ->where( 'uuid=:uuid' )
-            ->addParams( [':accessToken' => $token] )
+         ->where( 'access_token=:access_token' )
+            ->addParams( [':access_token' => $token] )
          ->limit(1);     
      
       foreach( $query_users->each() as $user_row )
@@ -328,7 +328,7 @@ class User extends ActiveRecord implements IdentityInterface
          return false;
       }
    
-      return $this->$auth_key === $auth_key;
+      return $this->auth_key === $auth_key;
    }
 
     /**
