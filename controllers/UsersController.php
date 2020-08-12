@@ -255,6 +255,8 @@ class UsersController extends Controller
    {
       $this->_dataProvider = $this->getUserGridView();   
    
+   // Testing GH Workflow   
+   
       $this->_userModel->uuid          = ArrayHelper::getValue($this->_request->post(), 'User.uuid', '' );
       
       $uuidExists = User::existsUUID( $this->_userModel->uuid );
