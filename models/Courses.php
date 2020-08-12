@@ -24,6 +24,9 @@ class Courses extends ActiveRecord
    const SUBJECT_MIS       = "MIS";
    const SUBJECT_MKTG      = "MKTG";
    const SUBJECT_SCMS      = "SCMS";
+   
+   const SCENARIO_INSERT   = 'insert';
+   const SCENARIO_UPDATE   = 'update';   
 
 /**
    public $id;
@@ -118,10 +121,32 @@ class Courses extends ActiveRecord
    /**
    * @inheritdoc
    */
+   public function scenarios()
+   {
+      $scenarios = parent::scenarios();
+      $scenarios[self::SCENARIO_INSERT] = [ 'subject_area', 'course_number', 'section_number', 'is_active', 'is_hidden' ];
+      $scenarios[self::SCENARIO_UPDATE] = [ 'subject_area', 'course_number', 'section_number', 'is_active', 'is_hidden' ];
+   
+      return $scenarios;
+   }
+
+
+   /**
+   * @inheritdoc
+   */
    public function rules()
    {
       return [
-//         [['name', 'type', ], 'required' ],
+         ['is_active', 'default', 'value'    => Courses::STATUS_ACTIVE   ],
+         ['is_active', 'integer', 'min'      => Courses::STATUS_INACTIVE ],
+         ['is_active', 'filter',  'filter'   => 'intval'],
+
+         ['is_hidden', 'default', 'value'    => Courses::STATUS_VISIBLE ],
+         ['is_hidden', 'integer', 'min'      => Courses::STATUS_HIDDEN  ],         
+         ['is_hidden', 'filter',  'filter'   => 'intval'],
+         
+         [['is_active', 'is_hidden'], 'required', 'on' => self::SCENARIO_UPDATE ],
+      
       ];
    }
 

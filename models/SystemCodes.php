@@ -16,6 +16,8 @@ class SystemCodes extends ActiveRecord
    const TYPE_DEPARTMENT   = 2;
    const TYPE_CAREERLEVEL  = 3;
    const TYPE_MASTERS      = 4;
+
+   const TYPE_MAX          = SystemCodes::TYPE_MASTERS;   
    
    const STATUS_INACTIVE   = 0;
    const STATUS_ACTIVE     = 1;
@@ -124,14 +126,15 @@ class SystemCodes extends ActiveRecord
       return [
          ['type', 'default', 'value'    => SystemCodes::TYPE_PERMIT ],
          ['type', 'integer', 'min'      => SystemCodes::TYPE_PERMIT ],
+         ['type', 'integer', 'max'      => SystemCodes::TYPE_MAX    ],         
          ['type', 'filter',  'filter'   => 'intval'],
 
-         ['is_active', 'default', 'value'    => SystemCodes::STATUS_ACTIVE ],
+         ['is_active', 'default', 'value'    => SystemCodes::STATUS_ACTIVE   ],
          ['is_active', 'integer', 'min'      => SystemCodes::STATUS_INACTIVE ],
          ['is_active', 'filter',  'filter'   => 'intval'],
 
          ['is_hidden', 'default', 'value'    => SystemCodes::STATUS_VISIBLE ],
-         ['is_hidden', 'integer', 'min'      => SystemCodes::STATUS_HIDDEN ],         
+         ['is_hidden', 'integer', 'min'      => SystemCodes::STATUS_HIDDEN  ],         
          ['is_hidden', 'filter',  'filter'   => 'intval'],
          
          [['is_active', 'is_hidden'], 'required', 'on' => self::SCENARIO_UPDATE ],
@@ -269,34 +272,6 @@ class SystemCodes extends ActiveRecord
             ->addParams([ ':type' => SystemCodes::TYPE_PERMIT, ':id' => $id ])
          ->all();
 
-/**
-      $query_codes = ( new \yii\db\Query() )
-         ->select([  'sc.id', 'sc.type', 'sc.code', 'sc.description', 'sc.is_active' ])
-         ->from(     $tbl_SystemsCodes       . ' sc' )
-         ->leftJoin( $tbl_SystemCodesChild   . ' scc', 'scc.child = sc.id' )
-         ->where( 'sc.type !=:type AND scc.child IS NULL ' )
-            ->addParams([':type' => SystemCodes::TYPE_PERMIT ]);
-
-//      $query_sub2    = SystemCodesChild::find()->select('child')->where([ 'child' => 1 ]);
-
-      $query_codes2 = ( new \yii\db\Query() )
-         ->select([  'sc.id', 'sc.type', 'sc.code', 'sc.description', 'sc.is_active' ])
-         ->from(     $tbl_SystemCodesChild   . ' scc' )
-         ->leftJoin( $tbl_SystemCodesChild   . ' scc2', 'scc.child = scc2.child' )
-         ->innerJoin( $tbl_SystemsCodes      . ' sc ',  'sc.id = scc.child' )
-         ->where( 'scc2.parent !=:id AND scc.child NOT IN ( SELECT child FROM ' . $tbl_SystemCodesChild . ' WHERE parent =:parent )'  )
-            ->addParams([':id' => $id, ':parent' => $id ]);
-
-      $query_codes->union( $query_codes2 );
-      
-      
-//      print( "<pre>" );
-      foreach( $query_codes->all() as $user_row )
-      {
-//         print_r( $user_row );
-      }
-//      die();
- **/
       return $query_codes;
    }
 
@@ -356,15 +331,16 @@ class SystemCodes extends ActiveRecord
                ':type' => $type, 
             ])
          ->limit(1);     
-     
+
       foreach( $query_codes->each() as $code_row )
       {
-         return true;
+         return new static( $code_row );
       }
  
-      return false;              
+      return null;          
    }   
-   
+
+
    /**
     * Determines if this permit already exists in the system
     *
@@ -372,26 +348,7 @@ class SystemCodes extends ActiveRecord
     */
    public static function existsPermit($code)
    {        
-      return self::existsSystemCode( TYPE_PERMIT, $code );
-   
-/**   
-      $query_permits = (new \yii\db\Query())
-         ->select([ 'id', 'type', 'code', 'description', 'created_at', 'updated_at' ])
-         ->from( SystemCodes::tableName() )
-         ->where( 'code=:code AND type =:type ' )
-            ->addParams([
-               ':code' => $code, 
-               ':type' => SystemCodes::TYPE_PERMIT, 
-            ])
-         ->limit(1);     
-     
-      foreach( $query_permits->each() as $permit_row )
-      {
-         return true;
-      }
- 
-      return false;            
- **/      
+      return self::existsSystemCode( SystemCodes::TYPE_PERMIT, $code );  
    }   
    
    
