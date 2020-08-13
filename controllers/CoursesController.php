@@ -16,13 +16,21 @@ use yii\web\Response;
 use app\controllers\BaseController;
 
 use app\models\Courses;
-//use app\models\UserSearch;
+use app\models\CoursesCodesChild;
+use app\models\SystemCodes;
 
 
 class CoursesController extends BaseController
 {
    private $_coursesModel;
+   private $_coursesChildModel;
    
+   private $_codesModel;
+
+   private $_tagsModel;
+
+   private $_tbl_SystemCodes;
+   private $_tbl_CoursesCodesChild;   
 
     /**
      * {@inheritdoc}
@@ -31,14 +39,13 @@ class CoursesController extends BaseController
    {
       parent::init();
       
-      $this->_coursesModel     = new Courses();
+      $this->_coursesModel          = new Courses();
+      $this->_coursesChildModel     = new CoursesCodesChild();
       
-      $this->_data['filterForm']['subject_area']      = ArrayHelper::getValue($this->_request->get(), 'Courses.subject_area',    '');
-      $this->_data['filterForm']['course_number']     = ArrayHelper::getValue($this->_request->get(), 'Courses.course_number',   '');      
-      $this->_data['filterForm']['is_active']         = ArrayHelper::getValue($this->_request->get(), 'Courses.is_active',       -1);
-      $this->_data['filterForm']['is_hidden']         = ArrayHelper::getValue($this->_request->get(), 'Courses.is_hidden',       -1);      
-      $this->_data['filterForm']['paginationCount']   = $this->_request->get( 'pagination_count', 25 );
+      $this->_codesModel            = new SystemCodes();
 
+      $this->_tbl_SystemCodes       = SystemCodes::tableName();
+      $this->_tbl_CoursesCodesChild = CoursesCodesChild::tableName();
       
       /**
        *    Capturing the possible post() variables used in this controller
@@ -58,9 +65,18 @@ class CoursesController extends BaseController
             ->where(['id' => $this->_data['id'] ])
             ->limit(1)->one();
             
-//         $this->_tagsModel       = SystemCodes::findPermitTagsById( $this->_data['id'] );
-//         $this->_codeChildModel  = SystemCodes::findUnassignedPermitTagOptions( $this->_data['id']);
-      }   
+         $this->_tagsModel          = CoursesCodesChild::findTagsById( $this->_data['id'] );
+         $this->_coursesChildModel  = SystemCodes::findUnassignedTagOptionsForCourses( $this->_data['id']);
+         
+//         $this->debug( $this->_tagsModel, false );  
+//         $this->debug( $this->_coursesChildModel, true );           
+      }
+
+      $this->_data['filterForm']['subject_area']      = ArrayHelper::getValue($this->_request->get(), 'Courses.subject_area',    '');
+      $this->_data['filterForm']['course_number']     = ArrayHelper::getValue($this->_request->get(), 'Courses.course_number',   '');      
+      $this->_data['filterForm']['is_active']         = ArrayHelper::getValue($this->_request->get(), 'Courses.is_active',       -1);
+      $this->_data['filterForm']['is_hidden']         = ArrayHelper::getValue($this->_request->get(), 'Courses.is_hidden',       -1);      
+      $this->_data['filterForm']['paginationCount']   = $this->_request->get( 'pagination_count', 25 );
  
       $this->_data['tagid']            = $this->_request->post('tagid',    '' );      
       $this->_data['addTag']           = $this->_request->post('addTag',   '' );
@@ -74,7 +90,15 @@ class CoursesController extends BaseController
       $this->_data['Courses']['course_number']  = ArrayHelper::getValue($this->_request->post(),   'Courses.course_number',   '');
       $this->_data['Courses']['section_number'] = ArrayHelper::getValue($this->_request->post(),   'Courses.section_number',  '');      
       $this->_data['Courses']['is_active']      = ArrayHelper::getValue($this->_request->post(),   'Courses.is_active',       -1);
-      $this->_data['Courses']['is_hidden']      = ArrayHelper::getValue($this->_request->post(),   'Courses.is_hidden',       -1);      
+      $this->_data['Courses']['is_hidden']      = ArrayHelper::getValue($this->_request->post(),   'Courses.is_hidden',       -1);    
+      
+      /**
+       *    if inserting a new record, set the filter to that new record's type as a UX feature
+       **/  
+      if( isset( $this->_data['Courses']['subject_area'] ) && !empty( $this->_data['Courses']['subject_area'] ) )
+      {
+         $this->_data['filterForm']['subject_area'] = $this->_data['Courses']['subject_area'];
+      }        
    }   
 
 
@@ -238,9 +262,10 @@ class CoursesController extends BaseController
       $this->_dataProvider = $this->getCoursesGridView();
 
       return $this->render('courses-listing', [
-            'data'         => $this->_data, 
-            'dataProvider' => $this->_dataProvider,
-            'model'        => $this->_coursesModel,
+            'data'            => $this->_data, 
+            'dataProvider'    => $this->_dataProvider,
+            'model'           => $this->_coursesModel,
+            'modelSubjects'  => Courses::getAllSubjectAreas()
       ]);      
    }
    
@@ -251,13 +276,13 @@ class CoursesController extends BaseController
     * @return string
     */
    public function actionView()
-   {  
+   { 
       return $this->render('course-view', [
             'data'         => $this->_data, 
             'dataProvider' => $this->_dataProvider,
             'model'        => $this->_coursesModel,
-//            'tags'         => $this->_tagsModel,
-//            'allTags'      => $this->_codeChildModel,
+            'tags'         => $this->_tagsModel,
+            'allTags'      => $this->_coursesChildModel,
       ]);      
    }
 
@@ -334,9 +359,10 @@ class CoursesController extends BaseController
       if( $exitEarly )
       {
          return $this->render('courses-listing', [
-               'data'         => $this->_data, 
-               'dataProvider' => $this->_dataProvider,
-               'model'        => $this->_coursesModel,
+               'data'            => $this->_data, 
+               'dataProvider'    => $this->_dataProvider,
+               'model'           => $this->_coursesModel,
+               'modelSubjects'   => Courses::getAllSubjectAreas(),           
          ]); 
       }
 
@@ -406,9 +432,10 @@ class CoursesController extends BaseController
       $this->_dataProvider = $this->getCoursesGridView();      
 
       return $this->render('courses-listing', [
-            'data'         => $this->_data, 
-            'dataProvider' => $this->_dataProvider,
-            'model'        => $this->_coursesModel,
+            'data'            => $this->_data, 
+            'dataProvider'    => $this->_dataProvider,
+            'model'           => $this->_coursesModel,
+            'modelSubjects'   => Courses::getAllSubjectAreas(),
       ]); 
    }
    
@@ -428,8 +455,7 @@ print_r( $this->_request->post() );
 die();
  **/
  
-/**
-      $tagRelationExists = SystemCodesChild::find()
+      $tagRelationExists = CoursesCodesChild::find()
          ->where([ 'parent' => $this->_data['id'] ])
          ->andWhere([ 'child' => $this->_data['tagid'] ])
          ->limit(1)
@@ -439,7 +465,6 @@ die();
          ->where([ 'id' => $this->_data['tagid'] ])
          ->limit(1)
          ->one();
-
 
       if( strlen( $this->_data['addTag'] ) > 0 )
       {
@@ -457,11 +482,14 @@ die();
             ];
             
             $isError = true;
+            $exitEarly = $isError;
          }
 
          if( !$isError )
          {
-            if( $this->addTag( $this->_data['tagid'], $this->_data['id'] ) )
+            $result = $this->addCourseTag( $this->_data['id'], $this->_data['tagid'] );
+         
+            if( $result > 0 )
             { 
                $tag = SystemCodes::find()
                   ->where([ 'id' => $this->_data['tagid'] ])
@@ -488,16 +516,20 @@ die();
                   'class'     => 'alert alert-danger',
                ];
                
-               $this->_data['errors']['Add Permit Tag'] = [
-                  'value' => "was not successful; no tags were added.",
+               $this->_data['errors']['Add Course Tag'] = [
+                  'value' => "was not successful; no tags were added. (Result: " . strval($result) . ") ",
                ];
             }
-         }    
-      }
+            
+            $exitEarly = true;    
+         }        
+      } 
 
       if( strlen( $this->_data['dropTag'] ) > 0 )
       {
-         if( $this->removeTag( $this->_data['tagid'], $this->_data['id'] ) )
+         $result = $this->removeCourseTag( $this->_data['id'], $this->_data['tagid'] );      
+      
+         if( $result > 0 )
          {
             $this->_data['success']['Remove Tag'] = [
                'value'        => "was successful",
@@ -520,12 +552,13 @@ die();
             ];
             
             $this->_data['errors'][$tagChild['description']] = [
-               'value' => "was not successful; no tags were removed.",
+               'value' => "was not successful; no tags were removed. (Result: " . strval($result) . ") ",
             ];
-         }  
+         }
+         
+         $exitEarly = true;
       }  
- **/      
-      
+
       if( isset($this->_data['saveCourse'] ) && !empty( $this->_data['saveCourse'] ) )
       {
          $this->_coursesModel->id               = ArrayHelper::getValue($this->_request->post(), 'Courses.id',   '' );
@@ -549,7 +582,7 @@ die();
             
             $exitEarly = true;
          }
-         
+
          if( !isset( $this->_coursesModel->course_number ) || empty( $this->_coursesModel->course_number ) )
          {
             $this->_data['errors']['Save Course'] = [
@@ -578,68 +611,77 @@ die();
             ];      
    
             $exitEarly = true;
-         }        
-   
-         if( $exitEarly )
-         {  
-            return $this->render('course-view', [
-                  'data'         => $this->_data, 
-                  'dataProvider' => $this->_dataProvider,
-                  'model'        => $this->_coursesModel,
-      //            'tags'         => $this->_tagsModel,
-      //            'allTags'      => $this->_codeChildModel,
-            ]);  
-         }      
-      
-         $updateModel      = Courses::findOne( $this->_coursesModel->id );
- 
-         $updateModel->subject_area    = $this->_data['Courses']['subject_area'];
-         $updateModel->course_number   = $this->_data['Courses']['course_number'];
-         $updateModel->section_number  = $this->_data['Courses']['section_number'];         
+         }
+      }  
 
-         $updateColumns = $updateModel->getDirtyAttributes();
 
-         $updateModel->is_active    = $this->_data['Courses']['is_active'];
-         $updateModel->is_hidden    = $this->_data['Courses']['is_hidden'];
+      /**
+       *  No reason to update model if the work is done for now
+       **/
+       
+      if( $exitEarly )
+      {
+         $this->_coursesModel       = $this->_coursesModel->findOne( $this->_data['id']  );
 
-         $this->_data['savePermit'] = $updateModel->save();   
+         $this->_tagsModel          = CoursesCodesChild::findTagsById( $this->_data['id'] );
+         $this->_coursesChildModel  = SystemCodes::findUnassignedTagOptionsForCourses( $this->_data['id']);
+
+         return $this->render('course-view', [
+               'data'         => $this->_data, 
+               'dataProvider' => $this->_dataProvider,
+               'model'        => $this->_coursesModel,
+               'tags'         => $this->_tagsModel,
+               'allTags'      => $this->_coursesChildModel,
+         ]);  
+      }      
          
-         if( isset($this->_data['savePermit'] ) && !empty( $this->_data['savePermit'] ) )
+      $updateModel      = Courses::findOne( $this->_coursesModel->id );
+
+      $updateModel->subject_area    = $this->_data['Courses']['subject_area'];
+      $updateModel->course_number   = $this->_data['Courses']['course_number'];
+      $updateModel->section_number  = $this->_data['Courses']['section_number'];         
+
+      $updateColumns = $updateModel->getDirtyAttributes();
+
+      $updateModel->is_active    = $this->_data['Courses']['is_active'];
+      $updateModel->is_hidden    = $this->_data['Courses']['is_hidden'];
+
+      $this->_data['savePermit'] = $updateModel->save();   
+      
+      if( isset($this->_data['savePermit'] ) && !empty( $this->_data['savePermit'] ) )
+      {
+         if( count( $updateColumns ) > 0 )
          {
-            if( count( $updateColumns ) > 0 )
-            {
-               $this->_data['success']['Save Permit'] = [
-                  'value'     => "was successful",
+            $this->_data['success']['Save Course'] = [
+               'value'     => "was successful",
+               'bValue'    => true,
+               'htmlTag'   => 'h4',
+               'class'     => 'alert alert-success',
+            ];
+            
+            foreach( $updateColumns as $key => $val )
+            {     
+               $keyIndex = ucfirst( strtolower(str_replace( "_", " ", $key )) );
+            
+               $this->_data['success'][$keyIndex] = [
+                  'value'     => "was updated ",
                   'bValue'    => true,
-                  'htmlTag'   => 'h4',
-                  'class'     => 'alert alert-success',
-               ];
-               
-               foreach( $updateColumns as $key => $val )
-               {     
-                  $keyIndex = ucfirst( strtolower(str_replace( "_", " ", $key )) );
-               
-                  $this->_data['success'][$keyIndex] = [
-                     'value'     => "was updated ",
-                     'bValue'    => true,
-                  ];                     
-               }
+               ];                     
             }
-         }  
+         }
       }    
 
       $this->_coursesModel      = $this->_coursesModel->findOne( $this->_data['id']  );
       
-//      $this->_tagsModel       = SystemCodes::findPermitTagsById( $this->_data['id'] );
-//      $this->_codeChildModel  = SystemCodes::findUnassignedPermitTagOptions( $this->_data['id']);
-
+      $this->_tagsModel          = CoursesCodesChild::findTagsById( $this->_data['id'] );
+      $this->_coursesChildModel  = SystemCodes::findUnassignedTagOptionsForCourses( $this->_data['id']);
 
       return $this->render('course-view', [
             'data'         => $this->_data, 
             'dataProvider' => $this->_dataProvider,
             'model'        => $this->_coursesModel,
-//            'tags'         => $this->_tagsModel,
-//            'allTags'      => $this->_codeChildModel,
+            'tags'         => $this->_tagsModel,
+            'allTags'      => $this->_coursesChildModel,
       ]);  
    }   
 }

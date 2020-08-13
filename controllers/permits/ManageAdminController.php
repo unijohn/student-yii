@@ -469,52 +469,5 @@ die();
             'tags'         => $this->_tagsModel,
             'allTags'      => $this->_codeChildModel,
       ]);  
-   }   
-   
-
-   /**
-    * Adds tag assigned to Permit
-    *
-    * @return bool if rows deleted are > 0
-    */
-    public function addTag($tagId, $permitId)
-    {
-/**
-   Need to add error catching later or handle it in action before getting this far
-  
-        if ($this->isEmptyUserId($userId)) {
-            return false;
-        }
-        
-        unset($this->_checkAccessAssignments[(string) $userId]);
- **/
-
-        return $this->_db->createCommand()
-            ->insert($this->_tbl_SystemCodesChild, ['parent' => (integer) $permitId, 'child' => (integer) $tagId])
-            ->execute() > 0;
-    }
-
-
-   /**
-    * Removes tag assigned to Permit
-    *
-    * @return bool if rows deleted are > 0
-    */
-    public function removeTag($tagId, $permitId)
-    {
-/**
-   Need to add error catching later or handle it in action before getting this far
-  
-        if ($this->isEmptyUserId($userId)) {
-            return false;
-        }
-        
-        unset($this->_checkAccessAssignments[(string) $userId]);
- **/
-
-        return $this->_db->createCommand()
-            ->delete($this->_tbl_SystemCodesChild, ['parent' => (integer) $permitId, 'child' => (integer) $tagId])
-            ->execute() > 0;
-    }
-
+   } 
 }

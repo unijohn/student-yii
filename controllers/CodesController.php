@@ -48,8 +48,13 @@ class CodesController extends BaseController
          '1'   => 'Visible',
       ],
    ];
+   
+   private $_codesModel;
+   private $_codeChildModel;
+   private $_tagsModel;
 
-   private $_systemCodes;
+   private $_tbl_SystemCodes;
+   private $_tbl_SystemCodesChild;   
 
 
     /**
@@ -58,14 +63,13 @@ class CodesController extends BaseController
    public function init()
    {
       parent::init();
-
-      $this->_systemCodes        = new SystemCodes();
+      
+      $this->_codesModel            = new SystemCodes();
+      $this->_codeChildModel        = new SystemCodesChild();
+      
+      $this->_tbl_SystemCodes       = SystemCodes::tableName();
+      $this->_tbl_SystemCodesChild  = SystemCodesChild::tableName();
             
-      $this->_data['filterForm']['type']              = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.type',        '');    
-      $this->_data['filterForm']['is_active']         = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.is_active',   -1);
-      $this->_data['filterForm']['is_hidden']         = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.is_hidden',   -1);
-      $this->_data['filterForm']['paginationCount']   = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.is_hidden',   10);
-
       /**
        *    Capturing the possible post() variables used in this controller
        *
@@ -80,10 +84,22 @@ class CodesController extends BaseController
       
       if( strlen( $this->_data['id'] ) > 0 )
       {
-         $this->_systemCodes = SystemCodes::find()
+         $this->_codesModel = SystemCodes::find()
             ->where(['id' => $this->_data['id'] ])
             ->limit(1)->one();
-      }   
+            
+         $this->_tagsModel       = SystemCodes::findPermitTagsById( $this->_data['id'] );
+         $this->_codeChildModel  = SystemCodes::findUnassignedPermitTagOptions( $this->_data['id']);            
+      }
+
+      $this->_data['filterForm']['type']              = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.type',              '');    
+      $this->_data['filterForm']['is_active']         = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.is_active',         -1);
+      $this->_data['filterForm']['is_hidden']         = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.is_hidden',         -1);
+      $this->_data['filterForm']['paginationCount']   = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.pagination_count',  10);
+      
+      $this->_data['tagid']            = $this->_request->post('tagid',    '' );      
+      $this->_data['addTag']           = $this->_request->post('addTag',   '' );
+      $this->_data['dropTag']          = $this->_request->post('dropTag',  '' );  
   
       $this->_data['SystemCodes']['code']          = ArrayHelper::getValue($this->_request->post(),   'SystemCodes.code',        '');      
       $this->_data['SystemCodes']['description']   = ArrayHelper::getValue($this->_request->post(),   'SystemCodes.description', '');
@@ -252,7 +268,7 @@ class CodesController extends BaseController
       return $this->render('codes-listing', [
             'data'         => $this->_data, 
             'dataProvider' => $this->_dataProvider,
-            'model'        => $this->_systemCodes,
+            'model'        => $this->_codesModel,
       ]);      
    }
    
@@ -267,9 +283,9 @@ class CodesController extends BaseController
       return $this->render('codes-view', [
             'data'         => $this->_data, 
             'dataProvider' => $this->_dataProvider,
-            'model'        => $this->_systemCodes,
-//            'tags'         => $this->_tagsModel,
-//            'allTags'      => $this->_codeChildModel,
+            'model'        => $this->_codesModel,
+            'tags'         => $this->_tagsModel,
+            'allTags'      => $this->_codeChildModel,
       ]);      
    }
 
@@ -342,7 +358,7 @@ class CodesController extends BaseController
          return $this->render('codes-listing', [
                'data'         => $this->_data, 
                'dataProvider' => $this->_dataProvider,
-               'model'        => $this->_systemCodes,
+               'model'        => $this->_codesModel,
          ]); 
       }
 
@@ -374,7 +390,7 @@ class CodesController extends BaseController
          return $this->render('codes-listing', [
                'data'         => $this->_data, 
                'dataProvider' => $this->_dataProvider,
-               'model'        => $this->_systemCodes,
+               'model'        => $this->_codesModel,
          ]);          
       }
       
@@ -424,7 +440,7 @@ class CodesController extends BaseController
       return $this->render('codes-listing', [
             'data'         => $this->_data, 
             'dataProvider' => $this->_dataProvider,
-            'model'        => $this->_systemCodes,
+            'model'        => $this->_codesModel,
       ]); 
    }
    
@@ -444,7 +460,6 @@ print_r( $this->_request->post() );
 die();
  **/
  
-/**
       $tagRelationExists = SystemCodesChild::find()
          ->where([ 'parent' => $this->_data['id'] ])
          ->andWhere([ 'child' => $this->_data['tagid'] ])
@@ -455,8 +470,7 @@ die();
          ->where([ 'id' => $this->_data['tagid'] ])
          ->limit(1)
          ->one();
-
-
+ 
       if( strlen( $this->_data['addTag'] ) > 0 )
       {
          if( !is_null( $tagRelationExists ) )
@@ -477,7 +491,9 @@ die();
 
          if( !$isError )
          {
-            if( $this->addTag( $this->_data['tagid'], $this->_data['id'] ) )
+            $result = $this->addPermitTag( $this->_data['id'], $this->_data['tagid'] );
+         
+            if( $result > 0 )
             { 
                $tag = SystemCodes::find()
                   ->where([ 'id' => $this->_data['tagid'] ])
@@ -505,15 +521,19 @@ die();
                ];
                
                $this->_data['errors']['Add Permit Tag'] = [
-                  'value' => "was not successful; no tags were added.",
+                  'value' => "was not successful; no tags were added. (Result: " . strval($result) . ") ",
                ];
             }
+            
+            $exitEarly = true;
          }    
       }
 
       if( strlen( $this->_data['dropTag'] ) > 0 )
       {
-         if( $this->removeTag( $this->_data['tagid'], $this->_data['id'] ) )
+         $result = $this->removePermitTag( $this->_data['id'], $this->_data['tagid'] );         
+      
+         if( $result > 0 )
          {
             $this->_data['success']['Remove Tag'] = [
                'value'        => "was successful",
@@ -536,22 +556,12 @@ die();
             ];
             
             $this->_data['errors'][$tagChild['description']] = [
-               'value' => "was not successful; no tags were removed.",
+               'value' => "was not successful; no tags were removed. (Result: " . strval($result) . ") ",
             ];
-         }  
-      }  
- **/      
-
-/** 
-      $this->_data['SystemCodes']['code']          = ArrayHelper::getValue($this->_request->post(),   'SystemCodes.code',        '');      
-      $this->_data['SystemCodes']['description']   = ArrayHelper::getValue($this->_request->post(),   'SystemCodes.description', '');
-      $this->_data['SystemCodes']['id']            = ArrayHelper::getValue($this->_request->post(),   'SystemCodes.id',          '');
-      $this->_data['SystemCodes']['insert']        = ArrayHelper::getValue($this->_request->post(),   'SystemCodes.insert',      '');      
-      $this->_data['SystemCodes']['is_active']     = ArrayHelper::getValue($this->_request->post(),   'SystemCodes.is_active',   -1);
-      $this->_data['SystemCodes']['is_hidden']     = ArrayHelper::getValue($this->_request->post(),   'SystemCodes.is_hidden',   -1);
-      $this->_data['SystemCodes']['type']          = ArrayHelper::getValue($this->_request->post(),   'SystemCodes.type',        '');
-      $this->_data['SystemCodes']['update']        = ArrayHelper::getValue($this->_request->post(),   'SystemCodes.update',      '');
- **/
+         }
+         
+         $exitEarly = true;         
+      }
 
       if( isset( $this->_data['SystemCodes']['update'] ) && !empty( $this->_data['SystemCodes']['update']  ) )
       {
@@ -612,13 +622,16 @@ die();
          }        
    
          if( $exitEarly )
-         {  
+         {
+            $this->_tagsModel       = SystemCodes::findPermitTagsById( $this->_data['id'] );
+            $this->_codeChildModel  = SystemCodes::findUnassignedPermitTagOptions( $this->_data['id']);
+         
             return $this->render('codes-view', [
                   'data'         => $this->_data, 
                   'dataProvider' => $this->_dataProvider,
-                  'model'        => $this->_systemCodes,
-      //            'tags'         => $this->_tagsModel,
-      //            'allTags'      => $this->_codeChildModel,
+                  'model'        => $this->_codesModel,
+                  'tags'         => $this->_tagsModel,
+                  'allTags'      => $this->_codeChildModel,
             ]);  
          }   
       
@@ -678,18 +691,17 @@ die();
          }  
       }    
 
-      $this->_systemCodes      = $this->_systemCodes->findOne( $this->_data['id']  );
+      $this->_codesModel      = $this->_codesModel->findOne( $this->_data['id']  );
       
-//      $this->_tagsModel       = SystemCodes::findPermitTagsById( $this->_data['id'] );
-//      $this->_codeChildModel  = SystemCodes::findUnassignedPermitTagOptions( $this->_data['id']);
-
+      $this->_tagsModel       = SystemCodes::findPermitTagsById( $this->_data['id'] );
+      $this->_codeChildModel  = SystemCodes::findUnassignedPermitTagOptions( $this->_data['id']);
 
       return $this->render('codes-view', [
             'data'         => $this->_data, 
             'dataProvider' => $this->_dataProvider,
-            'model'        => $this->_systemCodes,
-//            'tags'         => $this->_tagsModel,
-//            'allTags'      => $this->_codeChildModel,
+            'model'        => $this->_codesModel,
+            'tags'         => $this->_tagsModel,
+            'allTags'      => $this->_codeChildModel,
       ]);  
    }   
    
@@ -757,5 +769,5 @@ die();
       }
 
       return $dropDownOpts[$key];
-   }      
+   }  
 }
