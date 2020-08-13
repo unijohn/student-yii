@@ -8,6 +8,10 @@ class UserTest extends \Codeception\Test\Unit
 {
    public function testFindUserById()
    {
+      /**
+       *  If this unit test fails, did you rebuild tlb_Users?
+       **/
+   
       expect_that($user = User::findIdentity(7));
       expect($user->uuid)->equals('adminusr');
       
@@ -17,7 +21,7 @@ class UserTest extends \Codeception\Test\Unit
 
    public function testFindUserByAccessToken()
    {
-      expect_that($user = User::findIdentityByAccessToken('xLTDpVs_DkCd7FFWo-rNSuUba6a5Pymn'));
+      expect_that($user = User::findIdentityByAccessToken('RIQFHOWd5GBOknxtm1U2wmquI0qBpOvp'));
       expect($user->uuid)->equals('adminusr');
       
       expect_not(User::findIdentityByAccessToken('non-existing'));        
