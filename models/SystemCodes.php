@@ -7,6 +7,7 @@ use yii\base\model;
 use yii\behaviors\TimestampBehavior;
 
 use app\models\BaseModel;
+use app\models\CoursesCodesChild;
 use app\models\SystemCodesChild;
 
 
@@ -257,6 +258,33 @@ class SystemCodes extends BaseModel
          ->from(     $tbl_SystemsCodes       . ' sc' )
          ->where( 'type !=:type AND id NOT IN ( SELECT child from ' . $tbl_SystemCodesChild .' WHERE parent = :id )' )
             ->addParams([ ':type' => self::TYPE_PERMIT, ':id' => $id ])
+         ->all();
+
+      return $query_codes;
+   }
+   
+    /**
+     * TBD
+     *
+     * @param integer Row $id value for code entry
+     * @returns model filtered by TYPE_PERMIT || false if $id is invalid
+     */
+   public static function findUnassignedTagOptionsForCourses( $id = "" )
+   {
+      if( empty( $id ) || !is_string($id) )
+      {
+         return false;
+      }
+   
+      $tbl_SystemCodes        = self::tableName();
+      $tbl_CoursesCodesChild  = CoursesCodesChild::tableName();
+   
+
+      $query_codes = ( new \yii\db\Query() )
+         ->select([  'sc.id', 'sc.type', 'sc.code', 'sc.description', 'sc.is_active' ])
+         ->from(     $tbl_SystemCodes       . ' sc' )
+         ->where( 'id NOT IN ( SELECT child from ' . $tbl_CoursesCodesChild .' WHERE parent = :id ) AND sc.is_active =:is_active AND sc.type !=:type' )
+            ->addParams([ ':id' => $id, 'is_active' => self::STATUS_ACTIVE, 'type' => self::TYPE_PERMIT ])
          ->all();
 
       return $query_codes;

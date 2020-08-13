@@ -50,4 +50,15 @@ class BaseModel extends ActiveRecord
    {
       parent::init();
    }
+
+
+   public static function debug( $msgObj, $willDie = true )
+   {
+      print( "<pre> ++ BaseModel ++" . PHP_EOL );
+      var_dump( $msgObj );
+      
+      if( $willDie )
+         die();
+   }
+
 }

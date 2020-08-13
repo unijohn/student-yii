@@ -12,8 +12,8 @@ use app\models\SystemCodes;
 
 class SystemCodesChild extends BaseModel
 {
-   public $parent;
-   public $child;
+//   public $parent;
+//   public $child;
 
 
    public function init()
@@ -112,5 +112,4 @@ class SystemCodesChild extends BaseModel
    {
       return $this->hasMany(SystemCodes::className(), [ 'parent' => 'id' ] );
    }
-
 }

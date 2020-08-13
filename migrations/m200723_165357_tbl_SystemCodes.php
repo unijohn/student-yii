@@ -101,7 +101,7 @@ class m200723_165357_tbl_SystemCodes extends Migration
       $STATUS_HIDDEN    = 0;
       $STATUS_VISIBLE   = 1;  
 
-      $tableOptions = null;
+      $tableOptions     = null;
 
       if ($this->isMySQL()) 
       {
@@ -109,7 +109,7 @@ class m200723_165357_tbl_SystemCodes extends Migration
          $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
       }          
 
-      $time = time();
+      $time       = time();
       $created_at = $time;
       $updated_at = $time;      
 
@@ -128,6 +128,7 @@ class m200723_165357_tbl_SystemCodes extends Migration
       $this->createTable($this->getCodesChildTableName(), [
          'parent'          => $this->integer()->notNull(),
          'child'           => $this->integer()->notNull(),
+         'created_at'      => $this->integer()->notNull(),
          'PRIMARY KEY ([[parent]], [[child]])',
          'FOREIGN KEY ([[parent]]) REFERENCES ' . $this->getTableName() . ' ([[id]])' .
          $this->buildFkClause('ON DELETE CASCADE', 'ON UPDATE CASCADE'),
@@ -139,7 +140,6 @@ class m200723_165357_tbl_SystemCodes extends Migration
       $this->createIndex('idx_SystemCodes_code', $this->getTableName(), 'code');      
 
       $codeColumns      = [ 'type', 'code', 'description', 'is_active', 'is_hidden', 'created_at', 'updated_at' ];
-      $codeChildColumns = [ 'parent', 'child' ];
 
       $permitRows = [
          [  
@@ -288,25 +288,24 @@ class m200723_165357_tbl_SystemCodes extends Migration
          ],
       ];  
       
-      $codeChildColumns = [ 'parent', 'child' ];
-
 /**
  *    Sample Assignments
  *
  *    1: 1, A, ISSUED
- *    ..24: 3, UGAD, Undergraduate
- *    ..25: 3, GRAD, Graduate
- *    ..26: 3, PHD,  Doctorate
+ *    ..24: 3, UGAD, Undergraduate, $created_at
+ *    ..25: 3, GRAD, Graduate,      $created_at
+ *    ..26: 3, PHD,  Doctorate,     $created_at
  *
  *    17: 1, Z, PENDING
- *    ..24: 3, UGAD, Undergraduate
- *    ..25: 3, GRAD, Graduate
- *    ..26: 3, PHD,  Doctorate 
+ *    ..24: 3, UGAD, Undergraduate, $created_at
+ *    ..25: 3, GRAD, Graduate,      $created_at
+ *    ..26: 3, PHD,  Doctorate,     $created_at
  **/
+      $codeChildColumns = [ 'parent', 'child', 'created_at' ];
 
       $permitChildRows = [      
-         [ 1, 24], [ 1, 25], [ 1, 26],
-         [17, 24], [17, 25], [17, 26],
+         [ 1, 24, $created_at], [ 1, 25, $created_at], [ 1, 26, $created_at],
+         [17, 24, $created_at], [17, 25, $created_at], [17, 26, $created_at],
       ];
       
       $this->batchInsert( $this->getTableName(), $codeColumns, $permitRows      );
@@ -325,8 +324,15 @@ class m200723_165357_tbl_SystemCodes extends Migration
     {
 //        echo "m200723_165357_tbl_PermitCodes cannot be reverted.\n";
 
-        $this->dropTable($this->getTableName());
-        $this->dropTable($this->getCodesChildTableName());        
+      if (Yii::$app->db->getTableSchema($this->getTableName(), true) !== null) 
+      {
+         $this->dropTable($this->getTableName());
+      }
+
+      if (Yii::$app->db->getTableSchema($this->getCodesChildTableName(), true) !== null) 
+      {
+         $this->dropTable($this->getCodesChildTableName());
+      }  
 
 //        return false;
     }

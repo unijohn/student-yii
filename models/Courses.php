@@ -7,6 +7,7 @@ use yii\base\model;
 use yii\behaviors\TimestampBehavior;
 
 use app\models\BaseModel;
+use app\models\CoursesCodesChild;
 
 
 class Courses extends BaseModel
@@ -163,11 +164,31 @@ class Courses extends BaseModel
       }
  
       return null;            
-   }   
+   }
    
+
+   /**
+    * Returns all distinct subject_area values
+    *
+    * @return (TBD)
+    */
+   public static function getAllSubjectAreas()
+   {        
+      return (new \yii\db\Query())
+         ->select([ 'subject_area' ])
+         ->from( self::tableName() )
+         ->distinct()
+         ->all();
+   }
+
+
 /**
  *
  *    Relationships & Model section
  *
- **/   
+ **/
+   public function getChildren()
+   {
+      return $this->hasMany(CoursesCodesChild::className(), [ 'id' => 'parent' ] );
+   }
 }

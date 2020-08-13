@@ -13,6 +13,18 @@ class m200804_171045_tbl_Courses extends Migration
    }
 
 
+   protected function getCoursesCodesChildTableName()
+   {
+      return "{{%tbl_CoursesCodesChild}}";
+   }   
+
+
+   protected function getSystemCodesTableName()
+   {
+      return "{{%tbl_SystemCodes}}";
+   }
+   
+
    /**
    * @return bool
    */
@@ -79,7 +91,7 @@ class m200804_171045_tbl_Courses extends Migration
       $STATUS_HIDDEN    = 0;
       $STATUS_VISIBLE   = 1;      
     
-      $tableOptions = null;
+      $tableOptions     = null;
 
       if ($this->isMySQL()) 
       {
@@ -87,28 +99,46 @@ class m200804_171045_tbl_Courses extends Migration
          $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
       }            
 
-      $time = time();
+      $time       = time();
       $created_at = $time;
-      $updated_at = $time;   
+      $updated_at = $time;
 
+      if (Yii::$app->db->getTableSchema($this->getTableName(), true) === null) 
+      {
+         $this->createTable($this->getTableName(), [
+            'id'              => $this->string(16)->notNull(),
+            'subject_area'    => $this->string(8)->notNull(),
+            'course_number'   => $this->string(8)->notNull(),
+            'section_number'  => $this->string(8)->notNull(),
+            'is_active'       => $this->integer()->notNull(),
+            'is_hidden'       => $this->integer()->notNull(),         
+            'created_at'      => $this->integer()->notNull(),
+            'updated_at'      => $this->integer()->notNull(),         
+            'deleted_at'      => $this->integer(),
+            'PRIMARY KEY ( [[id]] )',         
+         ], $tableOptions);
+         
+         $this->createIndex('idx_Courses_id', $this->getTableName(), 'id');
+         $this->createIndex('idx_Courses_subject_area', $this->getTableName(), 'subject_area');
+      }
 
-      $this->createTable($this->getTableName(), [
-         'id'              => $this->string(16)->notNull(),
-         'subject_area'    => $this->string(8)->notNull(),
-         'course_number'   => $this->string(8)->notNull(),
-         'section_number'  => $this->string(8)->notNull(),
-         'is_active'       => $this->integer()->notNull(),
-         'is_hidden'       => $this->integer()->notNull(),         
-         'created_at'      => $this->integer()->notNull(),
-         'updated_at'      => $this->integer()->notNull(),         
-         'deleted_at'      => $this->integer(),
-         'PRIMARY KEY ( [[id]] )',         
-      ], $tableOptions);    
-
-      $this->createIndex('idx_Courses_id', $this->getTableName(), 'id');
-      $this->createIndex('idx_Courses_subject_area', $this->getTableName(), 'subject_area');
+      if (Yii::$app->db->getTableSchema($this->getCoursesCodesChildTableName(), true) === null) 
+      {
+         $this->createTable($this->getCoursesCodesChildTableName(), [
+            'parent'          => $this->string(16)->notNull(),
+            'child'           => $this->integer()->notNull(),
+            'created_at'      => $this->integer()->notNull(),
+            'PRIMARY KEY ([[parent]], [[child]])',
+            'FOREIGN KEY ([[parent]]) REFERENCES ' . $this->getTableName() . ' ([[id]])' .
+            $this->buildFkClause('ON DELETE CASCADE', 'ON UPDATE CASCADE'),
+            'FOREIGN KEY ([[child]]) REFERENCES ' . $this->getSystemCodesTableName()  . ' ([[id]])' .
+            $this->buildFkClause('ON DELETE CASCADE', 'ON UPDATE CASCADE'),
+         ], $tableOptions);
+      }
       
       $courseColumns = [ 'id', 'subject_area', 'course_number', 'section_number', 'is_active', 'is_hidden', 'created_at', 'updated_at' ];
+      
+      $courseCodesChildColumns = [ 'parent', 'child', 'created_at' ];
       
       $courseRows1 = [
          [ 'ACCT2010001', 'ACCT', '2010', '001',  $STATUS_ACTIVE,  $STATUS_VISIBLE,  $created_at,  $updated_at,  ],
@@ -1518,10 +1548,36 @@ class m200804_171045_tbl_Courses extends Migration
        *
        **/
 
-      $this->batchInsert( $this->getTableName(), $courseColumns, $courseRows1 );  
+      $this->batchInsert( $this->getTableName(), $courseColumns, $courseRows1 );
       $this->batchInsert( $this->getTableName(), $courseColumns, $courseRows2 );
       $this->batchInsert( $this->getTableName(), $courseColumns, $courseRows3 );
-      $this->batchInsert( $this->getTableName(), $courseColumns, $courseRows4 );                  
+      $this->batchInsert( $this->getTableName(), $courseColumns, $courseRows4 );
+
+/**
+ *    Sample Assignments
+ *
+ *    1: 1, A, ISSUED
+ *    ..24: 3, UGAD, Undergraduate, $created_at
+ *    ..25: 3, GRAD, Graduate,      $created_at
+ *    ..26: 3, PHD,  Doctorate,     $created_at
+ *
+ *    17: 1, Z, PENDING
+ *    ..24: 3, UGAD, Undergraduate, $created_at
+ *    ..25: 3, GRAD, Graduate,      $created_at
+ *    ..26: 3, PHD,  Doctorate,     $created_at
+ **/
+      $codeChildColumns = [ 'parent', 'child', 'created_at' ];
+
+      $courseChildRows = [      
+         [ "ACCT2010001", 18, $created_at], 
+         [ "ACCT2010001", 24, $created_at], 
+
+         [ "ECON7100M50", 20, $created_at], 
+         [ "ECON7100M50", 32, $created_at], 
+         [ "ECON7100M50", 33, $created_at],
+      ];
+      
+      $this->batchInsert( $this->getCoursesCodesChildTableName(), $codeChildColumns, $courseChildRows     );   
    }
    
    /**
@@ -1530,8 +1586,16 @@ class m200804_171045_tbl_Courses extends Migration
    public function safeDown()
    {
 //       echo "m200804_171045_tbl_Courses cannot be reverted.\n";
-   
-        $this->dropTable($this->getTableName());   
+      
+      if (Yii::$app->db->getTableSchema($this->getTableName(), true) !== null) 
+      {
+         $this->dropTable($this->getTableName());
+      }
+
+      if (Yii::$app->db->getTableSchema($this->getCoursesCodesChildTableName(), true) !== null) 
+      {
+         $this->dropTable($this->getCoursesCodesChildTableName());
+      }
    
 //       return false;
    }
