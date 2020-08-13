@@ -73,8 +73,25 @@
                return HTML::a( $data['id'], Url::toRoute( ['permits/manage-admin/view', 'id' => $data['id'] ], true) );
             },
          ],
-         'code',
-         'description',
+
+         [
+            'attribute' => 'code',
+            'label'     => 'Code',
+            'format' => 'raw',
+            'value' => function( $data ){
+               return HTML::a( $data['code'], Url::toRoute( ['permits/manage-admin/view', 'id' => $data['id'] ], true) );
+            },
+         ],
+
+
+         [
+            'attribute' => 'description',
+            'label'     => 'Description',
+            'format' => 'raw',
+            'value' => function( $data ){
+               return HTML::a( $data['description'], Url::toRoute( ['permits/manage-admin/view', 'id' => $data['id'] ], true) );
+            },
+         ],
          
          'created_at:datetime',
          'updated_at:datetime',

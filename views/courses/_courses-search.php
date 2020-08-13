@@ -18,8 +18,15 @@ use yii\widgets\ActiveForm;
    
    $isHidden['-1']   = 'Select Status';
    $isHidden['1']    = 'Visible';
-   $isHidden['0']    = 'Hidden';   
+   $isHidden['0']    = 'Hidden';
+
+   $subjectArea['-1']   = 'Select Subject';
+   foreach( $model_subjects as $area )
+   {
+      $subjectArea[ $area['subject_area'] ] = $area['subject_area'];
+   }  
 ?>
+
 
 <style>
 .inline-label {
@@ -36,17 +43,18 @@ use yii\widgets\ActiveForm;
         'action' => ['index'],
         'method' => 'get',
     ]); ?>
-    
-   <div class="form-group form-inline field-subject">
-      <label class="control-label" for="Courses[subject_area]">Subject</label>
-      <?= Html::input('text', 'Courses[subject_area]', $subject_area, 
+
+
+   <div class="form-group form-inline field-subject_area" style="!white-space:nowrap;">
+   <label class="control-label" for="Courses[subject_area]">Subject</label>
+      <?= Html::dropDownList('Courses[subject_area]', $subject_area, 
+         $subjectArea,
          [
-            'id'     => 'subject', 
+            'id'     => 'subject',
             'class'  => 'form-control',
             'style'  => 'width: 60%;float:right;', 
-            'value'  => $subject_area,
          ]) 
-      ?>   
+      ?>
       <div class="help-block"></div>
    </div>
 

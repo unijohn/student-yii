@@ -16,6 +16,9 @@ AppAsset::register($this);
 
 $cookies = Yii::$app->request->cookies;
 $session = Yii::$app->session;
+
+$this->title = "FCBE Helpdesk";
+
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
