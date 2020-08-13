@@ -353,7 +353,9 @@ die();
 
          if( !$isError )
          {
-            if( $this->addTag( $this->_data['tagid'], $this->_data['id'] ) )
+            $result = $this->addPermitTag(  $this->_data['id'], $this->_data['tagid'] );
+         
+            if( $result > 0 )
             { 
                $tag = SystemCodes::find()
                   ->where([ 'id' => $this->_data['tagid'] ])
@@ -381,7 +383,7 @@ die();
                ];
                
                $this->_data['errors']['Add Permit Tag'] = [
-                  'value' => "was not successful; no tags were added.",
+                  'value' => "was not successful; no tags were added. (Result: " . strval($result) . ") ",
                ];
             }
          }    
@@ -389,7 +391,9 @@ die();
 
       if( strlen( $this->_data['dropTag'] ) > 0 )
       {
-         if( $this->removeTag( $this->_data['tagid'], $this->_data['id'] ) )
+         $result = $this->removePermitTag(  $this->_data['id'], $this->_data['tagid'] );
+      
+         if( $result > 0 )
          {
             $this->_data['success']['Remove Tag'] = [
                'value'        => "was successful",
@@ -412,7 +416,7 @@ die();
             ];
             
             $this->_data['errors'][$tagChild['description']] = [
-               'value' => "was not successful; no tags were removed.",
+               'value' => "was not successful; no tags were removed. (Result: " . strval($result) . ") ",
             ];
          }  
       }

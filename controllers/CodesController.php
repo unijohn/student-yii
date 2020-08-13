@@ -88,8 +88,8 @@ class CodesController extends BaseController
             ->where(['id' => $this->_data['id'] ])
             ->limit(1)->one();
             
-         $this->_tagsModel       = SystemCodes::findPermitTagsById( $this->_data['id'] );
-         $this->_codeChildModel  = SystemCodes::findUnassignedPermitTagOptions( $this->_data['id']);            
+         $this->_tagsModel       = SystemCodes::findAllTagsById( $this->_data['id'] );
+         $this->_codeChildModel  = SystemCodes::findUnassignedTagOptions( $this->_data['id']);            
       }
 
       $this->_data['filterForm']['type']              = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.type',              '');    
@@ -623,8 +623,8 @@ die();
    
          if( $exitEarly )
          {
-            $this->_tagsModel       = SystemCodes::findPermitTagsById( $this->_data['id'] );
-            $this->_codeChildModel  = SystemCodes::findUnassignedPermitTagOptions( $this->_data['id']);
+            $this->_tagsModel       = SystemCodes::findAllTagsById( $this->_data['id'] );
+            $this->_codeChildModel  = SystemCodes::findUnassignedTagOptions( $this->_data['id']);  
          
             return $this->render('codes-view', [
                   'data'         => $this->_data, 
@@ -693,8 +693,8 @@ die();
 
       $this->_codesModel      = $this->_codesModel->findOne( $this->_data['id']  );
       
-      $this->_tagsModel       = SystemCodes::findPermitTagsById( $this->_data['id'] );
-      $this->_codeChildModel  = SystemCodes::findUnassignedPermitTagOptions( $this->_data['id']);
+      $this->_tagsModel       = SystemCodes::findAllTagsById( $this->_data['id'] );
+      $this->_codeChildModel  = SystemCodes::findUnassignedTagOptions( $this->_data['id']);  
 
       return $this->render('codes-view', [
             'data'         => $this->_data, 

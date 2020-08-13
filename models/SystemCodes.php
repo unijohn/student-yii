@@ -226,6 +226,36 @@ class SystemCodes extends BaseModel
     /**
      * TBD
      *
+     * @param integer Row $id value for code entry
+     * @returns model || false if $id is invalid
+     */
+   public static function findAllTagsById( $id = -1 )
+   {
+      if( $id < 0 || strval($id) === 0 )
+      {
+         return false;
+      }
+   
+      $tbl_SystemsCodes       = self::tableName();
+      $tbl_SystemCodesChild   = SystemCodesChild::tableName();
+   
+      $query_codes = ( new \yii\db\Query() )
+         ->select([  'sc.id', 'sc.type', 'sc.code', 'sc.description', 'sc2.id', 'sc2.type', 'sc2.code', 'sc2.description' ])
+         ->from(     $tbl_SystemsCodes . ' sc' )
+         ->innerJoin( $tbl_SystemCodesChild,       $tbl_SystemCodesChild . '.parent = sc.id' )
+         ->innerJoin( $tbl_SystemsCodes . ' sc2',  $tbl_SystemCodesChild . '.child = sc2.id' )
+         ->where(['sc.id' => $id ])
+         ->andWhere([ 'sc.is_active'   => self::STATUS_ACTIVE ])
+         ->andWhere([ 'sc2.is_active'  => self::STATUS_ACTIVE ])
+         ->all();
+
+      return $query_codes;
+   }
+
+
+    /**
+     * TBD
+     *
      * @returns model filtered by all entries that are not TYPE_PERMIT
      */
    public static function findPermitTagOptions( $id = -1 )
@@ -267,7 +297,34 @@ class SystemCodes extends BaseModel
      * TBD
      *
      * @param integer Row $id value for code entry
-     * @returns model filtered by TYPE_PERMIT || false if $id is invalid
+     * @returns model || false if $id is invalid
+     */
+   public static function findUnassignedTagOptions( $id = -1 )
+   {
+      if( $id < 0 || strval($id) === 0 )
+      {
+         return false;
+      }
+   
+      $tbl_SystemsCodes       = self::tableName();
+      $tbl_SystemCodesChild   = SystemCodesChild::tableName();
+   
+
+      $query_codes = ( new \yii\db\Query() )
+         ->select([  'sc.id', 'sc.type', 'sc.code', 'sc.description', 'sc.is_active' ])
+         ->from(     $tbl_SystemsCodes       . ' sc' )
+         ->where( 'id NOT IN ( SELECT child from ' . $tbl_SystemCodesChild .' WHERE parent = :id )' )
+            ->addParams([ ':id' => $id ])
+         ->all();
+
+      return $query_codes;
+   }   
+   
+    /**
+     * TBD
+     *
+     * @param integer Row $id value for course entry
+     * @returns model || false if $id is invalid
      */
    public static function findUnassignedTagOptionsForCourses( $id = "" )
    {
