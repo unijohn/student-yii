@@ -13,6 +13,7 @@ use yii\web\Controller;
 use yii\web\Response;
 use yii\web\View;
 
+use app\controllers\BaseController;
 
 use app\models\AuthAssignment;
 use app\models\AuthItem;
@@ -21,43 +22,19 @@ use app\models\UserSearch;
 use app\models\TempAuthAssignment;
 
 
-class RolesController extends Controller
+class RolesController extends BaseController
 {
-   private $_auth;
    private $_authItemModel;
-   private $_data;
-   private $_dataProvider;
    private $_newRole;
-   private $_request;
    private $_reset;
    private $_roleModel;
-   private $_user;
    private $_userId;
    private $_userModel;
-   private $_view;
    
 
    public function init()
    {
       parent::init();
-      
-      /**
-       *  Quick fix for cookie timeout
-       **/      
-      
-      $this->_user      = Yii::$app->user;      
-      
-      if( is_null( $this->_user->identity ) )
-      {
-         /* /site/index works but trying to learn named routes syntax */
-         return $this->redirect(['/site/index']);
-      }
-      
-      $this->_auth      = Yii::$app->authManager;
-      $this->_request   = Yii::$app->request;  
-      $this->_view      = Yii::$app->view;
-      
-      $this->_data             = [];
 
       $this->_userModel        = new User();
       $this->_roleModel        = new AuthAssignment();
@@ -95,17 +72,15 @@ class RolesController extends Controller
    }
   
 
-    /**
-     * {@inheritdoc}
-     */
-    public function actions()
-    {
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-        ];
-    }
+   /**
+   * @inheritdoc
+   */
+   public function actions()
+   {
+      $actions = parent::actions();
+   
+      return $actions;
+   }
 
 
     /**

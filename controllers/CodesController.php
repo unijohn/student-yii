@@ -13,10 +13,12 @@ use yii\rbac\DbManager;
 use yii\web\Controller;
 use yii\web\Response;
 
+use app\controllers\BaseController;
+
 use app\models\SystemCodes;
 use app\models\SystemCodesChild;
 
-class CodesController extends Controller
+class CodesController extends BaseController
 {
    const dropDownOptsKeys  = [ 'pageCount', 'type', 'is_active', 'is_hidden' ];
    
@@ -47,11 +49,6 @@ class CodesController extends Controller
       ],
    ];
 
-   private $_auth;
-   private $_data;
-   private $_dataProvider;
-   private $_db;
-   private $_request;
    private $_systemCodes;
 
 
@@ -61,25 +58,9 @@ class CodesController extends Controller
    public function init()
    {
       parent::init();
-      
-      /**
-       *  Quick fix for cookie timeout
-       **/      
-      
-      if( is_null( Yii::$app->user->identity ) )
-      {
-         /* /site/index works but trying to learn named routes syntax */
-         return $this->redirect(['/site/index']);
-      }
-      
-      $this->_auth      = Yii::$app->authManager;
-      $this->_request   = Yii::$app->request;  
-      
-      $this->_data               = [];
-      $this->_dataProvider       = [];
 
       $this->_systemCodes        = new SystemCodes();
-      
+            
       $this->_data['filterForm']['type']              = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.type',        '');    
       $this->_data['filterForm']['is_active']         = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.is_active',   -1);
       $this->_data['filterForm']['is_hidden']         = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.is_hidden',   -1);
@@ -87,8 +68,10 @@ class CodesController extends Controller
 
       /**
        *    Capturing the possible post() variables used in this controller
+       *
+       *    $this->_data['id'] ( post() ) is set in BaseController.  If it isn't set,
+       *    we check to see if there is a get() version of it.
        **/
-      $this->_data['id']   = $this->_request->post('id',       '' );
       
       if( strlen( $this->_data['id'] ) < 1 )
       {
@@ -100,16 +83,7 @@ class CodesController extends Controller
          $this->_systemCodes = SystemCodes::find()
             ->where(['id' => $this->_data['id'] ])
             ->limit(1)->one();
-            
-//         $this->_tagsModel       = SystemCodes::findPermitTagsById( $this->_data['id'] );
-//         $this->_codeChildModel  = SystemCodes::findUnassignedPermitTagOptions( $this->_data['id']);
       }   
-
-/** 
-      $this->_data['tagid']            = $this->_request->post('tagid',    '' );      
-      $this->_data['addTag']           = $this->_request->post('addTag',   '' );
-      $this->_data['dropTag']          = $this->_request->post('dropTag',  '' );     
- **/
   
       $this->_data['SystemCodes']['code']          = ArrayHelper::getValue($this->_request->post(),   'SystemCodes.code',        '');      
       $this->_data['SystemCodes']['description']   = ArrayHelper::getValue($this->_request->post(),   'SystemCodes.description', '');
@@ -127,9 +101,6 @@ class CodesController extends Controller
       {
          $this->_data['filterForm']['type'] = $this->_data['SystemCodes']['type'];
       }
-  
-      $this->_data['errors']  = [];   
-      $this->_data['success'] = [];
    }   
 
 

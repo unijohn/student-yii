@@ -13,17 +13,14 @@ use yii\rbac\DbManager;
 use yii\web\Controller;
 use yii\web\Response;
 
+use app\controllers\BaseController;
+
 use app\models\Courses;
 //use app\models\UserSearch;
 
 
-class CoursesController extends Controller
+class CoursesController extends BaseController
 {
-   private $_auth;
-   private $_data;
-   private $_dataProvider;
-   private $_db;
-   private $_request;
    private $_coursesModel;
    
 
@@ -34,25 +31,8 @@ class CoursesController extends Controller
    {
       parent::init();
       
-      /**
-       *  Quick fix for cookie timeout
-       **/      
-      
-      if( is_null( Yii::$app->user->identity ) )
-      {
-         /* /site/index works but trying to learn named routes syntax */
-         return $this->redirect(['/site/index']);
-      }
-      
-      $this->_auth      = Yii::$app->authManager;
-      $this->_request   = Yii::$app->request;  
-      
-      $this->_data             = [];
-      $this->_dataProvider     = [];
-
       $this->_coursesModel     = new Courses();
       
-  
       $this->_data['filterForm']['subject_area']      = ArrayHelper::getValue($this->_request->get(), 'Courses.subject_area',    '');
       $this->_data['filterForm']['course_number']     = ArrayHelper::getValue($this->_request->get(), 'Courses.course_number',   '');      
       $this->_data['filterForm']['is_active']         = ArrayHelper::getValue($this->_request->get(), 'Courses.is_active',       -1);
@@ -62,8 +42,10 @@ class CoursesController extends Controller
       
       /**
        *    Capturing the possible post() variables used in this controller
+       *
+       *    $this->_data['id'] ( post() ) is set in BaseController.  If it isn't set,
+       *    we check to see if there is a get() version of it.
        **/
-      $this->_data['id']               = $this->_request->post('id',       '' );
       
       if( strlen( $this->_data['id'] ) < 1 )
       {
@@ -93,9 +75,6 @@ class CoursesController extends Controller
       $this->_data['Courses']['section_number'] = ArrayHelper::getValue($this->_request->post(),   'Courses.section_number',  '');      
       $this->_data['Courses']['is_active']      = ArrayHelper::getValue($this->_request->post(),   'Courses.is_active',       -1);
       $this->_data['Courses']['is_hidden']      = ArrayHelper::getValue($this->_request->post(),   'Courses.is_hidden',       -1);      
-  
-      $this->_data['errors']           = [];   
-      $this->_data['success']          = [];
    }   
 
 
@@ -127,17 +106,17 @@ class CoursesController extends Controller
     }
  **/    
 
-    /**
-     * {@inheritdoc}
-     */
-    public function actions()
-    {
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-        ];
-    }
+
+   /**
+   * @inheritdoc
+   */
+   public function actions()
+   {
+      $actions = parent::actions();
+   
+      return $actions;
+   }     
+
 
    /**
     * Centralizing the query for building the User GridView

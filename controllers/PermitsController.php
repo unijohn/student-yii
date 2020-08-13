@@ -13,16 +13,14 @@ use yii\rbac\DbManager;
 use yii\web\Controller;
 use yii\web\Response;
 
+use app\controllers\BaseController;
+
 use app\models\SystemCodes;
 use app\models\SystemCodesChild;
 
 
-class PermitsController extends Controller
+class PermitsController extends BaseController
 {
-   private $_auth;
-   private $_data;
-   private $_dataProvider;
-   private $_request;
    private $_codesModel;
    private $_codeChildModel;
 
@@ -33,22 +31,6 @@ class PermitsController extends Controller
    public function init()
    {
       parent::init();
-      
-      /**
-       *  Quick fix for cookie timeout
-       **/      
-      
-      if( is_null( Yii::$app->user->identity ) )
-      {
-         /* /site/index works but trying to learn named routes syntax */
-         return $this->redirect(['/site/index']);
-      }
-      
-      $this->_auth      = Yii::$app->authManager;
-      $this->_request   = Yii::$app->request;  
-      
-      $this->_data             = [];
-      $this->_dataProvider     = [];
 
       $this->_codesModel      = new SystemCodes();
       $this->_codeChildModel  = new SystemCodesChild();
@@ -81,17 +63,15 @@ class PermitsController extends Controller
    }
    
 
-    /**
-     * {@inheritdoc}
-     */
-    public function actions()
-    {
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-        ];
-    }
+   /**
+   * @inheritdoc
+   */
+   public function actions()
+   {
+      $actions = parent::actions();
+   
+      return $actions;
+   }
 
 
    /**

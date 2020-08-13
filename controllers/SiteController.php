@@ -54,6 +54,21 @@ class SiteController extends Controller
         ];
     }
 
+
+   /**
+   * @inheritdoc
+   */
+   public function actions()
+   {
+      $actions = parent::actions();
+      $actions['captcha'] => [
+          'class' => 'yii\captcha\CaptchaAction',
+          'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+      ];
+   
+      return $actions;
+   }    
+
     /**
      * Displays homepage.
      *

@@ -13,17 +13,14 @@ use yii\rbac\DbManager;
 use yii\web\Controller;
 use yii\web\Response;
 
+use app\controllers\BaseController;
+
 use app\models\SystemCodes;
 use app\models\SystemCodesChild;
 
 
-class ManageAdminController extends Controller
+class ManageAdminController extends BaseController
 {
-   private $_auth;
-   private $_data;
-   private $_dataProvider;
-   private $_db;
-   private $_request;
    private $_codesModel;
    private $_codeChildModel;
    private $_tagsModel;
@@ -37,23 +34,6 @@ class ManageAdminController extends Controller
    public function init()
    {
       parent::init();
-      
-      /**
-       *  Quick fix for cookie timeout
-       **/      
-      
-      if( is_null( Yii::$app->user->identity ) )
-      {
-         /* /site/index works but trying to learn named routes syntax */
-         return $this->redirect(['/site/index']);
-      }
-      
-      $this->_auth      = Yii::$app->authManager;
-      $this->_db        = Yii::$app->db;
-      $this->_request   = Yii::$app->request;  
-      
-      $this->_data             = [];
-      $this->_dataProvider     = [];
 
       $this->_codesModel            = new SystemCodes();
       $this->_codeChildModel        = new SystemCodesChild();
@@ -63,9 +43,11 @@ class ManageAdminController extends Controller
       
       /**
        *    Capturing the possible post() variables used in this controller
+       *
+       *    $this->_data['id'] ( post() ) is set in BaseController.  If it isn't set,
+       *    we check to see if there is a get() version of it.
        **/
-      $this->_data['id']               = $this->_request->post('id',       '' );
-      
+       
       if( strlen( $this->_data['id'] ) < 1 )
       {
          $this->_data['id']     = $this->_request->get('id', ''); 
@@ -127,19 +109,18 @@ class ManageAdminController extends Controller
             ],
         ];
     }
- **/    
+ **/
 
-    /**
-     * {@inheritdoc}
-     */
-    public function actions()
-    {
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-        ];
-    }
+
+   /**
+   * @inheritdoc
+   */
+   public function actions()
+   {
+      $actions = parent::actions();
+   
+      return $actions;
+   }
 
 
    /**
