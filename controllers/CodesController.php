@@ -132,17 +132,16 @@ class CodesController extends BaseController
     }
  **/    
 
-    /**
-     * {@inheritdoc}
-     */
-    public function actions()
-    {
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-        ];
-    }
+
+   /**
+   * @inheritdoc
+   */
+   public function actions()
+   {
+      $actions = parent::actions();
+   
+      return $actions;
+   }     
 
    /**
     * Centralizing the query for building the User GridView

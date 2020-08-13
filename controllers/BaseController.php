@@ -29,6 +29,7 @@ class BaseController extends Controller
     *              BaseController only.
     **/
    public $_auth;
+   public $_db;
    public $_data;
    public $_dataProvider;
    public $_request;
@@ -53,6 +54,7 @@ class BaseController extends Controller
       }
       
       $this->_auth      = Yii::$app->authManager;
+      $this->_db        = Yii::$app->db;   
       $this->_request   = Yii::$app->request;  
       $this->_view      = Yii::$app->view;
       $this->_user      = Yii::$app->user;            
