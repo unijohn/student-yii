@@ -21,6 +21,9 @@ class UserTest extends \Codeception\Test\Unit
 
    public function testFindUserByAccessToken()
    {
+      codecept_debug( "[FCBE-WORKDESK]   Currently randomly generating access_token and auth_key" );
+      codecept_debug( "[FCBE-WORKDESK]   Need to revise it in the future" );
+
       expect_that($user = User::findIdentityByAccessToken('RIQFHOWd5GBOknxtm1U2wmquI0qBpOvp'));
       expect($user->uuid)->equals('adminusr');
       
