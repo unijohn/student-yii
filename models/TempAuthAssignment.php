@@ -9,7 +9,10 @@ use yii\rbac\DbManager;
 
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
-class TempAuthAssignment extends ActiveRecord
+use app\models\BaseModel;
+
+
+class TempAuthAssignment extends BaseModel
 {
 //   protected $id;
 //   public $item_name;
@@ -19,11 +22,18 @@ class TempAuthAssignment extends ActiveRecord
 //   public $deleted_at;
     
    private $_auth;
+   private $_identity;
+   private $_userId;
+
    
    public function init()
    {
       parent::init();
-      $this->_auth = \Yii::$app->getAuthManager();
+      
+      $this->_auth      = \Yii::$app->getAuthManager();
+      $this->_identity  = \Yii::$app->user->identity;   
+      
+      $this->_userId  = $this->_identity->getId();        
    }   
 
    public static function tableName()
@@ -94,8 +104,8 @@ class TempAuthAssignment extends ActiveRecord
             'class' => TimestampBehavior::className(),
             'attributes' => 
             [
-               ActiveRecord::EVENT_BEFORE_INSERT => ['created_at',],
-               ActiveRecord::EVENT_BEFORE_DELETE => ['deleted_at',],
+               self::EVENT_BEFORE_INSERT => ['created_at',],
+               self::EVENT_BEFORE_DELETE => ['deleted_at',],
             ],
             // if you're using datetime instead of UNIX timestamp:
             'value' => time(),
@@ -123,17 +133,15 @@ class TempAuthAssignment extends ActiveRecord
      */
    public function existsTemporaryEntries()
    {
-      $userId  = Yii::$app->user->identity->getId();   
-
-      if( empty( $userId ) || !isset( $userId ) )  
+      if( empty( $this->_userId ) || !isset( $this->_userId ) )  
       {
          return false;
       }
    
 
-      $activeTempAssignmentCount = TempAuthAssignment::find()
+      $activeTempAssignmentCount = self::find()
          ->where([
-            'user_id'            => $userId,
+            'user_id'            => $this->_userId,
             'deleted_at'         => null,
          ])
          ->count();            
@@ -152,20 +160,18 @@ class TempAuthAssignment extends ActiveRecord
      */   
    public function storePermanentRoles( $id, $new_role = '' )
    {
-      $userId  = Yii::$app->user->identity->getId();   
-
-      if( empty( $new_role ) || !isset( $new_role ) ||
-          empty( $userId   ) || !isset( $userId   )
+      if( empty( $new_role       ) || !isset( $new_role ) ||
+          empty( $this->_userId  ) || !isset( $this->_userId   )
       )  
       {
          return false;
       }
    
-      if( !empty( $userId ) && isset( $userId ) )
+      if( !empty( $this->_userId ) && isset( $this->_userId ) )
       { 
          $activeTempAssignmentCount = TempAuthAssignment::find()
             ->where([
-               'user_id'            => $userId,
+               'user_id'            => $this->_userId,
                'deleted_at'         => null,
             ])
             ->count();            
@@ -178,13 +184,13 @@ class TempAuthAssignment extends ActiveRecord
          $transaction = TempAuthAssignment::getDb()->beginTransaction();
          try 
          {            
-            foreach( $this->_auth->getRolesByUser($userId) as $key => $roles )
+            foreach( $this->_auth->getRolesByUser($this->_userId) as $key => $roles )
             {
                $currentRole = new TempAuthAssignment();           
                
                $currentRole->item_name       = $roles->name;
                $currentRole->temp_item_name  = $new_role;
-               $currentRole->user_id         = $userId;
+               $currentRole->user_id         = $this->_userId;
  
                $currentRole->save();      
             }
@@ -216,14 +222,12 @@ class TempAuthAssignment extends ActiveRecord
      */   
    public function revokeRoles( $id )
    {
-      $userId  = Yii::$app->user->identity->getId();   
-   
-      if( empty( $userId   ) || !isset( $userId   ) )  
+      if( empty( $this->_userId ) || !isset( $this->_userId ) )
       {     
          return false;
       }
       
-      return $this->_auth->revokeAll( $userId );
+      return $this->_auth->revokeAll( $this->_userId );
    }
 
    
@@ -236,21 +240,19 @@ class TempAuthAssignment extends ActiveRecord
      */   
    public function assignTemporaryRole( $new_role = '' )
    {
-      $userId  = Yii::$app->user->identity->getId();   
-   
-      if( empty( $new_role ) || !isset( $new_role ) ||
-          empty( $userId   ) || !isset( $userId   )
+      if( empty( $new_role       ) || !isset( $new_role        ) ||
+          empty( $this->_userId  ) || !isset( $this->_userId   )
       )  
       {
          return false;
       }
       
-      if( $this->_auth->getAssignment( $new_role, $userId ) )
+      if( $this->_auth->getAssignment( $new_role, $this->_userId ) )
       {
          return false;
       }
       
-      return $this->_auth->assign( $this->_auth->getRole($new_role), $userId );
+      return $this->_auth->assign( $this->_auth->getRole($new_role), $this->_userId );
    }
       
    
@@ -262,14 +264,12 @@ class TempAuthAssignment extends ActiveRecord
      * @return bool if storing roles was successful
      */   
    public function restorePermanentRoles()
-   {
-      $userId  = Yii::$app->user->identity->getId();   
-   
-      if( !empty( $userId ) && isset( $userId ) )
+   {  
+      if( !empty( $this->_userId ) && isset( $this->_userId ) )
       { 
          $temporaryRoleCount = TempAuthAssignment::find()
             ->where([
-               'user_id' => $userId, 
+               'user_id' => $this->_userId, 
                'deleted_at' => null,
             ])->count();            
 
@@ -282,22 +282,22 @@ class TempAuthAssignment extends ActiveRecord
             ->select([ 'taa.item_name', 'taa.temp_item_name', 'taa.user_id' ])
             ->from(  'tbl_TempAuthAssignment taa' )
             ->where( 'taa.user_id =:user_id and deleted_at IS NULL ' )
-               ->addParams( [':user_id' => $userId, ])
+               ->addParams( [':user_id' => $this->_userId, ])
             ->limit(1);
 
-         $transaction = TempAuthAssignment::getDb()->beginTransaction();      
+         $transaction = self::getDb()->beginTransaction();      
          
          try 
          {
-            $this->revokeRoles( $userId );
+            $this->revokeRoles( $this->_userId );
             
             foreach( $activeTempAssignment->each() as $user )
             {            
-               $this->_auth->assign( $this->_auth->getRole( $user['item_name'] ), $userId );
+               $this->_auth->assign( $this->_auth->getRole( $user['item_name'] ), $this->_userId );
                
-               $tempRole = TempAuthAssignment::find()
+               $tempRole = self::find()
                   ->where([
-                     'user_id' => $userId,
+                     'user_id' => $this->_userId,
                      'deleted_at' => null,
                   ])->limit(1)->one();
 

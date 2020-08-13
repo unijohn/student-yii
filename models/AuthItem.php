@@ -6,14 +6,12 @@ use Yii;
 use yii\base\model;
 use yii\rbac\DbManager;
 
+use app\models\BaseModel;
 use app\models\AuthAssignment;
 
 
-class AuthItem extends \yii\db\ActiveRecord
+class AuthItem extends BaseModel
 {
-   const TYPE_ROLE         = 1;
-   const TYPE_PERMISSION   = 2;
-
 
 //   public $name;
 //   public $type;
@@ -96,14 +94,14 @@ class AuthItem extends \yii\db\ActiveRecord
    public static function findbyRoles()
    {
       return AuthItem::find()
-         ->where(['type' => AuthItem::TYPE_ROLE ])
+         ->where(['type' => self::TYPE_ROLE ])
          ->all();
    }
 
    public static function findbyUnassignedRoles( $assignedRoles = '' )
    {
       return AuthItem::find()
-         ->where([ 'type' => AuthItem::TYPE_ROLE ]) 
+         ->where([ 'type' => self::TYPE_ROLE ]) 
          ->andWhere([ 'not in' , 'name', $assignedRoles ])
          ->all();         
    }   
@@ -112,7 +110,7 @@ class AuthItem extends \yii\db\ActiveRecord
    public static function findbyPermissions()
    {
       return AuthItem::find()
-         ->where(['type' => AuthItem::TYPE_PERMISSION ])
+         ->where(['type' => self::TYPE_PERMISSION ])
          ->all();
    }
    

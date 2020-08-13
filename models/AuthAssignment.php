@@ -6,11 +6,12 @@ use Yii;
 use yii\base\model;
 use yii\rbac\DbManager;
 
-use app\models\User;
+use app\models\BaseModel;
 use app\models\AuthItem;
+use app\models\User;
 
 
-class AuthAssignment extends \yii\db\ActiveRecord
+class AuthAssignment extends BaseModel
 {
 //   public $item_name;
 //   public $user_id;

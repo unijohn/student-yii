@@ -5,28 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\model;
 use yii\behaviors\TimestampBehavior;
-use yii\db\ActiveRecord;
+
+use app\models\BaseModel;
 
 
-class Courses extends ActiveRecord
+class Courses extends BaseModel
 {  
-   const STATUS_INACTIVE   = 0;
-   const STATUS_ACTIVE     = 1;
-
-   const STATUS_HIDDEN     = 0;
-   const STATUS_VISIBLE    = 1;
-   
-   const SUBJECT_ACCT      = "ACCT";
-   const SUBJECT_BA        = "BA";
-   const SUBJECT_ECON      = "ECON";
-   const SUBJECT_FIR       = "FIR";
-   const SUBJECT_MGMT      = "MGMT";
-   const SUBJECT_MIS       = "MIS";
-   const SUBJECT_MKTG      = "MKTG";
-   const SUBJECT_SCMS      = "SCMS";
-   
-   const SCENARIO_INSERT   = 'insert';
-   const SCENARIO_UPDATE   = 'update';   
 
 /**
    public $id;
@@ -93,9 +77,9 @@ class Courses extends ActiveRecord
             'class' => TimestampBehavior::className(),
             'attributes' => 
             [
-               ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
-               ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],           
-               ActiveRecord::EVENT_BEFORE_DELETE => ['deleted_at'],
+               self::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+               self::EVENT_BEFORE_UPDATE => ['updated_at'],           
+               self::EVENT_BEFORE_DELETE => ['deleted_at'],
             ],
             // if you're using datetime instead of UNIX timestamp:
             'value' => time(),
@@ -137,16 +121,22 @@ class Courses extends ActiveRecord
    public function rules()
    {
       return [
-         ['is_active', 'default', 'value'    => Courses::STATUS_ACTIVE   ],
-         ['is_active', 'integer', 'min'      => Courses::STATUS_INACTIVE ],
-         ['is_active', 'filter',  'filter'   => 'intval'],
+         ['is_active', 'default', 'value'    => self::STATUS_ACTIVE        ],
+         ['is_active', 'integer', 'min'      => self::STATUS_INACTIVE      ],
+         ['is_active', 'filter',  'filter'   => 'intval'                   ],
+         ['is_active', 'integer', 'max'      => self::STATUS_ACTIVE_MAX    ],
 
-         ['is_hidden', 'default', 'value'    => Courses::STATUS_VISIBLE ],
-         ['is_hidden', 'integer', 'min'      => Courses::STATUS_HIDDEN  ],         
-         ['is_hidden', 'filter',  'filter'   => 'intval'],
+         ['is_hidden', 'default', 'value'    => self::STATUS_VISIBLE       ],
+         ['is_hidden', 'integer', 'min'      => self::STATUS_HIDDEN        ],        
+         ['is_hidden', 'filter',  'filter'   => 'intval'                   ],
+         ['is_hidden', 'integer', 'max'      => self::STATUS_VISIBLE_MAX   ],
          
-         [['is_active', 'is_hidden'], 'required', 'on' => self::SCENARIO_UPDATE ],
-      
+         [
+            [
+               'subject_area', 'course_number', 'section_number', 'is_active', 'is_hidden'
+            ], 
+            'required', 'on' => self::SCENARIO_UPDATE 
+         ],
       ];
    }
 
@@ -160,7 +150,7 @@ class Courses extends ActiveRecord
    {        
       $query_courses = (new \yii\db\Query())
          ->select([ 'id', 'subject_area', 'course_number', 'section_number', 'created_at', 'updated_at' ])
-         ->from( Courses::tableName() )
+         ->from( self::tableName() )
          ->where( 'id=:id ' )
             ->addParams([
                ':id' => $id, 

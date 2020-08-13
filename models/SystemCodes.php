@@ -5,31 +5,15 @@ namespace app\models;
 use Yii;
 use yii\base\model;
 use yii\behaviors\TimestampBehavior;
-use yii\db\ActiveRecord;
 
+use app\models\BaseModel;
 use app\models\SystemCodesChild;
 
 
-class SystemCodes extends ActiveRecord
+class SystemCodes extends BaseModel
 {
-   const TYPE_PERMIT       = 1;
-   const TYPE_DEPARTMENT   = 2;
-   const TYPE_CAREERLEVEL  = 3;
-   const TYPE_MASTERS      = 4;
-
-   const TYPE_MAX          = SystemCodes::TYPE_MASTERS;   
-   
-   const STATUS_INACTIVE   = 0;
-   const STATUS_ACTIVE     = 1;
-   
-   const STATUS_HIDDEN     = 0;
-   const STATUS_VISIBLE    = 1;
-   
-   const SCENARIO_INSERT   = 'insert';
-   const SCENARIO_UPDATE   = 'update';
-   
-
    private $_changedAttributes;
+
 
    public function init()
    {
@@ -80,9 +64,9 @@ class SystemCodes extends ActiveRecord
             'class' => TimestampBehavior::className(),
             'attributes' => 
             [
-               ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
-               ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],           
-               ActiveRecord::EVENT_BEFORE_DELETE => ['deleted_at'],
+               self::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+               self::EVENT_BEFORE_UPDATE => ['updated_at'],           
+               self::EVENT_BEFORE_DELETE => ['deleted_at'],
             ],
             // if you're using datetime instead of UNIX timestamp:
             'value' => time(),
@@ -124,22 +108,25 @@ class SystemCodes extends ActiveRecord
    public function rules()
    {
       return [
-         ['type', 'default', 'value'    => SystemCodes::TYPE_PERMIT ],
-         ['type', 'integer', 'min'      => SystemCodes::TYPE_PERMIT ],
-         ['type', 'integer', 'max'      => SystemCodes::TYPE_MAX    ],         
+         ['type', 'default', 'value'    => self::TYPE_PERMIT ],
+         ['type', 'integer', 'min'      => self::TYPE_PERMIT ],
+         ['type', 'integer', 'max'      => self::TYPE_MAX    ],
          ['type', 'filter',  'filter'   => 'intval'],
 
-         ['is_active', 'default', 'value'    => SystemCodes::STATUS_ACTIVE   ],
-         ['is_active', 'integer', 'min'      => SystemCodes::STATUS_INACTIVE ],
+         ['is_active', 'default', 'value'    => self::STATUS_ACTIVE   ],
+         ['is_active', 'integer', 'min'      => self::STATUS_INACTIVE ],
          ['is_active', 'filter',  'filter'   => 'intval'],
 
-         ['is_hidden', 'default', 'value'    => SystemCodes::STATUS_VISIBLE ],
-         ['is_hidden', 'integer', 'min'      => SystemCodes::STATUS_HIDDEN  ],         
+         ['is_hidden', 'default', 'value'    => self::STATUS_VISIBLE ],
+         ['is_hidden', 'integer', 'min'      => self::STATUS_HIDDEN  ],         
          ['is_hidden', 'filter',  'filter'   => 'intval'],
-         
-         [['is_active', 'is_hidden'], 'required', 'on' => self::SCENARIO_UPDATE ],
-      
-//         [['name', 'type', ], 'required' ],
+
+         [
+            [
+               'type', 'code', 'description', 'is_active', 'is_hidden'
+            ], 
+            'required', 'on' => self::SCENARIO_UPDATE 
+         ],
       ];
    }
 
@@ -172,7 +159,7 @@ class SystemCodes extends ActiveRecord
    public static function findbyPermit()
    {
       return SystemCodes::find()
-         ->where(['type' => SystemCodes::TYPE_PERMIT ])
+         ->where(['type' => self::TYPE_PERMIT ])
          ->all();
    }
       
@@ -194,9 +181,9 @@ class SystemCodes extends ActiveRecord
          ->innerJoin( $tbl_systemsCodes . ' sc2',  $tbl_SystemCodesChild . '.child = sc2.id' )
          ->where(['sc.type =:sc_type AND sc.is_active =:sc_is_active AND sc2.is_active =:sc2_is_active' ])
             ->addParams([ 
-               ':sc_type'        => SystemCodes::TYPE_PERMIT, 
-               ':sc_is_active'   => SystemCodes::STATUS_ACTIVE,
-               ':sc2_is_active'  => SystemCodes::STATUS_ACTIVE, 
+               ':sc_type'        => self::TYPE_PERMIT, 
+               ':sc_is_active'   => self::STATUS_ACTIVE,
+               ':sc2_is_active'  => self::STATUS_ACTIVE, 
             ])
          ->all();
 
@@ -217,7 +204,7 @@ class SystemCodes extends ActiveRecord
          return false;
       }
    
-      $tbl_SystemsCodes       = SystemCodes::tableName();
+      $tbl_SystemsCodes       = self::tableName();
       $tbl_SystemCodesChild   = SystemCodesChild::tableName();
    
       $query_codes = ( new \yii\db\Query() )
@@ -226,9 +213,9 @@ class SystemCodes extends ActiveRecord
          ->innerJoin( $tbl_SystemCodesChild,       $tbl_SystemCodesChild . '.parent = sc.id' )
          ->innerJoin( $tbl_SystemsCodes . ' sc2',  $tbl_SystemCodesChild . '.child = sc2.id' )
          ->where(['sc.id' => $id ])
-         ->andWhere([ 'sc.type'        => SystemCodes::TYPE_PERMIT ])
-         ->andWhere([ 'sc.is_active'   => SystemCodes::STATUS_ACTIVE ])
-         ->andWhere([ 'sc2.is_active'  => SystemCodes::STATUS_ACTIVE ])
+         ->andWhere([ 'sc.type'        => self::TYPE_PERMIT ])
+         ->andWhere([ 'sc.is_active'   => self::STATUS_ACTIVE ])
+         ->andWhere([ 'sc2.is_active'  => self::STATUS_ACTIVE ])
          ->all();
 
       return $query_codes;
@@ -243,7 +230,7 @@ class SystemCodes extends ActiveRecord
    public static function findPermitTagOptions( $id = -1 )
    {
       return SystemCodes::find()
-         ->where([ '!=', 'type',  SystemCodes::TYPE_PERMIT ])
+         ->where([ '!=', 'type',  self::TYPE_PERMIT ])
          ->all();
    }
 
@@ -261,7 +248,7 @@ class SystemCodes extends ActiveRecord
          return false;
       }
    
-      $tbl_SystemsCodes       = SystemCodes::tableName();
+      $tbl_SystemsCodes       = self::tableName();
       $tbl_SystemCodesChild   = SystemCodesChild::tableName();
    
 
@@ -269,7 +256,7 @@ class SystemCodes extends ActiveRecord
          ->select([  'sc.id', 'sc.type', 'sc.code', 'sc.description', 'sc.is_active' ])
          ->from(     $tbl_SystemsCodes       . ' sc' )
          ->where( 'type !=:type AND id NOT IN ( SELECT child from ' . $tbl_SystemCodesChild .' WHERE parent = :id )' )
-            ->addParams([ ':type' => SystemCodes::TYPE_PERMIT, ':id' => $id ])
+            ->addParams([ ':type' => self::TYPE_PERMIT, ':id' => $id ])
          ->all();
 
       return $query_codes;
@@ -284,7 +271,7 @@ class SystemCodes extends ActiveRecord
    public static function findbyDepartment()
    {
       return SystemCodes::find()
-         ->where(['type' => SystemCodes::TYPE_DEPARTMENT ])
+         ->where(['type' => self::TYPE_DEPARTMENT ])
          ->all();
    }
 
@@ -297,7 +284,7 @@ class SystemCodes extends ActiveRecord
    public static function findbyCareerLevel()
    {
       return SystemCodes::find()
-         ->where(['type' => SystemCodes::TYPE_CAREERLEVEL ])
+         ->where(['type' => self::TYPE_CAREERLEVEL ])
          ->all();
    }
 
@@ -310,7 +297,7 @@ class SystemCodes extends ActiveRecord
    public static function findbyMasters()
    {
       return SystemCodes::find()
-         ->where(['type' => SystemCodes::TYPE_MASTERS ])
+         ->where(['type' => self::TYPE_MASTERS ])
          ->all();
    }
 
@@ -324,7 +311,7 @@ class SystemCodes extends ActiveRecord
    {        
       $query_codes = (new \yii\db\Query())
          ->select([ 'id', 'type', 'code', 'description', 'created_at', 'updated_at' ])
-         ->from( SystemCodes::tableName() )
+         ->from( self::tableName() )
          ->where( 'code=:code AND type =:type ' )
             ->addParams([
                ':code' => $code, 
@@ -348,7 +335,7 @@ class SystemCodes extends ActiveRecord
     */
    public static function existsPermit($code)
    {        
-      return self::existsSystemCode( SystemCodes::TYPE_PERMIT, $code );  
+      return self::existsSystemCode( self::TYPE_PERMIT, $code );  
    }   
    
    
@@ -360,6 +347,6 @@ class SystemCodes extends ActiveRecord
 
    public function getCodeChildren()
    {
-      return $this->hasMany(SystemCodesAssignment::className(), [ 'child' => 'id' ] );
+      return $this->hasMany(SystemCodesChild::className(), [ 'child' => 'id' ] );
    }
 }

@@ -12,11 +12,14 @@ use yii\web\IdentityInterface;
 //use yii2tech\ar\position\PositionBehavior;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
+use app\models\BaseModel;
 use app\models\AuthAssignment;
 use app\models\AuthItem;
+use app\models\TempAuthAssignment;
+
 
 //class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
-class User extends ActiveRecord implements IdentityInterface
+class User extends BaseModel implements IdentityInterface
 {
 /**
    Using these declarations breaks the ActiveRecord functionality 
@@ -33,10 +36,7 @@ class User extends ActiveRecord implements IdentityInterface
  **/
 
    private $_auth;
-
-   /** TEST HERE **/
-
-   const SCENARIO_ADD_USER = 'addUser';
+   
 
    public function init()
    {
@@ -53,13 +53,13 @@ class User extends ActiveRecord implements IdentityInterface
 
    public static function getUserTableName()
    {
-      return User::tableName();
+      return self::tableName();
    }
    
 
    public static function getTempAuthAssignmentTableName()
    {
-      return "{{tbl_TempAuthAssignment}}";
+      return TempAuthAssignment::tableName();
    }     
     
    
@@ -110,13 +110,14 @@ class User extends ActiveRecord implements IdentityInterface
             'class' => TimestampBehavior::className(),
             'attributes' => 
             [
-               ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
-               ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
+               self::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+               self::EVENT_BEFORE_UPDATE => ['updated_at'],
             ],
             // if you're using datetime instead of UNIX timestamp:
             'value' => time(),
          ],
          
+/**          
          'softDeleteBehavior' => [
             'class' => SoftDeleteBehavior::className(),
             'softDeleteAttributeValues' => 
@@ -127,7 +128,7 @@ class User extends ActiveRecord implements IdentityInterface
             // mutate native `delete()` method
             'replaceRegularDelete' => false
          ],         
-/**         
+        
          'positionBehavior' => [
             'class' => PositionBehavior::className(),
             'positionAttribute' => 'position',
@@ -143,14 +144,13 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * @inheritdoc
-     */
+     */ 
    public function scenarios()
    {
       $scenarios = parent::scenarios();
-      $scenarios[self::SCENARIO_ADD_USER] =[ 
-         'uuid', 'name', 'is_active', 'auth_key', 'access_token', 'created_at' 
-      ];
-      
+      $scenarios[self::SCENARIO_INSERT] = [ 'uuid', 'name', 'is_active', 'auth_key', 'access_token' ];
+      $scenarios[self::SCENARIO_UPDATE] = [ 'is_active', 'access_token' ];
+   
       return $scenarios;
    }   
 
@@ -167,9 +167,12 @@ class User extends ActiveRecord implements IdentityInterface
          
          [ 'name', 'string', 'min' => 2, 'max' => 48 ],
 
-         [ 'is_active', 'integer'  ],
-
-         [['auth_key', 'access_token', 'created_at'], 'required' ],
+         ['is_active', 'default', 'value'    => self::STATUS_ACTIVE     ],
+         ['is_active', 'integer', 'min'      => self::STATUS_INACTIVE   ],
+         ['is_active', 'integer', 'max'      => self::TYPE_MAX          ],         
+         ['is_active', 'filter',  'filter'   => 'intval'],
+         
+         [['is_active'], 'required' ],
       ];
    }
 
@@ -222,7 +225,7 @@ class User extends ActiveRecord implements IdentityInterface
    {  
       $query_users = (new \yii\db\Query())
          ->select([ 'id', 'uuid', 'name', 'access_token', 'created_at', 'updated_at' ])
-         ->from( User::getUserTableName() )
+         ->from( User::tableName() )
          ->where( 'id=:id' )
             ->addParams( [':id' => $id] )
          ->limit(1);     
@@ -241,7 +244,7 @@ class User extends ActiveRecord implements IdentityInterface
    {
       $query_users = (new \yii\db\Query())
          ->select([ 'id', 'uuid', 'name', 'access_token', 'created_at', 'updated_at' ])
-         ->from( User::getUserTableName() )
+         ->from( self::tableName() )
          ->where( 'access_token=:access_token' )
             ->addParams( [':access_token' => $token] )
          ->limit(1);     
@@ -260,7 +263,7 @@ class User extends ActiveRecord implements IdentityInterface
    {        
       $query_users = (new \yii\db\Query())
          ->select([ 'id', 'uuid', 'name', 'access_token', 'created_at', 'updated_at' ])
-         ->from( User::getUserTableName() )
+         ->from( self::tableName() )
          ->where( 'uuid=:uuid' )
             ->addParams( [':uuid' => $uuid] )
          ->limit(1);     
@@ -273,12 +276,13 @@ class User extends ActiveRecord implements IdentityInterface
  
       return null;            
    }
-   
+
+
    public static function existsUUID($uuid)
    {        
       $query_users = (new \yii\db\Query())
          ->select([ 'id', 'uuid', 'name', 'access_token', 'created_at', 'updated_at' ])
-         ->from( User::getUserTableName() )
+         ->from( self::tableName() )
          ->where( 'uuid=:uuid' )
             ->addParams( [':uuid' => $uuid] )
          ->limit(1);     
@@ -331,6 +335,7 @@ class User extends ActiveRecord implements IdentityInterface
       return $this->auth_key === $auth_key;
    }
 
+
     /**
      * Validates password
      * Long-term plan is to use CAS, nothing local; hence, this
@@ -344,12 +349,12 @@ class User extends ActiveRecord implements IdentityInterface
         return true;
     }
 
+
 /**
  *
  *    Relationships & Model section
  *
  **/   
-
    public function getRoles()
    {
       return $this->hasMany(AuthAssignment::className(), [ 'user_id' => 'id' ] );
@@ -372,9 +377,11 @@ class User extends ActiveRecord implements IdentityInterface
      */
    public function isFrameworkAdministrator( $id )
    {
+      $tbl_TAA  = self::getTempAuthAssignmentTableName() . " taa";
+   
       $query_users = (new \yii\db\Query())
          ->select([ 'taa.item_name', 'taa.user_id' ])
-         ->from(  'tbl_TempAuthAssignment taa' )
+         ->from(  $tbl_TAA )
          ->where( 'taa.user_id =:user_id and item_name like :name and deleted_at IS NULL ' )
             ->addParams( [':user_id' => $id, ':name' => 'Framework-Administrator'] )
          ->limit(1);
@@ -396,9 +403,11 @@ class User extends ActiveRecord implements IdentityInterface
      */
    public function isAssignedTemporaryRole( $id )
    {
+      $tbl_TAA  = self::getTempAuthAssignmentTableName() . " taa";   
+   
       $query_users = (new \yii\db\Query())
          ->select([ 'taa.item_name', 'taa.user_id' ])
-         ->from(  'tbl_TempAuthAssignment taa' )
+         ->from(  $tbl_TAA )
          ->where( 'taa.user_id =:user_id  and deleted_at IS NULL ' )
             ->addParams( [':user_id' => $id, ] )
          ->limit(1);

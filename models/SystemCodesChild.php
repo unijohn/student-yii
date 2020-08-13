@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\model;
 //use yii\behaviors\TimestampBehavior;
-use yii\db\ActiveRecord;
 
+use app\models\BaseModel;
 use app\models\SystemCodes;
 
 
-class SystemCodesChild extends ActiveRecord
+class SystemCodesChild extends BaseModel
 {
    public $parent;
    public $child;
