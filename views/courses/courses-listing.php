@@ -33,11 +33,12 @@
                <div id='courses-search-form'>      
                   <?= $this->render('_courses-search', [
                      'model'              => $model, 
-                     'subject_area'       => $data['filterForm']['subject_area'],
+                     'model_subjects'     => $modelSubjects,
                      'course_number'      => $data['filterForm']['course_number'],                     
                      'is_active'          => $data['filterForm']['is_active'], 
                      'is_hidden'          => $data['filterForm']['is_hidden'], 
-                     'pagination_count'   => $data['filterForm']['paginationCount'] 
+                     'pagination_count'   => $data['filterForm']['paginationCount'],
+                     'subject_area'       => $data['filterForm']['subject_area'],
                   ]); ?>    
                </div>
             </div>

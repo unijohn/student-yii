@@ -149,12 +149,12 @@
  
       <h3>Drop System Code Tag</h3>
       <div id='system-codes-drop-form'>      
-
+         <?= $this->render('_codes-tags-drop', ['data' => $data, 'model' => $tags]); ?>
       </div>  
 
       <h3>Add System Code Tag</h3>
       <div id='system-codes-add-form'>      
-
+         <?= $this->render('_codes-tags-add', ['data' => $data, 'model' => $allTags]); ?>
       </div>
 
       <code><?= __FILE__ ?></code>

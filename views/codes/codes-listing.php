@@ -23,7 +23,7 @@
       <?= $this->render('/common/_alert', ['data' => $data]); ?>
       
       <p>
-         This is the <?php print( $this->title ); ?> page. You may modify the following file to customize its content:
+         This is the <?php print( $this->title ); ?> page. You may modify the following file to customize its content: <? print( $data['filterForm']['paginationCount'] ); ?>
       </p>
     
       <div class="body-content">

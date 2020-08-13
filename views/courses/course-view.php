@@ -148,13 +148,13 @@
       </div>
  
       <h3>Drop System Code Tag</h3>
-      <div id='system-codes-tags-drop-form'>      
-
+      <div id='courses-tags-drop-form'>      
+         <?= $this->render('_courses-tags-drop', ['data' => $data, 'model' => $tags]); ?>
       </div>  
 
       <h3>Add System Code Tag</h3>
-      <div id='system-codes-tags-add-form'>      
-
+      <div id='courses-tags-add-form'>      
+         <?= $this->render('_courses-tags-add', ['data' => $data, 'model' => $allTags]); ?>
       </div>
 
       <code><?= __FILE__ ?></code>
