@@ -130,7 +130,7 @@ class BaseController extends Controller
     }
     
 
-   public function debug( $msgObj, $willDie = true )
+   public static function debug( $msgObj, $willDie = true )
    {
       print( "<pre> ++ BaseController ++" . PHP_EOL );
       var_dump( $msgObj );

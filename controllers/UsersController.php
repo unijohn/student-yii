@@ -13,6 +13,8 @@ use yii\rbac\DbManager;
 use yii\web\Controller;
 use yii\web\Response;
 
+use app\controllers\BaseController;
+
 use app\models\AuthAssignment;
 use app\models\AuthItem;
 use app\models\SystemCodes;
@@ -20,13 +22,26 @@ use app\models\SystemCodesChild;
 use app\models\User;
 
 
-class UsersController extends Controller
+class UsersController extends BaseController
 {
-   private $_auth;
+   const dropDownOptsKeys  = [ 'pageCount',  'is_active' ];
+   
+   const dropDownOpts      = [
+      'pageCount' => [
+         '10'  => '10',
+         '25'  => '25',
+         '50'  => '50',
+         '100' => '100',
+      ],
+      'is_active' => [
+         '-1'  => 'Select Status',
+         '0'   => 'Inactive',
+         '1'   => 'Active',
+      ],
+   ];
+
    private $_authItemModel;
-   private $_data;
-   private $_dataProvider;
-   private $_request;
+
    private $_roleModel;
    private $_userModel;
    
@@ -39,21 +54,6 @@ class UsersController extends Controller
    public function init()
    {
       parent::init();
-      
-      /**
-       *  Quick fix for cookie timeout
-       **/      
-      if( is_null( Yii::$app->user->identity ) )
-      {
-         /* /site/index works but trying to learn named routes syntax */
-         return $this->redirect(['/site/index']);
-      }
-      
-      $this->_auth      = Yii::$app->authManager;
-      $this->_request   = Yii::$app->request;  
-      
-      $this->_data             = [];
-      $this->_dataProvider     = [];
 
       $this->_userModel        = new User();
       $this->_roleModel        = new AuthAssignment();
@@ -61,38 +61,41 @@ class UsersController extends Controller
       
       $this->_tbl_SystemCodes       = SystemCodes::tableName();
       $this->_tbl_SystemCodesChild  = SystemCodesChild::tableName();      
+           
+      /**
+       *    Capturing the possible post() variables used in this controller
+       **/
+      if( !isset( $this->_data['uuid'] ) || empty( $this->_data['uuid'] ) )
+      {
+         $this->_data['uuid']   = $this->_request->get('uuid', ''); 
+      } 
+      
+      if( !isset( $this->_data['uuid'] ) || empty( $this->_data['uuid'] ) )
+      {
+         $this->_data['uuid']   = ArrayHelper::getValue($this->_request->post(), 'User.uuid',   '' ); 
+      }           
       
       $this->_data['filterForm']['uuid']              = ArrayHelper::getValue($this->_request->get(), 'User.uuid',      '');
       $this->_data['filterForm']['is_active']         = ArrayHelper::getValue($this->_request->get(), 'User.is_active', -1);
       $this->_data['filterForm']['paginationCount']   = $this->_request->get( 'pagination_count', 10 );
       
-      /**
-       *    Capturing the possible post() variables used in this controller
-       **/      
-      
-      $this->_data['post']['uuid']           = $this->_request->post('uuid',     '' );
-      
-      if( strlen( $this->_data['post']['uuid'] ) < 1 )
-      {
-         $this->_data['post']['uuid']        = ArrayHelper::getValue($this->_request->post(), 'User.uuid', '' ); 
-      }
-      
       $this->_data['post']['addRole']        = $this->_request->post('addRole',        '' );
       $this->_data['post']['dropRole']       = $this->_request->post('dropRole',       '' );
       $this->_data['post']['authitem']       = $this->_request->post('authitem',       '' );
-      $this->_data['post']['authassignment'] = $this->_request->post('authassignment', '' );        
+      $this->_data['post']['authassignment'] = $this->_request->post('authassignment', '' );
       
-      $this->_data['uuid']           = $this->_request->post('uuid',     '' );
-      $this->_data['addRole']        = $this->_request->post('addRole',  '' );
-      $this->_data['dropRole']       = $this->_request->post('dropRole', '' );
-      $this->_data['authitem']       = $this->_request->post('authitem', '' );
-      $this->_data['authassignment'] = $this->_request->post('authassignment', '' );    
+      $this->_data['User']['is_active']      = ArrayHelper::getValue($this->_request->post(), 'User.is_active',    -1 );
+      $this->_data['User']['access_token']   = ArrayHelper::getValue($this->_request->post(), 'User.access_token', -1 );
+      $this->_data['User']['saveUser']       = ArrayHelper::getValue($this->_request->post(), 'User.saveUser',     -1 );      
+      
+      $this->_data['addRole']          = $this->_request->post('addRole',          '' );
+      $this->_data['dropRole']         = $this->_request->post('dropRole',         '' );
+      $this->_data['authitem']         = $this->_request->post('authitem',         '' );
+      $this->_data['authassignment']   = $this->_request->post('authassignment',   '' );    
       
       $this->_data['addUser']          = ArrayHelper::getValue($this->_request->post(), 'User.addUser',     '' );
       $this->_data['lookupUser']       = ArrayHelper::getValue($this->_request->post(), 'User.lookupUser',  '' );
       $this->_data['saveUser']         = false;
-      $this->_data['errors']           = [];   
-      $this->_data['success']          = [];
    }   
 
 
@@ -124,17 +127,6 @@ class UsersController extends Controller
     }
  **/    
 
-    /**
-     * {@inheritdoc}
-     */
-    public function actions()
-    {
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-        ];
-    }
 
    /**
     * Centralizing the query for building the User GridView
@@ -208,7 +200,7 @@ class UsersController extends Controller
       return $this->render('users-listing', [
             'data'         => $this->_data, 
             'dataProvider' => $this->_dataProvider,
-            'model'        => $this->_userModel,
+            'model'        => $this->_userModel
       ]);      
    }
    
@@ -339,18 +331,26 @@ class UsersController extends Controller
     */
    public function actionSave()
    {       
-//      $this->_auth->assign( $auth->getRole('Academic-Advisor-Graduate'),       5 ); 
-//      print_r( $this->_request->post() );
+      $exitEarly = false;
 
       $this->_userModel = User::find()
          ->where(['uuid' => $this->_data['uuid'] ])
          ->limit(1)->one();
 
-//      print( $this->_userModel->id . PHP_EOL );
+      $roleTag = "";
+      
+      if( isset( $this->_data['authitem']['name'] ) && !empty( $this->_data['authitem']['name'] ) ) 
+      {
+         $roleTag = $this->_data['authitem']['name'];
+      }
+      else if( isset( $this->_data['authassignment']['item_name'] ) && !empty( $this->_data['authassignment']['item_name'] ) ) 
+      {
+         $roleTag = $this->_data['authassignment']['item_name'];
+      }
 
       if( strlen( $this->_data['addRole'] ) > 0 )
       {
-         if( $this->_auth->assign( $this->_auth->getRole($this->_data['authitem']['name']), $this->_userModel->id ) )
+         if( $this->_auth->assign( $this->_auth->getRole($roleTag), $this->_userModel->id ) )
          {
             $this->_data['success']['Add Role'] = [
                'value'        => "was successful",
@@ -359,9 +359,9 @@ class UsersController extends Controller
                'class'        => 'alert alert-success', 
             ];
             
-            $this->_data['success']['Add Role To User'] = [
-               'value' => "was successful",
-            ];
+            $this->_data['success'][$roleTag] = [
+               'value' => "was added",
+            ];            
          }
          else
          {
@@ -372,15 +372,17 @@ class UsersController extends Controller
                'class'     => 'alert alert-danger',
             ];
             
-            $this->_data['errors']['Remove Role From User'] = [
-               'value' => "was not successful; no roles were added.",
+            $this->_data['errors'][$roleTag] = [
+               'value' => "was not added.",
             ];
-         }           
+         }
+         
+         $exitEarly = true;
       }
 
       if( strlen( $this->_data['dropRole'] ) > 0 )
       {
-         if( $this->_auth->revoke( $this->_auth->getRole($this->_data['authassignment']['item_name']), $this->_userModel->id ) )
+         if( $this->_auth->revoke( $this->_auth->getRole($roleTag), $this->_userModel->id ) )
          {
             $this->_data['success']['Remove Role'] = [
                'value'        => "was successful",
@@ -389,9 +391,9 @@ class UsersController extends Controller
                'class'        => 'alert alert-success', 
             ];
             
-            $this->_data['success']['Remove Role From User'] = [
-               'value' => "was successful",
-            ];
+            $this->_data['success'][$roleTag] = [
+               'value' => "was removed",
+            ];  
          }
          else
          {
@@ -402,10 +404,126 @@ class UsersController extends Controller
                'class'     => 'alert alert-danger',
             ];
             
-            $this->_data['errors']['Remove Role From User'] = [
-               'value' => "was not successful; no roles were removed.",
+            $this->_data['errors'][$roleTag] = [
+               'value' => "was not removed.",
+            ]; 
+         }
+         
+         $exitEarly = true;
+      }
+
+   /**
+    * Tag only update; exiting early
+    **/
+
+      if( $exitEarly )
+      {
+         $roleModel  = AuthAssignment::find();
+         
+         $assignedRoles = [];
+         foreach( $this->_userModel->roles as $role )
+         {
+            $assignedRoles[] = $role->item_name;
+         }
+         
+         $this->_authItemModel   = AuthItem::findbyUnassignedRoles($assignedRoles);                  
+      
+         return $this->render('user-view', [
+            'data'         => $this->_data, 
+            'dataProvider' => $this->_dataProvider,
+            'model'        => $this->_userModel,
+            'roles'        => $this->_roleModel,
+            'allRoles'     => $this->_authItemModel,
+         ]); 
+      } 
+      
+   /**
+    * User model update
+    **/
+      $exitEarly = false;    
+      $uuidExists = User::existsUUID( $this->_data['uuid'] );
+      
+      if( !$uuidExists )
+      {
+         if( isset( $this->_data['saveUser'] ) && !empty( $this->_data['saveUser'] ) )
+         {
+            $this->_data['errors']['Save User'] = [
+               'value'     => "was unsuccessful",
+               'htmlTag'   => 'h4',
+               'class'     => 'alert alert-danger',
             ];
-         }  
+
+         }
+         $this->_data['errors']['uuid'] = [
+            'value' => " ( " . $this->_data['uuid'] . " ) does not exist",      
+         ];
+         
+         $roleModel  = AuthAssignment::find();
+         
+         $assignedRoles = [];
+         foreach( $this->_userModel->roles as $role )
+         {
+            $assignedRoles[] = $role->item_name;
+         }
+         
+         $this->_authItemModel   = AuthItem::findbyUnassignedRoles($assignedRoles);                  
+      
+         return $this->render('user-view', [
+            'data'         => $this->_data, 
+            'dataProvider' => $this->_dataProvider,
+            'model'        => $this->_userModel,
+            'roles'        => $this->_roleModel,
+            'allRoles'     => $this->_authItemModel,
+         ]); 
+      }
+
+      $updateModel            = $this->_userModel;
+      
+      $updateModel->scenario  = User::SCENARIO_UPDATE;
+
+      $updateModel->is_active     = $this->_data['User']['is_active'];      
+      $updateModel->access_token  = $this->_data['User']['access_token'];
+
+      $this->_data['User']['Update']   = $updateModel->save();   
+      
+      $updateColumns = $updateModel->afterSave( false, $this->_data['User']['Update']);  
+      
+      if( $this->_data['User']['Update'] && is_array( $updateColumns ) )
+      {
+         
+         if( count( $updateColumns ) > 0 )
+         {
+            $this->_data['success']['Save User'] = [
+               'value'     => "was successful",
+               'bValue'    => true,
+               'htmlTag'   => 'h4',
+               'class'     => 'alert alert-success',
+            ];
+            
+            foreach( $updateColumns as $key => $val )
+            {     
+               $keyIndex = ucwords( strtolower(str_replace( "_", " ", $key )) );
+            
+               if( $key !== "updated_at" && $key !== "deleted_at" )
+               {
+      
+                  $lookupNew = $this->keyLookup( $key, $val );
+                  $lookupOld = $this->keyLookup( $key, $this->_data['User'][$key] );                     
+               
+                  $this->_data['success'][$keyIndex] = [
+                     'value'     => "was updated",
+                     'bValue'    => true,
+                  ];
+                  
+                  if( strpos( $lookupNew, "Unknown" ) !== 0 )
+                  {
+                     $this->_data['success'][$keyIndex] = [
+                        'value'  => "was updated ( " . $lookupNew . " -> " . $lookupOld . " )",
+                     ];
+                  }
+               }
+            }
+         }
       }
 
       $roleModel  = AuthAssignment::find();
@@ -426,4 +544,52 @@ class UsersController extends Controller
          'allRoles'     => $this->_authItemModel,
       ]);
    }
+   
+   /**
+    * TBD
+    *
+    * @return (TBD)
+    */
+   private function keyLookup( $key, $value )
+   {
+      $isActive   = self::getDropDownOpts( 'is_active' );
+      
+      if( $key === "is_active" )
+      {
+         if( isset( $isActive[$value] ) && !empty( $isActive[$value] ) )
+            return $isActive[$value];
+
+         else
+            return "Unknown value : " . $key . " :: " . $value;  
+      }
+   
+      return "Unknown key : " . $key . " :: " . $value;
+   }
+   
+   /**
+    * TBD
+    *
+    * @return (TBD)
+    */
+   public static function getDropDownOpts( $key = "", $prompt = false)
+   {
+      $dropDownOpts     = self::dropDownOpts;   
+   
+      if( !isset( $key ) || empty( $key ) )
+      {
+         return $dropDownOpts;
+      }
+      else if( !in_array( $key, self::dropDownOptsKeys ) )
+      {
+         return $dropDownOpts;
+      }      
+      
+      if( !$prompt )
+      {
+         if( isset( $dropDownOpts[$key] ) )
+            unset( $dropDownOpts[$key][-1] );            
+      }
+
+      return $dropDownOpts[$key];
+   }  
 }

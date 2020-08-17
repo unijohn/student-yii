@@ -49,6 +49,7 @@ class CodesController extends BaseController
       ],
    ];
    
+   private $_systemCodes;
    private $_codesModel;
    private $_codeChildModel;
    private $_tagsModel;
@@ -453,12 +454,6 @@ class CodesController extends BaseController
    public function actionSave()
    {  
       $isError = false;
-
-/**
-print( "<pre>");
-print_r( $this->_request->post() );
-die();
- **/
  
       $tagRelationExists = SystemCodesChild::find()
          ->where([ 'parent' => $this->_data['id'] ])
@@ -565,6 +560,8 @@ die();
 
       if( isset( $this->_data['SystemCodes']['update'] ) && !empty( $this->_data['SystemCodes']['update']  ) )
       {
+         $this->_systemCodes              = new SystemCodes();
+      
          $this->_systemCodes->id          = $this->_data['SystemCodes']['id'];
          $this->_systemCodes->type        = $this->_data['SystemCodes']['type'];
          $this->_systemCodes->code        = $this->_data['SystemCodes']['code'];
@@ -688,7 +685,7 @@ die();
                   }
                }
             }
-         }  
+         }
       }    
 
       $this->_codesModel      = $this->_codesModel->findOne( $this->_data['id']  );
