@@ -31,7 +31,7 @@
             <div class="col-lg-4">
                <h2>Find Users</h2>
                <div id='users-search-form'>      
-                  <?= $this->render('_users-search', ['model' => $model, 'pagination_count' => $data['filterForm']['paginationCount'] ]); ?>      
+                  <?= $this->render('_users-search', ['model' => $model, 'filterForm' => $data['filterForm'] ] ); ?>      
                </div>
             </div>
             <div class="col-lg-4">

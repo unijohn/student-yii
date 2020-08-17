@@ -3,16 +3,17 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
+use app\controllers\UsersController;
+
 /* @var $this yii\web\View */
 /* @var $model app\models\PostSearch */
 /* @var $form yii\widgets\ActiveForm */
 
-
-   $pageCount['10']  = 10;
-   $pageCount['25']  = 25;
-   $pageCount['50']  = 50;
-   $pageCount['100'] = 100;         
-
+   $pageCount  = UsersController::getDropDownOpts( 'pageCount' );
+   $isActive   = UsersController::getDropDownOpts( 'is_active',   true );
+   
+//   UsersController::debug( $filterForm );
+   
 ?>
 
 <div class="users-search">
@@ -22,17 +23,22 @@ use yii\widgets\ActiveForm;
     ]); ?>
 
     <?=  $form->field($model, 'uuid') ?>
-
-    <?=  $form->field($model, 'is_active')->dropdownList([
-               1 => 'Active',
-               0 => 'Inactive',
-            ],
-            ['prompt' => 'Select Status']
-         ); ?>
+         
+   <div class="form-group field-is_active">
+   <label class="control-label" for="pagination_count">Is Active</label>
+      <?= Html::dropDownList('User[is_active]', $filterForm['is_active'], 
+         $isActive,
+         [
+            'id'     => 'is_active',
+            'class'  => 'form-control',
+         ]) 
+      ?>
+      <div class="help-block"></div>
+   </div>
 
    <div class="form-group field-pagination_count">
    <label class="control-label" for="pagination_count"># per Page</label>
-      <?= Html::dropDownList('pagination_count', $pagination_count, 
+      <?= Html::dropDownList('User[pagination_count]', $filterForm['paginationCount'], 
          $pageCount,
          [
             'id'     => 'pagination_count',
