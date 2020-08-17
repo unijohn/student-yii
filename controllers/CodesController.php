@@ -89,7 +89,7 @@ class CodesController extends BaseController
             ->limit(1)->one();
             
          $this->_tagsModel       = SystemCodes::findAllTagsById( $this->_data['id'] );
-         $this->_codeChildModel  = SystemCodes::findUnassignedTagOptions( $this->_data['id']);            
+         $this->_codeChildModel  = $this->getCodeChildModel( $this->_data['id'], $this->_codesModel->code );
       }
 
       $this->_data['filterForm']['type']              = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.type',              '');    
@@ -624,7 +624,7 @@ die();
          if( $exitEarly )
          {
             $this->_tagsModel       = SystemCodes::findAllTagsById( $this->_data['id'] );
-            $this->_codeChildModel  = SystemCodes::findUnassignedTagOptions( $this->_data['id']);  
+            $this->_codeChildModel  = $this->getCodeChildModel( $this->_data['id'], $this->_codesModel->code );
          
             return $this->render('codes-view', [
                   'data'         => $this->_data, 
@@ -694,7 +694,7 @@ die();
       $this->_codesModel      = $this->_codesModel->findOne( $this->_data['id']  );
       
       $this->_tagsModel       = SystemCodes::findAllTagsById( $this->_data['id'] );
-      $this->_codeChildModel  = SystemCodes::findUnassignedTagOptions( $this->_data['id']);  
+      $this->_codeChildModel  = $this->getCodeChildModel( $this->_data['id'], $this->_codesModel->code );
 
       return $this->render('codes-view', [
             'data'         => $this->_data, 
@@ -769,5 +769,27 @@ die();
       }
 
       return $dropDownOpts[$key];
+   }  
+
+
+   /**
+    * TBD
+    *
+    * @return (TBD)
+    */
+   private function getCodeChildModel( $id = -1, $code = "" )
+   {
+      if( SystemCodes::existsPermit( $code ) )
+      {
+         return SystemCodes::findUnassignedPermitTagOptions( $id );
+      }
+      else if ( SystemCodes::existsDepartment( $code ) )
+      {
+         return SystemCodes::findUnassignedDepartmentTagOptions( $id );      
+      }
+      else
+      {
+         return SystemCodes::findUnassignedTagOptions( $id );
+      }
    }  
 }

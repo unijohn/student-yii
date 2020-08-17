@@ -278,30 +278,39 @@ class SystemCodes extends BaseModel
       {
          return false;
       }
-   
-      $tbl_SystemsCodes       = self::tableName();
-      $tbl_SystemCodesChild   = SystemCodesChild::tableName();
-   
-
-      $query_codes = ( new \yii\db\Query() )
-         ->select([  'sc.id', 'sc.type', 'sc.code', 'sc.description', 'sc.is_active' ])
-         ->from(     $tbl_SystemsCodes       . ' sc' )
-         ->where( 'type !=:type AND id NOT IN ( SELECT child from ' . $tbl_SystemCodesChild .' WHERE parent = :id )' )
-            ->addParams([ ':type' => self::TYPE_PERMIT, ':id' => $id ])
-         ->all();
-
-      return $query_codes;
+      
+      // $id, SelectType, OmitType [self::TYPE_PERMIT]
+      return self::findUnassignedTagOptions( $id, -1, self::TYPE_PERMIT );
    }
    
+   
+    /**
+     * TBD
+     *
+     * @param integer Row $id value for code entry
+     * @returns model filtered by TYPE_PERMIT || false if $id is invalid
+     */
+   public static function findUnassignedDepartmentTagOptions( $id = -1 )
+   {
+      if( $id < 0 || strval($id) === 0 )
+      {
+         return false;
+      }
+      
+      // $id, SelectType, OmitType [self::TYPE_PERMIT]
+      return self::findUnassignedTagOptions( $id, -1, self::TYPE_DEPARTMENT );
+   }
+
+
     /**
      * TBD
      *
      * @param integer Row $id value for code entry
      * @returns model || false if $id is invalid
      */
-   public static function findUnassignedTagOptions( $id = -1 )
+   public static function findUnassignedTagOptions( $id = -1, $selectType = -1, $omitType = -1, $isActive = self::STATUS_ACTIVE )
    {
-      if( $id < 0 || strval($id) === 0 )
+      if( $id < 0 || !is_numeric($id) )
       {
          return false;
       }
@@ -309,13 +318,54 @@ class SystemCodes extends BaseModel
       $tbl_SystemsCodes       = self::tableName();
       $tbl_SystemCodesChild   = SystemCodesChild::tableName();
    
+      $tag = SystemCodes::find()
+         ->where([ 'id' => $id ])
+         ->limit(1)
+         ->one();
 
       $query_codes = ( new \yii\db\Query() )
          ->select([  'sc.id', 'sc.type', 'sc.code', 'sc.description', 'sc.is_active' ])
-         ->from(     $tbl_SystemsCodes       . ' sc' )
-         ->where( 'id NOT IN ( SELECT child from ' . $tbl_SystemCodesChild .' WHERE parent = :id )' )
-            ->addParams([ ':id' => $id ])
+         ->from(     $tbl_SystemsCodes       . ' sc' );
+            
+       
+      if( $selectType > 0 && is_numeric( $selectType ) )
+      {           
+         $query_codes = $query_codes->where( 'sc.type =:type AND sc.is_active =:is_active AND sc.id NOT IN ( SELECT child from ' . $tbl_SystemCodesChild .' WHERE parent = :id )' )
+            ->addParams([ 
+               ':type'        => $selectType, 
+               ':is_active'   => $isActive,
+               ':id'          => $id 
+            ])
          ->all();
+      }
+      else if( $omitType > 0 && is_numeric( $omitType ) )
+      {
+         $query_codes = $query_codes->where( 'sc.type !=:type AND sc.is_active =:is_active AND sc.id NOT IN ( SELECT child from ' . $tbl_SystemCodesChild .' WHERE parent = :id )' )
+            ->addParams([ 
+               ':type'        => $omitType, 
+               ':is_active'   => $isActive,
+               ':id'          => $id 
+            ])
+         ->all();
+      }
+      else
+      {
+         $query_codes = $query_codes->where( 'sc.is_active =:is_active AND sc.id NOT IN ( SELECT child from ' . $tbl_SystemCodesChild .' WHERE parent = :id )' )
+            ->addParams([ 
+               ':is_active'   => $isActive,
+               ':id'          => $id 
+            ])
+         ->all();
+      }      
+      
+/*
+      $query_codes = ( new \yii\db\Query() )
+         ->select([  'sc.id', 'sc.type', 'sc.code', 'sc.description', 'sc.is_active' ])
+         ->from(     $tbl_SystemsCodes       . ' sc' )
+         ->where( 'type !=:type AND id NOT IN ( SELECT child from ' . $tbl_SystemCodesChild .' WHERE parent = :id ) AND sc.is_active =:is_active ' )
+            ->addParams([ ':type' => $tag->type, ':id' => $id, ':is_active' => self::STATUS_ACTIVE ])
+         ->all();
+ */
 
       return $query_codes;
    }   
@@ -421,6 +471,16 @@ class SystemCodes extends BaseModel
    public static function existsPermit($code)
    {        
       return self::existsSystemCode( self::TYPE_PERMIT, $code );  
+   }  
+   
+   /**
+    * Determines if this department already exists in the system
+    *
+    * @return (TBD)
+    */
+   public static function existsDepartment($code)
+   {        
+      return self::existsSystemCode( self::TYPE_DEPARTMENT, $code );  
    }   
    
    
