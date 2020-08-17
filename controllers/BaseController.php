@@ -42,7 +42,7 @@ class BaseController extends Controller
 
    private $_tbl_SystemCodesName;
    private $_tbl_SystemCodesChildName;
-   
+
     /**
      * {@inheritdoc}
      */
@@ -79,7 +79,8 @@ class BaseController extends Controller
       /**
        *    Capturing the possible post() variables used across all controllers
        **/
-      $this->_data['id']   = $this->_request->post( 'id', '' );
+      $this->_data['id']      = $this->_request->post( 'id',   '' );
+      $this->_data['uuid']    = $this->_request->post( 'uuid', '' );
       
       $this->_data['errors']  = [];   
       $this->_data['success'] = [];

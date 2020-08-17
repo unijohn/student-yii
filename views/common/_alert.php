@@ -28,7 +28,8 @@
             $htmlTagClose  = "</"   . $data['errors'][$key]['htmlTag'] . ">";             
          } 
          
-         $errorName = str_replace( "_", " ", $key );    
+         $errorName = str_replace( "_", " ", $key );
+         $errorName = str_replace( "-", " ", $errorName );
 
          print( $htmlTagOpen . "<strong>" . $errorName . " </strong> " . $data['errors'][$key]['value'] . $htmlTagClose . PHP_EOL);
       }
@@ -53,6 +54,7 @@
          }
          
          $successName = str_replace( "_", " ", $key );
+         $successName = str_replace( "-", " ", $successName );
          
          print( $htmlTagOpen . "<strong>" . $successName . " </strong> " . $data['success'][$key]['value'] . $htmlTagClose . PHP_EOL);
       }

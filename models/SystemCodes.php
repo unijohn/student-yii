@@ -13,7 +13,7 @@ use app\models\SystemCodesChild;
 
 class SystemCodes extends BaseModel
 {
-   private $_changedAttributes;
+   public $_changedAttributes;
 
 
    public function init()
@@ -129,26 +129,6 @@ class SystemCodes extends BaseModel
             'required', 'on' => self::SCENARIO_UPDATE 
          ],
       ];
-   }
-
-    /**
-     * TBD
-     *
-     * @returns array[] attributes updated after save
-     */
-   public function afterSave($insert, $changedAttributes) 
-   {
-      parent::afterSave($insert, $changedAttributes);
-   
-      if(!$insert) 
-      {
-         if( is_null( $this->_changedAttributes ) || empty( $this->_changedAttributes ) )
-            $this->_changedAttributes = $changedAttributes;
-            
-         return $this->_changedAttributes;
-      }
-      
-      return [];
    }
 
 
@@ -357,15 +337,6 @@ class SystemCodes extends BaseModel
             ])
          ->all();
       }      
-      
-/*
-      $query_codes = ( new \yii\db\Query() )
-         ->select([  'sc.id', 'sc.type', 'sc.code', 'sc.description', 'sc.is_active' ])
-         ->from(     $tbl_SystemsCodes       . ' sc' )
-         ->where( 'type !=:type AND id NOT IN ( SELECT child from ' . $tbl_SystemCodesChild .' WHERE parent = :id ) AND sc.is_active =:is_active ' )
-            ->addParams([ ':type' => $tag->type, ':id' => $id, ':is_active' => self::STATUS_ACTIVE ])
-         ->all();
- */
 
       return $query_codes;
    }   

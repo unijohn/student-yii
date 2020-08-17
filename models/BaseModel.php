@@ -46,6 +46,8 @@ class BaseModel extends ActiveRecord
    const SCENARIO_UPDATE   = 'update';   
 
 
+   public $_changedAttributes;
+
    public function init()
    {
       parent::init();
@@ -61,4 +63,24 @@ class BaseModel extends ActiveRecord
          die();
    }
 
+
+    /**
+     * TBD
+     *
+     * @returns array[] attributes updated after save
+     */
+   public function afterSave($insert, $changedAttributes) 
+   {
+      parent::afterSave($insert, $changedAttributes);
+   
+      if(!$insert) 
+      {
+         if( is_null( $this->_changedAttributes ) || empty( $this->_changedAttributes ) )
+            $this->_changedAttributes = $changedAttributes;
+            
+         return $this->_changedAttributes;
+      }
+      
+      return [];
+   }
 }
