@@ -21,14 +21,14 @@
       {
          $htmlTagOpen   = "";
          $htmlTagClose  = "<br />";
-      
-         $errorName = $key;
 
          if( isset( $data['errors'][$key]['htmlTag'] ) && !empty( $data['errors'][$key]['htmlTag'] ) )
          {
             $htmlTagOpen   = "<"    . $data['errors'][$key]['htmlTag'] . ">";
             $htmlTagClose  = "</"   . $data['errors'][$key]['htmlTag'] . ">";             
-         }     
+         } 
+         
+         $errorName = str_replace( "_", " ", $key );    
 
          print( $htmlTagOpen . "<strong>" . $errorName . " </strong> " . $data['errors'][$key]['value'] . $htmlTagClose . PHP_EOL);
       }
@@ -46,15 +46,15 @@
          $htmlTagOpen   = "";
          $htmlTagClose  = "<br />";
       
-         $errorName = $key;
-
          if( isset( $data['success'][$key]['htmlTag'] ) && !empty( $data['success'][$key]['htmlTag'] ) )
          {
             $htmlTagOpen   = "<"    . $data['success'][$key]['htmlTag'] . ">";
             $htmlTagClose  = "</"   . $data['success'][$key]['htmlTag'] . ">";             
          }
          
-         print( $htmlTagOpen . "<strong>" . $errorName . " </strong> " . $data['success'][$key]['value'] . $htmlTagClose . PHP_EOL);
+         $successName = str_replace( "_", " ", $key );
+         
+         print( $htmlTagOpen . "<strong>" . $successName . " </strong> " . $data['success'][$key]['value'] . $htmlTagClose . PHP_EOL);
       }
       
       print( "</div> " . PHP_EOL );      
