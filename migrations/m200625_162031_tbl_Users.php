@@ -61,7 +61,7 @@ class m200625_162031_tbl_Users extends BaseMigration
          $this->createTable(self::getTblUserName(), [
             'id'           => $this->primaryKey(),
             'uuid'         => $this->string(16)->notNull(),
-            'name'         => $this->string(48)->notNull(),
+//            'name'         => $this->string(48)->notNull(),  // Moving this information into its own model
             'is_active'    => $this->integer()->notNull(),
             'auth_key'     => $this->string(32)->notNull(),
             'access_token' => $this->string(32)->notNull(),
@@ -71,81 +71,81 @@ class m200625_162031_tbl_Users extends BaseMigration
          ], $tableOptions);
       }
       
-      $columns = [ 'uuid', 'name', 'is_active', 'auth_key', 'access_token', 'created_at'];
+      $columns = [ 'uuid', 'is_active', 'auth_key', 'access_token', 'created_at'];
 
       $rows = [
          [  
-            'ugadstdt', 'Undergraduate Student', 
+            'ugadstdt',
             self::STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48), 
             \Yii::$app->security->generateRandomString(32), 
             $created_at,
          ],
          [ 
-            'gradstdt', 'Graduate Student',
+            'gradstdt',
             self::STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48), 
             \Yii::$app->security->generateRandomString(32), 
             $created_at,
          ],
          [ 
-            'ugadadvr', 'Undergraduate Advisor',
+            'ugadadvr',
             self::STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48), 
             \Yii::$app->security->generateRandomString(32), 
             $created_at,
          ],
          [ 
-            'ugadadmn', 'Undergraduate Administrator',
+            'ugadadmn',
             self::STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48), 
             \Yii::$app->security->generateRandomString(32), 
             $created_at,
          ],
          [ 
-            'gradadvr', 'Graduate Advisor',
+            'gradadvr',
             self::STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48), 
             \Yii::$app->security->generateRandomString(32), 
             $created_at,
          ],
          [ 
-            'gradadmn', 'Graduate Administrator',
+            'gradadmn', 
             self::STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48), 
             \Yii::$app->security->generateRandomString(32), 
             $created_at,
          ],
          [ 
-            'adminusr', 'Administrative User',
+            'adminusr', 
             self::STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48), 
             \Yii::$app->security->generateRandomString(32), 
             $created_at,
          ],
          [ 
-            'gridview_01', 'Gridview_01',
+            'gridview_01', 
             self::STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48), 
             \Yii::$app->security->generateRandomString(32), 
             $created_at,
          ],    
          [ 
-            'gridview_02', 'Gridview_02',
+            'gridview_02', 
             self::STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48), 
             \Yii::$app->security->generateRandomString(32), 
             $created_at,
          ],    
          [ 
-            'gridview_03', 'Gridview_03',
+            'gridview_03', 
             self::STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48), 
             \Yii::$app->security->generateRandomString(32), 
             $created_at,
          ], 
          [ 
-            'gridview_04', 'Gridview_04',
+            'gridview_04', 
             self::STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48), 
             \Yii::$app->security->generateRandomString(32), 

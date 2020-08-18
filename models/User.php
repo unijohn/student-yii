@@ -148,7 +148,7 @@ class User extends BaseModel implements IdentityInterface
    public function scenarios()
    {
       $scenarios = parent::scenarios();
-      $scenarios[self::SCENARIO_INSERT] = [ 'uuid', 'name', 'is_active', 'auth_key', 'access_token' ];
+      $scenarios[self::SCENARIO_INSERT] = [ 'uuid', 'is_active', 'auth_key', 'access_token' ];
       $scenarios[self::SCENARIO_UPDATE] = [ 'is_active', 'access_token' ];
    
       return $scenarios;
@@ -164,8 +164,6 @@ class User extends BaseModel implements IdentityInterface
          [ 'uuid', 'string', 'min' => 2, 'max' => 16 ],
          [ 'uuid', 'unique' ],
          [ 'uuid', 'default', 'value' => null ],
-         
-         [ 'name', 'string', 'min' => 2, 'max' => 48 ],
 
          ['is_active', 'default', 'value'    => self::STATUS_ACTIVE     ],
          ['is_active', 'integer', 'min'      => self::STATUS_INACTIVE   ],
@@ -224,7 +222,7 @@ class User extends BaseModel implements IdentityInterface
    public static function findIdentity($id)
    {  
       $query_users = (new \yii\db\Query())
-         ->select([ 'id', 'uuid', 'name', 'access_token', 'created_at', 'updated_at' ])
+         ->select([ 'id', 'uuid', 'access_token', 'created_at', 'updated_at' ])
          ->from( User::tableName() )
          ->where( 'id=:id' )
             ->addParams( [':id' => $id] )
@@ -243,7 +241,7 @@ class User extends BaseModel implements IdentityInterface
    public static function findIdentityByAccessToken($token, $type = null)
    {
       $query_users = (new \yii\db\Query())
-         ->select([ 'id', 'uuid', 'name', 'access_token', 'created_at', 'updated_at' ])
+         ->select([ 'id', 'uuid', 'access_token', 'created_at', 'updated_at' ])
          ->from( self::tableName() )
          ->where( 'access_token=:access_token' )
             ->addParams( [':access_token' => $token] )
@@ -262,7 +260,7 @@ class User extends BaseModel implements IdentityInterface
    public static function findByUUID($uuid)
    {        
       $query_users = (new \yii\db\Query())
-         ->select([ 'id', 'uuid', 'name', 'access_token', 'created_at', 'updated_at' ])
+         ->select([ 'id', 'uuid', 'access_token', 'created_at', 'updated_at' ])
          ->from( self::tableName() )
          ->where( 'uuid=:uuid' )
             ->addParams( [':uuid' => $uuid] )
@@ -281,7 +279,7 @@ class User extends BaseModel implements IdentityInterface
    public static function existsUUID($uuid)
    {        
       $query_users = (new \yii\db\Query())
-         ->select([ 'id', 'uuid', 'name', 'access_token', 'created_at', 'updated_at' ])
+         ->select([ 'id', 'uuid', 'access_token', 'created_at', 'updated_at' ])
          ->from( self::tableName() )
          ->where( 'uuid=:uuid' )
             ->addParams( [':uuid' => $uuid] )
@@ -382,8 +380,8 @@ class User extends BaseModel implements IdentityInterface
       $query_users = (new \yii\db\Query())
          ->select([ 'taa.item_name', 'taa.user_id' ])
          ->from(  $tbl_TAA )
-         ->where( 'taa.user_id =:user_id and item_name like :name and deleted_at IS NULL ' )
-            ->addParams( [':user_id' => $id, ':name' => 'Framework-Administrator'] )
+         ->where( 'taa.user_id =:user_id and item_name like :item_name and deleted_at IS NULL ' )
+            ->addParams( [':user_id' => $id, ':item_name' => 'Framework-Administrator'] )
          ->limit(1);
 
       foreach( $query_users->each() as $user_row )

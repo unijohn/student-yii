@@ -71,7 +71,7 @@
                return HTML::a( $data['uuid'], Url::toRoute( ['users/view', 'uuid' => $data['uuid'] ], true) );
             },
          ],
-         'name',
+//         'name',
          
          'created_at:datetime',
          'updated_at:datetime',

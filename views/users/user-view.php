@@ -33,7 +33,7 @@
 <?php
 //   print( "<P> id: " . $model->id . "</p>" );
    print( "<P> UUID: " . $model->uuid . "</p>" );
-   print( "<P> name: " . $model->name . "</p>" );   
+//   print( "<P> name: " . $model->name . "</p>" );   
 //   print( "<P> is_active: " . $model->is_active . "</p>" );
 //   print( "<P> access_token: " . $model->access_token . "</p>" );
 //   print( "<P> created_at: " . $formatter->asDate( $model->created_at, 'MM-dd-yyyy HH:mm:ss' ) . "</p>" );

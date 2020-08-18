@@ -141,7 +141,7 @@ class UsersController extends BaseController
          'SELECT COUNT(*) FROM tbl_Users WHERE id >=:id ',
          [':id' => $params[':id']])->queryScalar();
             
-      $sql  = "SELECT  id, uuid, name, is_active, created_at, updated_at " ;
+      $sql  = "SELECT  id, uuid, is_active, created_at, updated_at " ;
       $sql .= "FROM tbl_Users WHERE id >=:id ";
 
       if( strlen ($this->_data['filterForm']['uuid'] ) > 0 )
@@ -166,11 +166,12 @@ class UsersController extends BaseController
                   'default' => SORT_ASC,
                   'label' => 'UUID',
                ],
+/** 
                'name' => [
                   'default' => SORT_ASC,
                   'label' => 'Name',
                ],
-/**               
+              
                'is_active' => [
                   'default' => SORT_ASC,
                   'label' => 'Status',
@@ -270,7 +271,7 @@ class UsersController extends BaseController
       }
       else
       {
-         $this->_userModel->name       = $this->_userModel->uuid;
+//         $this->_userModel->name       = $this->_userModel->uuid;
          $this->_userModel->is_active  = 1;      
          $this->_userModel->created_at = time();
             
