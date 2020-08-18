@@ -1,231 +1,187 @@
 <?php
 
-use yii\db\Migration;
+namespace app\migrations;
+
 
 /**
  * Class m200702_151044_init_rbac
  */
-class m200702_151044_init_rbac extends Migration
+class m200702_151044_init_rbac extends BaseMigration
 {
     /**
      * {@inheritdoc}
      */
    public function safeUp()
    {    
-      $auth = Yii::$app->authManager;
-
       /**
        *    createPermissions:  systems level
-       **/        
-
-      /**
-       *    SystemID CONSTS
-       **/ 
-      $SYS_FRAMEWORKID        = 1;
-      $SYS_STUDENTID          = 2;
-      $SYS_FACULTYID          = 3;
-      $SYS_ADMINISTRATIONID   = 4;
-
+       **/
 
       $systemsAccess = [
-         '1' => [
-            'id'           => 1,
+         self::SYS_FRAMEWORKID => [
+            'id'           => self::SYS_FRAMEWORKID,
             'key'          => '[Framework]', 
             'name'         => '[Framework]', 
             'description'  => 'Framework selfServe',
          ],      
-         '2' => [ 
-            'id'           => 2,
+         self::SYS_STUDENTID => [ 
+            'id'           => self::SYS_STUDENTID,
             'key'          => '[Student]',
             'name'         => '[Student]', 
             'description'  => 'Student selfServe',
          ],
-         '3' => [ 
-            'id'           => 3,
+         self::SYS_FACULTYID => [ 
+            'id'           => self::SYS_FACULTYID,
             'name'         => '[Faculty]', 
             'key'          => '[Faculty]', 
             'description'  => 'Faculty selfServe',
          ],
-         '4' => [ 
-            'id'           => 4,
+         self::SYS_ADMINISTRATIONID => [ 
+            'id'           => self::SYS_ADMINISTRATIONID,
             'name'         => '[Administration]',
             'key'          => '[Administration]', 
             'description'  => 'Administration selfServe',
          ],
-      ];
-
-
-      /**
-       *    CareerLevelID CONSTS
-       **/ 
-      $CL_UGADID  = 1;
-      $CL_GRADID  = 2;
-      $CL_PHDID   = 3;      
-
+      ];   
       
       $careerLevelAccess = [ 
-         '1' => [ 
-            'id'           => 1,
+         self::CL_UGADID => [ 
+            'id'           => self::CL_UGADID,
             'name'         => '[UGAD]',   
             'key'          => '[UGAD]',
             'description'  => 'Undergraduate Career Level',  
          ],
-         '2' => [
-            'id'           => 2,
+         self::CL_GRADID => [
+            'id'           => self::CL_GRADID,
             'name'         => '[GRAD]',
             'key'          => '[GRAD]',            
             'description'  => 'Graduate Career Level',
          ],
-         '3' => [ 
-            'id'           => 3,
+         self::CL_PHDID => [ 
+            'id'           => self::CL_PHDID,
             'name'         => '[PHD]',
             'key'          => '[PHD]',            
             'description'  => 'Doctorate Career Level',
          ],         
-      ];      
-
+      ];
 
       $departmentAccess = [ 
-         '1' => [ 
-            'id'              => 1,
+         self::DEPT_ACCT => [ 
+            'id'              => self::DEPT_ACCT,
             'key'             => '[ACCT]',
             'name'            => '[ACCT]', 
             'description'     => 'Accounting Department', 
          ],
-         '2' => [ 
-            'id'              => 2,
+         self::DEPT_ECON => [ 
+            'id'              => self::DEPT_ECON,
             'key'             => '[ECON]',            
             'name'            => '[ECON]',  
             'description'     => 'Economics Department',  
          ],
-         '3' => [ 
-            'id'              => 3,
+         self::DEPT_FIN => [ 
+            'id'              => self::DEPT_FIN,
             'key'             => '[FIN]',            
             'name'            => '[FIN]',    
             'description'     => 'Finance Department',    
          ],
-         '4' => [ 
-            'id'              => 4,
+         self::DEPT_BIT => [ 
+            'id'              => self::DEPT_BIT,
             'key'             => '[BIT]',            
             'name'            => '[BIT]',        
             'description'     => 'BIT Department',        
          ],
-         '5' => [ 
-            'id'              => 5,
+         self::DEPT_MGMT => [ 
+            'id'              => self::DEPT_MGMT,
             'key'             => '[MGMT]',            
             'name'            => '[MGMT]', 
             'description'     => 'Management Department', 
          ],
-         '6' => [ 
-            'id'              => 1,
+         self::DEPT_MCSM => [ 
+            'id'              => self::DEPT_MCSM,
             'key'             => '[MCSM]',    
             'name'            => '[MCSM]',       
             'description'     => 'MCSM Department',       
          ],
       ];
-
-
-      /**
-       *    FeatureID CONSTS
-       **/ 
-      $FEAT_PERMIT   = 1;
-      $FEAT_GAAAP    = 2;
-      $FEAT_SYLLA    = 3;    
       
       $featureAccess = [
-         '1' => [ 
-            'id'              => 1,
+         self::FEATURE_PERMIT => [ 
+            'id'              => self::FEATURE_PERMIT,
             'key'             => '[Permit]',            
             'name'            => '[Permit]', 
             'description'     => 'Permit Feature',
          ],
-         '2' => [ 
-            'id'              => 2,
+         self::FEATURE_GAAAP => [ 
+            'id'              => self::FEATURE_GAAAP,
             'key'             => '[GAApp]',            
             'name'            => '[GAApp]', 
             'description'     => 'Graduate Assistant Applications',       
          ],
-         '3' => [ 
-            'id'              => 3,
+         self::FEATURE_SYLLA => [ 
+            'id'              => self::FEATURE_SYLLA,
             'key'             => '[Sylla]',            
             'name'            => '[Sylla]', 
             'description'     => 'Course Syllabi',
          ],
       ]; 
 
-
-      /**
-       *    ActionID CONSTS
-       **/ 
-      $ACT_ACCESS    = 1;
-      $ACT_CREATE    = 2;
-      $ACT_READ      = 3;
-      $ACT_UPDATE    = 4;
-      $ACT_sDELETE   = 5;
-      $ACT_hDELETE   = 6;
-      $ACT_BACKUP    = 7;
-      $ACT_ROLE      = 8;
-      $ACT_SYNCH     = 9;
-      $ACT_MANAGE    = 10;
-   
-      
       $actionAccess = [ 
-         '1' => [ 
-            'id'           => '1',
+         self::ACTION_ACCESS => [ 
+            'id'           => self::ACTION_ACCESS,
             'key'          => '[Access]',
             'name'         => '[Access]', 
             'description'  => '(System) Access Permission',
          ],
-         '2' => [ 
-            'id'           => '2',
+         self::ACTION_CREATE => [ 
+            'id'           => self::ACTION_CREATE,
             'key'          => '[Create]',            
             'name'         => '[Create]', 
             'description'  => 'Create Permission',
          ],
-         '3' => [ 
-            'id'           => '3',
+         self::ACTION_READ => [ 
+            'id'           => self::ACTION_READ,
             'key'          => '[Read]',            
             'name'         => '[Read]', 
             'description'  => 'Read-Only Permission',
          ],
-         '4' => [ 
-            'id'           => '4',
+         self::ACTION_UPDATE => [ 
+            'id'           => self::ACTION_UPDATE,
             'key'          => '[Update]',            
             'name'         => '[Update]', 
             'description'  => 'Update Permission',
          ],
-         '5' => [ 
-            'id'           => '5',
+         self::ACTION_sDELETE => [ 
+            'id'           => self::ACTION_sDELETE,
             'key'          => '[sDelete]',              
             'name'         => '[sDelete]', 
             'description'  => 'Soft-Delete (flag) Permission',
          ],
-         '6' => [ 
-            'id'           => '6',
+         self::ACTION_hDELETE => [ 
+            'id'           => self::ACTION_hDELETE,
             'key'          => '[hDelete]',            
             'name'         => '[hDelete]', 
             'description'  => 'Hard-Delete (row removal) Permission',
          ],
-         '7' => [ 
-            'id'           => '7',
+         self::ACTION_BACKUP => [ 
+            'id'           => self::ACTION_BACKUP,
             'key'          => '[Backup]',            
             'name'         => '[Backup]',
             'description'  => 'Remote Backup Permission',
          ],
-         '8' => [ 
-            'id'           => '8',
+         self::ACTION_ROLE => [ 
+            'id'           => self::ACTION_ROLE,
             'key'          => '[Role]',              
             'name'         => '[Role]',
             'description'  => 'Role Assignment Permission',
          ],
-         '9' => [ 
-            'id'           => '9',
+         self::ACTION_SYNCH => [ 
+            'id'           => self::ACTION_SYNCH,
             'key'          => '[Synch]',            
             'name'         => '[Synch]',
             'description'  => 'Data Warehouse Sync Permission',
          ],
-         '10' => [ 
-            'id'           => '10',
+         self::ACTION_MANAGE => [ 
+            'id'           => self::ACTION_MANAGE,
             'key'          => '[Manage]',            
             'name'         => '[Manage]',
             'description'  => 'System-Feature Management Permission',
@@ -365,10 +321,10 @@ class m200702_151044_init_rbac extends Migration
             $newDescription   .= "-" . $permission['feature']['description'];
          } 
 
-         $newPerm = $auth->createPermission( $newKey  );
+         $newPerm = $this->_auth->createPermission( $newKey  );
          $newPerm->description = $newDescription;
       
-         $auth->add($newPerm);        
+         $this->_auth->add($newPerm);        
          
          $newAuthItem = [
             'key'             => $newKey,
@@ -377,122 +333,109 @@ class m200702_151044_init_rbac extends Migration
          ];  
          
          $permAuthList[$newKey] = $newAuthItem;
-      }    
-
-
-      /**
-       *    ActionID CONSTS
-       **/ 
-      $ROLE_ADMIN          = 1;
-      $ROLE_UGAD_STUDENT   = 2;
-      $ROLE_GRAD_STUDENT   = 3;
-      $ROLE_PHD_STUDENT    = 4;
-      $ROLE_UGAD_ADVISOR   = 5;
-      $ROLE_GRAD_ADVISOR   = 6;
-      $ROLE_PHD_ADVISOR    = 7;
-      
+      }
  
       $roleAccess = [
-         '1' => [
-            'id'              => '1',
+         self::ROLE_ADMIN => [
+            'id'              =>self::ROLE_ADMIN,
             'name'            => 'Framework-Administrator',
             'description'     => 'Framework Administrator (10)',
             'allEverything'   => true,
          ],
-         '2' => [
-            'id'              => '2',
+         self::ROLE_UGAD_STUDENT => [
+            'id'              => self::ROLE_UGAD_STUDENT,
             'name'            => 'Student-Undergraduate',
             'description'     => 'Undergraduate Student (1)',
             'allEverything'   => false,
             'permissions'     => [
          //    2:  Student Self Serve                . 1: Access                         . 1:  Permits
-               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_ACCESS]['key'] . $featureAccess[$FEAT_PERMIT]['key'],
+               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_ACCESS]['key'] . $featureAccess[self::FEATURE_PERMIT]['key'],
 
          //    2:  Student Self Serve                . 1: Access                         . 1:  UGAD
-               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_ACCESS]['key'] . $careerLevelAccess[$CL_UGADID]['key'],
+               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_ACCESS]['key'] . $careerLevelAccess[self::CL_UGADID]['key'],
             ],
          ],        
-         '3' => [
-            'id'              => '3',
+         self::ROLE_GRAD_STUDENT => [
+            'id'              => self::ROLE_GRAD_STUDENT,
             'name'            => 'Student-Graduate',
             'description'     => 'Graduate Student (1)',
             'allEverything'   => false,
             'permissions'     => [
          //    2:  Student Self Serve                . 1: Access                         . 1:  Permits
-               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_ACCESS]['key'] . $featureAccess[$FEAT_PERMIT]['key'],
+               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_ACCESS]['key'] . $featureAccess[self::FEATURE_PERMIT]['key'],
 
          //    2:  Student Self Serve                . 1: Access                         . 2:  GRAD
-               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_ACCESS]['key'] . $careerLevelAccess[$CL_GRADID]['key'],
+               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_ACCESS]['key'] . $careerLevelAccess[self::CL_GRADID]['key'],
             ],
          ],
-         '4' => [
-            'id'              => '4',
+         self::ROLE_PHD_STUDENT => [
+            'id'              => self::ROLE_PHD_STUDENT,
             'name'            => 'Student-Doctorate',
             'description'     => 'Doctorate Student (1)',
             'allEverything'   => false,
             'permissions'     => [
          //    2:  Student Self Serve                . 1: Access                         . 1:  Permits
-               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_ACCESS]['key'] . $featureAccess[$FEAT_PERMIT]['key'],
+               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_ACCESS]['key'] . $featureAccess[self::FEATURE_PERMIT]['key'],
 
          //    2:  Student Self Serve                . 1: Access                         . 3:  PHD
-               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_ACCESS]['key'] . $careerLevelAccess[$CL_PHDID]['key'],            
+               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_ACCESS]['key'] . $careerLevelAccess[self::CL_PHDID]['key'],            
             ],
          ],
-         '5' => [
-            'id'              => '5',
+         self::ROLE_UGAD_ADVISOR => [
+            'id'              => self::ROLE_UGAD_ADVISOR,
             'name'            => 'Academic-Advisor-Undergraduate',
             'description'     => 'Undergraduate Advisor (2)',
             'allEverything'   => false,
             'permissions'     => [
          //    2:  Student Self Serve                . 1: Access                         . 1:  Permits
-               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_ACCESS]['key'] . $featureAccess[$FEAT_PERMIT]['key'],
+               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_ACCESS]['key'] . $featureAccess[self::FEATURE_PERMIT]['key'],
 
          //    2:  Student Self Serve                . 1: Access                         . 1:  UGAD
-               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_ACCESS]['key'] . $careerLevelAccess[$CL_UGADID]['key'],
+               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_ACCESS]['key'] . $careerLevelAccess[self::CL_UGADID]['key'],
                       
          //    2:  Student Self Serve                . 2: Create                         . 1:  UGAD
-               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_CREATE]['key'] . $careerLevelAccess[$CL_UGADID]['key'],
+               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_CREATE]['key'] . $careerLevelAccess[self::CL_UGADID]['key'],
                
          //    2:  Student Self Serve                . 4: Update                         . 1:  UGAD
-               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_UPDATE]['key'] . $careerLevelAccess[$CL_UGADID]['key'],
+               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_UPDATE]['key'] . $careerLevelAccess[self::CL_UGADID]['key'],
             ],
          ],
-         '6' => [
-            'id'              => '6',
+         self::ROLE_GRAD_ADVISOR => [
+            'id'              => self::ROLE_GRAD_ADVISOR,
             'name'            => 'Academic-Advisor-Graduate',
             'description'     => 'Graduate Advisor (2)',
             'allEverything'   => false,
             'permissions'     => [
          //    2:  Student Self Serve                . 1: Access                         . 1:  Permits
-               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_ACCESS]['key'] . $featureAccess[$FEAT_PERMIT]['key'],
+               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_ACCESS]['key'] . $featureAccess[self::FEATURE_PERMIT]['key'],
        
          //    2:  Student Self Serve                . 1:  Access                        . 2:  GRAD
-               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_ACCESS]['key'] . $careerLevelAccess[$CL_GRADID]['key'],
+               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_ACCESS]['key'] . $careerLevelAccess[self::CL_GRADID]['key'],
                
          //    2:  Student Self Serve                . 2: Create                         . 2:  GRAD
-               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_CREATE]['key'] . $careerLevelAccess[$CL_GRADID]['key'],
+               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_CREATE]['key'] . $careerLevelAccess[self::CL_GRADID]['key'],
                
          //    2:  Student Self Serve                . 4: Update                         . 2:  GRAD               
-               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_UPDATE]['key'] . $careerLevelAccess[$CL_GRADID]['key'],               
+               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_UPDATE]['key'] . $careerLevelAccess[self::CL_GRADID]['key'],               
             ],
          ],         
-         '7' => [
-            'id'              => '7',
+         self::ROLE_PHD_ADVISOR => [
+            'id'              => self::ROLE_PHD_ADVISOR,
             'name'            => 'Academic-Advisor-PhD',
             'description'     => 'PhD Advisor (2)',
             'allEverything'   => false,
             'permissions'     => [
          //    2:  Student Self Serve                . 1: Access                         . 1:  Permits
-               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_ACCESS]['key'] . $featureAccess[$FEAT_PERMIT]['key'],
+               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_ACCESS]['key'] . $featureAccess[self::FEATURE_PERMIT]['key'],
        
          //    2:  Student Self Serve                . 1:  Access                        . 3:  PHD
-               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_ACCESS]['key'] . $careerLevelAccess[$CL_PHDID]['key'],
+               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_ACCESS]['key'] . $careerLevelAccess[self::CL_PHDID]['key'],
                
          //    2:  Student Self Serve                . 2: Create                         . 3:  PHD
-               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_CREATE]['key'] . $careerLevelAccess[$CL_PHDID]['key'],
+               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_CREATE]['key'] . $careerLevelAccess[self::CL_PHDID]['key'],
                
          //    2:  Student Self Serve                . 4: Update                         . 3:  PHD
-               $systemsAccess[$SYS_STUDENTID]['key'] . $actionAccess[$ACT_UPDATE]['key'] . $careerLevelAccess[$CL_PHDID]['key'],               
+               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_UPDATE]['key'] . $careerLevelAccess[self::CL_PHDID]['key'],               
             ],
          ], 
       ];
@@ -501,7 +444,7 @@ class m200702_151044_init_rbac extends Migration
       $roleAuthList  = [];    
       foreach( $roleAccess as $role )
       {
-         $roleRole               = $auth->createRole( $role['name'] );         
+         $roleRole               = $this->_auth->createRole( $role['name'] );         
          $roleRole->description  = $role['description'];
 
          $newRoleChild = [
@@ -510,7 +453,7 @@ class m200702_151044_init_rbac extends Migration
          
          $roleAuthList[] = $newRoleChild;
          
-         $auth->add($roleRole);
+         $this->_auth->add($roleRole);
 
          /**
           *    All permissions for all systems, features, careers, departments for this role
@@ -521,7 +464,7 @@ class m200702_151044_init_rbac extends Migration
             {
                foreach( $permAuthList as $permAuth )
                {
-                  $auth->addChild( $roleRole, $permAuth['permission'] );
+                  $this->_auth->addChild( $roleRole, $permAuth['permission'] );
                }
             }
          }
@@ -529,19 +472,19 @@ class m200702_151044_init_rbac extends Migration
          {
             foreach( $role['permissions'] as $permItem )
             {
-               $auth->addChild( $roleRole, $permAuthList[$permItem]['permission'] );
+               $this->_auth->addChild( $roleRole, $permAuthList[$permItem]['permission'] );
             }
          }
       }
 
-      $frameworkRole = $auth->getRole('Framework-Administrator');
+      $frameworkRole = $this->_auth->getRole('Framework-Administrator');
 
-      $auth->assign( $auth->getRole('Framework-Administrator'), 7 );
+      $this->_auth->assign( $this->_auth->getRole('Framework-Administrator'), 7 );
       
-      $auth->assign( $auth->getRole('Student-Undergraduate'),           1 );
-      $auth->assign( $auth->getRole('Student-Graduate'),                2 );
-      $auth->assign( $auth->getRole('Academic-Advisor-Undergraduate'),  3 );
-      $auth->assign( $auth->getRole('Academic-Advisor-Graduate'),       5 ); 
+      $this->_auth->assign( $this->_auth->getRole('Student-Undergraduate'),           1 );
+      $this->_auth->assign( $this->_auth->getRole('Student-Graduate'),                2 );
+      $this->_auth->assign( $this->_auth->getRole('Academic-Advisor-Undergraduate'),  3 );
+      $this->_auth->assign( $this->_auth->getRole('Academic-Advisor-Graduate'),       5 ); 
    }
 
    
@@ -550,12 +493,11 @@ class m200702_151044_init_rbac extends Migration
      */
     public function safeDown()
     {
-//        echo "m200702_151044_init_rbac cannot be reverted.\n";
-
-      $auth = Yii::$app->authManager;
-      $auth->removeAll();
-
-//        return false;
+      /**
+       * The tables used in this migration are found at:  @yii/rbac/migrations/
+       **/
+    
+      $this->_auth->removeAll();
     }
 
     /*

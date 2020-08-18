@@ -1,23 +1,13 @@
 <?php
 
-use yii\db\Migration;
+namespace app\migrations;
+
 
 /**
  * Class m200723_165357_tbl_PermitCodes
  */
-class m200723_165357_tbl_SystemCodes extends Migration
+class m200723_165357_tbl_SystemCodes extends BaseMigration
 {
-   protected function getTableName()
-   {
-      return "{{%tbl_SystemCodes}}";
-   }
-   
-   
-   protected function getCodesChildTableName()
-   {
-      return "{{%tbl_SystemCodesChild}}";
-   }   
-
 
 /**
  *    To Do List (for my scattered mine)
@@ -28,61 +18,6 @@ class m200723_165357_tbl_SystemCodes extends Migration
  *    . Permit Codes Gridview - Search
  *    . Site-wide Role / Permission Logic with [Manage] permission
  **/
- 
-
-   /**
-   * @return bool
-   */
-   protected function isMSSQL()
-   {
-      return $this->db->driverName === 'mssql' || $this->db->driverName === 'sqlsrv' || $this->db->driverName === 'dblib';
-   }
-
-
-   /**
-   * @return bool
-   */   
-   protected function isOracle()
-   {
-      return $this->db->driverName === 'oci';
-   }
-
-
-   /**
-   * @return bool
-   */   
-   protected function isMySQL()
-   {
-      return $this->db->driverName === 'mysql';
-   }
-
-
-   /**
-   * @return bool
-   */   
-   protected function isSQLite()
-   {
-      return strncmp($this->db->getDriverName(), 'sqlite', 6) === 0;
-   }  
-
-
-   /**
-   * @return string
-   */ 
-   protected function buildFkClause($delete = '', $update = '')
-   {
-      if ($this->isMSSQL()) 
-      {
-         return '';
-      }
-      
-      if ($this->isOracle()) 
-      {
-         return ' ' . $delete;
-      }
-      
-      return implode(' ', ['', $delete, $update]);
-   }
 
 
    /**
@@ -90,124 +25,110 @@ class m200723_165357_tbl_SystemCodes extends Migration
    */
    public function safeUp()
    {
-      $TYPE_PERMIT      = 1;
-      $TYPE_DEPARTMENT  = 2;
-      $TYPE_CAREERLEVEL = 3;
-      $TYPE_MASTERS     = 4;
+      $created_at = $this->_time;
+      $updated_at = $this->_time;
 
-      $STATUS_INACTIVE  = 0;
-      $STATUS_ACTIVE    = 1;
-      
-      $STATUS_HIDDEN    = 0;
-      $STATUS_VISIBLE   = 1;  
-
-      $tableOptions     = null;
-
-      if ($this->isMySQL()) 
+      if ($this->_db->getTableSchema(self::getTblSystemCodesName(), true) === null) 
       {
-         // http://stackoverflow.com/questions/766809/whats-the-difference-between-utf8-general-ci-and-utf8-unicode-ci
-         $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
-      }          
+         $this->createTable(self::getTblSystemCodesName(), [
+            'id'              => $this->primaryKey(),      
+            'type'            => $this->integer()->notNull(),
+            'code'            => $this->string(8)->notNull(),
+            'description'     => $this->string(64),         
+            'is_active'       => $this->integer()->notNull(),
+            'is_hidden'       => $this->integer()->notNull(),         
+            'created_at'      => $this->integer()->notNull(),
+            'updated_at'      => $this->integer()->notNull(),         
+            'deleted_at'      => $this->integer(),
+         ], $this->_tableOptions);
+         
+         $this->createIndex('idx_SystemCodes_type', self::getTblSystemCodesName(), 'type');
+         $this->createIndex('idx_SystemCodes_code', self::getTblSystemCodesName(), 'code');
+      }
 
-      $time       = time();
-      $created_at = $time;
-      $updated_at = $time;      
-
-      $this->createTable($this->getTableName(), [
-         'id'              => $this->primaryKey(),      
-         'type'            => $this->integer()->notNull(),
-         'code'            => $this->string(8)->notNull(),
-         'description'     => $this->string(64),         
-         'is_active'       => $this->integer()->notNull(),
-         'is_hidden'       => $this->integer()->notNull(),         
-         'created_at'      => $this->integer()->notNull(),
-         'updated_at'      => $this->integer()->notNull(),         
-         'deleted_at'      => $this->integer(),
-      ], $tableOptions);
-
-      $this->createTable($this->getCodesChildTableName(), [
-         'parent'          => $this->integer()->notNull(),
-         'child'           => $this->integer()->notNull(),
-         'created_at'      => $this->integer()->notNull(),
-         'PRIMARY KEY ([[parent]], [[child]])',
-         'FOREIGN KEY ([[parent]]) REFERENCES ' . $this->getTableName() . ' ([[id]])' .
-         $this->buildFkClause('ON DELETE CASCADE', 'ON UPDATE CASCADE'),
-         'FOREIGN KEY ([[child]]) REFERENCES ' . $this->getTableName()  . ' ([[id]])' .
-         $this->buildFkClause('ON DELETE CASCADE', 'ON UPDATE CASCADE'),
-      ], $tableOptions);
-      
-      $this->createIndex('idx_SystemCodes_type', $this->getTableName(), 'type');
-      $this->createIndex('idx_SystemCodes_code', $this->getTableName(), 'code');      
+      if ($this->_db->getTableSchema(self::getTblSystemCodesChildName(), true) === null) 
+      {
+         $this->createTable(self::getTblSystemCodesChildName(), [
+            'parent'          => $this->integer()->notNull(),
+            'child'           => $this->integer()->notNull(),
+            'created_at'      => $this->integer()->notNull(),
+            'PRIMARY KEY ([[parent]], [[child]])',
+            'FOREIGN KEY ([[parent]]) REFERENCES ' . self::getTblSystemCodesName() . ' ([[id]])' .
+            $this->buildFkClause('ON DELETE CASCADE', 'ON UPDATE CASCADE'),
+            'FOREIGN KEY ([[child]]) REFERENCES ' . self::getTblSystemCodesName()  . ' ([[id]])' .
+            $this->buildFkClause('ON DELETE CASCADE', 'ON UPDATE CASCADE'),
+         ], $this->_tableOptions);
+      }
 
       $codeColumns      = [ 'type', 'code', 'description', 'is_active', 'is_hidden', 'created_at', 'updated_at' ];
 
       $permitRows = [
          [  
-            $TYPE_PERMIT, 'A', 'ISSUED', $STATUS_ACTIVE, $STATUS_VISIBLE,
+            self::TYPE_PERMIT, 'A', 'ISSUED', self::STATUS_ACTIVE, self::STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_PERMIT, 'B', 'PRIOR_ISSUED', $STATUS_ACTIVE, $STATUS_VISIBLE,
+            self::TYPE_PERMIT, 'B', 'PRIOR_ISSUED', self::STATUS_ACTIVE, self::STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_PERMIT, 'C', 'DENIED_PREREQ', $STATUS_ACTIVE, $STATUS_VISIBLE,
+            self::TYPE_PERMIT, 'C', 'DENIED_PREREQ', self::STATUS_ACTIVE, self::STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_PERMIT, 'D', 'DENIED_UPPER', $STATUS_ACTIVE, $STATUS_VISIBLE,
+            self::TYPE_PERMIT, 'D', 'DENIED_UPPER', self::STATUS_ACTIVE, self::STATUS_VISIBLE,
             $created_at, $updated_at,
          ],       
          [  
-            $TYPE_PERMIT, 'E', 'DENIED_MAX_UPPER', $STATUS_ACTIVE, $STATUS_VISIBLE,
+            self::TYPE_PERMIT, 'E', 'DENIED_MAX_UPPER', self::STATUS_ACTIVE, self::STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_PERMIT, 'F', 'TRANSCRIPT_REQ', $STATUS_ACTIVE, $STATUS_VISIBLE,
+            self::TYPE_PERMIT, 'F', 'TRANSCRIPT_REQ', self::STATUS_ACTIVE, self::STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_PERMIT, 'G', 'DENIED_FULL', $STATUS_ACTIVE, $STATUS_VISIBLE,
+            self::TYPE_PERMIT, 'G', 'DENIED_FULL', self::STATUS_ACTIVE, self::STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_PERMIT, 'H', 'DENIED_NOT_NEEDED', $STATUS_ACTIVE, $STATUS_VISIBLE,
+            self::TYPE_PERMIT, 'H', 'DENIED_NOT_NEEDED', self::STATUS_ACTIVE, self::STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_PERMIT, 'I', 'DENIED_HONORS_REQ', $STATUS_ACTIVE, $STATUS_VISIBLE,
+            self::TYPE_PERMIT, 'I', 'DENIED_HONORS_REQ', self::STATUS_ACTIVE, self::STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_PERMIT, 'J', '', $STATUS_INACTIVE, $STATUS_HIDDEN,
+            self::TYPE_PERMIT, 'J', '', self::STATUS_INACTIVE, self::STATUS_HIDDEN,
             $created_at, $updated_at,
          ], 
          [  
-            $TYPE_PERMIT, 'K', 'CODE_CHANGED', $STATUS_ACTIVE, $STATUS_VISIBLE,
+            self::TYPE_PERMIT, 'K', 'CODE_CHANGED', self::STATUS_ACTIVE, self::STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_PERMIT, 'L', '', $STATUS_INACTIVE, $STATUS_HIDDEN,
+            self::TYPE_PERMIT, 'L', '', self::STATUS_INACTIVE, self::STATUS_HIDDEN,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_PERMIT, 'M', 'DENIED_NOT_OFFERED', $STATUS_ACTIVE, $STATUS_VISIBLE,
+            self::TYPE_PERMIT, 'M', 'DENIED_NOT_OFFERED', self::STATUS_ACTIVE, self::STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_PERMIT, 'N', 'DENIED_DEADLINE', $STATUS_ACTIVE, $STATUS_VISIBLE,
+            self::TYPE_PERMIT, 'N', 'DENIED_DEADLINE', self::STATUS_ACTIVE, self::STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_PERMIT, 'P', 'REQUEST_PENDING', $STATUS_ACTIVE, $STATUS_VISIBLE,
+            self::TYPE_PERMIT, 'P', 'REQUEST_PENDING', self::STATUS_ACTIVE, self::STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_PERMIT, 'Q', 'ISSUED_ANY_SECTION', $STATUS_ACTIVE, $STATUS_VISIBLE,
+            self::TYPE_PERMIT, 'Q', 'ISSUED_ANY_SECTION', self::STATUS_ACTIVE, self::STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_PERMIT, 'Z', 'PENDING', $STATUS_ACTIVE, $STATUS_VISIBLE,
+            self::TYPE_PERMIT, 'Z', 'PENDING', self::STATUS_ACTIVE, self::STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
       ];
@@ -215,27 +136,27 @@ class m200723_165357_tbl_SystemCodes extends Migration
       
       $departmentRows = [
          [  
-            $TYPE_DEPARTMENT, 'ACCT', 'Accounting', $STATUS_ACTIVE, $STATUS_VISIBLE,
+            self::TYPE_DEPARTMENT, 'ACCT', 'Accounting', self::STATUS_ACTIVE, self::STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_DEPARTMENT, 'BITM', 'Bit_Info_Tech', $STATUS_ACTIVE, $STATUS_VISIBLE,
+            self::TYPE_DEPARTMENT, 'BITM', 'Bit_Info_Tech', self::STATUS_ACTIVE, self::STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_DEPARTMENT, 'ECON', 'Economics', $STATUS_ACTIVE, $STATUS_VISIBLE,
+            self::TYPE_DEPARTMENT, 'ECON', 'Economics', self::STATUS_ACTIVE, self::STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_DEPARTMENT, 'FIR', 'Finance', $STATUS_ACTIVE, $STATUS_VISIBLE,
+            self::TYPE_DEPARTMENT, 'FIR', 'Finance', self::STATUS_ACTIVE, self::STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_DEPARTMENT, 'MCSM', 'Mktg_Supply_Chain', $STATUS_ACTIVE, $STATUS_VISIBLE,
+            self::TYPE_DEPARTMENT, 'MCSM', 'Mktg_Supply_Chain', self::STATUS_ACTIVE, self::STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_DEPARTMENT, 'MGMT', 'Management', $STATUS_ACTIVE, $STATUS_VISIBLE,
+            self::TYPE_DEPARTMENT, 'MGMT', 'Management', self::STATUS_ACTIVE, self::STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
       ];
@@ -243,15 +164,15 @@ class m200723_165357_tbl_SystemCodes extends Migration
 
       $careerLevelRows = [
          [  
-            $TYPE_CAREERLEVEL, 'UGAD', 'Undergraduate',  $STATUS_ACTIVE, $STATUS_VISIBLE,
+            self::TYPE_CAREERLEVEL, 'UGAD', 'Undergraduate',  self::STATUS_ACTIVE, self::STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_CAREERLEVEL, 'GRAD', 'Graduate',       $STATUS_ACTIVE, $STATUS_VISIBLE,
+            self::TYPE_CAREERLEVEL, 'GRAD', 'Graduate',       self::STATUS_ACTIVE, self::STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_CAREERLEVEL, 'PHD',  'Doctorate',      $STATUS_ACTIVE, $STATUS_VISIBLE,
+            self::TYPE_CAREERLEVEL, 'PHD',  'Doctorate',      self::STATUS_ACTIVE, self::STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
       ];
@@ -259,31 +180,31 @@ class m200723_165357_tbl_SystemCodes extends Migration
       
       $mastersRows = [
          [  
-            $TYPE_MASTERS, 'MAECON',   'MA_ECON',     $STATUS_ACTIVE, $STATUS_VISIBLE,
+            self::TYPE_MASTERS, 'MAECON',   'MA_ECON',     self::STATUS_ACTIVE, self::STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_MASTERS, 'MSACCT',   'MS_ACCT',     $STATUS_ACTIVE, $STATUS_VISIBLE,
+            self::TYPE_MASTERS, 'MSACCT',   'MS_ACCT',     self::STATUS_ACTIVE, self::STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_MASTERS, 'MSIS',     'MS_IS',       $STATUS_ACTIVE, $STATUS_VISIBLE,
+            self::TYPE_MASTERS, 'MSIS',     'MS_IS',       self::STATUS_ACTIVE, self::STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_MASTERS, 'MSBAFIR',  'MSBA_FIR',    $STATUS_ACTIVE, $STATUS_VISIBLE,
+            self::TYPE_MASTERS, 'MSBAFIR',  'MSBA_FIR',    self::STATUS_ACTIVE, self::STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_MASTERS, 'EMBA',     'EXEC_MBA',    $STATUS_ACTIVE, $STATUS_VISIBLE,
+            self::TYPE_MASTERS, 'EMBA',     'EXEC_MBA',    self::STATUS_ACTIVE, self::STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_MASTERS, 'PMBA',     'PROF_MBA',    $STATUS_ACTIVE, $STATUS_VISIBLE,
+            self::TYPE_MASTERS, 'PMBA',     'PROF_MBA',    self::STATUS_ACTIVE, self::STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
          [  
-            $TYPE_MASTERS, 'OMBA',     'ONLINE_MBA',  $STATUS_ACTIVE, $STATUS_VISIBLE,
+            self::TYPE_MASTERS, 'OMBA',     'ONLINE_MBA',  self::STATUS_ACTIVE, self::STATUS_VISIBLE,
             $created_at, $updated_at,
          ],
       ];  
@@ -308,12 +229,12 @@ class m200723_165357_tbl_SystemCodes extends Migration
          [17, 24, $created_at], [17, 25, $created_at], [17, 26, $created_at],
       ];
       
-      $this->batchInsert( $this->getTableName(), $codeColumns, $permitRows      );
-      $this->batchInsert( $this->getTableName(), $codeColumns, $departmentRows  );
-      $this->batchInsert( $this->getTableName(), $codeColumns, $careerLevelRows );
-      $this->batchInsert( $this->getTableName(), $codeColumns, $mastersRows     );
+      $this->batchInsert( self::getTblSystemCodesName(), $codeColumns, $permitRows      );
+      $this->batchInsert( self::getTblSystemCodesName(), $codeColumns, $departmentRows  );
+      $this->batchInsert( self::getTblSystemCodesName(), $codeColumns, $careerLevelRows );
+      $this->batchInsert( self::getTblSystemCodesName(), $codeColumns, $mastersRows     );
       
-      $this->batchInsert( $this->getCodesChildTableName(), $codeChildColumns, $permitChildRows     );      
+      $this->batchInsert( self::getTblSystemCodesChildName(), $codeChildColumns, $permitChildRows );      
    }
 
 
@@ -324,15 +245,8 @@ class m200723_165357_tbl_SystemCodes extends Migration
     {
 //        echo "m200723_165357_tbl_PermitCodes cannot be reverted.\n";
 
-      if (Yii::$app->db->getTableSchema($this->getTableName(), true) !== null) 
-      {
-         $this->dropTable($this->getTableName());
-      }
-
-      if (Yii::$app->db->getTableSchema($this->getCodesChildTableName(), true) !== null) 
-      {
-         $this->dropTable($this->getCodesChildTableName());
-      }  
+        $this->forceDropTable( self::getTblSystemCodesName()      );
+        $this->forceDropTable( self::getTblSystemCodesChildName() );
 
 //        return false;
     }

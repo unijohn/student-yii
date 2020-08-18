@@ -1,8 +1,7 @@
 <?php
 
-use yii\base\InvalidConfigException;
-use yii\db\Migration;
-use yii\rbac\DbManager;
+namespace app\migrations;
+
 
 /**
  * Class m200625_162031_tbl_Users
@@ -10,71 +9,8 @@ use yii\rbac\DbManager;
  * NOTE: Run this command to initate the AuthManager tables
  *   yii migrate --migrationPath=@yii/rbac/migrations/
  */
-class m200625_162031_tbl_Users extends Migration
+class m200625_162031_tbl_Users extends BaseMigration
 {
-   protected function getUserTableName()
-   {
-      return "{{%tbl_Users}}";
-   }
-
-
-   protected function getTempRoleTableName()
-   {
-      return "{{%tbl_TempAuthAssignment}}";
-   }   
-
-
-   /**
-   * @throws yii\base\InvalidConfigException
-   * @return DbManager
-   */
-   protected function getAuthManager()
-   {
-      $authManager = Yii::$app->getAuthManager();
-      if (!$authManager instanceof DbManager) 
-      {
-         throw new InvalidConfigException('You should configure "authManager" component to use database before executing this migration.');
-      }
-      
-      return $authManager;
-   }
-
-
-   /**
-   * @return bool
-   */
-   protected function isMSSQL()
-   {
-      return $this->db->driverName === 'mssql' || $this->db->driverName === 'sqlsrv' || $this->db->driverName === 'dblib';
-   }
-
-
-   /**
-   * @return bool
-   */   
-   protected function isOracle()
-   {
-      return $this->db->driverName === 'oci';
-   }
-
-
-   /**
-   * @return bool
-   */   
-   protected function isMySQL()
-   {
-      return $this->db->driverName === 'mysql';
-   }
-
-
-   /**
-   * @return bool
-   */   
-   protected function isSQLite()
-   {
-      return strncmp($this->db->getDriverName(), 'sqlite', 6) === 0;
-   }  
-
 
 /**
         $this->createTable($authManager->assignmentTable, [
@@ -92,10 +28,7 @@ class m200625_162031_tbl_Users extends Migration
    * {@inheritdoc}
    */
    public function safeUp()
-   {
-      $STATUS_INACTIVE   = 0;
-      $STATUS_ACTIVE     = 1;
-   
+   {  
       $authManager = $this->getAuthManager();
 
       $tableOptions = null;
@@ -109,112 +42,118 @@ class m200625_162031_tbl_Users extends Migration
       
       $created_at = $time;
       
-      $this->createTable($this->getTempRoleTableName(), [
-         'id'              => $this->primaryKey(),      
-         'item_name'       => $this->string(64)->notNull(),
-         'temp_item_name'  => $this->string(64)->notNull(),         
-         'user_id'         => $this->string(64)->notNull(),
-         'created_at'      => $this->integer()->notNull(),
-         'deleted_at'      => $this->integer(),                 
-      ], $tableOptions);
-      
-      $this->createIndex('idx_TempAuthAssignment_user_id', $this->getTempRoleTableName(), 'user_id');      
-      
-      $this->createTable($this->getUserTableName(), [
-         'id'           => $this->primaryKey(),
-         'uuid'         => $this->string(16)->notNull(),
-         'name'         => $this->string(48)->notNull(),
-         'is_active'    => $this->integer()->notNull(),
-         'auth_key'     => $this->string(32)->notNull(),
-         'access_token' => $this->string(32)->notNull(),
+      if ($this->_db->getTableSchema(self::getTblTempAuthAssignmentName(), true) === null) 
+      {
+         $this->createTable( self::getTblTempAuthAssignmentName(), [
+            'id'              => $this->primaryKey(),      
+            'item_name'       => $this->string(64)->notNull(),
+            'temp_item_name'  => $this->string(64)->notNull(),         
+            'user_id'         => $this->string(64)->notNull(),
+            'created_at'      => $this->integer()->notNull(),
+            'deleted_at'      => $this->integer(),                 
+         ], $tableOptions);
          
-         'created_at'   => $this->datetime()->notNull(),
-         'updated_at'   => $this->datetime(),
-      ], $tableOptions);
+         $this->createIndex('idx_TempAuthAssignment_user_id', self::getTblTempAuthAssignmentName(), 'user_id');
+      }         
+
+      if ($this->_db->getTableSchema(self::getTblUserName(), true) === null) 
+      {
+         $this->createTable(self::getTblUserName(), [
+            'id'           => $this->primaryKey(),
+            'uuid'         => $this->string(16)->notNull(),
+            'name'         => $this->string(48)->notNull(),
+            'is_active'    => $this->integer()->notNull(),
+            'auth_key'     => $this->string(32)->notNull(),
+            'access_token' => $this->string(32)->notNull(),
+            
+            'created_at'   => $this->datetime()->notNull(),
+            'updated_at'   => $this->datetime(),
+         ], $tableOptions);
+      }
       
       $columns = [ 'uuid', 'name', 'is_active', 'auth_key', 'access_token', 'created_at'];
 
       $rows = [
          [  
             'ugadstdt', 'Undergraduate Student', 
-            $STATUS_ACTIVE,
+            self::STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48), 
             \Yii::$app->security->generateRandomString(32), 
             $created_at,
          ],
          [ 
             'gradstdt', 'Graduate Student',
-            $STATUS_ACTIVE,
+            self::STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48), 
             \Yii::$app->security->generateRandomString(32), 
             $created_at,
          ],
          [ 
             'ugadadvr', 'Undergraduate Advisor',
-            $STATUS_ACTIVE,
+            self::STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48), 
             \Yii::$app->security->generateRandomString(32), 
             $created_at,
          ],
          [ 
             'ugadadmn', 'Undergraduate Administrator',
-            $STATUS_ACTIVE,
+            self::STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48), 
             \Yii::$app->security->generateRandomString(32), 
             $created_at,
          ],
          [ 
             'gradadvr', 'Graduate Advisor',
-            $STATUS_ACTIVE,
+            self::STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48), 
             \Yii::$app->security->generateRandomString(32), 
             $created_at,
          ],
          [ 
             'gradadmn', 'Graduate Administrator',
-            $STATUS_ACTIVE,
+            self::STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48), 
             \Yii::$app->security->generateRandomString(32), 
             $created_at,
          ],
          [ 
             'adminusr', 'Administrative User',
-            $STATUS_ACTIVE,
+            self::STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48), 
             \Yii::$app->security->generateRandomString(32), 
             $created_at,
          ],
          [ 
             'gridview_01', 'Gridview_01',
-            $STATUS_ACTIVE,
+            self::STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48), 
             \Yii::$app->security->generateRandomString(32), 
             $created_at,
          ],    
          [ 
             'gridview_02', 'Gridview_02',
-            $STATUS_ACTIVE,
+            self::STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48), 
             \Yii::$app->security->generateRandomString(32), 
             $created_at,
          ],    
          [ 
             'gridview_03', 'Gridview_03',
-            $STATUS_ACTIVE,
+            self::STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48), 
             \Yii::$app->security->generateRandomString(32), 
             $created_at,
          ], 
          [ 
             'gridview_04', 'Gridview_04',
-            $STATUS_ACTIVE,
+            self::STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48), 
             \Yii::$app->security->generateRandomString(32), 
             $created_at,
          ],                                           
       ];
       
-      $this->batchInsert( $this->getUserTableName(), $columns, $rows );        
+      $this->batchInsert( self::getTblUserName(), $columns, $rows );        
     }
 
     /**
@@ -224,22 +163,9 @@ class m200625_162031_tbl_Users extends Migration
     {
 //        echo "m200625_162031_tbl_user cannot be reverted.\n";
 
-        $this->dropTable($this->getTempRoleTableName());
-        $this->dropTable($this->getUserTableName());        
+        $this->forceDropTable( self::getTblTempAuthAssignmentName()  );
+        $this->forceDropTable( self::getTblUserName()                );
 
 //        return false;
-    }
-
-    protected function buildFkClause($delete = '', $update = '')
-    {
-        if ($this->isMSSQL()) {
-            return '';
-        }
-
-        if ($this->isOracle()) {
-            return ' ' . $delete;
-        }
-
-        return implode(' ', ['', $delete, $update]);
     }
 }
