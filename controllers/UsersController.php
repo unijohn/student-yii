@@ -75,9 +75,9 @@ class UsersController extends BaseController
          $this->_data['uuid']   = ArrayHelper::getValue($this->_request->post(), 'User.uuid',   '' ); 
       }           
       
-      $this->_data['filterForm']['uuid']              = ArrayHelper::getValue($this->_request->get(), 'User.uuid',      '');
-      $this->_data['filterForm']['is_active']         = ArrayHelper::getValue($this->_request->get(), 'User.is_active', -1);
-      $this->_data['filterForm']['paginationCount']   = $this->_request->get( 'pagination_count', 10 );
+      $this->_data['filterForm']['uuid']              = ArrayHelper::getValue($this->_request->get(), 'User.uuid',            '');
+      $this->_data['filterForm']['is_active']         = ArrayHelper::getValue($this->_request->get(), 'User.is_active',       -1);
+      $this->_data['filterForm']['paginationCount']   = ArrayHelper::getValue($this->_request->get(), 'User.pagination_count', 10);
       
       $this->_data['post']['addRole']        = $this->_request->post('addRole',        '' );
       $this->_data['post']['dropRole']       = $this->_request->post('dropRole',       '' );
