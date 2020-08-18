@@ -21,6 +21,15 @@ use app\models\SystemCodesChild;
 
 class ManageAdminController extends BaseController
 {
+   const dropDownOptsKeys  = [ 'tags_permits' ];
+   
+   const dropDownOpts      = [
+      'tags_permits' => [
+         '-1'  => 'Select Permit Tag',
+      ],
+   ];
+
+
    private $_codesModel;
    private $_codeChildModel;
    private $_tagsModel;
@@ -65,8 +74,9 @@ class ManageAdminController extends BaseController
       
       $this->_data['filterForm']['code']              = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.code',      '');
       $this->_data['filterForm']['is_active']         = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.is_active', -1);
-      $this->_data['filterForm']['is_hidden']         = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.is_hidden', -1);      
-      $this->_data['filterForm']['paginationCount']   = $this->_request->get( 'pagination_count', 10 );
+      $this->_data['filterForm']['is_hidden']         = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.is_hidden', -1); 
+      $this->_data['filterForm']['is_tagged']         = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.is_tagged', -1);  
+      $this->_data['filterForm']['pagination_count']  = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.pagination_count', 10);      
        
       $this->_data['tagid']            = $this->_request->post('tagid',    '' );      
       $this->_data['addTag']           = $this->_request->post('addTag',   '' );
@@ -131,31 +141,61 @@ class ManageAdminController extends BaseController
    private function getPermitGridView()
    {
       $params[':type']  = 1; 
-      
+
+/**
       $count = $this->_db->createCommand(
          "SELECT COUNT(*) FROM " . $this->_tbl_SystemCodes . " WHERE type =:type ",
          [':type' => $params[':type']])->queryScalar();
-           
-      $sql  = "SELECT  id, code, description, is_active, is_hidden, created_at, updated_at " ;
-      $sql .= "FROM " . $this->_tbl_SystemCodes . " WHERE type =:type ";
+ **/
+ 
+      $sql  = "SELECT  sc.id, sc.code, sc.description, sc.is_active, sc.is_hidden, sc.created_at, sc.updated_at " ;
+      $sql .= "FROM " . $this->_tbl_SystemCodes . " AS sc ";
+
+      $sql_count = "SELECT COUNT(*) FROM " . $this->_tbl_SystemCodes . " AS sc ";
+
+      if(  $this->_data['filterForm']['is_tagged'] > -1 && strlen(  $this->_data['filterForm']['is_tagged'] ) > 0 )
+      {
+         $sql       .= "INNER JOIN " . $this->_tbl_SystemCodesChild . " AS scc ON scc.parent = sc.id ";
+         $sql_count .= "INNER JOIN " . $this->_tbl_SystemCodesChild . " AS scc ON scc.parent = sc.id ";         
+      }
+      
+      $sql        .= "WHERE type =:type ";
+      $sql_count  .= "WHERE type =:type ";
       
       if(  $this->_data['filterForm']['is_active'] > -1 && strlen(  $this->_data['filterForm']['is_active'] ) > 0 )
       {
-         $sql .= "AND is_active =:is_active ";
+         $sql       .= "AND is_active =:is_active ";
+         $sql_count .= "AND is_active =:is_active ";
+
          $params[':is_active']   = $this->_data['filterForm']['is_active'];         
       }
       
       if(  $this->_data['filterForm']['is_hidden'] > -1 && strlen(  $this->_data['filterForm']['is_hidden'] ) > 0 )
       {
-         $sql .= "AND is_hidden =:is_hidden ";
+         $sql        .= "AND is_hidden =:is_hidden ";
+         $sql_count  .= "AND is_hidden =:is_hidden ";
+
          $params[':is_hidden']   = $this->_data['filterForm']['is_hidden'];         
       }
       
       if(  $this->_data['filterForm']['code'] > -1 && strlen(  $this->_data['filterForm']['code'] ) > 0 )
       {
-         $sql .= "AND code =:code ";
+         $sql        .= "AND code =:code ";
+         $sql_count  .= "AND code =:code ";
+
          $params[':code']   = $this->_data['filterForm']['code'];         
       }
+      
+      if(  $this->_data['filterForm']['is_tagged'] > -1 && strlen(  $this->_data['filterForm']['is_tagged'] ) > 0 )
+      {
+         $sql        .= "AND scc.child =:is_tagged ";
+         $sql_count  .= "AND scc.child =:is_tagged ";
+
+         $params[':is_tagged']   = $this->_data['filterForm']['is_tagged'];         
+      }
+      
+      $count = $this->_db->createCommand( $sql_count, $params )->queryScalar();
+      
       
       $PermitSDP = new SqlDataProvider ([
          'sql'          => $sql,
@@ -183,7 +223,7 @@ class ManageAdminController extends BaseController
             ],
          ],         
          'pagination' => [
-            'pageSize' => $this->_data['filterForm']['paginationCount'],
+            'pageSize' => $this->_data['filterForm']['pagination_count'],
          ],
       ]); 
       
@@ -473,5 +513,44 @@ die();
             'tags'         => $this->_tagsModel,
             'allTags'      => $this->_codeChildModel,
       ]);  
-   } 
+   }
+   
+
+   /**
+    * TBD
+    *
+    * @return (TBD)
+    */
+   public static function getDropDownOpts( $key = "", $prompt = false)
+   {
+      $dropDownOpts     = self::dropDownOpts;   
+   
+      if( !isset( $key ) || empty( $key ) )
+      {
+         return $dropDownOpts;
+      }
+      else if( !in_array( $key, self::dropDownOptsKeys ) )
+      {
+         return $dropDownOpts;
+      }
+      
+      if( $key === "tags_permits" )
+      {
+         $tagsModel  = SystemCodes::findPermitTagOptions();
+         
+         foreach( $tagsModel as $tag_row )
+         {
+            $dropDownOpts[$key][$tag_row->id] = $tag_row->code . ": " . $tag_row->description;
+         }         
+      
+      }
+      
+      if( !$prompt )
+      {
+         if( isset( $dropDownOpts[$key] ) )
+            unset( $dropDownOpts[$key][-1] );            
+      }
+
+      return $dropDownOpts[$key];
+   }
 }

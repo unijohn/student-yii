@@ -238,7 +238,7 @@ class SystemCodes extends BaseModel
      *
      * @returns model filtered by all entries that are not TYPE_PERMIT
      */
-   public static function findPermitTagOptions( $id = -1 )
+   public static function findPermitTagOptions()
    {
       return SystemCodes::find()
          ->where([ '!=', 'type',  self::TYPE_PERMIT ])

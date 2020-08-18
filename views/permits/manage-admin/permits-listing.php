@@ -32,11 +32,8 @@
                <h2>Find Permits</h2>
                <div id='permits-search-form'>      
                   <?= $this->render('_permits-search', [
-                     'model'     => $model, 
-                     'code'      => $data['filterForm']['code'],
-                     'is_active' => $data['filterForm']['is_active'], 
-                     'is_hidden' => $data['filterForm']['is_hidden'], 
-                     'pagination_count' => $data['filterForm']['paginationCount'] 
+                     'model'        => $model, 
+                     'filterForm'   => $data['filterForm'],
                   ]); ?>      
                </div>
             </div>
