@@ -59,6 +59,18 @@ class BaseMigration extends Migration
    const TYPE_DEPARTMENT      = 2;
    const TYPE_CAREERLEVEL     = 3;
    const TYPE_MASTERS         = 4;
+   
+   const CITIZEN_US_NO        = 0;
+   const CITIZEN_US_YES       = 1;
+   
+   const CITIZEN_OTHER_NO     = 0;
+   const CITIZEN_OTHER_YES    = 0;   
+   
+   const VISA_NO              = 0;
+   const VISA_F1              = 1;   
+   const VISA_F2              = 2;
+   const VISA_F3              = 3;
+   
 
    const tbl_YiiNames  = [ 
       'auth_assignment',
@@ -76,6 +88,7 @@ class BaseMigration extends Migration
       'tbl_SystemCodesChild',
       'tbl_TempAuthAssignment',
       'tbl_Users',
+      'tbl_UsersPersonal',
    ];
 
    public $_auth;
@@ -140,6 +153,12 @@ class BaseMigration extends Migration
    static function getTblUserName()
    {
       return self::getWorkDeskTableName(5);
+   }   
+
+
+   static function getTblUserPersonalName()
+   {
+      return self::getWorkDeskTableName(6);
    }   
 
 

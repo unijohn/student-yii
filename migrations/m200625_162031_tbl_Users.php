@@ -23,24 +23,12 @@ class m200625_162031_tbl_Users extends BaseMigration
         ], $tableOptions);
   **/
 
-
    /**
    * {@inheritdoc}
    */
    public function safeUp()
-   {  
-      $authManager = $this->getAuthManager();
-
-      $tableOptions = null;
-      if ($this->isMySQL()) 
-      {
-         // http://stackoverflow.com/questions/766809/whats-the-difference-between-utf8-general-ci-and-utf8-unicode-ci
-         $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
-      }        
-
-      $time = time();
-      
-      $created_at = $time;
+   {      
+      $created_at = $this->_time;
       
       if ($this->_db->getTableSchema(self::getTblTempAuthAssignmentName(), true) === null) 
       {
@@ -51,7 +39,7 @@ class m200625_162031_tbl_Users extends BaseMigration
             'user_id'         => $this->string(64)->notNull(),
             'created_at'      => $this->integer()->notNull(),
             'deleted_at'      => $this->integer(),                 
-         ], $tableOptions);
+         ], $this->_tableOptions);
          
          $this->createIndex('idx_TempAuthAssignment_user_id', self::getTblTempAuthAssignmentName(), 'user_id');
       }         
@@ -68,7 +56,7 @@ class m200625_162031_tbl_Users extends BaseMigration
             
             'created_at'   => $this->datetime()->notNull(),
             'updated_at'   => $this->datetime(),
-         ], $tableOptions);
+         ], $this->_tableOptions);
       }
       
       $columns = [ 'uuid', 'is_active', 'auth_key', 'access_token', 'created_at'];
