@@ -15,7 +15,12 @@ use yii\widgets\ActiveForm;
         'method' => 'post',
     ]); ?>
 
-    <?=  $form->field($model, 'uuid') ?>
+    <?=  $form->field($model, 'uuid')->textInput(
+         [
+            'class'  => 'form-control',
+            'style'  => 'width: 60%;float:right;',
+         ])
+    ?>   
 
     <div class="form-group">
         <?= Html::submitButton('Add User',      ['class' => 'btn btn-primary',   'id' => 'addUserBtn',      'name' => 'User[addUser]',    'value' => 'addUser'    ]) ?>

@@ -16,13 +16,33 @@ use app\controllers\UsersController;
    
 ?>
 
+<style>
+.inline-label {
+    white-space: nowrap;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    float:left;  
+}
+</style>
+
 <div class="users-search">
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
         'method' => 'get',
     ]); ?>
-
-    <?=  $form->field($model, 'uuid') ?>
+    
+   <div class="form-group field-code">
+      <label class="control-label" for="User[uuid]">UUID</label>
+      <?= Html::input('text', 'User[uuid]', $filterForm['uuid'], 
+         [
+            'id'     => 'uuid', 
+            'class'  => 'form-control',
+            'style'  => 'width: 60%;float:right;', 
+         ]) 
+      ?>   
+      <div class="help-block"></div>
+   </div>
          
    <div class="form-group field-is_active">
    <label class="control-label" for="pagination_count">Is Active</label>
@@ -31,6 +51,7 @@ use app\controllers\UsersController;
          [
             'id'     => 'is_active',
             'class'  => 'form-control',
+            'style'  => 'width: 60%;float:right;', 
          ]) 
       ?>
       <div class="help-block"></div>
@@ -43,6 +64,7 @@ use app\controllers\UsersController;
          [
             'id'     => 'pagination_count',
             'class'  => 'form-control',
+            'style'  => 'width: 60%;float:right;', 
          ]) 
       ?>
       <div class="help-block"></div>
