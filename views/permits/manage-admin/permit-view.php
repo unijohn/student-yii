@@ -51,13 +51,25 @@
 
          <div class="form-group field-code">
             <label class="control-label" for="SystemCodes[code]">Code</label>
-            <?= Html::input('text', 'SystemCodes[code]', $model->code, ['id' => 'code', 'class' => 'form-control']) ?>
+            <?= Html::input('text', 'SystemCodes[code]', $model->code, 
+               [
+                  'id'     => 'code', 
+                  'class'  => 'form-control',
+                  'style'  => 'width: 80%;float:right;'
+               ]) 
+            ?>
             <div class="help-block"></div>
          </div>
          
          <div class="form-group field-description">
             <label class="control-label" for="SystemCodes[description]">Description</label>
-            <?= Html::input('text', 'SystemCodes[description]', $model->description, ['id' => 'description', 'class' => 'form-control']) ?>   
+            <?= Html::input('text', 'SystemCodes[description]', $model->description, 
+               [
+                  'id'     => 'description', 
+                  'class'  => 'form-control',
+                  'style'  => 'width: 80%;float:right;'
+               ]) 
+            ?>   
             <div class="help-block"></div>
          </div>
             
@@ -68,6 +80,7 @@
                [
                   'id'     => 'is_active',
                   'class'  => 'form-control',
+                  'style'  => 'width: 80%;float:right;',
                ]) 
             ?>
             <div class="help-block"></div>
@@ -80,6 +93,7 @@
                [
                   'id'     => 'is_hidden',
                   'class'  => 'form-control',
+                  'style'  => 'width: 80%;float:right;',
                ]) 
             ?>
             <div class="help-block"></div>
