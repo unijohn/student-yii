@@ -64,7 +64,7 @@ class BaseMigration extends Migration
    const CITIZEN_US_YES       = 1;
    
    const CITIZEN_OTHER_NO     = 0;
-   const CITIZEN_OTHER_YES    = 0;   
+   const CITIZEN_OTHER_YES    = 1;   
    
    const VISA_NO              = 0;
    const VISA_F1              = 1;   

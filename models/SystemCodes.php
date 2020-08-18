@@ -206,6 +206,12 @@ class SystemCodes extends BaseModel
     /**
      * TBD
      *
+     * Note:   If sc2 is Inactive, it will disappear from its code assignments
+     *         FIR.MSBAFIR == Inactive:  Tag will not appear to be removed on FIR code.
+     *
+     * Suggestion:   Add a "Show Hidden and/or Inactive Tags" on 'parent' code
+     *               FIR.show_all_tags == MSBAFIR which is set to Hidden & Inactive
+     *
      * @param integer Row $id value for code entry
      * @returns model || false if $id is invalid
      */
@@ -225,7 +231,7 @@ class SystemCodes extends BaseModel
          ->innerJoin( $tbl_SystemCodesChild,       $tbl_SystemCodesChild . '.parent = sc.id' )
          ->innerJoin( $tbl_SystemsCodes . ' sc2',  $tbl_SystemCodesChild . '.child = sc2.id' )
          ->where(['sc.id' => $id ])
-         ->andWhere([ 'sc.is_active'   => self::STATUS_ACTIVE ])
+         //->andWhere([ 'sc.is_active'   => self::STATUS_ACTIVE ])
          ->andWhere([ 'sc2.is_active'  => self::STATUS_ACTIVE ])
          ->all();
 

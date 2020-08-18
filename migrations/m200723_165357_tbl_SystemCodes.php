@@ -12,10 +12,10 @@ class m200723_165357_tbl_SystemCodes extends BaseMigration
 /**
  *    To Do List (for my scattered mine)
  *    . Feature Management Logic
- *    . SystemsCodeChild Many-to-Many method(s)
- *    . Add/Remove Tags for System Codes
- *    . Permit Codes Gridview
- *    . Permit Codes Gridview - Search
+ *    x SystemsCodeChild Many-to-Many method(s)
+ *    x Add/Remove Tags for System Codes
+ *    x Permit Codes Gridview
+ *    x Permit Codes Gridview - Search
  *    . Site-wide Role / Permission Logic with [Manage] permission
  **/
 

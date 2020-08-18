@@ -25,6 +25,7 @@ $codeType   = CodesController::getDropDownOpts( 'type', true );
                'id'     => 'type', 
                'class'  => 'form-control',
                'style'  => 'width: 60%;float:right;', 
+               'value'  => $filterForm['type'],
             ] 
          ) 
     ?>

@@ -3,9 +3,7 @@
 namespace app\models;
 
 use Yii;
-use yii\base\model;
 use yii\behaviors\TimestampBehavior;
-use yii\db\ActiveRecord;
 use yii\rbac\DbManager;
 use yii\web\IdentityInterface;
 
@@ -16,6 +14,7 @@ use app\models\BaseModel;
 use app\models\AuthAssignment;
 use app\models\AuthItem;
 use app\models\TempAuthAssignment;
+use app\models\UsersPersonal;
 
 
 //class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
@@ -358,6 +357,10 @@ class User extends BaseModel implements IdentityInterface
       return $this->hasMany(AuthAssignment::className(), [ 'user_id' => 'id' ] );
    }
 
+   public function getPersonalInformation()
+   {
+      return $this->hasOne(UsersPersonal::className(), [ 'uuid' => 'uuid' ] );
+   }
 
 /**
  *

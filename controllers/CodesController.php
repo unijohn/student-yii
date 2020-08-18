@@ -118,6 +118,8 @@ class CodesController extends BaseController
       {
          $this->_data['filterForm']['type'] = $this->_data['SystemCodes']['type'];
       }
+      
+      //self::debug( $this->_data['SystemCodes']['type'] );
    }   
 
 
@@ -299,16 +301,12 @@ class CodesController extends BaseController
    public function actionAdd()
    {
       $this->_dataProvider = $this->getCodesGridView();    
-      
-      $this->_systemCodes->type        = $this->_data['SystemCodes']['type'];
-      $this->_systemCodes->code        = $this->_data['SystemCodes']['code']; 
-      $this->_systemCodes->description = $this->_data['SystemCodes']['description']; 
 
       $exitEarly = false;
 
       if( isset( $this->_data['SystemCodes']['insert'] ) && !empty( $this->_data['SystemCodes']['insert'] ) )
       {
-         if( $this->_systemCodes->type < 1 )
+         if( $this->_data['SystemCodes']['type'] < 1 )
          {
             $this->_data['errors']['Add System Code'] = [
                'value'     => "was unsuccessful",
@@ -323,7 +321,7 @@ class CodesController extends BaseController
             $exitEarly = true;
          }
 
-         if( !isset( $this->_systemCodes->code ) || empty( $this->_systemCodes->code ) )
+         if( empty( $this->_data['SystemCodes']['code'] ) )
          {
             $this->_data['errors']['Add System Code'] = [
                'value'     => "was unsuccessful",
@@ -338,7 +336,7 @@ class CodesController extends BaseController
             $exitEarly = true;
          }
       
-         if( !isset( $this->_systemCodes->description ) || empty( $this->_systemCodes->description ) )
+         if( empty( $this->_data['SystemCodes']['description'] ) )
          {
             $this->_data['errors']['Add System Code'] = [
                'value'     => "was unsuccessful",
@@ -364,7 +362,11 @@ class CodesController extends BaseController
       }
 
       $idExists = SystemCodes::existsSystemCode( $this->_systemCodes->type, $this->_systemCodes->code  );         
-      
+
+      $this->_systemCodes->type        = $this->_data['SystemCodes']['type'];
+      $this->_systemCodes->code        = $this->_data['SystemCodes']['code']; 
+      $this->_systemCodes->description = $this->_data['SystemCodes']['description']; 
+
       if( $idExists )
       {
          if( isset( $this->_data['SystemCodes']['insert'] ) && !empty( $this->_data['SystemCodes']['insert'] ) )
