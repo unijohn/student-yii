@@ -52,19 +52,22 @@
          <div class="form-group field-code">
             <label class="control-label" for="SystemCodes[code]">Code</label>
             <?= Html::input(
-     'text',
-     'SystemCodes[code]',
-     $model->code,
-     [
-                  'id'     => 'code',
-                  'class'  => 'form-control',
-                  'style'  => 'width: 80%;float:right;'
-               ]
- )
-            ?>
+                'text',
+                'SystemCodes[code]',
+                $model->code,
+                [
+                    'id'     => 'code',
+                    'class'  => 'form-control',
+                    'style'  => 'width: 80%;float:right;'
+                ]
+            )
+            ?>   
             <div class="help-block"></div>
          </div>
          
+php-cs-fixer fix views/ -v --rules='{"method_argument_space": false}'
+         
+       
          <div class="form-group field-description">
             <label class="control-label" for="SystemCodes[description]">Description</label>
             <?= Html::input(
@@ -72,10 +75,10 @@
                 'SystemCodes[description]',
                 $model->description,
                 [
-                  'id'     => 'description',
-                  'class'  => 'form-control',
-                  'style'  => 'width: 80%;float:right;'
-               ]
+                    'id'     => 'description',
+                    'class'  => 'form-control',
+                    'style'  => 'width: 80%;float:right;'
+                ]
             )
             ?>   
             <div class="help-block"></div>
@@ -88,10 +91,10 @@
                 $model->is_active,
                 $isActive,
                 [
-                  'id'     => 'is_active',
-                  'class'  => 'form-control',
-                  'style'  => 'width: 80%;float:right;',
-               ]
+                    'id'     => 'is_active',
+                    'class'  => 'form-control',
+                    'style'  => 'width: 80%;float:right;',
+                ]
             )
             ?>
             <div class="help-block"></div>
@@ -104,10 +107,10 @@
                 $model->is_hidden,
                 $isHidden,
                 [
-                  'id'     => 'is_hidden',
-                  'class'  => 'form-control',
-                  'style'  => 'width: 80%;float:right;',
-               ]
+                    'id'     => 'is_hidden',
+                    'class'  => 'form-control',
+                    'style'  => 'width: 80%;float:right;',
+                ]
             )
             ?>
             <div class="help-block"></div>
@@ -126,12 +129,16 @@
          </div>
     
          <div class="form-group">
-            <?= Html::submitButton('Save Changes', [
-               'class'  => 'btn btn-primary',
-               'id'     => 'savePermitBtn',
-               'name'   => 'Permit[savePermit]',
-               'value'  => 'savePermit'
-            ]) ?>
+            <?= Html::submitButton(
+                'Save Changes',
+                [
+                   'class'  => 'btn btn-primary',
+                   'id'     => 'savePermitBtn',
+                   'name'   => 'Permit[savePermit]',
+                   'value'  => 'savePermit'
+                ]
+            )
+            ?>
          </div>
          
          <?php ActiveForm::end(); ?> 

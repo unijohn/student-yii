@@ -52,7 +52,7 @@
             "php-cs-fixer fix controllers/ -v",
             "php-cs-fixer fix models/ -v",
             "php-cs-fixer fix migrations/ -v",
-            "php-cs-fixer fix views/ -v"
+            "php-cs-fixer fix views/ --rules=-method_argument_space -v"
         ],
         "ci-php-cs-fixer-dry": [
             "php-cs-fixer fix controllers/ --dry-run -v",
