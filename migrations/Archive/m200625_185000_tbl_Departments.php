@@ -15,15 +15,15 @@ class m200625_185000_tbl_Departments extends Migration
         $this->createTable('tbl_Departments', [
             'id'     => $this->primaryKey(),
             'code' => $this->string(4)->notNull(),
-            'name' => $this->string(48)->notNull(),         
+            'name' => $this->string(48)->notNull(),
             
             'created_at' => $this->datetime()->notNull(),
             'updated_at' => $this->datetime(),
         ]);
         
-         $columns = [ 'code', 'name', 'created_at'];
+        $columns = [ 'code', 'name', 'created_at'];
         
-         $rows = [
+        $rows = [
             [ 'ACCT',   'Accounting',           date("Y-m-d H:i:s") ],
             [ 'MKTG',   'Marketing',            date("Y-m-d H:i:s") ],
             [ 'MGMT',   'Management',           date("Y-m-d H:i:s") ],
@@ -33,7 +33,7 @@ class m200625_185000_tbl_Departments extends Migration
                         
          ];
                 
-        $this->batchInsert( 'tbl_Departments', $columns, $rows );
+        $this->batchInsert('tbl_Departments', $columns, $rows);
     }
 
     /**

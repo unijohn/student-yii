@@ -2,7 +2,6 @@
 
 namespace app\migrations;
 
-
 /**
  * Class m200625_162031_tbl_Users
  *
@@ -23,30 +22,28 @@ class m200625_162031_tbl_Users extends BaseMigration
         ], $tableOptions);
   **/
 
-   /**
-   * {@inheritdoc}
-   */
-   public function safeUp()
-   {      
-      $created_at = $this->_time;
+    /**
+    * {@inheritdoc}
+    */
+    public function safeUp()
+    {
+        $created_at = $this->_time;
       
-      if ($this->_db->getTableSchema(self::getTblTempAuthAssignmentName(), true) === null) 
-      {
-         $this->createTable( self::getTblTempAuthAssignmentName(), [
-            'id'              => $this->primaryKey(),      
+        if ($this->_db->getTableSchema(self::getTblTempAuthAssignmentName(), true) === null) {
+            $this->createTable(self::getTblTempAuthAssignmentName(), [
+            'id'              => $this->primaryKey(),
             'item_name'       => $this->string(64)->notNull(),
-            'temp_item_name'  => $this->string(64)->notNull(),         
+            'temp_item_name'  => $this->string(64)->notNull(),
             'user_id'         => $this->string(64)->notNull(),
             'created_at'      => $this->integer()->notNull(),
-            'deleted_at'      => $this->integer(),                 
+            'deleted_at'      => $this->integer(),
          ], $this->_tableOptions);
          
-         $this->createIndex('idx_TempAuthAssignment_user_id', self::getTblTempAuthAssignmentName(), 'user_id');
-      }         
+            $this->createIndex('idx_TempAuthAssignment_user_id', self::getTblTempAuthAssignmentName(), 'user_id');
+        }
 
-      if ($this->_db->getTableSchema(self::getTblUserName(), true) === null) 
-      {
-         $this->createTable(self::getTblUserName(), [
+        if ($this->_db->getTableSchema(self::getTblUserName(), true) === null) {
+            $this->createTable(self::getTblUserName(), [
             'id'           => $this->primaryKey(),
             'uuid'         => $this->string(16)->notNull(),
 //            'name'         => $this->string(48)->notNull(),  // Moving this information into its own model
@@ -57,91 +54,91 @@ class m200625_162031_tbl_Users extends BaseMigration
             'created_at'   => $this->datetime()->notNull(),
             'updated_at'   => $this->datetime(),
          ], $this->_tableOptions);
-      }
+        }
       
-      $columns = [ 'uuid', 'is_active', 'auth_key', 'access_token', 'created_at'];
+        $columns = [ 'uuid', 'is_active', 'auth_key', 'access_token', 'created_at'];
 
-      $rows = [
-         [  
+        $rows = [
+         [
             'ugadstdt',
             self::STATUS_ACTIVE,
-            \Yii::$app->security->generateRandomString(48), 
-            \Yii::$app->security->generateRandomString(32), 
+            \Yii::$app->security->generateRandomString(48),
+            \Yii::$app->security->generateRandomString(32),
             $created_at,
          ],
-         [ 
+         [
             'gradstdt',
             self::STATUS_ACTIVE,
-            \Yii::$app->security->generateRandomString(48), 
-            \Yii::$app->security->generateRandomString(32), 
+            \Yii::$app->security->generateRandomString(48),
+            \Yii::$app->security->generateRandomString(32),
             $created_at,
          ],
-         [ 
+         [
             'ugadadvr',
             self::STATUS_ACTIVE,
-            \Yii::$app->security->generateRandomString(48), 
-            \Yii::$app->security->generateRandomString(32), 
+            \Yii::$app->security->generateRandomString(48),
+            \Yii::$app->security->generateRandomString(32),
             $created_at,
          ],
-         [ 
+         [
             'ugadadmn',
             self::STATUS_ACTIVE,
-            \Yii::$app->security->generateRandomString(48), 
-            \Yii::$app->security->generateRandomString(32), 
+            \Yii::$app->security->generateRandomString(48),
+            \Yii::$app->security->generateRandomString(32),
             $created_at,
          ],
-         [ 
+         [
             'gradadvr',
             self::STATUS_ACTIVE,
-            \Yii::$app->security->generateRandomString(48), 
-            \Yii::$app->security->generateRandomString(32), 
+            \Yii::$app->security->generateRandomString(48),
+            \Yii::$app->security->generateRandomString(32),
             $created_at,
          ],
-         [ 
-            'gradadmn', 
+         [
+            'gradadmn',
             self::STATUS_ACTIVE,
-            \Yii::$app->security->generateRandomString(48), 
-            \Yii::$app->security->generateRandomString(32), 
+            \Yii::$app->security->generateRandomString(48),
+            \Yii::$app->security->generateRandomString(32),
             $created_at,
          ],
-         [ 
-            'adminusr', 
+         [
+            'adminusr',
             self::STATUS_ACTIVE,
-            \Yii::$app->security->generateRandomString(48), 
-            \Yii::$app->security->generateRandomString(32), 
+            \Yii::$app->security->generateRandomString(48),
+            \Yii::$app->security->generateRandomString(32),
             $created_at,
          ],
-         [ 
-            'gridview_01', 
+         [
+            'gridview_01',
             self::STATUS_ACTIVE,
-            \Yii::$app->security->generateRandomString(48), 
-            \Yii::$app->security->generateRandomString(32), 
+            \Yii::$app->security->generateRandomString(48),
+            \Yii::$app->security->generateRandomString(32),
             $created_at,
-         ],    
-         [ 
-            'gridview_02', 
+         ],
+         [
+            'gridview_02',
             self::STATUS_ACTIVE,
-            \Yii::$app->security->generateRandomString(48), 
-            \Yii::$app->security->generateRandomString(32), 
+            \Yii::$app->security->generateRandomString(48),
+            \Yii::$app->security->generateRandomString(32),
             $created_at,
-         ],    
-         [ 
-            'gridview_03', 
+         ],
+         [
+            'gridview_03',
             self::STATUS_ACTIVE,
-            \Yii::$app->security->generateRandomString(48), 
-            \Yii::$app->security->generateRandomString(32), 
+            \Yii::$app->security->generateRandomString(48),
+            \Yii::$app->security->generateRandomString(32),
             $created_at,
-         ], 
-         [ 
-            'gridview_04', 
+         ],
+         [
+            'gridview_04',
             self::STATUS_ACTIVE,
-            \Yii::$app->security->generateRandomString(48), 
-            \Yii::$app->security->generateRandomString(32), 
+            \Yii::$app->security->generateRandomString(48),
+            \Yii::$app->security->generateRandomString(32),
             $created_at,
-         ],                                           
+         ],
       ];
       
-      $this->batchInsert( self::getTblUserName(), $columns, $rows );        
+        $this->batchInsert(self::getTblUserName(), $columns, $rows);
     }
 
     /**
@@ -151,8 +148,8 @@ class m200625_162031_tbl_Users extends BaseMigration
     {
 //        echo "m200625_162031_tbl_user cannot be reverted.\n";
 
-        $this->forceDropTable( self::getTblTempAuthAssignmentName()  );
-        $this->forceDropTable( self::getTblUserName()                );
+        $this->forceDropTable(self::getTblTempAuthAssignmentName());
+        $this->forceDropTable(self::getTblUserName());
 
 //        return false;
     }

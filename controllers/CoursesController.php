@@ -19,198 +19,190 @@ use app\models\Courses;
 use app\models\CoursesCodesChild;
 use app\models\SystemCodes;
 
-
 class CoursesController extends BaseController
 {
-   private $_coursesModel;
-   private $_coursesChildModel;
+    private $_coursesModel;
+    private $_coursesChildModel;
    
-   private $_codesModel;
+    private $_codesModel;
 
-   private $_tagsModel;
+    private $_tagsModel;
 
-   private $_tbl_SystemCodes;
-   private $_tbl_CoursesCodesChild;   
+    private $_tbl_SystemCodes;
+    private $_tbl_CoursesCodesChild;
 
     /**
      * {@inheritdoc}
      */
-   public function init()
-   {
-      parent::init();
+    public function init()
+    {
+        parent::init();
       
-      $this->_coursesModel          = new Courses();
-      $this->_coursesChildModel     = new CoursesCodesChild();
+        $this->_coursesModel          = new Courses();
+        $this->_coursesChildModel     = new CoursesCodesChild();
       
-      $this->_codesModel            = new SystemCodes();
+        $this->_codesModel            = new SystemCodes();
 
-      $this->_tbl_SystemCodes       = SystemCodes::tableName();
-      $this->_tbl_CoursesCodesChild = CoursesCodesChild::tableName();
+        $this->_tbl_SystemCodes       = SystemCodes::tableName();
+        $this->_tbl_CoursesCodesChild = CoursesCodesChild::tableName();
       
-      /**
-       *    Capturing the possible post() variables used in this controller
-       *
-       *    $this->_data['id'] ( post() ) is set in BaseController.  If it isn't set,
-       *    we check to see if there is a get() version of it.
-       **/
+        /**
+         *    Capturing the possible post() variables used in this controller
+         *
+         *    $this->_data['id'] ( post() ) is set in BaseController.  If it isn't set,
+         *    we check to see if there is a get() version of it.
+         **/
       
-      if( strlen( $this->_data['id'] ) < 1 )
-      {
-         $this->_data['id']     = $this->_request->get('id', ''); 
-      }
+        if (strlen($this->_data['id']) < 1) {
+            $this->_data['id']     = $this->_request->get('id', '');
+        }
       
-      if( strlen( $this->_data['id'] ) > 0 )
-      {
-         $this->_coursesModel = Courses::find()
+        if (strlen($this->_data['id']) > 0) {
+            $this->_coursesModel = Courses::find()
             ->where(['id' => $this->_data['id'] ])
             ->limit(1)->one();
             
-         $this->_tagsModel          = CoursesCodesChild::findTagsById( $this->_data['id'] );
-         $this->_coursesChildModel  = SystemCodes::findUnassignedTagOptionsForCourses( $this->_data['id']);
+            $this->_tagsModel          = CoursesCodesChild::findTagsById($this->_data['id']);
+            $this->_coursesChildModel  = SystemCodes::findUnassignedTagOptionsForCourses($this->_data['id']);
          
-//         $this->debug( $this->_tagsModel, false );  
-//         $this->debug( $this->_coursesChildModel, true );           
-      }
+//         $this->debug( $this->_tagsModel, false );
+//         $this->debug( $this->_coursesChildModel, true );
+        }
 
-      $this->_data['filterForm']['subject_area']      = ArrayHelper::getValue($this->_request->get(), 'Courses.subject_area',    '');
-      $this->_data['filterForm']['course_number']     = ArrayHelper::getValue($this->_request->get(), 'Courses.course_number',   '');      
-      $this->_data['filterForm']['is_active']         = ArrayHelper::getValue($this->_request->get(), 'Courses.is_active',       -1);
-      $this->_data['filterForm']['is_hidden']         = ArrayHelper::getValue($this->_request->get(), 'Courses.is_hidden',       -1);      
-      $this->_data['filterForm']['paginationCount']   = $this->_request->get( 'pagination_count', 25 );
+        $this->_data['filterForm']['subject_area']      = ArrayHelper::getValue($this->_request->get(), 'Courses.subject_area', '');
+        $this->_data['filterForm']['course_number']     = ArrayHelper::getValue($this->_request->get(), 'Courses.course_number', '');
+        $this->_data['filterForm']['is_active']         = ArrayHelper::getValue($this->_request->get(), 'Courses.is_active', -1);
+        $this->_data['filterForm']['is_hidden']         = ArrayHelper::getValue($this->_request->get(), 'Courses.is_hidden', -1);
+        $this->_data['filterForm']['paginationCount']   = $this->_request->get('pagination_count', 25);
  
-      $this->_data['tagid']            = $this->_request->post('tagid',    '' );      
-      $this->_data['addTag']           = $this->_request->post('addTag',   '' );
-      $this->_data['dropTag']          = $this->_request->post('dropTag',  '' );     
+        $this->_data['tagid']            = $this->_request->post('tagid', '');
+        $this->_data['addTag']           = $this->_request->post('addTag', '');
+        $this->_data['dropTag']          = $this->_request->post('dropTag', '');
  
-      $this->_data['addCourse']        = ArrayHelper::getValue($this->_request->post(), 'Course.addCourse',    '' );
-      $this->_data['saveCourse']       = ArrayHelper::getValue($this->_request->post(), 'Course.saveCourse',   '' );
+        $this->_data['addCourse']        = ArrayHelper::getValue($this->_request->post(), 'Course.addCourse', '');
+        $this->_data['saveCourse']       = ArrayHelper::getValue($this->_request->post(), 'Course.saveCourse', '');
       
-      $this->_data['Courses']['id']             = ArrayHelper::getValue($this->_request->post(),   'Courses.id',              '');
-      $this->_data['Courses']['subject_area']   = ArrayHelper::getValue($this->_request->post(),   'Courses.subject_area',    '');
-      $this->_data['Courses']['course_number']  = ArrayHelper::getValue($this->_request->post(),   'Courses.course_number',   '');
-      $this->_data['Courses']['section_number'] = ArrayHelper::getValue($this->_request->post(),   'Courses.section_number',  '');      
-      $this->_data['Courses']['is_active']      = ArrayHelper::getValue($this->_request->post(),   'Courses.is_active',       -1);
-      $this->_data['Courses']['is_hidden']      = ArrayHelper::getValue($this->_request->post(),   'Courses.is_hidden',       -1);    
+        $this->_data['Courses']['id']             = ArrayHelper::getValue($this->_request->post(), 'Courses.id', '');
+        $this->_data['Courses']['subject_area']   = ArrayHelper::getValue($this->_request->post(), 'Courses.subject_area', '');
+        $this->_data['Courses']['course_number']  = ArrayHelper::getValue($this->_request->post(), 'Courses.course_number', '');
+        $this->_data['Courses']['section_number'] = ArrayHelper::getValue($this->_request->post(), 'Courses.section_number', '');
+        $this->_data['Courses']['is_active']      = ArrayHelper::getValue($this->_request->post(), 'Courses.is_active', -1);
+        $this->_data['Courses']['is_hidden']      = ArrayHelper::getValue($this->_request->post(), 'Courses.is_hidden', -1);
       
-      /**
-       *    if inserting a new record, set the filter to that new record's type as a UX feature
-       **/  
-      if( isset( $this->_data['Courses']['subject_area'] ) && !empty( $this->_data['Courses']['subject_area'] ) )
-      {
-         $this->_data['filterForm']['subject_area'] = $this->_data['Courses']['subject_area'];
-      }        
-   }   
+        /**
+         *    if inserting a new record, set the filter to that new record's type as a UX feature
+         **/
+        if (isset($this->_data['Courses']['subject_area']) && !empty($this->_data['Courses']['subject_area'])) {
+            $this->_data['filterForm']['subject_area'] = $this->_data['Courses']['subject_area'];
+        }
+    }
 
 
     /**
      * {@inheritdoc}
      */
-/**      
-    public function behaviors()
-    {   
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout'],
-                'rules' => [
-                    [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
+    /**
+        public function behaviors()
+        {
+            return [
+                'access' => [
+                    'class' => AccessControl::className(),
+                    'only' => ['logout'],
+                    'rules' => [
+                        [
+                            'actions' => ['logout'],
+                            'allow' => true,
+                            'roles' => ['@'],
+                        ],
                     ],
                 ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
+                'verbs' => [
+                    'class' => VerbFilter::className(),
+                    'actions' => [
+                        'logout' => ['post'],
+                    ],
                 ],
-            ],
-        ];
-    }
- **/    
+            ];
+        }
+     **/
 
 
-   /**
-   * @inheritdoc
-   */
-   public function actions()
-   {
-      $actions = parent::actions();
+    /**
+    * @inheritdoc
+    */
+    public function actions()
+    {
+        $actions = parent::actions();
    
-      return $actions;
-   }     
+        return $actions;
+    }
 
 
-   /**
-    * Centralizing the query for building the User GridView
-    *
-    * @return SqlDataProvider
-    */ 
-   private function getCoursesGridView()
-   {
-      $tableNm = Courses::tableName();
+    /**
+     * Centralizing the query for building the User GridView
+     *
+     * @return SqlDataProvider
+     */
+    private function getCoursesGridView()
+    {
+        $tableNm = Courses::tableName();
       
-      $params  = [];
+        $params  = [];
       
 //      $params[':table_name']  = Courses::tableName();
-//      $params[':id']          = 1;     
+//      $params[':id']          = 1;
 
-      $sql  = "SELECT  id, subject_area, course_number, section_number, is_active, is_hidden, created_at, updated_at " ;
-      $sql .= "FROM " . $tableNm . " WHERE length(id) > 0 ";
+        $sql  = "SELECT  id, subject_area, course_number, section_number, is_active, is_hidden, created_at, updated_at " ;
+        $sql .= "FROM " . $tableNm . " WHERE length(id) > 0 ";
 
-      $countSQL  = "SELECT COUNT(*) " ;
-      $countSQL .= "FROM " . $tableNm . " WHERE length(id) > 0 ";
+        $countSQL  = "SELECT COUNT(*) " ;
+        $countSQL .= "FROM " . $tableNm . " WHERE length(id) > 0 ";
 
-      if( strlen ($this->_data['filterForm']['subject_area'] ) > 0 )
-      {
-         $andWhere = "AND subject_area LIKE :subject_area ";
+        if (strlen($this->_data['filterForm']['subject_area']) > 0) {
+            $andWhere = "AND subject_area LIKE :subject_area ";
       
-         $sql        .= $andWhere;
-         $countSQL   .= $andWhere;
+            $sql        .= $andWhere;
+            $countSQL   .= $andWhere;
          
-         $params[':subject_area'] = '%' . $this->_data['filterForm']['subject_area'] . '%';      
-      }
+            $params[':subject_area'] = '%' . $this->_data['filterForm']['subject_area'] . '%';
+        }
       
-      if( strlen ($this->_data['filterForm']['course_number'] ) > 0 )
-      {
-         $andWhere = "AND course_number LIKE :course_number ";
+        if (strlen($this->_data['filterForm']['course_number']) > 0) {
+            $andWhere = "AND course_number LIKE :course_number ";
       
-         $sql        .= $andWhere;
-         $countSQL   .= $andWhere;
+            $sql        .= $andWhere;
+            $countSQL   .= $andWhere;
          
-         $params[':course_number'] = '%' . $this->_data['filterForm']['course_number'] . '%';      
-      }
+            $params[':course_number'] = '%' . $this->_data['filterForm']['course_number'] . '%';
+        }
       
-      if(  $this->_data['filterForm']['is_active'] > -1 && strlen(  $this->_data['filterForm']['is_active'] ) > 0 )
-      {
-         $andWhere = "AND is_active =:is_active ";
+        if ($this->_data['filterForm']['is_active'] > -1 && strlen($this->_data['filterForm']['is_active']) > 0) {
+            $andWhere = "AND is_active =:is_active ";
       
-         $sql        .= $andWhere;
-         $countSQL   .= $andWhere;
+            $sql        .= $andWhere;
+            $countSQL   .= $andWhere;
          
-         $params[':is_active']   = $this->_data['filterForm']['is_active']; 
-      }
+            $params[':is_active']   = $this->_data['filterForm']['is_active'];
+        }
       
-      if(  $this->_data['filterForm']['is_hidden'] > -1 && strlen(  $this->_data['filterForm']['is_hidden'] ) > 0 )
-      {
-         $andWhere = "AND is_hidden =:is_hidden ";
+        if ($this->_data['filterForm']['is_hidden'] > -1 && strlen($this->_data['filterForm']['is_hidden']) > 0) {
+            $andWhere = "AND is_hidden =:is_hidden ";
       
-         $sql        .= $andWhere;
-         $countSQL   .= $andWhere;   
-      }
+            $sql        .= $andWhere;
+            $countSQL   .= $andWhere;
+        }
       
-      $count = Yii::$app->db->createCommand(
-         $countSQL,
-         $params
-      )->queryScalar();      
+        $count = Yii::$app->db->createCommand(
+            $countSQL,
+            $params
+        )->queryScalar();
       
-      $CoursesSDP = new SqlDataProvider ([
+        $CoursesSDP = new SqlDataProvider([
          'sql'          => $sql,
          'params'       => $params,
          'totalCount'   => $count,
          'sort' => [
-            'defaultOrder' => [ 
+            'defaultOrder' => [
                'id'           => SORT_ASC,
             ],
             'attributes' => [
@@ -231,8 +223,8 @@ class CoursesController extends BaseController
                'section_number' => [
                   'default' => SORT_ASC,
                   'label' => 'Section',
-               ],               
-/**               
+               ],
+/**
                'is_active' => [
                   'default' => SORT_ASC,
                   'label' => 'Status',
@@ -242,446 +234,410 @@ class CoursesController extends BaseController
                'updated_at',
  **/
             ],
-         ],         
+         ],
          'pagination' => [
             'pageSize' => $this->_data['filterForm']['paginationCount'],
          ],
-      ]); 
+      ]);
       
-      return $CoursesSDP;
-   }
+        return $CoursesSDP;
+    }
 
 
-   /**
-    * Displays listing of all users in the system.
-    *
-    * @return string
-    */
-   public function actionIndex()
-   {
-      $this->_dataProvider = $this->getCoursesGridView();
+    /**
+     * Displays listing of all users in the system.
+     *
+     * @return string
+     */
+    public function actionIndex()
+    {
+        $this->_dataProvider = $this->getCoursesGridView();
 
-      return $this->render('courses-listing', [
-            'data'            => $this->_data, 
+        return $this->render('courses-listing', [
+            'data'            => $this->_data,
             'dataProvider'    => $this->_dataProvider,
             'model'           => $this->_coursesModel,
             'modelSubjects'  => Courses::getAllSubjectAreas()
-      ]);      
-   }
+      ]);
+    }
    
 
-   /**
-    * Displays selected Permit ( 1 record ).
-    *
-    * @return string
-    */
-   public function actionView()
-   { 
-      return $this->render('course-view', [
-            'data'         => $this->_data, 
+    /**
+     * Displays selected Permit ( 1 record ).
+     *
+     * @return string
+     */
+    public function actionView()
+    {
+        return $this->render('course-view', [
+            'data'         => $this->_data,
             'dataProvider' => $this->_dataProvider,
             'model'        => $this->_coursesModel,
             'tags'         => $this->_tagsModel,
             'allTags'      => $this->_coursesChildModel,
-      ]);      
-   }
+      ]);
+    }
 
 
-   /**
-    * Adding new Course information
-    *
-    * @return (TBD)
-    */
-   public function actionAdd()
-   {
-      $this->_dataProvider = $this->getCoursesGridView();
+    /**
+     * Adding new Course information
+     *
+     * @return (TBD)
+     */
+    public function actionAdd()
+    {
+        $this->_dataProvider = $this->getCoursesGridView();
       
-      $this->_coursesModel->subject_area     = ArrayHelper::getValue($this->_request->post(), 'Courses.subject_area',   '' );
-      $this->_coursesModel->course_number    = ArrayHelper::getValue($this->_request->post(), 'Courses.course_number',  '' ); 
-      $this->_coursesModel->section_number   = ArrayHelper::getValue($this->_request->post(), 'Courses.section_number', '' );       
+        $this->_coursesModel->subject_area     = ArrayHelper::getValue($this->_request->post(), 'Courses.subject_area', '');
+        $this->_coursesModel->course_number    = ArrayHelper::getValue($this->_request->post(), 'Courses.course_number', '');
+        $this->_coursesModel->section_number   = ArrayHelper::getValue($this->_request->post(), 'Courses.section_number', '');
 
-      $exitEarly = false;
+        $exitEarly = false;
 
-      if( !isset( $this->_coursesModel->subject_area ) || empty( $this->_coursesModel->subject_area ) )
-      {
-         if( isset( $this->_data['addCourse'] ) && !empty( $this->_data['addCourse'] ) )
-         {
-            $this->_data['errors']['Add Course'] = [
+        if (!isset($this->_coursesModel->subject_area) || empty($this->_coursesModel->subject_area)) {
+            if (isset($this->_data['addCourse']) && !empty($this->_data['addCourse'])) {
+                $this->_data['errors']['Add Course'] = [
                'value'     => "was unsuccessful",
                'htmlTag'   => 'h4',
                'class'     => 'alert alert-danger',
             ];
-         }
+            }
 
-         $this->_data['errors']['subject'] = [
-            'value' => "is blank",      
-         ];      
+            $this->_data['errors']['subject'] = [
+            'value' => "is blank",
+         ];
          
-         $exitEarly = true;
-      }
+            $exitEarly = true;
+        }
       
-      if( !isset( $this->_coursesModel->course_number ) || empty( $this->_coursesModel->course_number ) )
-      {
-         if( isset( $this->_data['addCourse'] ) && !empty( $this->_data['addCourse'] ) )
-         {
-            $this->_data['errors']['Add Course'] = [
+        if (!isset($this->_coursesModel->course_number) || empty($this->_coursesModel->course_number)) {
+            if (isset($this->_data['addCourse']) && !empty($this->_data['addCourse'])) {
+                $this->_data['errors']['Add Course'] = [
                'value'     => "was unsuccessful",
                'htmlTag'   => 'h4',
                'class'     => 'alert alert-danger',
             ];
-         }
+            }
 
-         $this->_data['errors']['course'] = [
-            'value' => "is blank",      
-         ];      
+            $this->_data['errors']['course'] = [
+            'value' => "is blank",
+         ];
          
-         $exitEarly = true;
-      }      
+            $exitEarly = true;
+        }
       
-      if( !isset( $this->_coursesModel->section_number ) || empty( $this->_coursesModel->section_number ) )
-      {
-         if( isset( $this->_data['addCourse'] ) && !empty( $this->_data['addCourse'] ) )
-         {
-            $this->_data['errors']['Add Course'] = [
+        if (!isset($this->_coursesModel->section_number) || empty($this->_coursesModel->section_number)) {
+            if (isset($this->_data['addCourse']) && !empty($this->_data['addCourse'])) {
+                $this->_data['errors']['Add Course'] = [
                'value'     => "was unsuccessful",
                'htmlTag'   => 'h4',
                'class'     => 'alert alert-danger',
             ];
-         }
+            }
 
-         $this->_data['errors']['section'] = [
-            'value' => "is blank",      
-         ];      
+            $this->_data['errors']['section'] = [
+            'value' => "is blank",
+         ];
 
-         $exitEarly = true;
-      }        
+            $exitEarly = true;
+        }
 
-      if( $exitEarly )
-      {
-         return $this->render('courses-listing', [
-               'data'            => $this->_data, 
+        if ($exitEarly) {
+            return $this->render('courses-listing', [
+               'data'            => $this->_data,
                'dataProvider'    => $this->_dataProvider,
                'model'           => $this->_coursesModel,
-               'modelSubjects'   => Courses::getAllSubjectAreas(),           
-         ]); 
-      }
+               'modelSubjects'   => Courses::getAllSubjectAreas(),
+         ]);
+        }
 
-      $idChecking = $this->_coursesModel->subject_area . $this->_coursesModel->course_number . $this->_coursesModel->section_number;   
-      $idExists = Courses::existsCourse( $idChecking );         
+        $idChecking = $this->_coursesModel->subject_area . $this->_coursesModel->course_number . $this->_coursesModel->section_number;
+        $idExists = Courses::existsCourse($idChecking);
       
-      if( $idExists )
-      {
-         if( isset( $this->_data['addCourse'] ) && !empty( $this->_data['addCourse'] ) )
-         {
-            $this->_data['errors']['Add Course'] = [
+        if ($idExists) {
+            if (isset($this->_data['addCourse']) && !empty($this->_data['addCourse'])) {
+                $this->_data['errors']['Add Course'] = [
                'value'     => "was unsuccessful",
                'htmlTag'   => 'h4',
                'class'     => 'alert alert-danger',
             ];
-
-         }
-         $this->_data['errors']['course'] = [
-            'value' => "already exists",      
-         ];
-      }
-      else
-      {
-         $this->_coursesModel->id         = $idChecking;
-         $this->_coursesModel->is_active  = Courses::STATUS_ACTIVE;      
-         $this->_coursesModel->is_hidden  = Courses::STATUS_VISIBLE;      
-      } 
-      
-      if( !$idExists )
-      {          
-         if( isset($this->_data['addCourse'] ) && !empty( $this->_data['addCourse'] ) )
-         {        
-            if( isset( $this->_coursesModel->id   ) && !empty( $this->_coursesModel->id ) )
-            {
-               $this->_data['saveCourse'] = $this->_coursesModel->save();   
             }
-            else
-            {
-               $this->_data['errors']['Add Course'] = [
+            $this->_data['errors']['course'] = [
+            'value' => "already exists",
+         ];
+        } else {
+            $this->_coursesModel->id         = $idChecking;
+            $this->_coursesModel->is_active  = Courses::STATUS_ACTIVE;
+            $this->_coursesModel->is_hidden  = Courses::STATUS_VISIBLE;
+        }
+      
+        if (!$idExists) {
+            if (isset($this->_data['addCourse']) && !empty($this->_data['addCourse'])) {
+                if (isset($this->_coursesModel->id) && !empty($this->_coursesModel->id)) {
+                    $this->_data['saveCourse'] = $this->_coursesModel->save();
+                } else {
+                    $this->_data['errors']['Add Course'] = [
                   'value'     => "was unsuccessful",
                   'htmlTag'   => 'h4',
                   'class'     => 'alert alert-danger',
                ];
                
-               $this->_data['errors']['id'] = [
+                    $this->_data['errors']['id'] = [
                   'value'     => "is null",
-               ];               
+               ];
+                }
             }
-         }
-      }
+        }
 
-      if( isset($this->_data['saveCourse'] ) && !empty( $this->_data['saveCourse'] ) )
-      {
-         $this->_data['success']['Add Course'] = [
+        if (isset($this->_data['saveCourse']) && !empty($this->_data['saveCourse'])) {
+            $this->_data['success']['Add Course'] = [
             'value'     => "was successful",
             'bValue'    => true,
             'htmlTag'   => 'h4',
             'class'     => 'alert alert-success',
          ];
          
-         $this->_data['success'][$this->_coursesModel->id] = [
+            $this->_data['success'][$this->_coursesModel->id] = [
             'value'     => "was added",
             'bValue'    => true,
-         ];         
-      }
+         ];
+        }
       
-      $this->_dataProvider = $this->getCoursesGridView();      
+        $this->_dataProvider = $this->getCoursesGridView();
 
-      return $this->render('courses-listing', [
-            'data'            => $this->_data, 
+        return $this->render('courses-listing', [
+            'data'            => $this->_data,
             'dataProvider'    => $this->_dataProvider,
             'model'           => $this->_coursesModel,
             'modelSubjects'   => Courses::getAllSubjectAreas(),
-      ]); 
-   }
+      ]);
+    }
    
    
-   /**
-    * Saving changes to Course and Tag information
-    *
-    * @return (TBD)
-    */
-   public function actionSave()
-   {  
-      $isError = false;
+    /**
+     * Saving changes to Course and Tag information
+     *
+     * @return (TBD)
+     */
+    public function actionSave()
+    {
+        $isError = false;
 
-/**
-print( "<pre>");
-print_r( $this->_request->post() );
-die();
- **/
+        /**
+        print( "<pre>");
+        print_r( $this->_request->post() );
+        die();
+         **/
  
-      $tagRelationExists = CoursesCodesChild::find()
+        $tagRelationExists = CoursesCodesChild::find()
          ->where([ 'parent' => $this->_data['id'] ])
          ->andWhere([ 'child' => $this->_data['tagid'] ])
          ->limit(1)
-         ->one(); 
+         ->one();
          
-      $tagChild = SystemCodes::find()
+        $tagChild = SystemCodes::find()
          ->where([ 'id' => $this->_data['tagid'] ])
          ->limit(1)
          ->one();
 
-      if( strlen( $this->_data['addTag'] ) > 0 )
-      {
-         if( !is_null( $tagRelationExists ) )
-         {        
-            $this->_data['errors']['Add Tag'] = [
+        if (strlen($this->_data['addTag']) > 0) {
+            if (!is_null($tagRelationExists)) {
+                $this->_data['errors']['Add Tag'] = [
                'value'     => "was unsuccessful",
                'bValue'    => false,
                'htmlTag'   => 'h4',
                'class'     => 'alert alert-danger',
             ];
             
-            $this->_data['errors'][$tagChild['description']] = [
+                $this->_data['errors'][$tagChild['description']] = [
                'value' => "was not added; relationship already exists.",
             ];
             
-            $isError = true;
-            $exitEarly = $isError;
-         }
+                $isError = true;
+                $exitEarly = $isError;
+            }
 
-         if( !$isError )
-         {
-            $result = $this->addCourseTag( $this->_data['id'], $this->_data['tagid'] );
+            if (!$isError) {
+                $result = $this->addCourseTag($this->_data['id'], $this->_data['tagid']);
          
-            if( $result > 0 )
-            { 
-               $tag = SystemCodes::find()
+                if ($result > 0) {
+                    $tag = SystemCodes::find()
                   ->where([ 'id' => $this->_data['tagid'] ])
                   ->limit(1)
                   ->one();
             
-               $this->_data['success']['Add Tag'] = [
+                    $this->_data['success']['Add Tag'] = [
                   'value'        => "was successful",
                   'bValue'       => true,
                   'htmlTag'      => 'h4',
-                  'class'        => 'alert alert-success', 
+                  'class'        => 'alert alert-success',
                ];
                
-               $this->_data['success'][$tagChild['description']] = [
+                    $this->_data['success'][$tagChild['description']] = [
                   'value' => "was added",
                ];
-            }
-            else
-            {
-               $this->_data['errors']['Add Tag'] = [
+                } else {
+                    $this->_data['errors']['Add Tag'] = [
                   'value'     => "was unsuccessful",
                   'bValue'    => false,
                   'htmlTag'   => 'h4',
                   'class'     => 'alert alert-danger',
                ];
                
-               $this->_data['errors']['Add Course Tag'] = [
+                    $this->_data['errors']['Add Course Tag'] = [
                   'value' => "was not successful; no tags were added. (Result: " . strval($result) . ") ",
                ];
-            }
+                }
             
-            $exitEarly = true;    
-         }        
-      } 
+                $exitEarly = true;
+            }
+        }
 
-      if( strlen( $this->_data['dropTag'] ) > 0 )
-      {
-         $result = $this->removeCourseTag( $this->_data['id'], $this->_data['tagid'] );      
+        if (strlen($this->_data['dropTag']) > 0) {
+            $result = $this->removeCourseTag($this->_data['id'], $this->_data['tagid']);
       
-         if( $result > 0 )
-         {
-            $this->_data['success']['Remove Tag'] = [
+            if ($result > 0) {
+                $this->_data['success']['Remove Tag'] = [
                'value'        => "was successful",
                'bValue'       => true,
                'htmlTag'      => 'h4',
-               'class'        => 'alert alert-success', 
+               'class'        => 'alert alert-success',
             ];
             
-            $this->_data['success'][$tagChild['description']] = [
+                $this->_data['success'][$tagChild['description']] = [
                'value' => "was removed",
             ];
-         }
-         else
-         {
-            $this->_data['errors']['Remove Tag'] = [
+            } else {
+                $this->_data['errors']['Remove Tag'] = [
                'value'     => "was unsuccessful",
                'bValue'    => false,
                'htmlTag'   => 'h4',
                'class'     => 'alert alert-danger',
             ];
             
-            $this->_data['errors'][$tagChild['description']] = [
+                $this->_data['errors'][$tagChild['description']] = [
                'value' => "was not successful; no tags were removed. (Result: " . strval($result) . ") ",
             ];
-         }
+            }
          
-         $exitEarly = true;
-      }  
+            $exitEarly = true;
+        }
 
-      if( isset($this->_data['saveCourse'] ) && !empty( $this->_data['saveCourse'] ) )
-      {
-         $this->_coursesModel->id               = ArrayHelper::getValue($this->_request->post(), 'Courses.id',   '' );
-         $this->_coursesModel->subject_area     = ArrayHelper::getValue($this->_request->post(), 'Courses.subject_area',   '' );
-         $this->_coursesModel->course_number    = ArrayHelper::getValue($this->_request->post(), 'Courses.course_number',  '' ); 
-         $this->_coursesModel->section_number   = ArrayHelper::getValue($this->_request->post(), 'Courses.section_number', '' );       
+        if (isset($this->_data['saveCourse']) && !empty($this->_data['saveCourse'])) {
+            $this->_coursesModel->id               = ArrayHelper::getValue($this->_request->post(), 'Courses.id', '');
+            $this->_coursesModel->subject_area     = ArrayHelper::getValue($this->_request->post(), 'Courses.subject_area', '');
+            $this->_coursesModel->course_number    = ArrayHelper::getValue($this->_request->post(), 'Courses.course_number', '');
+            $this->_coursesModel->section_number   = ArrayHelper::getValue($this->_request->post(), 'Courses.section_number', '');
    
-         $exitEarly = false;
+            $exitEarly = false;
 
-         if( !isset( $this->_coursesModel->subject_area ) || empty( $this->_coursesModel->subject_area ) )
-         {
-            $this->_data['errors']['Save Course'] = [
+            if (!isset($this->_coursesModel->subject_area) || empty($this->_coursesModel->subject_area)) {
+                $this->_data['errors']['Save Course'] = [
                'value'     => "was unsuccessful",
                'htmlTag'   => 'h4',
                'class'     => 'alert alert-danger',
             ];
    
-            $this->_data['errors']['subject'] = [
-               'value' => "is blank",      
-            ];      
+                $this->_data['errors']['subject'] = [
+               'value' => "is blank",
+            ];
             
-            $exitEarly = true;
-         }
+                $exitEarly = true;
+            }
 
-         if( !isset( $this->_coursesModel->course_number ) || empty( $this->_coursesModel->course_number ) )
-         {
-            $this->_data['errors']['Save Course'] = [
+            if (!isset($this->_coursesModel->course_number) || empty($this->_coursesModel->course_number)) {
+                $this->_data['errors']['Save Course'] = [
                'value'     => "was unsuccessful",
                'htmlTag'   => 'h4',
                'class'     => 'alert alert-danger',
             ];
    
-            $this->_data['errors']['course'] = [
-               'value' => "is blank",      
-            ];      
+                $this->_data['errors']['course'] = [
+               'value' => "is blank",
+            ];
             
-            $exitEarly = true;
-         }      
+                $exitEarly = true;
+            }
          
-         if( !isset( $this->_coursesModel->section_number ) || empty( $this->_coursesModel->section_number ) )
-         {
-            $this->_data['errors']['Save Course'] = [
+            if (!isset($this->_coursesModel->section_number) || empty($this->_coursesModel->section_number)) {
+                $this->_data['errors']['Save Course'] = [
                'value'     => "was unsuccessful",
                'htmlTag'   => 'h4',
                'class'     => 'alert alert-danger',
             ];
    
-            $this->_data['errors']['section'] = [
-               'value' => "is blank",      
-            ];      
+                $this->_data['errors']['section'] = [
+               'value' => "is blank",
+            ];
    
-            $exitEarly = true;
-         }
-      }  
+                $exitEarly = true;
+            }
+        }
 
 
-      /**
-       *  No reason to update model if the work is done for now
-       **/
+        /**
+         *  No reason to update model if the work is done for now
+         **/
        
-      if( $exitEarly )
-      {
-         $this->_coursesModel       = $this->_coursesModel->findOne( $this->_data['id']  );
+        if ($exitEarly) {
+            $this->_coursesModel       = $this->_coursesModel->findOne($this->_data['id']);
 
-         $this->_tagsModel          = CoursesCodesChild::findTagsById( $this->_data['id'] );
-         $this->_coursesChildModel  = SystemCodes::findUnassignedTagOptionsForCourses( $this->_data['id']);
+            $this->_tagsModel          = CoursesCodesChild::findTagsById($this->_data['id']);
+            $this->_coursesChildModel  = SystemCodes::findUnassignedTagOptionsForCourses($this->_data['id']);
 
-         return $this->render('course-view', [
-               'data'         => $this->_data, 
+            return $this->render('course-view', [
+               'data'         => $this->_data,
                'dataProvider' => $this->_dataProvider,
                'model'        => $this->_coursesModel,
                'tags'         => $this->_tagsModel,
                'allTags'      => $this->_coursesChildModel,
-         ]);  
-      }      
+         ]);
+        }
          
-      $updateModel      = Courses::findOne( $this->_coursesModel->id );
+        $updateModel      = Courses::findOne($this->_coursesModel->id);
 
-      $updateModel->subject_area    = $this->_data['Courses']['subject_area'];
-      $updateModel->course_number   = $this->_data['Courses']['course_number'];
-      $updateModel->section_number  = $this->_data['Courses']['section_number'];         
+        $updateModel->subject_area    = $this->_data['Courses']['subject_area'];
+        $updateModel->course_number   = $this->_data['Courses']['course_number'];
+        $updateModel->section_number  = $this->_data['Courses']['section_number'];
 
-      $updateColumns = $updateModel->getDirtyAttributes();
+        $updateColumns = $updateModel->getDirtyAttributes();
 
-      $updateModel->is_active    = $this->_data['Courses']['is_active'];
-      $updateModel->is_hidden    = $this->_data['Courses']['is_hidden'];
+        $updateModel->is_active    = $this->_data['Courses']['is_active'];
+        $updateModel->is_hidden    = $this->_data['Courses']['is_hidden'];
 
-      $this->_data['savePermit'] = $updateModel->save();   
+        $this->_data['savePermit'] = $updateModel->save();
       
-      if( isset($this->_data['savePermit'] ) && !empty( $this->_data['savePermit'] ) )
-      {
-         if( count( $updateColumns ) > 0 )
-         {
-            $this->_data['success']['Save Course'] = [
+        if (isset($this->_data['savePermit']) && !empty($this->_data['savePermit'])) {
+            if (count($updateColumns) > 0) {
+                $this->_data['success']['Save Course'] = [
                'value'     => "was successful",
                'bValue'    => true,
                'htmlTag'   => 'h4',
                'class'     => 'alert alert-success',
             ];
             
-            foreach( $updateColumns as $key => $val )
-            {     
-               $keyIndex = ucfirst( strtolower(str_replace( "_", " ", $key )) );
+                foreach ($updateColumns as $key => $val) {
+                    $keyIndex = ucfirst(strtolower(str_replace("_", " ", $key)));
             
-               $this->_data['success'][$keyIndex] = [
+                    $this->_data['success'][$keyIndex] = [
                   'value'     => "was updated ",
                   'bValue'    => true,
-               ];                     
+               ];
+                }
             }
-         }
-      }    
+        }
 
-      $this->_coursesModel      = $this->_coursesModel->findOne( $this->_data['id']  );
+        $this->_coursesModel      = $this->_coursesModel->findOne($this->_data['id']);
       
-      $this->_tagsModel          = CoursesCodesChild::findTagsById( $this->_data['id'] );
-      $this->_coursesChildModel  = SystemCodes::findUnassignedTagOptionsForCourses( $this->_data['id']);
+        $this->_tagsModel          = CoursesCodesChild::findTagsById($this->_data['id']);
+        $this->_coursesChildModel  = SystemCodes::findUnassignedTagOptionsForCourses($this->_data['id']);
 
-      return $this->render('course-view', [
-            'data'         => $this->_data, 
+        return $this->render('course-view', [
+            'data'         => $this->_data,
             'dataProvider' => $this->_dataProvider,
             'model'        => $this->_coursesModel,
             'tags'         => $this->_tagsModel,
             'allTags'      => $this->_coursesChildModel,
-      ]);  
-   }   
+      ]);
+    }
 }

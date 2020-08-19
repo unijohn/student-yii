@@ -21,17 +21,17 @@ class m200625_162733_tbl_CareerLevel extends Migration
             'updated_at' => $this->datetime(),
         ]);
         
-         $columns = [ 'code', 'name', 'created_at'];
+        $columns = [ 'code', 'name', 'created_at'];
         
-         $rows = [
+        $rows = [
             [ 'UG', 'Undergraduate', date("Y-m-d H:i:s") ],
             [ 'GR', 'Graduate', date("Y-m-d H:i:s") ],
             [ 'LW', 'Unknown LW', date("Y-m-d H:i:s") ],
-            [ 'CE', 'Unknown CE', date("Y-m-d H:i:s") ],            
+            [ 'CE', 'Unknown CE', date("Y-m-d H:i:s") ],
          ];
          
         
-        $this->batchInsert( 'tbl_CareerLevel', $columns, $rows );
+        $this->batchInsert('tbl_CareerLevel', $columns, $rows);
     }
 
     /**

@@ -21,9 +21,9 @@ class m200625_180524_tbl_Permissions extends Migration
             'updated_at' => $this->datetime(),
         ]);
         
-         $columns = [ 'bit', 'name', 'created_at'];
+        $columns = [ 'bit', 'name', 'created_at'];
         
-         $rows = [
+        $rows = [
             [ 1,  'Only',        date("Y-m-d H:i:s") ],
             [ 2,  'Insert',      date("Y-m-d H:i:s") ],
             [ 4,  'Update',      date("Y-m-d H:i:s") ],
@@ -31,7 +31,7 @@ class m200625_180524_tbl_Permissions extends Migration
             [ 16, 'Full-Delete', date("Y-m-d H:i:s") ],
          ];
                 
-        $this->batchInsert( 'tbl_Permissions', $columns, $rows );            
+        $this->batchInsert('tbl_Permissions', $columns, $rows);
     }
 
     /**

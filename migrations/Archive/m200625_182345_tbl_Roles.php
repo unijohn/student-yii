@@ -15,16 +15,16 @@ class m200625_182345_tbl_Roles extends Migration
         $this->createTable('tbl_Roles', [
             'id'     => $this->primaryKey(),
             'role'   => $this->bigInteger()->notNull(),
-            'name'   => $this->string(16)->notNull(), 
-            'descr'  => $this->string(48)->notNull(),            
+            'name'   => $this->string(16)->notNull(),
+            'descr'  => $this->string(48)->notNull(),
             
             'created_at' => $this->datetime()->notNull(),
             'updated_at' => $this->datetime(),
         ]);
         
-         $columns = [ 'role', 'name', 'descr', 'created_at'];
+        $columns = [ 'role', 'name', 'descr', 'created_at'];
         
-         $rows = [
+        $rows = [
             [ 1,   'User',          'Insert/Read Only',            date("Y-m-d H:i:s") ],
             [ 7,   'Approval User', 'Insert/Update',               date("Y-m-d H:i:s") ],
             [ 15,  'Super User',    'Insert/Update/Flag-Delete',   date("Y-m-d H:i:s") ],
@@ -32,7 +32,7 @@ class m200625_182345_tbl_Roles extends Migration
             
          ];
                 
-        $this->batchInsert( 'tbl_Roles', $columns, $rows );
+        $this->batchInsert('tbl_Roles', $columns, $rows);
     }
 
     /**

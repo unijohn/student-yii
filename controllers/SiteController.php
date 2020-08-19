@@ -39,20 +39,20 @@ class SiteController extends Controller
     }
 
 
-   /**
-   * @inheritdoc
-   */
-   public function actions()
-   {
-      $actions = parent::actions();
+    /**
+    * @inheritdoc
+    */
+    public function actions()
+    {
+        $actions = parent::actions();
       
-      $actions['captcha'] = [
+        $actions['captcha'] = [
           'class' => 'yii\captcha\CaptchaAction',
           'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
       ];
    
-      return $actions;
-   }    
+        return $actions;
+    }
 
     /**
      * Displays homepage.
@@ -70,7 +70,7 @@ class SiteController extends Controller
      * @return Response|string
      */
     public function actionLogin()
-    {   
+    {
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }

@@ -2,23 +2,22 @@
 
 namespace app\migrations;
 
-
 /**
  * Class M200818200112TblUsersPersonal
  */
 class m200818_200112_tbl_UsersPersonal extends BaseMigration
 {
-   /**
-    * {@inheritdoc}
-    */
-   public function safeUp()
-   {
-      $created_at = $this->_time;   
+    /**
+     * {@inheritdoc}
+     */
+    public function safeUp()
+    {
+        $created_at = $this->_time;
    
-      if ($this->_db->getTableSchema(self::getTblUserPersonalName(), true) === null) 
-      {
-         $this->createTable( self::getTblUserPersonalName(), 
-            [
+        if ($this->_db->getTableSchema(self::getTblUserPersonalName(), true) === null) {
+            $this->createTable(
+                self::getTblUserPersonalName(),
+                [
                'uuid'            => $this->string(16)->notNull(),
                'uNbr'            => $this->string(10)->notNull(),  // e.g. U12345678
                'firstNm'         => $this->string(64)->notNull(),
@@ -32,21 +31,22 @@ class m200818_200112_tbl_UsersPersonal extends BaseMigration
                'created_at'   => $this->datetime()->notNull(),
                'updated_at'   => $this->datetime(),
                'deleted_at'   => $this->datetime(),
-               'PRIMARY KEY ( [[uuid]] )',            
-            ], $this->_tableOptions
-         );
+               'PRIMARY KEY ( [[uuid]] )',
+            ],
+                $this->_tableOptions
+            );
          
-         $this->createIndex('idx_UsersPersonal_uuid',       self::getTblUserPersonalName(), 'uuid'       );
-         $this->createIndex('idx_UsersPersonal_us_citizen', self::getTblUserPersonalName(), 'us_citizen' );         
-      }    
+            $this->createIndex('idx_UsersPersonal_uuid', self::getTblUserPersonalName(), 'uuid');
+            $this->createIndex('idx_UsersPersonal_us_citizen', self::getTblUserPersonalName(), 'us_citizen');
+        }
 
-      $columns = 
-      [ 
-         'uuid', 'uNbr', 'firstNm', 'middleNm', 'lastNm', 'salutation', 'us_citizen', 
+        $columns =
+      [
+         'uuid', 'uNbr', 'firstNm', 'middleNm', 'lastNm', 'salutation', 'us_citizen',
          'citizen_other', 'visa_type', 'created_at'
       ];
       
-      $coursePersonal = [
+        $coursePersonal = [
          [
             'ugadstdt', 'U12345678', 'Ugad', 'I.', 'Student', 'Mr.', self::CITIZEN_US_YES,
             self::CITIZEN_OTHER_NO, self::VISA_NO, $created_at,
@@ -90,12 +90,11 @@ class m200818_200112_tbl_UsersPersonal extends BaseMigration
          [
             'gridview_04', 'U12000004', 'Grid04', '', 'View', 'Mr.', self::CITIZEN_US_NO,
             self::CITIZEN_OTHER_YES, self::VISA_F1, $created_at,
-         ],                  
+         ],
       ];
       
-      $this->batchInsert( self::getTblUserPersonalName(), $columns, $coursePersonal );     
-
-   }
+        $this->batchInsert(self::getTblUserPersonalName(), $columns, $coursePersonal);
+    }
 
     /**
      * {@inheritdoc}
@@ -104,7 +103,7 @@ class m200818_200112_tbl_UsersPersonal extends BaseMigration
     {
 //        echo "M200818200112TblUsersPersonal cannot be reverted.\n";
 
-        $this->forceDropTable( self::getTblUserPersonalName()  );
+        $this->forceDropTable(self::getTblUserPersonalName());
 
 //        return false;
     }

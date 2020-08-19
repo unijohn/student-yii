@@ -21,13 +21,13 @@ class m200625_162752_tbl_MinorCode extends Migration
             'updated_at' => $this->datetime(),
         ]);
         
-         $columns = [ 'code', 'name', 'created_at'];
+        $columns = [ 'code', 'name', 'created_at'];
         
-         $rows = [
+        $rows = [
             [ 'SMMK', 'Unknown SMMK',     date("Y-m-d H:i:s") ],
             [ 'INBS', 'Unknown INBS',     date("Y-m-d H:i:s") ],
             [ 'ACCT', 'Accounting',       date("Y-m-d H:i:s") ],
-            [ 'RLES', 'Unknown RLES',     date("Y-m-d H:i:s") ],            
+            [ 'RLES', 'Unknown RLES',     date("Y-m-d H:i:s") ],
             [ 'BIT',  'Bus. Info. Tech.', date("Y-m-d H:i:s") ],
             [ 'BSFN', 'Unknown BSFN',     date("Y-m-d H:i:s") ],
             [ 'ENGL', 'Unknown ENGL',     date("Y-m-d H:i:s") ],
@@ -39,7 +39,7 @@ class m200625_162752_tbl_MinorCode extends Migration
             [ 'LTLA', 'Unknown ADV',      date("Y-m-d H:i:s") ],
             [ 'CHEM', 'Unknown CHEM',     date("Y-m-d H:i:s") ],
             [ 'MKTG', 'Marketing',        date("Y-m-d H:i:s") ],
-            [ 'NPMT', 'Unknown NPMT',     date("Y-m-d H:i:s") ],            
+            [ 'NPMT', 'Unknown NPMT',     date("Y-m-d H:i:s") ],
             [ 'JAPN', 'Unknown JAPN',     date("Y-m-d H:i:s") ],
             [ 'EMGT', 'Unknown EMGT',     date("Y-m-d H:i:s") ],
             [ 'SCMG', 'Unknown SCMG',     date("Y-m-d H:i:s") ],
@@ -48,8 +48,7 @@ class m200625_162752_tbl_MinorCode extends Migration
             [ 'AERO', 'Unknown AERO',     date("Y-m-d H:i:s") ],
          ];
                 
-        $this->batchInsert( 'tbl_MinorCode', $columns, $rows );        
-        
+        $this->batchInsert('tbl_MinorCode', $columns, $rows);
     }
 
     /**

@@ -2,42 +2,39 @@
 
 namespace app\migrations;
 
-
 /**
  * Class m200804_171045_tbl_Courses
  */
 class m200804_171045_tbl_Courses extends BaseMigration
 {
-   /**
-   * {@inheritdoc}
-   */
-   public function safeUp()
-   {
-      $created_at = $this->_time;
-      $updated_at = $this->_time;
+    /**
+    * {@inheritdoc}
+    */
+    public function safeUp()
+    {
+        $created_at = $this->_time;
+        $updated_at = $this->_time;
 
-      if ($this->_db->getTableSchema(self::getTblCoursesName(), true) === null) 
-      {
-         $this->createTable(self::getTblCoursesName(), [
+        if ($this->_db->getTableSchema(self::getTblCoursesName(), true) === null) {
+            $this->createTable(self::getTblCoursesName(), [
             'id'              => $this->string(16)->notNull(),
             'subject_area'    => $this->string(8)->notNull(),
             'course_number'   => $this->string(8)->notNull(),
             'section_number'  => $this->string(8)->notNull(),
             'is_active'       => $this->integer()->notNull(),
-            'is_hidden'       => $this->integer()->notNull(),         
+            'is_hidden'       => $this->integer()->notNull(),
             'created_at'      => $this->integer()->notNull(),
-            'updated_at'      => $this->integer()->notNull(),         
+            'updated_at'      => $this->integer()->notNull(),
             'deleted_at'      => $this->integer(),
-            'PRIMARY KEY ( [[id]] )',         
+            'PRIMARY KEY ( [[id]] )',
          ], $this->_tableOptions);
          
-         $this->createIndex('idx_Courses_id',            self::getTblCoursesName(), 'id'           );
-         $this->createIndex('idx_Courses_subject_area',  self::getTblCoursesName(), 'subject_area' );
-      }
+            $this->createIndex('idx_Courses_id', self::getTblCoursesName(), 'id');
+            $this->createIndex('idx_Courses_subject_area', self::getTblCoursesName(), 'subject_area');
+        }
 
-      if ($this->_db->getTableSchema(self::getTblCoursesCodesChildName(), true) === null) 
-      {
-         $this->createTable(self::getTblCoursesCodesChildName(), [
+        if ($this->_db->getTableSchema(self::getTblCoursesCodesChildName(), true) === null) {
+            $this->createTable(self::getTblCoursesCodesChildName(), [
             'parent'          => $this->string(16)->notNull(),
             'child'           => $this->integer()->notNull(),
             'created_at'      => $this->integer()->notNull(),
@@ -47,13 +44,13 @@ class m200804_171045_tbl_Courses extends BaseMigration
             'FOREIGN KEY ([[child]]) REFERENCES '  . self::getTblSystemCodesName()  . ' ([[id]])' .
             $this->buildFkClause('ON DELETE CASCADE', 'ON UPDATE CASCADE'),
          ], $this->_tableOptions);
-      }
+        }
       
-      $courseColumns = [ 'id', 'subject_area', 'course_number', 'section_number', 'is_active', 'is_hidden', 'created_at', 'updated_at' ];
+        $courseColumns = [ 'id', 'subject_area', 'course_number', 'section_number', 'is_active', 'is_hidden', 'created_at', 'updated_at' ];
       
-      $courseCodesChildColumns = [ 'parent', 'child', 'created_at' ];
+        $courseCodesChildColumns = [ 'parent', 'child', 'created_at' ];
       
-      $courseRows1 = [
+        $courseRows1 = [
          [ 'ACCT2010001', 'ACCT', '2010', '001',  self::STATUS_ACTIVE,  self::STATUS_VISIBLE,  $created_at,  $updated_at,  ],
          [ 'ACCT2010002', 'ACCT', '2010', '002',  self::STATUS_ACTIVE,  self::STATUS_VISIBLE,  $created_at,  $updated_at,  ],
          [ 'ACCT2010003', 'ACCT', '2010', '003',  self::STATUS_ACTIVE,  self::STATUS_VISIBLE,  $created_at,  $updated_at,  ],
@@ -357,7 +354,7 @@ class m200804_171045_tbl_Courses extends BaseMigration
          [ 'BA8800004', 'BA', '8800', '004',  self::STATUS_ACTIVE,  self::STATUS_VISIBLE,  $created_at,  $updated_at,  ],
       ];
 
-      $courseRows2 = [      
+        $courseRows2 = [
          [ 'BA8800005', 'BA', '8800', '005',  self::STATUS_ACTIVE,  self::STATUS_VISIBLE,  $created_at,  $updated_at,  ],
          [ 'BA8800006', 'BA', '8800', '006',  self::STATUS_ACTIVE,  self::STATUS_VISIBLE,  $created_at,  $updated_at,  ],
          [ 'BA8800007', 'BA', '8800', '007',  self::STATUS_ACTIVE,  self::STATUS_VISIBLE,  $created_at,  $updated_at,  ],
@@ -761,7 +758,7 @@ class m200804_171045_tbl_Courses extends BaseMigration
          [ 'FIR6720001', 'FIR', '6720', '001',  self::STATUS_ACTIVE,  self::STATUS_VISIBLE,  $created_at,  $updated_at,  ],
       ];
       
-      $courseRows3 = [      
+        $courseRows3 = [
          [ 'FIR6720101', 'FIR', '6720', '101',  self::STATUS_ACTIVE,  self::STATUS_VISIBLE,  $created_at,  $updated_at,  ],
          [ 'FIR6720M50', 'FIR', '6720', 'M50',  self::STATUS_ACTIVE,  self::STATUS_VISIBLE,  $created_at,  $updated_at,  ],
          [ 'FIR6721001', 'FIR', '6721', '001',  self::STATUS_ACTIVE,  self::STATUS_VISIBLE,  $created_at,  $updated_at,  ],
@@ -1164,7 +1161,7 @@ class m200804_171045_tbl_Courses extends BaseMigration
          [ 'MIS7030141', 'MIS', '7030', '141',  self::STATUS_ACTIVE,  self::STATUS_VISIBLE,  $created_at,  $updated_at,  ],
       ];
       
-      $courseRows4 = [      
+        $courseRows4 = [
          [ 'MIS7030201', 'MIS', '7030', '201',  self::STATUS_ACTIVE,  self::STATUS_VISIBLE,  $created_at,  $updated_at,  ],
          [ 'MIS7070001', 'MIS', '7070', '001',  self::STATUS_ACTIVE,  self::STATUS_VISIBLE,  $created_at,  $updated_at,  ],
          [ 'MIS7160001', 'MIS', '7160', '001',  self::STATUS_ACTIVE,  self::STATUS_VISIBLE,  $created_at,  $updated_at,  ],
@@ -1451,59 +1448,58 @@ class m200804_171045_tbl_Courses extends BaseMigration
          [ 'SCMS7313M50', 'SCMS', '7313', 'M50',  self::STATUS_ACTIVE,  self::STATUS_VISIBLE,  $created_at,  $updated_at,  ],
          [ 'SCMS7921410', 'SCMS', '7921', '410',  self::STATUS_ACTIVE,  self::STATUS_VISIBLE,  $created_at,  $updated_at,  ],
          [ 'SCMS8530001', 'SCMS', '8530', '001',  self::STATUS_ACTIVE,  self::STATUS_VISIBLE,  $created_at,  $updated_at,  ],
-         [ 'SCMS8540001', 'SCMS', '8540', '001',  self::STATUS_ACTIVE,  self::STATUS_VISIBLE,  $created_at,  $updated_at,  ],        
+         [ 'SCMS8540001', 'SCMS', '8540', '001',  self::STATUS_ACTIVE,  self::STATUS_VISIBLE,  $created_at,  $updated_at,  ],
       ];
 
-      /**
-       *
-       * Encounters SQLSTATE[HY000]: General error: 1 too many terms in compound SELECT
-       * on Oracle Linux 7; error does not occur on Windows 10
-       *
-       **/
+        /**
+         *
+         * Encounters SQLSTATE[HY000]: General error: 1 too many terms in compound SELECT
+         * on Oracle Linux 7; error does not occur on Windows 10
+         *
+         **/
 
-      $this->batchInsert( self::getTblCoursesName(), $courseColumns, $courseRows1 );
-      $this->batchInsert( self::getTblCoursesName(), $courseColumns, $courseRows2 );
-      $this->batchInsert( self::getTblCoursesName(), $courseColumns, $courseRows3 );
-      $this->batchInsert( self::getTblCoursesName(), $courseColumns, $courseRows4 );
+        $this->batchInsert(self::getTblCoursesName(), $courseColumns, $courseRows1);
+        $this->batchInsert(self::getTblCoursesName(), $courseColumns, $courseRows2);
+        $this->batchInsert(self::getTblCoursesName(), $courseColumns, $courseRows3);
+        $this->batchInsert(self::getTblCoursesName(), $courseColumns, $courseRows4);
 
-/**
- *    Sample Assignments
- *
- *    1: 1, A, ISSUED
- *    ..24: 3, UGAD, Undergraduate, $created_at
- *    ..25: 3, GRAD, Graduate,      $created_at
- *    ..26: 3, PHD,  Doctorate,     $created_at
- *
- *    17: 1, Z, PENDING
- *    ..24: 3, UGAD, Undergraduate, $created_at
- *    ..25: 3, GRAD, Graduate,      $created_at
- *    ..26: 3, PHD,  Doctorate,     $created_at
- **/
-      $codeChildColumns = [ 'parent', 'child', 'created_at' ];
+        /**
+         *    Sample Assignments
+         *
+         *    1: 1, A, ISSUED
+         *    ..24: 3, UGAD, Undergraduate, $created_at
+         *    ..25: 3, GRAD, Graduate,      $created_at
+         *    ..26: 3, PHD,  Doctorate,     $created_at
+         *
+         *    17: 1, Z, PENDING
+         *    ..24: 3, UGAD, Undergraduate, $created_at
+         *    ..25: 3, GRAD, Graduate,      $created_at
+         *    ..26: 3, PHD,  Doctorate,     $created_at
+         **/
+        $codeChildColumns = [ 'parent', 'child', 'created_at' ];
 
-      $courseChildRows = [      
-         [ "ACCT2010001", 18, $created_at], 
-         [ "ACCT2010001", 24, $created_at], 
+        $courseChildRows = [
+         [ "ACCT2010001", 18, $created_at],
+         [ "ACCT2010001", 24, $created_at],
 
-         [ "ECON7100M50", 20, $created_at], 
-         [ "ECON7100M50", 32, $created_at], 
+         [ "ECON7100M50", 20, $created_at],
+         [ "ECON7100M50", 32, $created_at],
          [ "ECON7100M50", 33, $created_at],
       ];
       
-      $this->batchInsert( self::getTblCoursesCodesChildName(), $codeChildColumns, $courseChildRows     );   
-   }
+        $this->batchInsert(self::getTblCoursesCodesChildName(), $codeChildColumns, $courseChildRows);
+    }
    
-   /**
-   * {@inheritdoc}
-   */
-   public function safeDown()
-   {
+    /**
+    * {@inheritdoc}
+    */
+    public function safeDown()
+    {
 //       echo "m200804_171045_tbl_Courses cannot be reverted.\n";
 
-        $this->forceDropTable( self::getTblCoursesName()             );
-        $this->forceDropTable( self::getTblCoursesCodesChildName()   );
+        $this->forceDropTable(self::getTblCoursesName());
+        $this->forceDropTable(self::getTblCoursesCodesChildName());
    
 //       return false;
-   }
-
+    }
 }

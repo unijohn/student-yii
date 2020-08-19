@@ -17,35 +17,33 @@ use app\models\User;
 use app\models\UserSearch;
 use app\models\TempAuthAssignment;
 
-
 class FrameworkController extends Controller
 {
-   private $_isUserIdentityEmpty;
+    private $_isUserIdentityEmpty;
 
-   public function init()
-   {
-      parent::init();
+    public function init()
+    {
+        parent::init();
       
-      $this->_isUserIdentityEmpty = false;
+        $this->_isUserIdentityEmpty = false;
       
-      if( is_null( Yii::$app->user->identity ) )
-      {
-         $this->_isUserIdentityEmpty = true;
-      }
-   }   
+        if (is_null(Yii::$app->user->identity)) {
+            $this->_isUserIdentityEmpty = true;
+        }
+    }
 
 
     /**
      * {@inheritdoc}
      */
     public function behaviors()
-    {  
-       return [
+    {
+        return [
            'verbs' => [
                'class' => VerbFilter::className(),
                'actions' => [
                    'index'  => ['get'],
-/**                
+/**
                    'view'   => ['get'],
                    'create' => ['get', 'post'],
                    'update' => ['get', 'put', 'post'],
@@ -54,33 +52,33 @@ class FrameworkController extends Controller
                ],
            ],
       ];
-   }
+    }
 
      
-/**      
-    public function behaviors()
-    {   
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout'],
-                'rules' => [
-                    [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
+    /**
+        public function behaviors()
+        {
+            return [
+                'access' => [
+                    'class' => AccessControl::className(),
+                    'only' => ['logout'],
+                    'rules' => [
+                        [
+                            'actions' => ['logout'],
+                            'allow' => true,
+                            'roles' => ['@'],
+                        ],
                     ],
                 ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
+                'verbs' => [
+                    'class' => VerbFilter::className(),
+                    'actions' => [
+                        'logout' => ['post'],
+                    ],
                 ],
-            ],
-        ];
-    }
- **/    
+            ];
+        }
+     **/
 
     /**
      * {@inheritdoc}

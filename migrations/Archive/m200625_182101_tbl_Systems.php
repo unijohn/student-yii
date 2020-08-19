@@ -21,13 +21,13 @@ class m200625_182101_tbl_Systems extends Migration
             'updated_at' => $this->datetime(),
         ]);
         
-         $columns = [ 'code', 'name', 'created_at'];
+        $columns = [ 'code', 'name', 'created_at'];
         
-         $rows = [
+        $rows = [
             [ 'PRMT',  'Permits System',  date("Y-m-d H:i:s") ],
          ];
                 
-        $this->batchInsert( 'tbl_Systems', $columns, $rows );            
+        $this->batchInsert('tbl_Systems', $columns, $rows);
     }
     /**
      * {@inheritdoc}

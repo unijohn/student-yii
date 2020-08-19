@@ -62,13 +62,13 @@ class LoginForm extends Model
         if ($this->validate()) {
             $value = Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*30 : 0);
 
-/**            
-            print( "<pre> LoginForm :: login() ::: ");
-            print_r( Yii::$app->user->identity );
-            print( "</pre>");
-            
-            die();
- **/   
+            /**
+                        print( "<pre> LoginForm :: login() ::: ");
+                        print_r( Yii::$app->user->identity );
+                        print( "</pre>");
+
+                        die();
+             **/
             
             return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*30 : 0);
         }
@@ -87,25 +87,25 @@ class LoginForm extends Model
             $this->_user = User::findByUUID($this->username);
         }
 
-/**
-        print( "<pre> LoginForm :: getUser() ::: ");    
-        print_r( $this->_user );
-        print( "</pre>" );
-        
-        die();
- **/
+        /**
+                print( "<pre> LoginForm :: getUser() ::: ");
+                print_r( $this->_user );
+                print( "</pre>" );
 
-        return $this->_user;
-    }    
-     
-/**     
-    public function getUser()
-    {
-        if ($this->_user === false) {
-            $this->_user = User::findByUsername($this->username);
-        }
+                die();
+         **/
 
         return $this->_user;
     }
- **/    
+     
+    /**
+        public function getUser()
+        {
+            if ($this->_user === false) {
+                $this->_user = User::findByUsername($this->username);
+            }
+
+            return $this->_user;
+        }
+     **/
 }

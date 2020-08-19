@@ -12,7 +12,6 @@ class m200625_162810_tbl_Classification extends Migration
      */
     public function safeUp()
     {
-
     }
 
     /**
