@@ -65,9 +65,6 @@
             <div class="help-block"></div>
          </div>
          
-php-cs-fixer fix views/ -v --rules='{"method_argument_space": false}'
-         
-       
          <div class="form-group field-description">
             <label class="control-label" for="SystemCodes[description]">Description</label>
             <?= Html::input(
