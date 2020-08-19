@@ -153,7 +153,27 @@ $this->title = "FCBE Workdesk";
       <h2>Scratchpad</h2>
       <pre>
 <?php
-//   print_r( $cookies );
+/*
+    $cookies = Yii::$app->request->cookies;
+    print_r( $cookies );
+
+    $session = Yii::$app->session;
+    print_r( $session );
+
+    print_r( "getTimeout :: " . $session->getTimeout() );
+
+    print_r( "at :: " . Yii::$app->user->authTimeout );
+    print_r( "aat :: " . Yii::$app->user->absoluteAuthTimeout );
+ */
+
+/*
+    if (isset($_COOKIE["start"]) and $_COOKIE["start"]+3600<time()){
+        echo (time()-$_COOKIE["start"])/60 . " minutes left";
+    } else{
+        Echo "times up";
+    }
+ */
+ 
  ?>
 
 <?php

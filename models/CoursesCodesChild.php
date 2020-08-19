@@ -32,9 +32,10 @@ class CoursesCodesChild extends BaseModel
     */
     public function attributeLabels()
     {
-        return [
-//         'id' => Yii::t('app', 'ID'),
-      ];
+        return
+        [
+//          'id' => Yii::t('app', 'ID'),
+        ];
     }
 
 
@@ -56,18 +57,19 @@ class CoursesCodesChild extends BaseModel
     */
     public function behaviors()
     {
-        return [
-
-         'timeStampBehavior' => [
-            'class' => TimestampBehavior::className(),
-            'attributes' =>
+        return
+        [
+            'timeStampBehavior' =>
             [
-               self::EVENT_BEFORE_INSERT => ['created_at',],
-//               ActiveRecord::EVENT_BEFORE_DELETE => ['deleted_at',],
+                'class' => TimestampBehavior::className(),
+                'attributes' =>
+                [
+                    self::EVENT_BEFORE_INSERT => ['created_at',],
+//                  ActiveRecord::EVENT_BEFORE_DELETE => ['deleted_at',],
+                ],
+                // if you're using datetime instead of UNIX timestamp:
+                'value' => time(),
             ],
-            // if you're using datetime instead of UNIX timestamp:
-            'value' => time(),
-         ],
 
 /**
          'softDeleteBehavior' => [
@@ -82,7 +84,7 @@ class CoursesCodesChild extends BaseModel
          ],
  **/
  
-      ];
+        ];
     }
 
 
@@ -91,9 +93,10 @@ class CoursesCodesChild extends BaseModel
     */
     public function rules()
     {
-        return [
+        return
+        [
 //         [['name', 'type', ], 'required' ],
-      ];
+        ];
     }
 
 
@@ -113,13 +116,14 @@ class CoursesCodesChild extends BaseModel
         $tbl_SystemCodes        = SystemCodes::tableName();
    
         $query_codes = ( new \yii\db\Query() )
-         ->select([  'sc.id', 'sc.type', 'sc.code', 'sc.description' ])
-         ->from($tbl_SystemCodes . ' sc')
-         ->innerJoin($tbl_CoursesCodesChild . ' ccc', 'sc.id = ccc.child ')
-         ->where('ccc.parent =:id AND sc.is_active =:is_active')
-            ->addParams([ ':id' => $id, 'is_active' => self::STATUS_ACTIVE ])
-         ->all();
- 
+            ->select([  'sc.id', 'sc.type', 'sc.code', 'sc.description', 'sc.is_active', 'sc.is_hidden' ])
+            ->from($tbl_SystemCodes . ' sc')
+            ->innerJoin($tbl_CoursesCodesChild . ' ccc', 'sc.id = ccc.child ')
+            ->where('ccc.parent =:id ')
+                ->addParams([ ':id' => $id ])
+            ->orderBy('sc.type ASC, sc.code ASC')
+            ->all();
+            
         return $query_codes;
     }
 
@@ -133,8 +137,8 @@ class CoursesCodesChild extends BaseModel
     {
         return $this->hasMany(Courses::className(), [ 'parent' => 'id' ]);
     }
-
-
+    
+    
     public function getSystemCodes()
     {
         return $this->hasMany(SystemCodes::className(), [ 'child' => 'id' ]);

@@ -79,15 +79,15 @@
          <div class="form-group form-inline field-course_number">
             <label class="control-label" for="Courses[course_number]">Course</label>
             <?= Html::input(
-                'text',
-                'Courses[course_number]',
-                $model->course_number,
-                [
+     'text',
+     'Courses[course_number]',
+     $model->course_number,
+     [
                   'id'     => 'course_number',
                   'class'  => 'form-control',
                   'style'  => 'width: 80%;float:right;',
                ]
-            ) ?>   
+ ) ?>   
             <div class="help-block"></div>
          </div>
          
@@ -164,12 +164,12 @@
  
       <h3>Drop System Code Tag</h3>
       <div id='courses-tags-drop-form'>      
-         <?= $this->render('_courses-tags-drop', ['data' => $data, 'model' => $tags]); ?>
+         <?= $this->render('/common/_remove-tags', ['data' => $data, 'model' => $tags]); ?>
       </div>  
 
       <h3>Add System Code Tag</h3>
       <div id='courses-tags-add-form'>      
-         <?= $this->render('_courses-tags-add', ['data' => $data, 'model' => $allTags]); ?>
+         <?= $this->render('/common/_add-tags', ['data' => $data, 'model' => $allTags]); ?>
       </div>
 
       <code><?= __FILE__ ?></code>

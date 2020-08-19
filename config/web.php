@@ -27,6 +27,23 @@ $config = [
     ],    
 
     'components' => [
+        'assetManager' => 
+        [
+            'appendTimestamp' => true,
+            'bundles' => 
+            [
+                'yii\web\JqueryAsset' => 
+                [
+                    'sourcePath' => null,   // do not publish the bundle
+                    'js' => 
+                    [
+                        YII_ENV_DEV ? '//ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.js' : '//ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js',
+                        YII_ENV_DEV ? '//ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js' : '//ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js',
+//                        YII_ENV_DEV ? '//code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.js' : '//code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js',
+                    ]
+                ],
+            ],
+        ],    
         'user' => [
             'class' => 'yii\web\User',
             
