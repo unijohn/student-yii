@@ -20,19 +20,23 @@ use app\models\AuthItem;
 use app\models\SystemCodes;
 use app\models\SystemCodesChild;
 use app\models\User;
+use app\models\UsersPersonal;
 
 class UsersController extends BaseController
 {
     const dropDownOptsKeys  = [ 'pageCount',  'is_active' ];
    
-    const dropDownOpts      = [
-      'pageCount' => [
+    const dropDownOpts      =
+    [
+      'pageCount' =>
+      [
          '10'  => '10',
          '25'  => '25',
          '50'  => '50',
          '100' => '100',
       ],
-      'is_active' => [
+      'is_active' =>
+      [
          '-1'  => 'Select Status',
          '0'   => 'Inactive',
          '1'   => 'Active',
@@ -43,6 +47,7 @@ class UsersController extends BaseController
 
     private $_roleModel;
     private $_userModel;
+    private $_userPersonalModel;
    
     private $_tbl_SystemCodes;
     private $_tbl_SystemCodesChild;
@@ -71,6 +76,13 @@ class UsersController extends BaseController
         if (!isset($this->_data['uuid']) || empty($this->_data['uuid'])) {
             $this->_data['uuid']   = ArrayHelper::getValue($this->_request->post(), 'User.uuid', '');
         }
+        
+        if (isset($this->_data['uuid']) && !empty($this->_data['uuid'])) {
+            $this->_userPersonalModel = UsersPersonal::findOne($this->_data['uuid']);
+        }
+        
+//        self::debug( $this->_data['uuid'], false );
+//        self::debug( $this->_userPersonalModel );
       
         $this->_data['filterForm']['uuid']              = ArrayHelper::getValue($this->_request->get(), 'User.uuid', '');
         $this->_data['filterForm']['is_active']         = ArrayHelper::getValue($this->_request->get(), 'User.is_active', -1);
@@ -157,8 +169,10 @@ class UsersController extends BaseController
          'params'       => $params,
          'totalCount'   => $count,
          'sort' => [
-            'attributes' => [
-               'uuid' => [
+            'attributes' =>
+            [
+               'uuid' =>
+               [
                   'default' => SORT_ASC,
                   'label' => 'UUID',
                ],
@@ -177,7 +191,8 @@ class UsersController extends BaseController
                'updated_at',
             ],
          ],
-         'pagination' => [
+         'pagination' =>
+         [
             'pageSize' => $this->_data['filterForm']['paginationCount'],
          ]
       ]);
@@ -194,11 +209,14 @@ class UsersController extends BaseController
     {
         $this->_dataProvider = $this->getUserGridView();
 
-        return $this->render('users-listing', [
-            'data'         => $this->_data,
-            'dataProvider' => $this->_dataProvider,
-            'model'        => $this->_userModel
-      ]);
+        return $this->render(
+            'users-listing',
+            [
+                'data'         => $this->_data,
+                'dataProvider' => $this->_dataProvider,
+                'model'        => $this->_userModel
+            ]
+        );
     }
    
 
@@ -212,8 +230,8 @@ class UsersController extends BaseController
         $this->_data['uuid']     = $this->_request->get('uuid', '');
 
         $this->_userModel = User::find()
-         ->where(['uuid' => $this->_data['uuid'] ])
-         ->limit(1)->one();
+            ->where(['uuid' => $this->_data['uuid'] ])
+            ->limit(1)->one();
 
         $this->_roleModel  = AuthAssignment::find();
       
@@ -223,14 +241,19 @@ class UsersController extends BaseController
         }
       
         $this->_authItemModel   = AuthItem::findbyUnassignedRoles($assignedRoles);
+        
 
-        return $this->render('user-view', [
-            'data'         => $this->_data,
-            'dataProvider' => $this->_dataProvider,
-            'model'        => $this->_userModel,
-            'roles'        => $this->_roleModel,
-            'allRoles'     => $this->_authItemModel
-      ]);
+        return $this->render(
+            'user-view',
+            [
+                'data'         => $this->_data,
+                'dataProvider' => $this->_dataProvider,
+                'model'        => $this->_userModel,
+                'roles'        => $this->_roleModel,
+                'allRoles'     => $this->_authItemModel,
+                'userPersonal' => $this->_userPersonalModel,
+            ]
+        );
     }
 
 
@@ -251,15 +274,18 @@ class UsersController extends BaseController
       
         if ($uuidExists) {
             if (isset($this->_data['addUser']) && !empty($this->_data['addUser'])) {
-                $this->_data['errors']['Add User'] = [
-               'value'     => "was unsuccessful",
-               'htmlTag'   => 'h4',
-               'class'     => 'alert alert-danger',
-            ];
+                $this->_data['errors']['Add User'] =
+                [
+                   'value'     => "was unsuccessful",
+                   'htmlTag'   => 'h4',
+                   'class'     => 'alert alert-danger',
+                ];
+
+                $this->_data['errors']['uuid'] =
+                [
+                    'value' => "already exists",
+                ];
             }
-            $this->_data['errors']['uuid'] = [
-            'value' => "already exists",
-         ];
         } else {
 //         $this->_userModel->name       = $this->_userModel->uuid;
             $this->_userModel->is_active  = 1;
@@ -274,38 +300,45 @@ class UsersController extends BaseController
                 if (isset($this->_userModel->uuid) && !empty($this->_userModel->uuid)) {
                     $this->_data['saveUser'] = $this->_userModel->save();
                 } else {
-                    $this->_data['errors']['Add User'] = [
-                  'value'     => "was unsuccessful",
-                  'htmlTag'   => 'h4',
-                  'class'     => 'alert alert-danger',
-               ];
+                    $this->_data['errors']['Add User'] =
+                    [
+                        'value'     => "was unsuccessful",
+                        'htmlTag'   => 'h4',
+                        'class'     => 'alert alert-danger',
+                    ];
                
-                    $this->_data['errors']['uuid'] = [
-                  'value'     => "is null",
-               ];
+                    $this->_data['errors']['uuid'] =
+                    [
+                        'value'     => "is null",
+                    ];
                 }
             }
         }
 
         if ($this->_data['saveUser']) {
-            $this->_data['success']['Add User'] = [
-            'value'     => "was successful",
-            'bValue'    => true,
-            'htmlTag'   => 'h4',
-            'class'     => 'alert alert-success',
-         ];
+            $this->_data['success']['Add User'] =
+            [
+                'value'     => "was successful",
+                'bValue'    => true,
+                'htmlTag'   => 'h4',
+                'class'     => 'alert alert-success',
+            ];
          
-            $this->_data['success'][$this->_userModel->uuid] = [
-            'value'     => "was added",
-            'bValue'    => true,
-         ];
+            $this->_data['success'][$this->_userModel->uuid] =
+            [
+                'value'     => "was added",
+                'bValue'    => true,
+            ];
         }
 
-        return $this->render('users-listing', [
-            'data'         => $this->_data,
-            'dataProvider' => $this->_dataProvider,
-            'model'        => $this->_userModel,
-      ]);
+        return $this->render(
+            'users-listing',
+            [
+                'data'         => $this->_data,
+                'dataProvider' => $this->_dataProvider,
+                'model'        => $this->_userModel,
+            ]
+        );
     }
    
    
@@ -332,27 +365,31 @@ class UsersController extends BaseController
 
         if (strlen($this->_data['addRole']) > 0) {
             if ($this->_auth->assign($this->_auth->getRole($roleTag), $this->_userModel->id)) {
-                $this->_data['success']['Add Role'] = [
-               'value'        => "was successful",
-               'bValue'       => true,
-               'htmlTag'      => 'h4',
-               'class'        => 'alert alert-success',
-            ];
+                $this->_data['success']['Add Role'] =
+                [
+                   'value'        => "was successful",
+                   'bValue'       => true,
+                   'htmlTag'      => 'h4',
+                   'class'        => 'alert alert-success',
+                ];
             
-                $this->_data['success'][$roleTag] = [
-               'value' => "was added",
-            ];
+                $this->_data['success'][$roleTag] =
+                [
+                    'value' => "was added",
+                ];
             } else {
-                $this->_data['errors']['Add Role'] = [
-               'value'     => "was unsuccessful",
-               'bValue'    => false,
-               'htmlTag'   => 'h4',
-               'class'     => 'alert alert-danger',
-            ];
+                $this->_data['errors']['Add Role'] =
+                [
+                   'value'     => "was unsuccessful",
+                   'bValue'    => false,
+                   'htmlTag'   => 'h4',
+                   'class'     => 'alert alert-danger',
+                ];
             
-                $this->_data['errors'][$roleTag] = [
-               'value' => "was not added.",
-            ];
+                $this->_data['errors'][$roleTag] =
+                [
+                    'value' => "was not added.",
+                ];
             }
          
             $exitEarly = true;
@@ -360,27 +397,31 @@ class UsersController extends BaseController
 
         if (strlen($this->_data['dropRole']) > 0) {
             if ($this->_auth->revoke($this->_auth->getRole($roleTag), $this->_userModel->id)) {
-                $this->_data['success']['Remove Role'] = [
-               'value'        => "was successful",
-               'bValue'       => true,
-               'htmlTag'      => 'h4',
-               'class'        => 'alert alert-success',
-            ];
+                $this->_data['success']['Remove Role'] =
+                [
+                   'value'        => "was successful",
+                   'bValue'       => true,
+                   'htmlTag'      => 'h4',
+                   'class'        => 'alert alert-success',
+                ];
             
-                $this->_data['success'][$roleTag] = [
-               'value' => "was removed",
-            ];
+                $this->_data['success'][$roleTag] =
+                [
+                    'value' => "was removed",
+                ];
             } else {
-                $this->_data['errors']['Remove Role'] = [
-               'value'     => "was unsuccessful",
-               'bValue'    => false,
-               'htmlTag'   => 'h4',
-               'class'     => 'alert alert-danger',
-            ];
+                $this->_data['errors']['Remove Role'] =
+                [
+                   'value'     => "was unsuccessful",
+                   'bValue'    => false,
+                   'htmlTag'   => 'h4',
+                   'class'     => 'alert alert-danger',
+                ];
             
-                $this->_data['errors'][$roleTag] = [
-               'value' => "was not removed.",
-            ];
+                $this->_data['errors'][$roleTag] =
+                [
+                    'value' => "was not removed.",
+                ];
             }
          
             $exitEarly = true;
@@ -400,13 +441,16 @@ class UsersController extends BaseController
          
             $this->_authItemModel   = AuthItem::findbyUnassignedRoles($assignedRoles);
       
-            return $this->render('user-view', [
-            'data'         => $this->_data,
-            'dataProvider' => $this->_dataProvider,
-            'model'        => $this->_userModel,
-            'roles'        => $this->_roleModel,
-            'allRoles'     => $this->_authItemModel,
-         ]);
+            return $this->render(
+                'user-view',
+                [
+                    'data'         => $this->_data,
+                    'dataProvider' => $this->_dataProvider,
+                    'model'        => $this->_userModel,
+                    'roles'        => $this->_roleModel,
+                    'allRoles'     => $this->_authItemModel,
+                ]
+            );
         }
       
         /**
@@ -417,15 +461,18 @@ class UsersController extends BaseController
       
         if (!$uuidExists) {
             if (isset($this->_data['saveUser']) && !empty($this->_data['saveUser'])) {
-                $this->_data['errors']['Save User'] = [
-               'value'     => "was unsuccessful",
-               'htmlTag'   => 'h4',
-               'class'     => 'alert alert-danger',
-            ];
+                $this->_data['errors']['Save User'] =
+                [
+                   'value'     => "was unsuccessful",
+                   'htmlTag'   => 'h4',
+                   'class'     => 'alert alert-danger',
+                ];
+
+                $this->_data['errors']['uuid'] =
+                [
+                    'value' => " ( " . $this->_data['uuid'] . " ) does not exist",
+                ];
             }
-            $this->_data['errors']['uuid'] = [
-            'value' => " ( " . $this->_data['uuid'] . " ) does not exist",
-         ];
          
             $roleModel  = AuthAssignment::find();
          
@@ -436,13 +483,16 @@ class UsersController extends BaseController
          
             $this->_authItemModel   = AuthItem::findbyUnassignedRoles($assignedRoles);
       
-            return $this->render('user-view', [
-            'data'         => $this->_data,
-            'dataProvider' => $this->_dataProvider,
-            'model'        => $this->_userModel,
-            'roles'        => $this->_roleModel,
-            'allRoles'     => $this->_authItemModel,
-         ]);
+            return $this->render(
+                'user-view',
+                [
+                    'data'         => $this->_data,
+                    'dataProvider' => $this->_dataProvider,
+                    'model'        => $this->_userModel,
+                    'roles'        => $this->_roleModel,
+                    'allRoles'     => $this->_authItemModel,
+                ]
+            );
         }
 
         $updateModel            = $this->_userModel;
@@ -458,12 +508,13 @@ class UsersController extends BaseController
       
         if ($this->_data['User']['Update'] && is_array($updateColumns)) {
             if (count($updateColumns) > 0) {
-                $this->_data['success']['Save User'] = [
-               'value'     => "was successful",
-               'bValue'    => true,
-               'htmlTag'   => 'h4',
-               'class'     => 'alert alert-success',
-            ];
+                $this->_data['success']['Save User'] =
+                [
+                   'value'     => "was successful",
+                   'bValue'    => true,
+                   'htmlTag'   => 'h4',
+                   'class'     => 'alert alert-success',
+                ];
             
                 foreach ($updateColumns as $key => $val) {
                     $keyIndex = ucwords(strtolower(str_replace("_", " ", $key)));
@@ -472,15 +523,17 @@ class UsersController extends BaseController
                         $lookupNew = $this->keyLookup($key, $val);
                         $lookupOld = $this->keyLookup($key, $this->_data['User'][$key]);
                
-                        $this->_data['success'][$keyIndex] = [
-                     'value'     => "was updated",
-                     'bValue'    => true,
-                  ];
+                        $this->_data['success'][$keyIndex] =
+                        [
+                            'value'     => "was updated",
+                            'bValue'    => true,
+                        ];
                   
                         if (strpos($lookupNew, "Unknown") !== 0) {
-                            $this->_data['success'][$keyIndex] = [
-                        'value'  => "was updated ( " . $lookupNew . " -> " . $lookupOld . " )",
-                     ];
+                            $this->_data['success'][$keyIndex] =
+                            [
+                                'value'  => "was updated ( " . $lookupNew . " -> " . $lookupOld . " )",
+                            ];
                         }
                     }
                 }
@@ -496,13 +549,16 @@ class UsersController extends BaseController
       
         $this->_authItemModel   = AuthItem::findbyUnassignedRoles($assignedRoles);
 
-        return $this->render('user-view', [
-         'data'         => $this->_data,
-         'dataProvider' => $this->_dataProvider,
-         'model'        => $this->_userModel,
-         'roles'        => $this->_roleModel,
-         'allRoles'     => $this->_authItemModel,
-      ]);
+        return $this->render(
+            'user-view',
+            [
+                'data'         => $this->_data,
+                'dataProvider' => $this->_dataProvider,
+                'model'        => $this->_userModel,
+                'roles'        => $this->_roleModel,
+                'allRoles'     => $this->_authItemModel,
+            ]
+        );
     }
    
     /**

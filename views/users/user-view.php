@@ -32,7 +32,8 @@
 
 <?php
 //   print( "<P> id: " . $model->id . "</p>" );
-   print("<P> UUID: " . $model->uuid . "</p>");
+   print("<div style='display:inline-block; margin: auto; width: 20%;'> <strong>UUID</strong></div>" . PHP_EOL);
+   print("<div style='display:inline;'>" . $model->uuid . "</div>" );
 //   print( "<P> name: " . $model->name . "</p>" );
 //   print( "<P> is_active: " . $model->is_active . "</p>" );
 //   print( "<P> access_token: " . $model->access_token . "</p>" );
@@ -42,7 +43,7 @@
  
 <!-- NEW SECTION -->
 
-      <div class="permits-edit">
+      <div class="user-edit">
          <?php $form = ActiveForm::begin([
                'action' => ['save'],
                'method' => 'post',
@@ -60,7 +61,16 @@
 
          <div class="form-group field-code">
             <label class="control-label" for="User[access_token]">Access Token</label>
-            <?= Html::input('text', 'User[access_token]', $model->access_token, ['id' => 'access_token', 'class' => 'form-control']) ?>
+            <?= Html::input(
+                'text', 
+                'User[access_token]', 
+                $model->access_token, 
+                [
+                    'id'    => 'access_token', 
+                    'class' => 'form-control',
+                    'style' => 'width: 80%;float:right;'
+                ]
+            ) ?>
             <div class="help-block"></div>
          </div>
 
@@ -75,25 +85,17 @@
          <div class="form-group field-is_active">
          <label class="control-label" for="is_active">Is Active</label>
             <?= Html::dropDownList(
-     'User[is_active]',
-     $model->is_active,
-     $isActive,
-     [
-                  'id'     => 'is_active',
-                  'class'  => 'form-control',
+                'User[is_active]',
+                $model->is_active,
+                $isActive,
+                [
+                    'id'     => 'is_active',
+                    'class'  => 'form-control',
+                    'style' => 'width: 80%;float:right;'
                ]
- )
-            ?>
+            ) ?>
             <div class="help-block"></div>
          </div>
-       
-<!--  
-         <div class="form-group field-is_hidden">
-         <label class="control-label" for="is_hidden">Is Visible</label>
-
-            <div class="help-block"></div>
-         </div>
- -->
          
          <div class="form-group field-dates">
             <div>
@@ -105,27 +107,42 @@
          </div>
     
          <div class="form-group">
-            <?= Html::submitButton('Save Changes', [
-               'class'  => 'btn btn-primary',
-               'id'     => 'saveUserBtn',
-               'name'   => 'User[saveUser]',
-               'value'  => 'saveUser'
-            ]) ?>
+            <?= Html::submitButton('Save Changes', 
+                [
+                   'class'  => 'btn btn-primary',
+                   'id'     => 'saveUserBtn',
+                   'name'   => 'User[saveUser]',
+                   'value'  => 'saveUser'
+                ]
+            ) ?>
          </div>
          
          <?php ActiveForm::end(); ?> 
       </div>
 
-      <h3>Drop User Roles</h3>
-      <div id='users-roles-drop-form'>      
-         <?= $this->render('_users-roles-drop', ['data' => $data, 'model' => $model->roles]); ?>      
-      </div>  
-
-      <h3>Add User Roles</h3>
-      <div id='user-roles-add-form'>      
-         <?= $this->render('_users-roles-add', ['data' => $data, 'model' => $allRoles]); ?>      
+      <div class="row">
+          <div class="col-lg-6">
+              <h3>Drop User Roles</h3>
+              <div id='users-roles-drop-form'>      
+                 <?= $this->render('_users-roles-drop', ['data' => $data, 'model' => $model->roles]); ?>      
+              </div>  
+          </div>
+          <div class="col-lg-6">
+              <h3>Add User Roles</h3>
+              <div id='user-roles-add-form'>      
+                 <?= $this->render('_users-roles-add', ['data' => $data, 'model' => $allRoles]); ?>      
+              </div>
+          </div>
       </div>
 
-      <code><?= __FILE__ ?></code>
+      <h3>Personal Information</h3>
+      <div id='user-personal-edit-form'>      
+
+      </div>               
+      
+
+      <p>
+          <code><?= __FILE__ ?></code>
+      </p>
          
    </div>
