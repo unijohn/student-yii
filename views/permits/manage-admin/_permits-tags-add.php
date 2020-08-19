@@ -9,10 +9,9 @@ use yii\widgets\ActiveForm;
 
 
    $tags = [];
-   foreach( $model as $tag )
-   {
-      $tags[$tag['id']] = $tag['code'] . ' : ' . $tag['description']; 
-   }  
+   foreach ($model as $tag) {
+       $tags[$tag['id']] = $tag['code'] . ' : ' . $tag['description'];
+   }
 ?>
 
 <div id="permits-tags-add-div">
@@ -20,21 +19,21 @@ use yii\widgets\ActiveForm;
          'action' => ['save'],
          'method' => 'post',
       ]); ?>
-   <?= Html::hiddenInput('id',   $data['id']) ?>
+   <?= Html::hiddenInput('id', $data['id']) ?>
    
    <div id="field-tag-code" class="form-group field-tag-code">
       <?= Html::dropDownList('tagid', null, $tags, [
             'id'     => 'tag-code',
-            'prompt' => 'Select Tag', 
+            'prompt' => 'Select Tag',
             'class'  => 'form-control'
-         ]) 
+         ])
       ?>
       <div id="field-tag-code-help-block" class="help-block"></div>
    </div>
 
    <div class="form-group">      
-      <?= Html::submitButton('Add Tag',  ['class' => 'btn btn-primary']) ?>
-      <?= Html::hiddenInput('addTag',    'addTag') ?>    
+      <?= Html::submitButton('Add Tag', ['class' => 'btn btn-primary']) ?>
+      <?= Html::hiddenInput('addTag', 'addTag') ?>    
    </div>
    
    <?php ActiveForm::end(); ?>

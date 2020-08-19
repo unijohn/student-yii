@@ -9,7 +9,7 @@ use app\controllers\CodesController;
 /* @var $model app\models\PostSearch */
 /* @var $form yii\widgets\ActiveForm */
 
-$codeType   = CodesController::getDropDownOpts( 'type', true );
+$codeType   = CodesController::getDropDownOpts('type', true);
 
 ?>
 
@@ -19,35 +19,36 @@ $codeType   = CodesController::getDropDownOpts( 'type', true );
         'method' => 'post',
     ]); ?>
 
-    <?=  $form->field($model, 'type' )
-            ->dropdownList( $codeType,
-            [
-               'id'     => 'type', 
+    <?=  $form->field($model, 'type')
+            ->dropdownList(
+                $codeType,
+                [
+               'id'     => 'type',
                'class'  => 'form-control',
-               'style'  => 'width: 60%;float:right;', 
+               'style'  => 'width: 60%;float:right;',
                'value'  => $filterForm['type'],
-            ] 
-         ) 
+            ]
+            )
     ?>
          
-    <?=  $form->field($model, 'code' )
-            ->textInput( 
-            [
-               'id'     => 'code', 
+    <?=  $form->field($model, 'code')
+            ->textInput(
+                [
+               'id'     => 'code',
                'class'  => 'form-control',
-               'style'  => 'width: 60%;float:right;', 
-            ] 
-         ) 
+               'style'  => 'width: 60%;float:right;',
+            ]
+            )
     ?>
          
-    <?=  $form->field($model, 'description' )
-            ->textInput( 
-            [
-               'id'     => 'description', 
+    <?=  $form->field($model, 'description')
+            ->textInput(
+                [
+               'id'     => 'description',
                'class'  => 'form-control',
-               'style'  => 'width: 60%;float:right;', 
-            ] 
-         ) ?>     
+               'style'  => 'width: 60%;float:right;',
+            ]
+            ) ?>     
 
    <div class="form-group">
       <?= Html::submitButton('Add System Code', [
@@ -55,11 +56,11 @@ $codeType   = CodesController::getDropDownOpts( 'type', true );
          'id'     => 'addSystemCodesBtn',
          'name'   => 'SystemCodes[insert]',
          'value'  => 'insert',
-         'style'  => 'width: 60%;float:right;',     
+         'style'  => 'width: 60%;float:right;',
       ]) ?>
 
 <!--        
-        <?= Html::a('Reset', ['/users/index'],  ['class'=>'btn btn-default']) ?>
+        <?= Html::a('Reset', ['/users/index'], ['class'=>'btn btn-default']) ?>
   -->
     </div>
 

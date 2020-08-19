@@ -2,15 +2,14 @@
 
 /* @var $this yii\web\View */
 
-   use yii\grid\GridView;   
+   use yii\grid\GridView;
 
    use yii\helpers\Html;
    use yii\helpers\HtmlPurifier;
-   use yii\helpers\Url;   
-   
+   use yii\helpers\Url;
 
    $this->title = 'Framework | System Codes | Index';
-   $this->params['breadcrumbs'][] = $this->title;  
+   $this->params['breadcrumbs'][] = $this->title;
    
    /*
     * Revisit issue where cookie times out
@@ -23,7 +22,7 @@
       <?= $this->render('/common/_alert', ['data' => $data]); ?>
       
       <p>
-         This is the <?php print( $this->title ); ?> page. You may modify the following file to customize its content: <? print( $data['filterForm']['paginationCount'] ); ?>
+         This is the <?php print($this->title); ?> page. You may modify the following file to customize its content: <?php print($data['filterForm']['paginationCount']); ?>
       </p>
     
       <div class="body-content">
@@ -32,11 +31,11 @@
                <h2>Find System Codes</h2>
                <div id='systemcodes-search-form'>      
                   <?= $this->render('_codes-search', [
-                     'model'              => $model, 
+                     'model'              => $model,
                      'type'               => $data['filterForm']['type'],
-                     'is_active'          => $data['filterForm']['is_active'], 
-                     'is_hidden'          => $data['filterForm']['is_hidden'], 
-                     'pagination_count'   => $data['filterForm']['paginationCount'] 
+                     'is_active'          => $data['filterForm']['is_active'],
+                     'is_hidden'          => $data['filterForm']['is_hidden'],
+                     'pagination_count'   => $data['filterForm']['paginationCount']
                   ]); ?>   
                </div>
             </div>
@@ -75,34 +74,39 @@
             'attribute' => 'type',
             'label' => 'Type',
             'format' => 'raw',
-            'value' => function( $data ){
-               $strValue = "";
-               if( $data['type'] == "1" ) $strValue = "Permit";
-               else if( $data['type'] == "2" ) $strValue = "Department";
-               else if( $data['type'] == "3" ) $strValue = "CareerLevel";
-               else if( $data['type'] == "4" ) $strValue = "Masters";
-                              
-               else $strValue = $data['type'] ;          
+            'value' => function ($data) {
+                $strValue = "";
+                if ($data['type'] == "1") {
+                    $strValue = "Permit";
+                } elseif ($data['type'] == "2") {
+                    $strValue = "Department";
+                } elseif ($data['type'] == "3") {
+                    $strValue = "CareerLevel";
+                } elseif ($data['type'] == "4") {
+                    $strValue = "Masters";
+                } else {
+                    $strValue = $data['type'] ;
+                }
                
-               return HTML::a( $strValue, Url::toRoute( ['codes/view', 'id' => $data['id'] ], true) );
+                return HTML::a($strValue, Url::toRoute(['codes/view', 'id' => $data['id'] ], true));
             },
          ],
          [
             'attribute' => 'code',
             'label' => 'Code',
             'format' => 'raw',
-            'value' => function( $data ){
-               return HTML::a( $data['code'], Url::toRoute( ['codes/view', 'id' => $data['id']  ], true) );
+            'value' => function ($data) {
+                return HTML::a($data['code'], Url::toRoute(['codes/view', 'id' => $data['id']  ], true));
             },
          ],
          [
             'attribute' => 'description',
             'label' => 'Description',
             'format' => 'raw',
-            'value' => function( $data ){
-               return HTML::a( $data['description'], Url::toRoute( ['codes/view', 'id' => $data['id']  ], true) );
+            'value' => function ($data) {
+                return HTML::a($data['description'], Url::toRoute(['codes/view', 'id' => $data['id']  ], true));
             },
-         ],   
+         ],
          
          'created_at:datetime',
          'updated_at:datetime',
@@ -110,7 +114,7 @@
       ],
 //       'showFooter' => false,
 //       'placeFooterAfterBody' => false,
-   ]); 
+   ]);
 ?>  
          </div>       
 

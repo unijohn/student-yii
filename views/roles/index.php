@@ -1,9 +1,9 @@
 <?php
    use yii\helpers\Html;
-   use yii\helpers\HtmlPurifier;
-   use yii\helpers\Url;   
+use yii\helpers\HtmlPurifier;
+use yii\helpers\Url;
    
-   use yii\grid\GridView;   
+   use yii\grid\GridView;
 
 /* @var $this yii\web\View */
 
@@ -13,7 +13,7 @@ $auth = Yii::$app->authManager;
 <div class="site-index">
 
     <div class="jumbotron">
-        <h1>Congratulations! <?php print( $this->title ); ?></h1>
+        <h1>Congratulations! <?php print($this->title); ?></h1>
 
         <p class="lead">You have successfully created your Yii-powered application.</p>
 
@@ -21,57 +21,50 @@ $auth = Yii::$app->authManager;
     </div>
 
 <?php
-   if( $data )
-   {
-      if( isset( $data['errors'] ) && !empty( $data['errors'] ) )
-      {
-         print( "<div class='alert alert-danger' role='alert'> " . PHP_EOL );
+   if ($data) {
+       if (isset($data['errors']) && !empty($data['errors'])) {
+           print("<div class='alert alert-danger' role='alert'> " . PHP_EOL);
              
-         foreach( $data['errors'] as $key => $value )
-         {
-            $htmlTagOpen   = "";
-            $htmlTagClose  = "<br />";
+           foreach ($data['errors'] as $key => $value) {
+               $htmlTagOpen   = "";
+               $htmlTagClose  = "<br />";
          
-            $errorName = $key;
+               $errorName = $key;
    
-            if( isset( $data['errors'][$key]['htmlTag'] ) && !empty( $data['errors'][$key]['htmlTag'] ) )
-            {
-               $htmlTagOpen   = "<"    . $data['errors'][$key]['htmlTag'] . ">";
-               $htmlTagClose  = "</"   . $data['errors'][$key]['htmlTag'] . ">";             
-            }
+               if (isset($data['errors'][$key]['htmlTag']) && !empty($data['errors'][$key]['htmlTag'])) {
+                   $htmlTagOpen   = "<"    . $data['errors'][$key]['htmlTag'] . ">";
+                   $htmlTagClose  = "</"   . $data['errors'][$key]['htmlTag'] . ">";
+               }
     
-            print( $htmlTagOpen . "<strong>" . $errorName . " </strong> " . $data['errors'][$key]['value'] . $htmlTagClose . PHP_EOL);
-         }
+               print($htmlTagOpen . "<strong>" . $errorName . " </strong> " . $data['errors'][$key]['value'] . $htmlTagClose . PHP_EOL);
+           }
          
-         print( "</div> " . PHP_EOL );      
-      }
+           print("</div> " . PHP_EOL);
+       }
       
-      if( isset( $data['success'] ) && !empty( $data['success'] ) )
-      {
-         print( "<div class='alert alert-success' role='alert'> " . PHP_EOL );
+       if (isset($data['success']) && !empty($data['success'])) {
+           print("<div class='alert alert-success' role='alert'> " . PHP_EOL);
              
-         foreach( $data['success'] as $key => $value )
-         {
-            $htmlTagOpen   = "";
-            $htmlTagClose  = "<br />";
+           foreach ($data['success'] as $key => $value) {
+               $htmlTagOpen   = "";
+               $htmlTagClose  = "<br />";
          
-            $errorName = $key;
+               $errorName = $key;
    
-            if( isset( $data['success'][$key]['htmlTag'] ) && !empty( $data['success'][$key]['htmlTag'] ) )
-            {
-               $htmlTagOpen   = "<"    . $data['success'][$key]['htmlTag'] . ">";
-               $htmlTagClose  = "</"   . $data['success'][$key]['htmlTag'] . ">";             
-            }
+               if (isset($data['success'][$key]['htmlTag']) && !empty($data['success'][$key]['htmlTag'])) {
+                   $htmlTagOpen   = "<"    . $data['success'][$key]['htmlTag'] . ">";
+                   $htmlTagClose  = "</"   . $data['success'][$key]['htmlTag'] . ">";
+               }
             
-            print( $htmlTagOpen . "<strong>" . $errorName . " </strong> " . $data['success'][$key]['value'] . $htmlTagClose . PHP_EOL);
-         }
+               print($htmlTagOpen . "<strong>" . $errorName . " </strong> " . $data['success'][$key]['value'] . $htmlTagClose . PHP_EOL);
+           }
          
-         print( "</div> " . PHP_EOL );      
-      }   
+           print("</div> " . PHP_EOL);
+       }
 
-      echo ( "<Pre>" );
-      print_r( $data );
-      echo ( "</Pre>" );
+       echo("<Pre>");
+       print_r($data);
+       echo("</Pre>");
    }
  ?>
 

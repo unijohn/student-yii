@@ -2,15 +2,14 @@
 
 /* @var $this yii\web\View */
 
-   use yii\grid\GridView;   
+   use yii\grid\GridView;
 
    use yii\helpers\Html;
    use yii\helpers\HtmlPurifier;
-   use yii\helpers\Url;   
-   
+   use yii\helpers\Url;
 
    $this->title = 'Permits | Admin | Index';
-   $this->params['breadcrumbs'][] = $this->title;  
+   $this->params['breadcrumbs'][] = $this->title;
 
 ?>
 <div class="site-index">

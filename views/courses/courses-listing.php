@@ -2,15 +2,14 @@
 
 /* @var $this yii\web\View */
 
-   use yii\grid\GridView;   
+   use yii\grid\GridView;
 
    use yii\helpers\Html;
    use yii\helpers\HtmlPurifier;
-   use yii\helpers\Url;   
-   
+   use yii\helpers\Url;
 
    $this->title = 'Framework | Courses | Index';
-   $this->params['breadcrumbs'][] = $this->title;  
+   $this->params['breadcrumbs'][] = $this->title;
    
    /*
     * Revisit issue where cookie times out
@@ -23,7 +22,7 @@
       <?= $this->render('/common/_alert', ['data' => $data]); ?>
       
       <p>
-         This is the <?php print( $this->title ); ?> page. You may modify the following file to customize its content:
+         This is the <?php print($this->title); ?> page. You may modify the following file to customize its content:
       </p>
     
       <div class="body-content">
@@ -32,11 +31,11 @@
                <h2>Find Courses</h2>
                <div id='courses-search-form'>      
                   <?= $this->render('_courses-search', [
-                     'model'              => $model, 
+                     'model'              => $model,
                      'model_subjects'     => $modelSubjects,
-                     'course_number'      => $data['filterForm']['course_number'],                     
-                     'is_active'          => $data['filterForm']['is_active'], 
-                     'is_hidden'          => $data['filterForm']['is_hidden'], 
+                     'course_number'      => $data['filterForm']['course_number'],
+                     'is_active'          => $data['filterForm']['is_active'],
+                     'is_hidden'          => $data['filterForm']['is_hidden'],
                      'pagination_count'   => $data['filterForm']['paginationCount'],
                      'subject_area'       => $data['filterForm']['subject_area'],
                   ]); ?>    
@@ -77,26 +76,26 @@
             'attribute' => 'subject_area',
             'label' => 'Subject',
             'format' => 'raw',
-            'value' => function( $data ){
-               return HTML::a( $data['subject_area'], Url::toRoute( ['courses/view', 'id' => $data['id'] ], true) );
+            'value' => function ($data) {
+                return HTML::a($data['subject_area'], Url::toRoute(['courses/view', 'id' => $data['id'] ], true));
             },
          ],
          [
             'attribute' => 'course_number',
             'label' => 'Course',
             'format' => 'raw',
-            'value' => function( $data ){
-               return HTML::a( $data['course_number'], Url::toRoute( ['courses/view', 'id' => $data['id']  ], true) );
+            'value' => function ($data) {
+                return HTML::a($data['course_number'], Url::toRoute(['courses/view', 'id' => $data['id']  ], true));
             },
          ],
          [
             'attribute' => 'section_number',
             'label' => 'Section',
             'format' => 'raw',
-            'value' => function( $data ){
-               return HTML::a( $data['section_number'], Url::toRoute( ['courses/view', 'id' => $data['id']  ], true) );
+            'value' => function ($data) {
+                return HTML::a($data['section_number'], Url::toRoute(['courses/view', 'id' => $data['id']  ], true));
             },
-         ],         
+         ],
          
          'created_at:datetime',
          'updated_at:datetime',
@@ -104,7 +103,7 @@
       ],
 //       'showFooter' => false,
 //       'placeFooterAfterBody' => false,
-   ]); 
+   ]);
 ?>  
          </div>       
 

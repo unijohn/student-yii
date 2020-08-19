@@ -11,7 +11,6 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 
-
 AppAsset::register($this);
 
 $cookies = Yii::$app->request->cookies;
@@ -49,24 +48,21 @@ $this->title = "FCBE Workdesk";
          ['label' => 'Home', 'url' => ['/site/index']],
 //         ['label' => 'About', 'url' => ['/site/about']],
 //         ['label' => 'Contact', 'url' => ['/site/contact']],
-//         ['label' => 'Permits', 'url' => ['/permits/index']],    
+//         ['label' => 'Permits', 'url' => ['/permits/index']],
        ];
    
-      if( Yii::$app->user->isGuest )
-      {
-         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
-      }
-      else
-      {  
-         $menuItems[] = '<li>'
+      if (Yii::$app->user->isGuest) {
+          $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
+      } else {
+          $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(
-               'Logout (' . Yii::$app->user->identity->uuid . ')',
-               ['class' => 'btn btn-link logout']
+                'Logout (' . Yii::$app->user->identity->uuid . ')',
+                ['class' => 'btn btn-link logout']
             )
             . Html::endForm()
             . '</li>';
-      }   
+      }
     
       echo Nav::widget([
          'options' => ['class' => 'navbar-nav navbar-right'],
@@ -83,78 +79,69 @@ $this->title = "FCBE Workdesk";
 
 <?php
       
-      if( isset( $this->params['data'] ) && !empty( $this->params['data']  ) )
-      {
-     
-         if( isset( $this->params['data']['errors'] ) && !empty( $this->params['data']['errors'] ) )
-         {
-         
-            $data['errors'] = $this->params['data']['errors'];
+      if (isset($this->params['data']) && !empty($this->params['data'])) {
+          if (isset($this->params['data']['errors']) && !empty($this->params['data']['errors'])) {
+              $data['errors'] = $this->params['data']['errors'];
 
-            print( "<div class='alert alert-danger' role='alert'> " . PHP_EOL );
-            print( "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>" );
+              print("<div class='alert alert-danger' role='alert'> " . PHP_EOL);
+              print("<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>");
                 
-            foreach( $data['errors'] as $key => $value )
-            {
-               $htmlTagOpen   = "";
-               $htmlTagClose  = "<br />";
+              foreach ($data['errors'] as $key => $value) {
+                  $htmlTagOpen   = "";
+                  $htmlTagClose  = "<br />";
             
-               $errorName = $key;
+                  $errorName = $key;
 
-/**
- *  Example of using Yii's built-in Alert widget
- *
- *
-               Yii::$app->session->setFlash('error', 'This is the message');
-               
-               echo Alert::widget([
-                  'options' => ['class' => 'error'],
-               ]);         
- **/
+                  /**
+                   *  Example of using Yii's built-in Alert widget
+                   *
+                   *
+                                 Yii::$app->session->setFlash('error', 'This is the message');
 
-               if( isset( $data['errors'][$key]['htmlTag'] ) && !empty( $data['errors'][$key]['htmlTag'] ) )
-               {
-                  $htmlTagOpen   = "<"    . $data['errors'][$key]['htmlTag'] . ">";
-                  $htmlTagClose  = "</"   . $data['errors'][$key]['htmlTag'] . ">";             
-               }
+                                 echo Alert::widget([
+                                    'options' => ['class' => 'error'],
+                                 ]);
+                   **/
+
+                  if (isset($data['errors'][$key]['htmlTag']) && !empty($data['errors'][$key]['htmlTag'])) {
+                      $htmlTagOpen   = "<"    . $data['errors'][$key]['htmlTag'] . ">";
+                      $htmlTagClose  = "</"   . $data['errors'][$key]['htmlTag'] . ">";
+                  }
        
-               print( $htmlTagOpen . "<strong>" . $errorName . " </strong> " . $data['errors'][$key]['value'] . $htmlTagClose . PHP_EOL);
-            }
+                  print($htmlTagOpen . "<strong>" . $errorName . " </strong> " . $data['errors'][$key]['value'] . $htmlTagClose . PHP_EOL);
+              }
 
-            print( "</div> " . PHP_EOL );      
-         }
+              print("</div> " . PHP_EOL);
+          }
       
-         if( isset( $this->params['data']['success'] ) && !empty( $this->params['data']['success'] ) )
-         {
-            $data['success'] = $this->params['data']['success'];
+          if (isset($this->params['data']['success']) && !empty($this->params['data']['success'])) {
+              $data['success'] = $this->params['data']['success'];
          
-            print( "<div class='alert alert-success' role='alert'> " . PHP_EOL );
-            print( "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>" );            
+              print("<div class='alert alert-success' role='alert'> " . PHP_EOL);
+              print("<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>");
                 
-            foreach( $data['success'] as $key => $value )
-            {
-               $htmlTagOpen   = "";
-               $htmlTagClose  = "<br />";
+              foreach ($data['success'] as $key => $value) {
+                  $htmlTagOpen   = "";
+                  $htmlTagClose  = "<br />";
             
-               $errorName = $key;
+                  $errorName = $key;
       
-               if( isset( $data['success'][$key]['htmlTag'] ) && !empty( $data['success'][$key]['htmlTag'] ) )
-               {
-                  $htmlTagOpen   = "<"    . $data['success'][$key]['htmlTag'] . ">";
-                  $htmlTagClose  = "</"   . $data['success'][$key]['htmlTag'] . ">";             
-               }
+                  if (isset($data['success'][$key]['htmlTag']) && !empty($data['success'][$key]['htmlTag'])) {
+                      $htmlTagOpen   = "<"    . $data['success'][$key]['htmlTag'] . ">";
+                      $htmlTagClose  = "</"   . $data['success'][$key]['htmlTag'] . ">";
+                  }
                
-               print( $htmlTagOpen . "<strong>" . $errorName . " </strong> " . $data['success'][$key]['value'] . $htmlTagClose . PHP_EOL);
-            }
+                  print($htmlTagOpen . "<strong>" . $errorName . " </strong> " . $data['success'][$key]['value'] . $htmlTagClose . PHP_EOL);
+              }
             
-            print( "</div> " . PHP_EOL );      
-         } 
+              print("</div> " . PHP_EOL);
+          }
   
-/*         
-         print( "<pre>" );
-         print_r( $this->params['data'] );
-         print( "</pre>" );
-*/             
+          /*
+                   print( "<pre>" );
+                   print_r( $this->params['data'] );
+                   print( "</pre>" );
+          */
       }
 ?>
    

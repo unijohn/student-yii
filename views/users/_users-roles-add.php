@@ -10,11 +10,10 @@ use yii\widgets\ActiveForm;
 
    $item_name = [];
    
-   foreach( $model as $role )
-   {
+   foreach ($model as $role) {
 //      print_r( $role);
-      $item_name[$role['name']] = $role['description']; 
-   }  
+       $item_name[$role['name']] = $role['description'];
+   }
 ?>
 
 <div class="users-search">
@@ -26,17 +25,17 @@ use yii\widgets\ActiveForm;
    <div class="form-group field-authitem-name">
       <?= Html::dropDownList('authitem[name]', null, $item_name, [
             'id'     => 'authitem-name',
-            'prompt' => 'Select Role', 
+            'prompt' => 'Select Role',
             'class'  => 'form-control'
-         ]) 
+         ])
       ?>
       <div class="help-block"></div>
    </div>
 
    <div class="form-group">      
-      <?= Html::submitButton('Add Role',  ['class' => 'btn btn-primary']) ?>
-      <?= Html::hiddenInput('addRole',    'addRole') ?>
-      <?= Html::hiddenInput('uuid',       $data['uuid']) ?>          
+      <?= Html::submitButton('Add Role', ['class' => 'btn btn-primary']) ?>
+      <?= Html::hiddenInput('addRole', 'addRole') ?>
+      <?= Html::hiddenInput('uuid', $data['uuid']) ?>          
    </div>
    
    <?php ActiveForm::end(); ?>

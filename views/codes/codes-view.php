@@ -2,24 +2,24 @@
 
 /* @var $this yii\web\View */
 
-   use yii\grid\GridView;   
+   use yii\grid\GridView;
 
    use yii\helpers\Html;
    use yii\helpers\HtmlPurifier;
-   use yii\helpers\Url;   
+   use yii\helpers\Url;
 
    use yii\widgets\ActiveForm;
    
-   use app\controllers\CodesController;   
+   use app\controllers\CodesController;
    
    $this->title = 'Framework | System Codes | View | Update';
    $this->params['breadcrumbs'][] = [ 'label' => $this->title, 'url' =>['index']];
    
    $formatter = \Yii::$app->formatter;
   
-   $codeType   = CodesController::getDropDownOpts( 'type'      );
-   $isActive   = CodesController::getDropDownOpts( 'is_active' );
-   $isHidden   = CodesController::getDropDownOpts( 'is_hidden' );   
+   $codeType   = CodesController::getDropDownOpts('type');
+   $isActive   = CodesController::getDropDownOpts('is_active');
+   $isHidden   = CodesController::getDropDownOpts('is_hidden');
 ?>
 
    <div class="site-about">
@@ -35,11 +35,11 @@
 /**
    print( "<P> id: "          . $model->id . "</p>" );
    print( "<P> code: "        . $model->code . "</p>" );
-   print( "<P> description: " . $model->description . "</p>" );   
+   print( "<P> description: " . $model->description . "</p>" );
    print( "<P> is_active: "   . $model->is_active . "</p>" );
    print( "<P> created_at: "  . $formatter->asDate( $model->created_at, 'MM-dd-yyyy HH:mm:ss' ) . "</p>" );
-   print( "<P> updated_at: "  . $formatter->asDate( $model->updated_at, 'MM-dd-yyyy HH:mm:ss' ) . "</p>" );    
-   print( "<P> deleted_at: "  . $formatter->asDate( $model->deleted_at, 'MM-dd-yyyy HH:mm:ss' ) . "</p>" );    
+   print( "<P> updated_at: "  . $formatter->asDate( $model->updated_at, 'MM-dd-yyyy HH:mm:ss' ) . "</p>" );
+   print( "<P> deleted_at: "  . $formatter->asDate( $model->deleted_at, 'MM-dd-yyyy HH:mm:ss' ) . "</p>" );
  **/
  ?>
   
@@ -62,21 +62,27 @@
 
          <div class="form-group form-inline field-type">
          <label class="control-label" for="SystemCodes[type]">Type</label>
-            <?= Html::dropDownList('SystemCodes[type]', $model->type, 
-               $codeType,
-               [
+            <?= Html::dropDownList(
+     'SystemCodes[type]',
+     $model->type,
+     $codeType,
+     [
                   'id'     => 'type',
                   'class'  => 'form-control',
                   'style'  => 'width: 80%;float:right;',
-               ]) 
+               ]
+ )
             ?>
             <div class="help-block"></div>
          </div>         
          
          <div class="form-group form-inline field-code">
             <label class="control-label" for="SystemCodes[code]">Code</label>
-            <?= Html::input('text', 'SystemCodes[code]', $model->code, 
-               [
+            <?= Html::input(
+                'text',
+                'SystemCodes[code]',
+                $model->code,
+                [
                   'id'     => 'code',
                   'class'  => 'form-control',
                   'style'  => 'width: 80%;float:right;',
@@ -87,9 +93,12 @@
          
          <div class="form-group form-inline field-description">
             <label class="control-label" for="SystemCodes[description]">Section</label>
-            <?= Html::input('text', 'SystemCodes[description]', $model->description, 
-               [
-                  'id'     => 'description', 
+            <?= Html::input(
+                'text',
+                'SystemCodes[description]',
+                $model->description,
+                [
+                  'id'     => 'description',
                   'class'  => 'form-control',
                   'style'  => 'width: 80%;float:right;',
                ]
@@ -99,39 +108,45 @@
             
          <div class="form-group form-inline field-is_active">
          <label class="control-label" for="SystemCodes[is_active]">Is Active</label>
-            <?= Html::dropDownList('SystemCodes[is_active]', $model->is_active, 
-               $isActive,
-               [
+            <?= Html::dropDownList(
+                'SystemCodes[is_active]',
+                $model->is_active,
+                $isActive,
+                [
                   'id'     => 'is_active',
                   'class'  => 'form-control',
                   'style'  => 'width: 80%;float:right;',
-               ]) 
+               ]
+            )
             ?>
             <div class="help-block"></div>
          </div>
          
          <div class="form-group form-inline field-is_hidden">
          <label class="control-label" for="SystemCodes[is_hidden]">Is Visible</label>
-            <?= Html::dropDownList('SystemCodes[is_hidden]', $model->is_hidden, 
-               $isHidden,
-               [
+            <?= Html::dropDownList(
+                'SystemCodes[is_hidden]',
+                $model->is_hidden,
+                $isHidden,
+                [
                   'id'     => 'is_hidden',
                   'class'  => 'form-control',
                   'style'  => 'width: 80%;float:right;',
-               ]) 
+               ]
+            )
             ?>
             <div class="help-block"></div>
          </div>
          
          <div class="form-group field-dates">
             <div>
-               <?php echo( "created_at: "  . $formatter->asDate( $model->created_at, 'MM-dd-yyyy HH:mm:ss' ) ); ?>
+               <?php echo("created_at: "  . $formatter->asDate($model->created_at, 'MM-dd-yyyy HH:mm:ss')); ?>
             </div>
             <div>
-               <?php echo( "updated_at: "  . $formatter->asDate( $model->updated_at, 'MM-dd-yyyy HH:mm:ss' ) ); ?>
+               <?php echo("updated_at: "  . $formatter->asDate($model->updated_at, 'MM-dd-yyyy HH:mm:ss')); ?>
             </div>
             <div>
-               <?php echo( "deleted_at: "  . $formatter->asDate( $model->deleted_at, 'MM-dd-yyyy HH:mm:ss' ) ); ?>
+               <?php echo("deleted_at: "  . $formatter->asDate($model->deleted_at, 'MM-dd-yyyy HH:mm:ss')); ?>
             </div>            
          </div>
     
@@ -149,12 +164,12 @@
  
       <h3>Drop System Code Tag</h3>
       <div id='system-codes-drop-form'>      
-         <?= $this->render('_codes-tags-drop', ['data' => $data, 'model' => $tags]); ?>
+         <?= $this->render('/common/_remove-tags', ['data' => $data, 'model' => $tags]); ?>
       </div>  
 
       <h3>Add System Code Tag</h3>
       <div id='system-codes-add-form'>      
-         <?= $this->render('_codes-tags-add', ['data' => $data, 'model' => $allTags]); ?>
+         <?= $this->render('/common/_add-tags', ['data' => $data, 'model' => $allTags]); ?>
       </div>
 
       <code><?= __FILE__ ?></code>

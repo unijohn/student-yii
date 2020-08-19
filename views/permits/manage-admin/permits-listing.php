@@ -2,15 +2,14 @@
 
 /* @var $this yii\web\View */
 
-   use yii\grid\GridView;   
+   use yii\grid\GridView;
 
    use yii\helpers\Html;
    use yii\helpers\HtmlPurifier;
-   use yii\helpers\Url;   
-   
+   use yii\helpers\Url;
 
    $this->title = 'Permits | Manage-Admin | Index';
-   $this->params['breadcrumbs'][] = $this->title;  
+   $this->params['breadcrumbs'][] = $this->title;
    
    /*
     * Revisit issue where cookie times out
@@ -23,7 +22,7 @@
       <?= $this->render('/common/_alert', ['data' => $data]); ?>
       
       <p>
-         This is the <?php print( $this->title ); ?> page. You may modify the following file to customize its content:
+         This is the <?php print($this->title); ?> page. You may modify the following file to customize its content:
       </p>
     
       <div class="body-content">
@@ -32,7 +31,7 @@
                <h2>Find Permits</h2>
                <div id='permits-search-form'>      
                   <?= $this->render('_permits-search', [
-                     'model'        => $model, 
+                     'model'        => $model,
                      'filterForm'   => $data['filterForm'],
                   ]); ?>      
                </div>
@@ -66,8 +65,8 @@
             'attribute' => 'id',
             'label'     => 'ID',
             'format' => 'raw',
-            'value' => function( $data ){
-               return HTML::a( $data['id'], Url::toRoute( ['permits/manage-admin/view', 'id' => $data['id'] ], true) );
+            'value' => function ($data) {
+                return HTML::a($data['id'], Url::toRoute(['permits/manage-admin/view', 'id' => $data['id'] ], true));
             },
          ],
 
@@ -75,8 +74,8 @@
             'attribute' => 'code',
             'label'     => 'Code',
             'format' => 'raw',
-            'value' => function( $data ){
-               return HTML::a( $data['code'], Url::toRoute( ['permits/manage-admin/view', 'id' => $data['id'] ], true) );
+            'value' => function ($data) {
+                return HTML::a($data['code'], Url::toRoute(['permits/manage-admin/view', 'id' => $data['id'] ], true));
             },
          ],
 
@@ -85,8 +84,8 @@
             'attribute' => 'description',
             'label'     => 'Description',
             'format' => 'raw',
-            'value' => function( $data ){
-               return HTML::a( $data['description'], Url::toRoute( ['permits/manage-admin/view', 'id' => $data['id'] ], true) );
+            'value' => function ($data) {
+                return HTML::a($data['description'], Url::toRoute(['permits/manage-admin/view', 'id' => $data['id'] ], true));
             },
          ],
          
@@ -96,7 +95,7 @@
        ],
 //       'showFooter' => false,
 //       'placeFooterAfterBody' => false,
-   ]); 
+   ]);
 ?>  
          </div>       
 

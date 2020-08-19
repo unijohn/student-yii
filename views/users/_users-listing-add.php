@@ -16,18 +16,19 @@ use yii\widgets\ActiveForm;
     ]); ?>
 
     <?=  $form->field($model, 'uuid')->textInput(
-         [
+        [
             'class'  => 'form-control',
             'style'  => 'width: 60%;float:right;',
-         ])
+         ]
+    )
     ?>   
 
     <div class="form-group">
-        <?= Html::submitButton('Add User',      ['class' => 'btn btn-primary',   'id' => 'addUserBtn',      'name' => 'User[addUser]',    'value' => 'addUser'    ]) ?>
-        <?= Html::submitButton('Lookup User',   ['class' => 'btn btn-info',      'id' => 'lookupUserBtn',   'name' => 'User[lookupUser]', 'value' => 'lookupUser' ]) ?>        
+        <?= Html::submitButton('Add User', ['class' => 'btn btn-primary',   'id' => 'addUserBtn',      'name' => 'User[addUser]',    'value' => 'addUser'    ]) ?>
+        <?= Html::submitButton('Lookup User', ['class' => 'btn btn-info',      'id' => 'lookupUserBtn',   'name' => 'User[lookupUser]', 'value' => 'lookupUser' ]) ?>        
 
 <!--        
-        <?= Html::a('Reset', ['/users/index'],  ['class'=>'btn btn-default']) ?>
+        <?= Html::a('Reset', ['/users/index'], ['class'=>'btn btn-default']) ?>
   -->
     </div>
 

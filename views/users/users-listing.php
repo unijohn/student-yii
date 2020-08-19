@@ -2,15 +2,14 @@
 
 /* @var $this yii\web\View */
 
-   use yii\grid\GridView;   
+   use yii\grid\GridView;
 
    use yii\helpers\Html;
    use yii\helpers\HtmlPurifier;
-   use yii\helpers\Url;   
-   
+   use yii\helpers\Url;
 
    $this->title = 'Framework | Users | Index';
-   $this->params['breadcrumbs'][] = $this->title;  
+   $this->params['breadcrumbs'][] = $this->title;
    
    /*
     * Revisit issue where cookie times out
@@ -23,7 +22,7 @@
       <?= $this->render('/common/_alert', ['data' => $data]); ?>
       
       <p>
-         This is the <?php print( $this->title ); ?> page. You may modify the following file to customize its content:
+         This is the <?php print($this->title); ?> page. You may modify the following file to customize its content:
       </p>
     
       <div class="body-content">
@@ -31,7 +30,7 @@
             <div class="col-lg-4">
                <h2>Find Users</h2>
                <div id='users-search-form'>      
-                  <?= $this->render('_users-search', ['model' => $model, 'filterForm' => $data['filterForm'] ] ); ?>      
+                  <?= $this->render('_users-search', ['model' => $model, 'filterForm' => $data['filterForm'] ]); ?>      
                </div>
             </div>
             <div class="col-lg-4">
@@ -67,8 +66,8 @@
             'attribute' => 'uuid',
             'label' => 'UUID',
             'format' => 'raw',
-            'value' => function( $data ){
-               return HTML::a( $data['uuid'], Url::toRoute( ['users/view', 'uuid' => $data['uuid'] ], true) );
+            'value' => function ($data) {
+                return HTML::a($data['uuid'], Url::toRoute(['users/view', 'uuid' => $data['uuid'] ], true));
             },
          ],
 //         'name',
@@ -79,7 +78,7 @@
        ],
 //       'showFooter' => false,
 //       'placeFooterAfterBody' => false,
-   ]); 
+   ]);
 ?>  
          </div>       
 

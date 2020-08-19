@@ -15,14 +15,14 @@ use yii\widgets\ActiveForm;
         'method' => 'post',
     ]); ?>
 
-    <?=  $form->field($model, 'code' )
-            ->textInput( 
-            [
-               'id'     => 'code', 
+    <?=  $form->field($model, 'code')
+            ->textInput(
+                [
+               'id'     => 'code',
                'class'  => 'form-control',
-               'style'  => 'width: 60%;float:right;', 
-            ] 
-         ) ?>
+               'style'  => 'width: 60%;float:right;',
+            ]
+            ) ?>
 
    <div class="form-group">
       <?= Html::submitButton('Add Permit', [
@@ -30,11 +30,11 @@ use yii\widgets\ActiveForm;
          'id'     => 'addPermitBtn',
          'name'   => 'Permit[addPermit]',
          'value'  => 'addPermit',
-         'style'  => 'width: 60%;float:right;',     
+         'style'  => 'width: 60%;float:right;',
       ]) ?>
 
 <!--        
-        <?= Html::a('Reset', ['/users/index'],  ['class'=>'btn btn-default']) ?>
+        <?= Html::a('Reset', ['/users/index'], ['class'=>'btn btn-default']) ?>
   -->
     </div>
 

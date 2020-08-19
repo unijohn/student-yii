@@ -15,32 +15,32 @@ use yii\widgets\ActiveForm;
         'method' => 'post',
     ]); ?>
 
-    <?=  $form->field($model, 'subject_area' )
-            ->textInput( 
-            [
-               'id'     => 'subject_area', 
+    <?=  $form->field($model, 'subject_area')
+            ->textInput(
+                [
+               'id'     => 'subject_area',
                'class'  => 'form-control',
-               'style'  => 'width: 60%;float:right;', 
-            ] 
-         ) ?>
+               'style'  => 'width: 60%;float:right;',
+            ]
+            ) ?>
          
-    <?=  $form->field($model, 'course_number' )
-            ->textInput( 
-            [
-               'id'     => 'course_number', 
+    <?=  $form->field($model, 'course_number')
+            ->textInput(
+                [
+               'id'     => 'course_number',
                'class'  => 'form-control',
-               'style'  => 'width: 60%;float:right;', 
-            ] 
-         ) ?>
+               'style'  => 'width: 60%;float:right;',
+            ]
+            ) ?>
          
-    <?=  $form->field($model, 'section_number' )
-            ->textInput( 
-            [
-               'id'     => 'section_number', 
+    <?=  $form->field($model, 'section_number')
+            ->textInput(
+                [
+               'id'     => 'section_number',
                'class'  => 'form-control',
-               'style'  => 'width: 60%;float:right;', 
-            ] 
-         ) ?>     
+               'style'  => 'width: 60%;float:right;',
+            ]
+            ) ?>     
 
    <div class="form-group">
       <?= Html::submitButton('Add Course', [
@@ -48,11 +48,11 @@ use yii\widgets\ActiveForm;
          'id'     => 'addCourseBtn',
          'name'   => 'Course[addCourse]',
          'value'  => 'addCourse',
-         'style'  => 'width: 60%;float:right;',     
+         'style'  => 'width: 60%;float:right;',
       ]) ?>
 
 <!--        
-        <?= Html::a('Reset', ['/users/index'],  ['class'=>'btn btn-default']) ?>
+        <?= Html::a('Reset', ['/users/index'], ['class'=>'btn btn-default']) ?>
   -->
     </div>
 

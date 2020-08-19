@@ -2,7 +2,7 @@
 
 /* @var $this yii\web\View */
 
-   use yii\grid\GridView;   
+   use yii\grid\GridView;
 
    use yii\helpers\Html;
    use yii\helpers\HtmlPurifier;
@@ -32,12 +32,12 @@
 
 <?php
 //   print( "<P> id: " . $model->id . "</p>" );
-   print( "<P> UUID: " . $model->uuid . "</p>" );
-//   print( "<P> name: " . $model->name . "</p>" );   
+   print("<P> UUID: " . $model->uuid . "</p>");
+//   print( "<P> name: " . $model->name . "</p>" );
 //   print( "<P> is_active: " . $model->is_active . "</p>" );
 //   print( "<P> access_token: " . $model->access_token . "</p>" );
 //   print( "<P> created_at: " . $formatter->asDate( $model->created_at, 'MM-dd-yyyy HH:mm:ss' ) . "</p>" );
-//   print( "<P> updated_at: " . $formatter->asDate( $model->updated_at, 'MM-dd-yyyy HH:mm:ss' ) . "</p>" );    
+//   print( "<P> updated_at: " . $formatter->asDate( $model->updated_at, 'MM-dd-yyyy HH:mm:ss' ) . "</p>" );
  ?>
  
 <!-- NEW SECTION -->
@@ -74,12 +74,15 @@
 
          <div class="form-group field-is_active">
          <label class="control-label" for="is_active">Is Active</label>
-            <?= Html::dropDownList('User[is_active]', $model->is_active, 
-               $isActive,
-               [
+            <?= Html::dropDownList(
+     'User[is_active]',
+     $model->is_active,
+     $isActive,
+     [
                   'id'     => 'is_active',
                   'class'  => 'form-control',
-               ]) 
+               ]
+ )
             ?>
             <div class="help-block"></div>
          </div>
@@ -94,10 +97,10 @@
          
          <div class="form-group field-dates">
             <div>
-               <?php echo( "created_at: "  . $formatter->asDate( $model->created_at, 'MM-dd-yyyy HH:mm:ss' ) ); ?>
+               <?php echo("created_at: "  . $formatter->asDate($model->created_at, 'MM-dd-yyyy HH:mm:ss')); ?>
             </div>
             <div>
-               <?php echo( "updated_at: "  . $formatter->asDate( $model->updated_at, 'MM-dd-yyyy HH:mm:ss' ) ); ?>
+               <?php echo("updated_at: "  . $formatter->asDate($model->updated_at, 'MM-dd-yyyy HH:mm:ss')); ?>
             </div>
          </div>
     

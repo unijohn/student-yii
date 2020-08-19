@@ -2,11 +2,11 @@
 
 /* @var $this yii\web\View */
 
-   use yii\grid\GridView;   
+   use yii\grid\GridView;
 
    use yii\helpers\Html;
    use yii\helpers\HtmlPurifier;
-   use yii\helpers\Url;   
+   use yii\helpers\Url;
 
    use yii\widgets\ActiveForm;
    
@@ -17,11 +17,11 @@
    
 //   $isActive['-1']   = 'Select Status';
    $isActive['1']    = 'Active';
-   $isActive['0']    = 'Inactive';   
+   $isActive['0']    = 'Inactive';
    
 //   $isHidden['-1']   = 'Select Status';
    $isHidden['1']    = 'Visible';
-   $isHidden['0']    = 'Hidden';   
+   $isHidden['0']    = 'Hidden';
 ?>
 
    <div class="site-about">
@@ -37,11 +37,11 @@
 /**
    print( "<P> id: "          . $model->id . "</p>" );
    print( "<P> code: "        . $model->code . "</p>" );
-   print( "<P> description: " . $model->description . "</p>" );   
+   print( "<P> description: " . $model->description . "</p>" );
    print( "<P> is_active: "   . $model->is_active . "</p>" );
    print( "<P> created_at: "  . $formatter->asDate( $model->created_at, 'MM-dd-yyyy HH:mm:ss' ) . "</p>" );
-   print( "<P> updated_at: "  . $formatter->asDate( $model->updated_at, 'MM-dd-yyyy HH:mm:ss' ) . "</p>" );    
-   print( "<P> deleted_at: "  . $formatter->asDate( $model->deleted_at, 'MM-dd-yyyy HH:mm:ss' ) . "</p>" );    
+   print( "<P> updated_at: "  . $formatter->asDate( $model->updated_at, 'MM-dd-yyyy HH:mm:ss' ) . "</p>" );
+   print( "<P> deleted_at: "  . $formatter->asDate( $model->deleted_at, 'MM-dd-yyyy HH:mm:ss' ) . "</p>" );
  **/
  ?>
  
@@ -63,20 +63,26 @@
 
          <div class="form-group form-inline field-subject_area">
             <label class="control-label" for="Courses[subject_area]">Subject</label>
-            <?= Html::input('text', 'Courses[subject_area]', $model->subject_area, 
-               [
+            <?= Html::input(
+     'text',
+     'Courses[subject_area]',
+     $model->subject_area,
+     [
                   'id'     => 'code',
                   'class'  => 'form-control',
                   'style'  => 'width: 80%;float:right;',
                ]
-            ) ?>
+ ) ?>
             <div class="help-block"></div>
          </div>
          
          <div class="form-group form-inline field-course_number">
             <label class="control-label" for="Courses[course_number]">Course</label>
-            <?= Html::input('text', 'Courses[course_number]', $model->course_number, 
-               [
+            <?= Html::input(
+                'text',
+                'Courses[course_number]',
+                $model->course_number,
+                [
                   'id'     => 'course_number',
                   'class'  => 'form-control',
                   'style'  => 'width: 80%;float:right;',
@@ -87,9 +93,12 @@
          
          <div class="form-group form-inline field-section_number">
             <label class="control-label" for="Courses[section_number]">Section</label>
-            <?= Html::input('text', 'Courses[section_number]', $model->section_number, 
-               [
-                  'id'     => 'section_number', 
+            <?= Html::input(
+                'text',
+                'Courses[section_number]',
+                $model->section_number,
+                [
+                  'id'     => 'section_number',
                   'class'  => 'form-control',
                   'style'  => 'width: 80%;float:right;',
                ]
@@ -99,39 +108,45 @@
             
          <div class="form-group form-inline field-is_active">
          <label class="control-label" for="is_active">Is Active</label>
-            <?= Html::dropDownList('Courses[is_active]', $model->is_active, 
-               $isActive,
-               [
+            <?= Html::dropDownList(
+                'Courses[is_active]',
+                $model->is_active,
+                $isActive,
+                [
                   'id'     => 'is_active',
                   'class'  => 'form-control',
                   'style'  => 'width: 80%;float:right;',
-               ]) 
+               ]
+            )
             ?>
             <div class="help-block"></div>
          </div>
          
          <div class="form-group form-inline field-is_hidden">
          <label class="control-label" for="is_hidden">Is Visible</label>
-            <?= Html::dropDownList('Courses[is_hidden]', $model->is_hidden, 
-               $isHidden,
-               [
+            <?= Html::dropDownList(
+                'Courses[is_hidden]',
+                $model->is_hidden,
+                $isHidden,
+                [
                   'id'     => 'is_hidden',
                   'class'  => 'form-control',
                   'style'  => 'width: 80%;float:right;',
-               ]) 
+               ]
+            )
             ?>
             <div class="help-block"></div>
          </div>
          
          <div class="form-group field-dates">
             <div>
-               <?php echo( "created_at: "  . $formatter->asDate( $model->created_at, 'MM-dd-yyyy HH:mm:ss' ) ); ?>
+               <?php echo("created_at: "  . $formatter->asDate($model->created_at, 'MM-dd-yyyy HH:mm:ss')); ?>
             </div>
             <div>
-               <?php echo( "updated_at: "  . $formatter->asDate( $model->updated_at, 'MM-dd-yyyy HH:mm:ss' ) ); ?>
+               <?php echo("updated_at: "  . $formatter->asDate($model->updated_at, 'MM-dd-yyyy HH:mm:ss')); ?>
             </div>
             <div>
-               <?php echo( "deleted_at: "  . $formatter->asDate( $model->deleted_at, 'MM-dd-yyyy HH:mm:ss' ) ); ?>
+               <?php echo("deleted_at: "  . $formatter->asDate($model->deleted_at, 'MM-dd-yyyy HH:mm:ss')); ?>
             </div>            
          </div>
     

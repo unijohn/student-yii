@@ -2,11 +2,11 @@
 
 /* @var $this yii\web\View */
 
-   use yii\grid\GridView;   
+   use yii\grid\GridView;
 
    use yii\helpers\Html;
    use yii\helpers\HtmlPurifier;
-   use yii\helpers\Url;   
+   use yii\helpers\Url;
 
    use yii\widgets\ActiveForm;
    
@@ -17,11 +17,11 @@
    
 //   $isActive['-1']   = 'Select Status';
    $isActive['1']    = 'Active';
-   $isActive['0']    = 'Inactive';   
+   $isActive['0']    = 'Inactive';
    
 //   $isHidden['-1']   = 'Select Status';
    $isHidden['1']    = 'Visible';
-   $isHidden['0']    = 'Hidden';   
+   $isHidden['0']    = 'Hidden';
 ?>
 
    <div class="site-about">
@@ -51,63 +51,77 @@
 
          <div class="form-group field-code">
             <label class="control-label" for="SystemCodes[code]">Code</label>
-            <?= Html::input('text', 'SystemCodes[code]', $model->code, 
-               [
-                  'id'     => 'code', 
+            <?= Html::input(
+     'text',
+     'SystemCodes[code]',
+     $model->code,
+     [
+                  'id'     => 'code',
                   'class'  => 'form-control',
                   'style'  => 'width: 80%;float:right;'
-               ]) 
+               ]
+ )
             ?>
             <div class="help-block"></div>
          </div>
          
          <div class="form-group field-description">
             <label class="control-label" for="SystemCodes[description]">Description</label>
-            <?= Html::input('text', 'SystemCodes[description]', $model->description, 
-               [
-                  'id'     => 'description', 
+            <?= Html::input(
+                'text',
+                'SystemCodes[description]',
+                $model->description,
+                [
+                  'id'     => 'description',
                   'class'  => 'form-control',
                   'style'  => 'width: 80%;float:right;'
-               ]) 
+               ]
+            )
             ?>   
             <div class="help-block"></div>
          </div>
             
          <div class="form-group field-is_active">
          <label class="control-label" for="is_active">Is Active</label>
-            <?= Html::dropDownList('SystemCodes[is_active]', $model->is_active, 
-               $isActive,
-               [
+            <?= Html::dropDownList(
+                'SystemCodes[is_active]',
+                $model->is_active,
+                $isActive,
+                [
                   'id'     => 'is_active',
                   'class'  => 'form-control',
                   'style'  => 'width: 80%;float:right;',
-               ]) 
+               ]
+            )
             ?>
             <div class="help-block"></div>
          </div>
          
          <div class="form-group field-is_hidden">
          <label class="control-label" for="is_hidden">Is Visible</label>
-            <?= Html::dropDownList('SystemCodes[is_hidden]', $model->is_hidden, 
-               $isHidden,
-               [
+            <?= Html::dropDownList(
+                'SystemCodes[is_hidden]',
+                $model->is_hidden,
+                $isHidden,
+                [
                   'id'     => 'is_hidden',
                   'class'  => 'form-control',
                   'style'  => 'width: 80%;float:right;',
-               ]) 
+               ]
+            )
             ?>
             <div class="help-block"></div>
          </div>
          
          <div class="form-group field-dates">
             <div>
-               <?php echo( "created_at: "  . $formatter->asDate( $model->created_at, 'MM-dd-yyyy HH:mm:ss' ) ); ?>
+               <?php echo("created_at: "  . $formatter->asDate($model->created_at, 'MM-dd-yyyy HH:mm:ss')); ?>
             </div>
             <div>
-               <?php echo( "updated_at: "  . $formatter->asDate( $model->updated_at, 'MM-dd-yyyy HH:mm:ss' ) ); ?>
+               <?php echo("updated_at: "  . $formatter->asDate($model->updated_at, 'MM-dd-yyyy HH:mm:ss')); ?>
             </div>
             <div>
-               <?php echo( "deleted_at: "  . $formatter->asDate( $model->deleted_at, 'MM-dd-yyyy HH:mm:ss' ) ); ?>
+               <?php echo("deleted_at: "  . $formatter->asDate($model->deleted_at, 'MM-dd-yyyy HH:mm:ss')); ?>
             </div>            
          </div>
     
@@ -125,12 +139,12 @@
  
       <h3>Drop Permit Tag</h3>
       <div id='permits-tags-drop-form'>      
-         <?= $this->render('_permits-tags-drop', ['data' => $data, 'model' => $tags]); ?>
+         <?= $this->render('/common/_remove-tags', ['data' => $data, 'model' => $tags]); ?>
       </div>  
 
       <h3>Add Permit Tag</h3>
       <div id='permits-tags-add-form'>      
-         <?= $this->render('_permits-tags-add', ['data' => $data, 'model' => $allTags]); ?>
+         <?= $this->render('/common/_add-tags', ['data' => $data, 'model' => $allTags]); ?>
       </div>
 
       <code><?= __FILE__ ?></code>
