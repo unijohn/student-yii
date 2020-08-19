@@ -15,15 +15,6 @@ use app\controllers\CodesController;
    $isHidden   = CodesController::getDropDownOpts('is_hidden', true);
 ?>
 
-<style>
-.inline-label {
-    white-space: nowrap;
-    max-width: 150px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    float:left;  
-}
-</style>
 
 <div class="courses-search">
     <?php $form = ActiveForm::begin([

@@ -130,14 +130,14 @@
           <div class="col-lg-6">
               <h3>Add User Roles</h3>
               <div id='user-roles-add-form'>      
-                 <?= $this->render('_users-roles-add', ['data' => $data, 'model' => $allRoles]); ?>      
+                 <?= $this->render('_users-roles-add', ['data' => $data, 'model' => $allRoles]); ?>
               </div>
           </div>
       </div>
 
       <h3>Personal Information</h3>
       <div id='user-personal-edit-form'>      
-
+          <?= $this->render('_users-personal-viewadd', ['data' => $data, 'model' => $userPersonal]); ?>
       </div>               
       
 

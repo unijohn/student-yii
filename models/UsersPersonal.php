@@ -49,11 +49,16 @@ class UsersPersonal extends BaseModel
     */
     public function attributeLabels()
     {
-        return [
+        return
+        [
 //          'id' => Yii::t('app', 'ID'),
         
-            'uuid'   => Yii::t('app', 'UUID'),
-            'uNbr'   => Yii::t('app', 'U Number'),
+            'uuid'          => Yii::t('app', 'UUID'),
+            'uNbr'          => Yii::t('app', 'U Number'),
+            'firstNm'       => Yii::t('app', 'First Name'),
+            'middleNm'      => Yii::t('app', 'Middle Name'),
+            'lastNm'        => Yii::t('app', 'Last Name'),
+            'us_citizen'    => Yii::t('app', 'Are you a US Citizen?'),
         ];
     }
 
@@ -132,9 +137,8 @@ class UsersPersonal extends BaseModel
             ['us_citizen', 'integer', 'max'     => self::CITIZEN_US_MAX ],
             
             ['citizen_other', 'default', 'value'   => self::CITIZEN_OTHER_NO  ],
-            ['citizen_other', 'integer', 'min'     => self::CITIZEN_OTHER_NO  ],
-            ['citizen_other', 'filter',  'filter'  => 'intval'                ],
-            ['citizen_other', 'integer', 'max'     => self::CITIZEN_OTHER_MAX ],
+            ['citizen_other', 'string',  'min'     => self::CITIZEN_OTHER_MIN ],
+            ['citizen_other', 'string',  'max'     => self::CITIZEN_OTHER_MAX ],
             
             ['visa_type', 'default', 'value'   => self::VISA_NO  ],
             ['visa_type', 'integer', 'min'     => self::VISA_NO  ],

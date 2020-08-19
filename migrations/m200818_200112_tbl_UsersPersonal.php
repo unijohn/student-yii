@@ -25,7 +25,7 @@ class m200818_200112_tbl_UsersPersonal extends BaseMigration
                'lastNm'          => $this->string(64)->notNull(),
                'salutation'      => $this->string(16),
                'us_citizen'      => $this->integer()->notNull(),
-               'citizen_other'   => $this->integer()->notNull(),
+               'citizen_other'   => $this->string(4),
                'visa_type'       => $this->integer()->notNull(),
                
                'created_at'   => $this->datetime()->notNull(),
