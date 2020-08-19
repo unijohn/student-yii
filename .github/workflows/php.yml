@@ -64,7 +64,7 @@ jobs:
       run: composer install --prefer-dist --no-progress --no-suggest
 
     - name: Lint PHP Files
-      run: composer ci-fix
+      run: composer ci-dry
       
 
     # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
