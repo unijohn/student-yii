@@ -14,6 +14,7 @@ use yii\web\Controller;
 use yii\web\Response;
 
 use app\controllers\BaseController;
+use app\controllers\CodesController;
 
 use app\models\SystemCodes;
 use app\models\SystemCodesChild;
@@ -22,11 +23,13 @@ class ManageAdminController extends BaseController
 {
     const dropDownOptsKeys  = [ 'tags_permits' ];
    
-    const dropDownOpts      = [
-      'tags_permits' => [
-         '-1'  => 'Select Permit Tag',
-      ],
-   ];
+    const dropDownOpts      =
+    [
+        'tags_permits' =>
+        [
+            '1'  => 'Select Permit Tag',
+        ],
+    ];
 
 
     private $_codesModel;
@@ -62,8 +65,8 @@ class ManageAdminController extends BaseController
       
         if (strlen($this->_data['id']) > 0) {
             $this->_codesModel = SystemCodes::find()
-            ->where(['id' => $this->_data['id'] ])
-            ->limit(1)->one();
+                ->where(['id' => $this->_data['id'] ])
+                ->limit(1)->one();
             
             $this->_tagsModel       = SystemCodes::findPermitTagsById($this->_data['id']);
             $this->_codeChildModel  = SystemCodes::findUnassignedPermitTagOptions($this->_data['id']);
@@ -125,7 +128,6 @@ class ManageAdminController extends BaseController
     public function actions()
     {
         $actions = parent::actions();
-   
         return $actions;
     }
 
@@ -189,35 +191,36 @@ class ManageAdminController extends BaseController
         $count = $this->_db->createCommand($sql_count, $params)->queryScalar();
       
       
-        $PermitSDP = new SqlDataProvider([
-         'sql'          => $sql,
-         'params'       => $params,
-         'totalCount'   => $count,
-         'sort' => [
-            'attributes' => [
-               'code' => [
-                  'default' => SORT_ASC,
-                  'label' => 'Code',
-               ],
- 
-               'description' => [
-                  'default' => SORT_ASC,
-                  'label' => 'description',
-               ],
-/**
-               'is_active' => [
-                  'default' => SORT_ASC,
-                  'label' => 'Status',
-               ],
- **/
-               'created_at',
-               'updated_at',
-            ],
-         ],
-         'pagination' => [
-            'pageSize' => $this->_data['filterForm']['pagination_count'],
-         ],
-      ]);
+        $PermitSDP = new SqlDataProvider(
+            [
+                'sql'          => $sql,
+                'params'       => $params,
+                'totalCount'   => $count,
+                'sort' =>
+                [
+                    'attributes' =>
+                    [
+                        'code' =>
+                        [
+                          'default' => SORT_ASC,
+                          'label' => 'Code',
+                        ],
+         
+                        'description' =>
+                        [
+                          'default' => SORT_ASC,
+                          'label' => 'description',
+                        ],
+                        'created_at',
+                        'updated_at',
+                    ],
+                ],
+                'pagination' =>
+                [
+                    'pageSize' => $this->_data['filterForm']['pagination_count'],
+                ],
+            ]
+        );
       
         return $PermitSDP;
     }
@@ -232,11 +235,14 @@ class ManageAdminController extends BaseController
     {
         $this->_dataProvider = $this->getPermitGridView();
 
-        return $this->render('permits-listing', [
-            'data'         => $this->_data,
-            'dataProvider' => $this->_dataProvider,
-            'model'        => $this->_codesModel,
-      ]);
+        return $this->render(
+            'permits-listing',
+            [
+                'data'         => $this->_data,
+                'dataProvider' => $this->_dataProvider,
+                'model'        => $this->_codesModel,
+            ]
+        );
     }
 
 
@@ -247,13 +253,16 @@ class ManageAdminController extends BaseController
      */
     public function actionView()
     {
-        return $this->render('permit-view', [
+        return $this->render(
+            'permit-view',
+            [
             'data'         => $this->_data,
             'dataProvider' => $this->_dataProvider,
             'model'        => $this->_codesModel,
             'tags'         => $this->_tagsModel,
             'allTags'      => $this->_codeChildModel,
-      ]);
+            ]
+        );
     }
    
 
@@ -272,15 +281,17 @@ class ManageAdminController extends BaseController
       
         if ($idExists) {
             if (isset($this->_data['addPermit']) && !empty($this->_data['addPermit'])) {
-                $this->_data['errors']['Add Permit'] = [
-               'value'     => "was unsuccessful",
-               'htmlTag'   => 'h4',
-               'class'     => 'alert alert-danger',
-            ];
+                $this->_data['errors']['Add Permit'] =
+                [
+                    'value'     => "was unsuccessful",
+                    'htmlTag'   => 'h4',
+                    'class'     => 'alert alert-danger',
+                ];
             }
-            $this->_data['errors']['code'] = [
-            'value' => "already exists",
-         ];
+            $this->_data['errors']['code'] =
+            [
+                'value' => "already exists",
+            ];
         } else {
             $this->_codesModel->type         = SystemCodes::TYPE_PERMIT;
             $this->_codesModel->description  = $this->_codesModel->code;
@@ -293,38 +304,46 @@ class ManageAdminController extends BaseController
                 if (isset($this->_codesModel->code) && !empty($this->_codesModel->code)) {
                     $this->_data['savePermit'] = $this->_codesModel->save();
                 } else {
-                    $this->_data['errors']['Add Permit'] = [
-                  'value'     => "was unsuccessful",
-                  'htmlTag'   => 'h4',
-                  'class'     => 'alert alert-danger',
-               ];
-               
-                    $this->_data['errors']['code'] = [
-                  'value'     => "is null",
-               ];
+                    $this->_data['errors']['Add Permit'] =
+                    [
+                        'value'     => "was unsuccessful",
+                        'bValue'    => false,
+                        'htmlTag'   => 'h4',
+                        'class'     => 'alert alert-danger',
+                    ];
+                    
+                    $this->_data['errors']['code'] =
+                    [
+                        'value'     => "was blank",
+                    ];
                 }
             }
         }
 
         if (isset($this->_data['savePermit']) && !empty($this->_data['savePermit'])) {
-            $this->_data['success']['Add Permit'] = [
-            'value'     => "was successful",
-            'bValue'    => true,
-            'htmlTag'   => 'h4',
-            'class'     => 'alert alert-success',
-         ];
-         
-            $this->_data['success'][$this->_codesModel->code] = [
-            'value'     => "was added",
-            'bValue'    => true,
-         ];
+            $this->_data['success']['Add Permit'] =
+            [
+                'value'     => "was successful",
+                'bValue'    => true,
+                'htmlTag'   => 'h4',
+                'class'     => 'alert alert-success',
+            ];
+            
+            $this->_data['success'][$this->_codesModel->code] =
+            [
+                'value'     => "was added",
+                'bValue'    => true,
+            ];
         }
 
-        return $this->render('permits-listing', [
-            'data'         => $this->_data,
-            'dataProvider' => $this->_dataProvider,
-            'model'        => $this->_codesModel,
-      ]);
+        return $this->render(
+            'permits-listing',
+            [
+                'data'         => $this->_data,
+                'dataProvider' => $this->_dataProvider,
+                'model'        => $this->_codesModel,
+            ]
+        );
     }
 
 
@@ -344,28 +363,30 @@ class ManageAdminController extends BaseController
          **/
  
         $tagRelationExists = SystemCodesChild::find()
-         ->where([ 'parent' => $this->_data['id'] ])
-         ->andWhere([ 'child' => $this->_data['tagid'] ])
-         ->limit(1)
-         ->one();
-         
+            ->where([ 'parent' => $this->_data['id'] ])
+            ->andWhere([ 'child' => $this->_data['tagid'] ])
+            ->limit(1)
+            ->one();
+            
         $tagChild = SystemCodes::find()
-         ->where([ 'id' => $this->_data['tagid'] ])
-         ->limit(1)
-         ->one();
+            ->where([ 'id' => $this->_data['tagid'] ])
+            ->limit(1)
+            ->one();
 
         if (strlen($this->_data['addTag']) > 0) {
             if (!is_null($tagRelationExists)) {
-                $this->_data['errors']['Add Tag'] = [
-               'value'     => "was unsuccessful",
-               'bValue'    => false,
-               'htmlTag'   => 'h4',
-               'class'     => 'alert alert-danger',
-            ];
+                $this->_data['errors']['Add Tag'] =
+                [
+                   'value'     => "was unsuccessful",
+                   'bValue'    => false,
+                   'htmlTag'   => 'h4',
+                   'class'     => 'alert alert-danger',
+                ];
             
-                $this->_data['errors'][$tagChild['description']] = [
-               'value' => "was not added; relationship already exists.",
-            ];
+                $this->_data['errors'][$tagChild['description']] =
+                [
+                    'value' => "was not added; relationship already exists.",
+                ];
             
                 $isError = true;
             }
@@ -375,31 +396,35 @@ class ManageAdminController extends BaseController
          
                 if ($result > 0) {
                     $tag = SystemCodes::find()
-                  ->where([ 'id' => $this->_data['tagid'] ])
-                  ->limit(1)
-                  ->one();
+                        ->where([ 'id' => $this->_data['tagid'] ])
+                        ->limit(1)
+                        ->one();
             
-                    $this->_data['success']['Add Tag'] = [
-                  'value'        => "was successful",
-                  'bValue'       => true,
-                  'htmlTag'      => 'h4',
-                  'class'        => 'alert alert-success',
-               ];
+                    $this->_data['success']['Add Tag'] =
+                    [
+                      'value'        => "was successful",
+                      'bValue'       => true,
+                      'htmlTag'      => 'h4',
+                      'class'        => 'alert alert-success',
+                    ];
                
-                    $this->_data['success'][$tagChild['description']] = [
-                  'value' => "was added",
-               ];
+                    $this->_data['success'][$tagChild['description']] =
+                    [
+                        'value' => "was added",
+                    ];
                 } else {
-                    $this->_data['errors']['Add Tag'] = [
-                  'value'     => "was unsuccessful",
-                  'bValue'    => false,
-                  'htmlTag'   => 'h4',
-                  'class'     => 'alert alert-danger',
-               ];
+                    $this->_data['errors']['Add Tag'] =
+                    [
+                        'value'     => "was unsuccessful",
+                        'bValue'    => false,
+                        'htmlTag'   => 'h4',
+                        'class'     => 'alert alert-danger',
+                    ];
                
-                    $this->_data['errors']['Add Permit Tag'] = [
-                  'value' => "was not successful; no tags were added. (Result: " . strval($result) . ") ",
-               ];
+                    $this->_data['errors']['Add Permit Tag'] =
+                    [
+                        'value' => "was not successful; no tags were added. (Result: " . strval($result) . ") ",
+                    ];
                 }
             }
         }
@@ -408,27 +433,31 @@ class ManageAdminController extends BaseController
             $result = $this->removePermitTag($this->_data['id'], $this->_data['tagid']);
       
             if ($result > 0) {
-                $this->_data['success']['Remove Tag'] = [
-               'value'        => "was successful",
-               'bValue'       => true,
-               'htmlTag'      => 'h4',
-               'class'        => 'alert alert-success',
-            ];
+                $this->_data['success']['Remove Tag'] =
+                [
+                    'value'        => "was successful",
+                    'bValue'       => true,
+                    'htmlTag'      => 'h4',
+                    'class'        => 'alert alert-success',
+                ];
             
-                $this->_data['success'][$tagChild['description']] = [
-               'value' => "was removed",
-            ];
+                $this->_data['success'][$tagChild['description']] =
+                [
+                    'value' => "was removed",
+                ];
             } else {
-                $this->_data['errors']['Remove Tag'] = [
-               'value'     => "was unsuccessful",
-               'bValue'    => false,
-               'htmlTag'   => 'h4',
-               'class'     => 'alert alert-danger',
-            ];
+                $this->_data['errors']['Remove Tag'] =
+                [
+                    'value'     => "was unsuccessful",
+                    'bValue'    => false,
+                    'htmlTag'   => 'h4',
+                    'class'     => 'alert alert-danger',
+                ];
             
-                $this->_data['errors'][$tagChild['description']] = [
-               'value' => "was not successful; no tags were removed. (Result: " . strval($result) . ") ",
-            ];
+                $this->_data['errors'][$tagChild['description']] =
+                [
+                    'value' => "was not successful; no tags were removed. (Result: " . strval($result) . ") ",
+                ];
             }
         }
       
@@ -448,31 +477,34 @@ class ManageAdminController extends BaseController
       
             if ($this->_data['savePermit'] && is_array($updateColumns)) {
                 if (count($updateColumns) > 0) {
-                    $this->_data['success']['Save Permit'] = [
-                  'value'     => "was successful",
-                  'bValue'    => true,
-                  'htmlTag'   => 'h4',
-                  'class'     => 'alert alert-success',
-               ];
+                    $this->_data['success']['Save Permit'] =
+                    [
+                        'value'     => "was successful",
+                        'bValue'    => true,
+                        'htmlTag'   => 'h4',
+                        'class'     => 'alert alert-success',
+                    ];
                
                     foreach ($updateColumns as $key => $val) {
                         $keyIndex = ucwords(strtolower(str_replace("_", " ", $key)));
                
                         if ($key !== "updated_at" && $key !== "deleted_at") {
-                            $lookupNew = "TBD";
-                            $lookupOld = "TBI";
-//                     $lookupNew = $this->keyLookup( $key, $val );
-//                     $lookupOld = $this->keyLookup( $key, $this->_data['SystemCodes'][$key] );
+//                            $lookupNew = "TBD";
+//                            $lookupOld = "TBI";
+                            $lookupNew = $this->keyLookup($key, $val);
+                            $lookupOld = $this->keyLookup($key, $this->_data['SystemCodes'][$key]);
                   
-                            $this->_data['success'][$keyIndex] = [
-                        'value'     => "was updated ",
-                        'bValue'    => true,
-                     ];
+                            $this->_data['success'][$keyIndex] =
+                            [
+                                'value'     => "was updated ",
+                                'bValue'    => true,
+                            ];
                      
                             if (strpos($lookupNew, "Unknown") !== 0) {
-                                $this->_data['success'][$keyIndex] = [
-                           'value'  => "was updated ( " . $lookupNew . " -> " . $lookupOld . " )",
-                        ];
+                                $this->_data['success'][$keyIndex] =
+                                [
+                                    'value'  => "was updated ( " . $lookupNew . " -> " . $lookupOld . " )",
+                                ];
                             }
                         }
                     }
@@ -482,18 +514,56 @@ class ManageAdminController extends BaseController
 
         $this->_codesModel      = $this->_codesModel->findOne($this->_data['id']);
         $this->_tagsModel       = SystemCodes::findPermitTagsById($this->_data['id']);
+//        $this->_tagsModel       = SystemCodes::findAllTagsById($this->_data['id']);
       
         $this->_codeChildModel  = SystemCodes::findUnassignedPermitTagOptions($this->_data['id']);
 
-        return $this->render('permit-view', [
-            'data'         => $this->_data,
-            'dataProvider' => $this->_dataProvider,
-            'model'        => $this->_codesModel,
-            'tags'         => $this->_tagsModel,
-            'allTags'      => $this->_codeChildModel,
-      ]);
+        return $this->render(
+            'permit-view',
+            [
+                'data'         => $this->_data,
+                'dataProvider' => $this->_dataProvider,
+                'model'        => $this->_codesModel,
+                'tags'         => $this->_tagsModel,
+                'allTags'      => $this->_codeChildModel,
+            ]
+        );
     }
    
+
+    /**
+     * TBD
+     *
+     * @return (TBD)
+     */
+    private function keyLookup($key, $value)
+    {
+        $codeType   = self::getDropDownOpts('tags_permits');
+        $isActive   = CodesController::getDropDownOpts('is_active');
+        $isHidden   = CodesController::getDropDownOpts('is_hidden');
+      
+        if ($key === "type") {
+            if (isset($codeType[$value]) && !empty($codeType[$value])) {
+                return $codeType[$value];
+            } else {
+                return "Unknown value : " . $key . " :: " . $value;
+            }
+        } elseif ($key === "is_active") {
+            if (isset($isActive[$value]) && !empty($isActive[$value])) {
+                return $isActive[$value];
+            } else {
+                return "Unknown value : " . $key . " :: " . $value;
+            }
+        } elseif ($key === "is_hidden") {
+            if (isset($isHidden[$value]) && !empty($isHidden[$value])) {
+                return $isHidden[$value];
+            } else {
+                return "Unknown value : " . $key . " :: " . $value;
+            }
+        }
+   
+        return "Unknown key : " . $key . " :: " . $value;
+    }
 
     /**
      * TBD

@@ -185,14 +185,14 @@ class SystemCodes extends BaseModel
         $tbl_SystemCodesChild   = SystemCodesChild::tableName();
    
         $query_codes = ( new \yii\db\Query() )
-         ->select([  'sc.id', 'sc.type', 'sc.code', 'sc.description', 'sc2.id', 'sc2.type', 'sc2.code', 'sc2.description' ])
+         ->select([  'sc2.id', 'sc2.type', 'sc2.code', 'sc2.description', 'sc2.is_active', 'sc2.is_hidden' ])
          ->from($tbl_SystemsCodes . ' sc')
          ->innerJoin($tbl_SystemCodesChild, $tbl_SystemCodesChild . '.parent = sc.id')
          ->innerJoin($tbl_SystemsCodes . ' sc2', $tbl_SystemCodesChild . '.child = sc2.id')
          ->where(['sc.id' => $id ])
          ->andWhere([ 'sc.type'        => self::TYPE_PERMIT ])
-         ->andWhere([ 'sc.is_active'   => self::STATUS_ACTIVE ])
-         ->andWhere([ 'sc2.is_active'  => self::STATUS_ACTIVE ])
+//         ->andWhere([ 'sc.is_active'   => self::STATUS_ACTIVE ])
+//         ->andWhere([ 'sc2.is_active'  => self::STATUS_ACTIVE ])
          ->all();
 
         return $query_codes;
@@ -221,13 +221,13 @@ class SystemCodes extends BaseModel
         $tbl_SystemCodesChild   = SystemCodesChild::tableName();
    
         $query_codes = ( new \yii\db\Query() )
-         ->select([  'sc.id', 'sc.type', 'sc.code', 'sc.description', 'sc2.id', 'sc2.type', 'sc2.code', 'sc2.description' ])
+         ->select([  'sc2.id', 'sc2.type', 'sc2.code', 'sc2.description', 'sc2.is_active', 'sc2.is_hidden' ])
          ->from($tbl_SystemsCodes . ' sc')
          ->innerJoin($tbl_SystemCodesChild, $tbl_SystemCodesChild . '.parent = sc.id')
          ->innerJoin($tbl_SystemsCodes . ' sc2', $tbl_SystemCodesChild . '.child = sc2.id')
          ->where(['sc.id' => $id ])
          //->andWhere([ 'sc.is_active'   => self::STATUS_ACTIVE ])
-         ->andWhere([ 'sc2.is_active'  => self::STATUS_ACTIVE ])
+         //->andWhere([ 'sc2.is_active'  => self::STATUS_ACTIVE ])
          ->all();
 
         return $query_codes;
