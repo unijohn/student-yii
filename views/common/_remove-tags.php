@@ -13,7 +13,7 @@
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div id="codes-tags-drop-div" name="codes_tags-drop-div" style="margin-bottom: 12px;min-height: 45px;">
+<div id="codes-tags-remove-div" name="codes_tags-remove-div" style="margin-bottom: 12px;min-height: 45px;">
 <?php
    foreach ($model as $tag) {
        $form = ActiveForm::begin([

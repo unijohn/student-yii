@@ -40,13 +40,14 @@ $config = [
             // If this property is not set, the user will be logged out after the current session expires (c.f. yii\web\Session::$timeout). 
             //
             // Note that this will not work if $enableAutoLogin is true.
-            'authTimeout'        => 60 * 60,
-            'authTimeoutParam'   => '__frameworkExpire',            
+            'authTimeout'           => 60 * 30,
+            'authTimeoutParam'      => '__frameworkExpire',
+            'absoluteAuthTimeout'   => 60 * 60 * 4,
 
             'enableSession'      => true,
                        
             // Whether to automatically renew the identity cookie each time a page is requested.
-            'autoRenewCookie'    => true,
+            'autoRenewCookie'    => false,
 
         ],
         
@@ -54,11 +55,11 @@ $config = [
             'class'        => 'yii\web\Session',
             'cookieParams' => [
                'httponly'  => true,
-               'lifetime'  => 60 * 60
+               'lifetime'  => 60 * 60 * 2
             ],
             
             // Session expire
-            'timeout'      => 60 * 60,
+            'timeout'      => 60 * 60 * 2,
             'useCookies'   => true,            
         ],
         

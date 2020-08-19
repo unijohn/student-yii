@@ -14,7 +14,7 @@ use yii\widgets\ActiveForm;
    }
 ?>
 
-<div id="system-codes-tags-add-div">
+<div id="codes-tags-add-div" name="codes-tags-add-div">
    <?php $form = ActiveForm::begin([
          'action' => ['save'],
          'method' => 'post',
