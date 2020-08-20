@@ -224,7 +224,7 @@ class UsersPersonalController extends BaseController
                     }
                 }
             }
-        } 
+        }
 
         return $this->redirect(['users/view', 'uuid' => $this->_data['uuid'], 'success' => $this->_data['success'], 'errors' => $this->_data['errors'] ]);
     }
