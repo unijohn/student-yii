@@ -47,12 +47,14 @@ class UsersController extends BaseController
          '0'   => 'No',
          '1'   => 'Yes',
       ],
+/**
       'citizen_other' =>
       [
          '-1'  => 'Select Foreign Citizenship Status',
          '0'   => 'Not Applicable',
          '1'   => 'Yes',
       ],
+ **/
       'visa_type' =>
       [
          '-1'  => 'Select Visa Status',
@@ -62,279 +64,264 @@ class UsersController extends BaseController
          '3'   => 'F-3',
       ],
 
-      'country_list' =>
+      'citizen_other' =>
       [
-        '-1'    => 'Select Country of Citizenship',
-        '0'     => 'Not Applicable',
-        'Africa' =>
-        [
+            'ZZZZ'  => 'Select Country of Citizenship',
+            'AAAA'  => 'Not Applicable',
+            "AX" => "Åland Islands",
+            "AF" => "Afghanistan",
+            "AL" => "Albania",
             "DZ" => "Algeria",
+            "AS" => "American Samoa",
+            "AD" => "Andorra",
             "AO" => "Angola",
+            "AI" => "Anguilla",
+            "AQ" => "Antarctica",
+            "AG" => "Antigua and Barbuda",
+            "AR" => "Argentina",
+            "AM" => "Armenia",
+            "AW" => "Aruba",
+            "AU" => "Australia",
+            "AT" => "Austria",
+            "AZ" => "Azerbaijan",
+            "BS" => "Bahamas",
+            "BH" => "Bahrain",
+            "BD" => "Bangladesh",
+            "BB" => "Barbados",
+            "BY" => "Belarus",
+            "BE" => "Belgium",
+            "BZ" => "Belize",
             "BJ" => "Benin",
+            "BM" => "Bermuda",
+            "BT" => "Bhutan",
+            "BO" => "Bolivia",
+            "BA" => "Bosnia and Herzegovina",
             "BW" => "Botswana",
+            "BV" => "Bouvet Island",
+            "BR" => "Brazil",
+            "IO" => "British Indian Ocean Territory",
+            "VG" => "British Virgin Islands",
+            "BN" => "Brunei",
+            "BG" => "Bulgaria",
             "BF" => "Burkina Faso",
             "BI" => "Burundi",
+            "KH" => "Cambodia",
             "CM" => "Cameroon",
+            "CA" => "Canada",
             "CV" => "Cape Verde",
+            "KY" => "Cayman Islands",
             "CF" => "Central African Republic",
             "TD" => "Chad",
+            "CL" => "Chile",
+            "CN" => "China",
+            "CX" => "Christmas Island",
+            "CC" => "Cocos [Keeling] Islands",
+            "CO" => "Colombia",
             "KM" => "Comoros",
             "CG" => "Congo - Brazzaville",
             "CD" => "Congo - Kinshasa",
-            "CI" => "Côte d’Ivoire",
-            "DJ" => "Djibouti",
-            "EG" => "Egypt",
-            "GQ" => "Equatorial Guinea",
-            "ER" => "Eritrea",
-            "ET" => "Ethiopia",
-            "GA" => "Gabon",
-            "GM" => "Gambia",
-            "GH" => "Ghana",
-            "GN" => "Guinea",
-            "GW" => "Guinea-Bissau",
-            "KE" => "Kenya",
-            "LS" => "Lesotho",
-            "LR" => "Liberia",
-            "LY" => "Libya",
-            "MG" => "Madagascar",
-            "MW" => "Malawi",
-            "ML" => "Mali",
-            "MR" => "Mauritania",
-            "MU" => "Mauritius",
-            "YT" => "Mayotte",
-            "MA" => "Morocco",
-            "MZ" => "Mozambique",
-            "NA" => "Namibia",
-            "NE" => "Niger",
-            "NG" => "Nigeria",
-            "RW" => "Rwanda",
-            "RE" => "Réunion",
-            "SH" => "Saint Helena",
-            "SN" => "Senegal",
-            "SC" => "Seychelles",
-            "SL" => "Sierra Leone",
-            "SO" => "Somalia",
-            "ZA" => "South Africa",
-            "SD" => "Sudan",
-            "SZ" => "Swaziland",
-            "ST" => "São Tomé and Príncipe",
-            "TZ" => "Tanzania",
-            "TG" => "Togo",
-            "TN" => "Tunisia",
-            "UG" => "Uganda",
-            "EH" => "Western Sahara",
-            "ZM" => "Zambia",
-            "ZW" => "Zimbabwe",
-        ],
-        'Americas' =>
-        [
-            "AI" => "Anguilla",
-            "AG" => "Antigua and Barbuda",
-            "AR" => "Argentina",
-            "AW" => "Aruba",
-            "BS" => "Bahamas",
-            "BB" => "Barbados",
-            "BZ" => "Belize",
-            "BM" => "Bermuda",
-            "BO" => "Bolivia",
-            "BR" => "Brazil",
-            "VG" => "British Virgin Islands",
-            "CA" => "Canada",
-            "KY" => "Cayman Islands",
-            "CL" => "Chile",
-            "CO" => "Colombia",
+            "CK" => "Cook Islands",
             "CR" => "Costa Rica",
+            "HR" => "Croatia",
             "CU" => "Cuba",
+            "CY" => "Cyprus",
+            "CZ" => "Czech Republic",
+            "CI" => "Côte d’Ivoire",
+            "DK" => "Denmark",
+            "DJ" => "Djibouti",
             "DM" => "Dominica",
             "DO" => "Dominican Republic",
+            "DD" => "East Germany",
             "EC" => "Ecuador",
+            "EG" => "Egypt",
             "SV" => "El Salvador",
+            "GQ" => "Equatorial Guinea",
+            "ER" => "Eritrea",
+            "EE" => "Estonia",
+            "ET" => "Ethiopia",
             "FK" => "Falkland Islands",
+            "FO" => "Faroe Islands",
+            "FJ" => "Fiji",
+            "FI" => "Finland",
+            "FR" => "France",
             "GF" => "French Guiana",
+            "PF" => "French Polynesia",
+            "TF" => "French Southern Territories",
+            "GA" => "Gabon",
+            "GM" => "Gambia",
+            "GE" => "Georgia",
+            "DE" => "Germany",
+            "GH" => "Ghana",
+            "GI" => "Gibraltar",
+            "GR" => "Greece",
             "GL" => "Greenland",
             "GD" => "Grenada",
             "GP" => "Guadeloupe",
+            "GU" => "Guam",
             "GT" => "Guatemala",
+            "GG" => "Guernsey",
+            "GN" => "Guinea",
+            "GW" => "Guinea-Bissau",
             "GY" => "Guyana",
             "HT" => "Haiti",
+            "HM" => "Heard Island and McDonald Islands",
             "HN" => "Honduras",
+            "HK" => "Hong Kong SAR China",
+            "HU" => "Hungary",
+            "IS" => "Iceland",
+            "IN" => "India",
+            "ID" => "Indonesia",
+            "IR" => "Iran",
+            "IQ" => "Iraq",
+            "IE" => "Ireland",
+            "IM" => "Isle of Man",
+            "IL" => "Israel",
+            "IT" => "Italy",
             "JM" => "Jamaica",
+            "JP" => "Japan",
+            "JE" => "Jersey",
+            "JO" => "Jordan",
+            "KZ" => "Kazakhstan",
+            "KE" => "Kenya",
+            "KI" => "Kiribati",
+            "KW" => "Kuwait",
+            "KG" => "Kyrgyzstan",
+            "LA" => "Laos",
+            "LV" => "Latvia",
+            "LB" => "Lebanon",
+            "LS" => "Lesotho",
+            "LR" => "Liberia",
+            "LY" => "Libya",
+            "LI" => "Liechtenstein",
+            "LT" => "Lithuania",
+            "LU" => "Luxembourg",
+            "MO" => "Macau SAR China",
+            "MK" => "Macedonia",
+            "MG" => "Madagascar",
+            "MW" => "Malawi",
+            "MY" => "Malaysia",
+            "MV" => "Maldives",
+            "ML" => "Mali",
+            "MT" => "Malta",
+            "MH" => "Marshall Islands",
             "MQ" => "Martinique",
+            "MR" => "Mauritania",
+            "MU" => "Mauritius",
+            "YT" => "Mayotte",
+            "FX" => "Metropolitan France",
             "MX" => "Mexico",
+            "FM" => "Micronesia",
+            "MD" => "Moldova",
+            "MC" => "Monaco",
+            "MN" => "Mongolia",
+            "ME" => "Montenegro",
             "MS" => "Montserrat",
+            "MA" => "Morocco",
+            "MZ" => "Mozambique",
+            "MM" => "Myanmar [Burma]",
+            "NA" => "Namibia",
+            "NR" => "Nauru",
+            "NP" => "Nepal",
+            "NL" => "Netherlands",
             "AN" => "Netherlands Antilles",
+            "NT" => "Neutral Zone",
+            "NC" => "New Caledonia",
+            "NZ" => "New Zealand",
             "NI" => "Nicaragua",
+            "NE" => "Niger",
+            "NG" => "Nigeria",
+            "NU" => "Niue",
+            "NF" => "Norfolk Island",
+            "KP" => "North Korea",
+            "MP" => "Northern Mariana Islands",
+            "NO" => "Norway",
+            "OM" => "Oman",
+            "PK" => "Pakistan",
+            "PW" => "Palau",
+            "PS" => "Palestinian Territories",
             "PA" => "Panama",
+            "PG" => "Papua New Guinea",
             "PY" => "Paraguay",
+            "YD" => "People's Democratic Republic of Yemen",
             "PE" => "Peru",
+            "PH" => "Philippines",
+            "PN" => "Pitcairn Islands",
+            "PL" => "Poland",
+            "PT" => "Portugal",
             "PR" => "Puerto Rico",
+            "QA" => "Qatar",
+            "RO" => "Romania",
+            "RU" => "Russia",
+            "RW" => "Rwanda",
+            "RE" => "Réunion",
             "BL" => "Saint Barthélemy",
+            "SH" => "Saint Helena",
             "KN" => "Saint Kitts and Nevis",
             "LC" => "Saint Lucia",
             "MF" => "Saint Martin",
             "PM" => "Saint Pierre and Miquelon",
             "VC" => "Saint Vincent and the Grenadines",
-            "SR" => "Suriname",
-            "TT" => "Trinidad and Tobago",
-            "TC" => "Turks and Caicos Islands",
-            "VI" => "U.S. Virgin Islands",
-            "US" => "United States",
-            "UY" => "Uruguay",
-            "VE" => "Venezuela",
-        ],
-        'Asia' =>
-        [
-            "AF" => "Afghanistan",
-            "AM" => "Armenia",
-            "AZ" => "Azerbaijan",
-            "BH" => "Bahrain",
-            "BD" => "Bangladesh",
-            "BT" => "Bhutan",
-            "BN" => "Brunei",
-            "KH" => "Cambodia",
-            "CN" => "China",
-            "CY" => "Cyprus",
-            "GE" => "Georgia",
-            "HK" => "Hong Kong SAR China",
-            "IN" => "India",
-            "ID" => "Indonesia",
-            "IR" => "Iran",
-            "IQ" => "Iraq",
-            "IL" => "Israel",
-            "JP" => "Japan",
-            "JO" => "Jordan",
-            "KZ" => "Kazakhstan",
-            "KW" => "Kuwait",
-            "KG" => "Kyrgyzstan",
-            "LA" => "Laos",
-            "LB" => "Lebanon",
-            "MO" => "Macau SAR China",
-            "MY" => "Malaysia",
-            "MV" => "Maldives",
-            "MN" => "Mongolia",
-            "MM" => "Myanmar [Burma]",
-            "NP" => "Nepal",
-            "NT" => "Neutral Zone",
-            "KP" => "North Korea",
-            "OM" => "Oman",
-            "PK" => "Pakistan",
-            "PS" => "Palestinian Territories",
-            "YD" => "People's Democratic Republic of Yemen",
-            "PH" => "Philippines",
-            "QA" => "Qatar",
-            "SA" => "Saudi Arabia",
-            "SG" => "Singapore",
-            "KR" => "South Korea",
-            "LK" => "Sri Lanka",
-            "SY" => "Syria",
-            "TW" => "Taiwan",
-            "TJ" => "Tajikistan",
-            "TH" => "Thailand",
-            "TL" => "Timor-Leste",
-            "TR" => "Turkey",
-            "TM" => "Turkmenistan",
-            "AE" => "United Arab Emirates",
-            "UZ" => "Uzbekistan",
-            "VN" => "Vietnam",
-            "YE" => "Yemen",
-        ],
-        'Europe' =>
-        [
-            "AL" => "Albania",
-            "AD" => "Andorra",
-            "AT" => "Austria",
-            "BY" => "Belarus",
-            "BE" => "Belgium",
-            "BA" => "Bosnia and Herzegovina",
-            "BG" => "Bulgaria",
-            "HR" => "Croatia",
-            "CY" => "Cyprus",
-            "CZ" => "Czech Republic",
-            "DK" => "Denmark",
-            "DD" => "East Germany",
-            "EE" => "Estonia",
-            "FO" => "Faroe Islands",
-            "FI" => "Finland",
-            "FR" => "France",
-            "DE" => "Germany",
-            "GI" => "Gibraltar",
-            "GR" => "Greece",
-            "GG" => "Guernsey",
-            "HU" => "Hungary",
-            "IS" => "Iceland",
-            "IE" => "Ireland",
-            "IM" => "Isle of Man",
-            "IT" => "Italy",
-            "JE" => "Jersey",
-            "LV" => "Latvia",
-            "LI" => "Liechtenstein",
-            "LT" => "Lithuania",
-            "LU" => "Luxembourg",
-            "MK" => "Macedonia",
-            "MT" => "Malta",
-            "FX" => "Metropolitan France",
-            "MD" => "Moldova",
-            "MC" => "Monaco",
-            "ME" => "Montenegro",
-            "NL" => "Netherlands",
-            "NO" => "Norway",
-            "PL" => "Poland",
-            "PT" => "Portugal",
-            "RO" => "Romania",
-            "RU" => "Russia",
+            "WS" => "Samoa",
             "SM" => "San Marino",
+            "SA" => "Saudi Arabia",
+            "SN" => "Senegal",
             "RS" => "Serbia",
             "CS" => "Serbia and Montenegro",
+            "SC" => "Seychelles",
+            "SL" => "Sierra Leone",
+            "SG" => "Singapore",
             "SK" => "Slovakia",
             "SI" => "Slovenia",
+            "SB" => "Solomon Islands",
+            "SO" => "Somalia",
+            "ZA" => "South Africa",
+            "GS" => "South Georgia and the South Sandwich Islands",
+            "KR" => "South Korea",
             "ES" => "Spain",
+            "LK" => "Sri Lanka",
+            "SD" => "Sudan",
+            "SR" => "Suriname",
             "SJ" => "Svalbard and Jan Mayen",
+            "SZ" => "Swaziland",
             "SE" => "Sweden",
             "CH" => "Switzerland",
-            "UA" => "Ukraine",
-            "SU" => "Union of Soviet Socialist Republics",
-            "GB" => "United Kingdom",
-            "VA" => "Vatican City",
-            "AX" => "Åland Islands",
-        ],
-        'Oceania' =>
-        [
-            "AS" => "American Samoa",
-            "AQ" => "Antarctica",
-            "AU" => "Australia",
-            "BV" => "Bouvet Island",
-            "IO" => "British Indian Ocean Territory",
-            "CX" => "Christmas Island",
-            "CC" => "Cocos [Keeling] Islands",
-            "CK" => "Cook Islands",
-            "FJ" => "Fiji",
-            "PF" => "French Polynesia",
-            "TF" => "French Southern Territories",
-            "GU" => "Guam",
-            "HM" => "Heard Island and McDonald Islands",
-            "KI" => "Kiribati",
-            "MH" => "Marshall Islands",
-            "FM" => "Micronesia",
-            "NR" => "Nauru",
-            "NC" => "New Caledonia",
-            "NZ" => "New Zealand",
-            "NU" => "Niue",
-            "NF" => "Norfolk Island",
-            "MP" => "Northern Mariana Islands",
-            "PW" => "Palau",
-            "PG" => "Papua New Guinea",
-            "PN" => "Pitcairn Islands",
-            "WS" => "Samoa",
-            "SB" => "Solomon Islands",
-            "GS" => "South Georgia and the South Sandwich Islands",
+            "SY" => "Syria",
+            "ST" => "São Tomé and Príncipe",
+            "TW" => "Taiwan",
+            "TJ" => "Tajikistan",
+            "TZ" => "Tanzania",
+            "TH" => "Thailand",
+            "TL" => "Timor-Leste",
+            "TG" => "Togo",
             "TK" => "Tokelau",
             "TO" => "Tonga",
+            "TT" => "Trinidad and Tobago",
+            "TN" => "Tunisia",
+            "TR" => "Turkey",
+            "TM" => "Turkmenistan",
+            "TC" => "Turks and Caicos Islands",
             "TV" => "Tuvalu",
             "UM" => "U.S. Minor Outlying Islands",
+            "VI" => "U.S. Virgin Islands",
+            "UG" => "Uganda",
+            "UA" => "Ukraine",
+            "SU" => "Union of Soviet Socialist Republics",
+            "AE" => "United Arab Emirates",
+            "GB" => "United Kingdom",
+            "US" => "United States",
+            "UY" => "Uruguay",
+            "UZ" => "Uzbekistan",
             "VU" => "Vanuatu",
+            "VA" => "Vatican City",
+            "VE" => "Venezuela",
+            "VN" => "Vietnam",
             "WF" => "Wallis and Futuna",
+            "EH" => "Western Sahara",
+            "YE" => "Yemen",
+            "ZM" => "Zambia",
+            "ZW" => "Zimbabwe",
+        
         ],
-    ],
 
    ];
 
@@ -375,6 +362,7 @@ class UsersController extends BaseController
         if (isset($this->_data['uuid']) && !empty($this->_data['uuid'])) {
             $this->_userPersonalModel = UsersPersonal::findOne($this->_data['uuid']);
         }
+                
         
 //        self::debug( $this->_data['uuid'], false );
 //        self::debug( $this->_userPersonalModel );
@@ -495,12 +483,13 @@ class UsersController extends BaseController
         return $UserSDP;
     }
 
+
     /**
-     * Displays listing of all users in the system.
+     *  Centralized render('users-listing') call
      *
-     * @return string
-     */
-    public function actionIndex()
+     *  returns void
+     **/
+    private function renderListing()
     {
         $this->_dataProvider = $this->getUserGridView();
 
@@ -513,6 +502,36 @@ class UsersController extends BaseController
             ]
         );
     }
+
+    /**
+     *  Centralized render('users-view') call
+     *
+     *  returns void
+     **/
+    private function renderView()
+    {
+        return $this->render(
+            'user-view',
+            [
+                'data'         => $this->_data,
+                'dataProvider' => $this->_dataProvider,
+                'model'        => $this->_userModel,
+                'roles'        => $this->_roleModel,
+                'allRoles'     => $this->_authItemModel,
+                'userPersonal' => $this->_userPersonalModel,
+            ]
+        );
+    }
+
+    /**
+     * Displays listing of all users in the system.
+     *
+     * @return string
+     */
+    public function actionIndex()
+    {
+        return $this->renderListing();
+    }
    
 
     /**
@@ -522,7 +541,7 @@ class UsersController extends BaseController
      */
     public function actionView()
     {
-        $this->_data['uuid']     = $this->_request->get('uuid', '');
+//        $this->_data['uuid']     = $this->_request->get('uuid', '');
 
         $this->_userModel = User::find()
             ->where(['uuid' => $this->_data['uuid'] ])
@@ -536,19 +555,8 @@ class UsersController extends BaseController
         }
       
         $this->_authItemModel   = AuthItem::findbyUnassignedRoles($assignedRoles);
-        
 
-        return $this->render(
-            'user-view',
-            [
-                'data'         => $this->_data,
-                'dataProvider' => $this->_dataProvider,
-                'model'        => $this->_userModel,
-                'roles'        => $this->_roleModel,
-                'allRoles'     => $this->_authItemModel,
-                'userPersonal' => $this->_userPersonalModel,
-            ]
-        );
+        return $this->renderView();
     }
 
 
@@ -626,14 +634,7 @@ class UsersController extends BaseController
             ];
         }
 
-        return $this->render(
-            'users-listing',
-            [
-                'data'         => $this->_data,
-                'dataProvider' => $this->_dataProvider,
-                'model'        => $this->_userModel,
-            ]
-        );
+        return $this->renderListing();
     }
    
    
@@ -659,7 +660,20 @@ class UsersController extends BaseController
         }
 
         if (strlen($this->_data['addRole']) > 0) {
-            if ($this->_auth->assign($this->_auth->getRole($roleTag), $this->_userModel->id)) {
+            if (AuthAssignment::existsRoleAssigned($this->_userModel->id, $roleTag)) {
+                $this->_data['errors']['Add Role'] =
+                [
+                   'value'     => "was unsuccessful",
+                   'bValue'    => false,
+                   'htmlTag'   => 'h4',
+                   'class'     => 'alert alert-danger',
+                ];
+            
+                $this->_data['errors'][$this->_userModel->uuid] =
+                [
+                    'value' => "is already assigned this role ( " . $roleTag. " )",
+                ];
+            } elseif ($this->_auth->assign($this->_auth->getRole($roleTag), $this->_userModel->id)) {
                 $this->_data['success']['Add Role'] =
                 [
                    'value'        => "was successful",
@@ -736,16 +750,7 @@ class UsersController extends BaseController
          
             $this->_authItemModel   = AuthItem::findbyUnassignedRoles($assignedRoles);
       
-            return $this->render(
-                'user-view',
-                [
-                    'data'         => $this->_data,
-                    'dataProvider' => $this->_dataProvider,
-                    'model'        => $this->_userModel,
-                    'roles'        => $this->_roleModel,
-                    'allRoles'     => $this->_authItemModel,
-                ]
-            );
+            return $this->renderView();
         }
       
         /**
@@ -778,16 +783,7 @@ class UsersController extends BaseController
          
             $this->_authItemModel   = AuthItem::findbyUnassignedRoles($assignedRoles);
       
-            return $this->render(
-                'user-view',
-                [
-                    'data'         => $this->_data,
-                    'dataProvider' => $this->_dataProvider,
-                    'model'        => $this->_userModel,
-                    'roles'        => $this->_roleModel,
-                    'allRoles'     => $this->_authItemModel,
-                ]
-            );
+            return $this->renderView();
         }
 
         $updateModel            = $this->_userModel;
@@ -844,16 +840,7 @@ class UsersController extends BaseController
       
         $this->_authItemModel   = AuthItem::findbyUnassignedRoles($assignedRoles);
 
-        return $this->render(
-            'user-view',
-            [
-                'data'         => $this->_data,
-                'dataProvider' => $this->_dataProvider,
-                'model'        => $this->_userModel,
-                'roles'        => $this->_roleModel,
-                'allRoles'     => $this->_authItemModel,
-            ]
-        );
+        return $this->renderView();
     }
    
     /**
