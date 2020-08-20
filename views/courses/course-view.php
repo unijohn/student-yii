@@ -10,18 +10,16 @@
 
    use yii\widgets\ActiveForm;
    
+   use app\controllers\CodesController;   
+   
    $this->title = 'Framework | Courses | View | Update';
-   $this->params['breadcrumbs'][] = [ 'label' => $this->title, 'url' =>['index']];
+
+   $this->params['breadcrumbs'][]   = [ 'label' => $this->title, 'url' =>['index']];
    
    $formatter = \Yii::$app->formatter;
    
-//   $isActive['-1']   = 'Select Status';
-   $isActive['1']    = 'Active';
-   $isActive['0']    = 'Inactive';
-   
-//   $isHidden['-1']   = 'Select Status';
-   $isHidden['1']    = 'Visible';
-   $isHidden['0']    = 'Hidden';
+   $isActive   = CodesController::getDropDownOpts('is_active');
+   $isHidden   = CodesController::getDropDownOpts('is_hidden');
 ?>
 
    <div class="site-about">

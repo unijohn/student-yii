@@ -2,23 +2,22 @@
 
 /* @var $this yii\web\View */
 
-   use yii\grid\GridView;
-
    use yii\helpers\Html;
    use yii\helpers\HtmlPurifier;
    use yii\helpers\Url;
    
    use yii\widgets\ActiveForm;
 
+   use app\controllers\CodesController;   
+
    $this->title = 'Framework | User | View | Update';
-   $this->params['breadcrumbs'][] = [ 'label' => $this->title, 'url' =>['index']];
    
+   $this->params['title']           = Yii::$app->name . " :: " . $this->title;   
+   $this->params['breadcrumbs'][] = [ 'label' => $this->title, 'url' =>['index']];
    
    $formatter = \Yii::$app->formatter;
    
-//   $isActive['-1']   = 'Select Status';
-   $isActive['1']    = 'Active';
-   $isActive['0']    = 'Inactive';
+   $isActive   = CodesController::getDropDownOpts('is_active');
 ?>
 
    <div class="site-about">

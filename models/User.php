@@ -270,18 +270,12 @@ class User extends BaseModel implements IdentityInterface
 
     public static function existsUUID($uuid)
     {
-        $query_users = (new \yii\db\Query())
-         ->select([ 'id', 'uuid', 'access_token', 'created_at', 'updated_at' ])
-         ->from(self::tableName())
-         ->where('uuid=:uuid')
-            ->addParams([':uuid' => $uuid])
-         ->limit(1);
-     
-        foreach ($query_users->each() as $user_row) {
-            return true;
-        }
- 
-        return false;
+        $count = Yii::$app->db->createCommand(
+            'SELECT COUNT(*) FROM ' . self::tableName() . ' WHERE uuid=:uuid ',
+            [':uuid' => $uuid]
+        )->queryScalar();
+        
+        return ($count == 1 ? true : false);        
     }
 
 

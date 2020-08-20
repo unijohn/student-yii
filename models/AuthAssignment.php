@@ -33,7 +33,8 @@ class AuthAssignment extends BaseModel
     */
     public function attributeLabels()
     {
-        return [
+        return
+        [
 //         'id' => Yii::t('app', 'ID'),
 //         'uuid'         => Yii::t('app', 'UUID'),
 //         '$is_active'   => Yii::t('app', 'Account Status'),
@@ -43,7 +44,7 @@ class AuthAssignment extends BaseModel
 //         'Description' => Yii::t('app', 'Description'),
 //         'Content' => Yii::t('app', 'Content'),
 //         'Format' => Yii::t('app', 'Format'),
-      ];
+        ];
     }
 
     // explicitly list every field, best used when you want to make sure the changes
@@ -69,20 +70,32 @@ class AuthAssignment extends BaseModel
     */
     public function behaviors()
     {
-        return [
-      ];
+        return
+        [
+        ];
     }
 
 
     public function rules()
     {
-        return [
+        return
+        [
 //         [['uuid', 'name', 'is_active', 'auth_key', 'access_token', 'created_at'], 'required' ],
-      ];
+        ];
     }
-   
-   
-   
+
+
+    public static function existsRoleAssigned($user_id = -1, $item_name = '')
+    {       
+        $count = Yii::$app->db->createCommand(
+            'SELECT COUNT(*) FROM ' . self::tableName() . ' WHERE user_id=:user_id and item_name=:item_name ',
+            [':user_id' => $user_id, ':item_name' => $item_name]
+        )->queryScalar();
+        
+        return ($count == 1 ? true : false);        
+    }
+
+
     /**
      *
      *    Relationships & Model section

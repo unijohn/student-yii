@@ -1,20 +1,24 @@
 <?php
 
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+   use yii\helpers\Html;
+   use yii\helpers\HtmlPurifier;
+   use yii\helpers\Url;
+   
+   use yii\bootstrap\ActiveForm;
 
 use app\controllers\UsersController;
+
+   $formatter = \Yii::$app->formatter;
 
    $usCitizen       = UsersController::getDropDownOpts('us_citizen', false);
    $citizenOther    = UsersController::getDropDownOpts('citizen_other', false);
    $visaType        = UsersController::getDropDownOpts('visa_type', false);
-   $countryList     = UsersController::getDropDownOpts('country_list', false);   
 
 ?>
 
 <div class="users-add-new-user">
     <?php $form = ActiveForm::begin([
-        'action' => ['save'],
+        'action' => ['users-personal/save'],
         'method' => 'post',
     ]); ?>
 
@@ -23,7 +27,7 @@ use app\controllers\UsersController;
     <?=  $form->field($model, 'uNbr')->textInput(
         [
             'class'         => 'form-control col-lg-4',
-            'style'        => 'width: 80%;float:right;',
+            'style'         => 'width: 80%;float:right;',
             'placeholder'   => "U Number"
          ]
     );
@@ -32,7 +36,7 @@ use app\controllers\UsersController;
     <?=  $form->field($model, 'firstNm')->textInput(
         [
             'class'         => 'form-control col-lg-4',
-            'style'        => 'width: 80%;float:right;',
+            'style'         => 'width: 80%;float:right;',
             'placeholder'   => "First Name"
          ]
     );
@@ -41,7 +45,7 @@ use app\controllers\UsersController;
     <?=  $form->field($model, 'middleNm')->textInput(
         [
             'class'         => 'form-control col-lg-4',
-            'style'        => 'width: 80%;float:right;',
+            'style'         => 'width: 80%;float:right;',
             'placeholder'   => "Middle Name(s)"
          ]
     );
@@ -50,7 +54,7 @@ use app\controllers\UsersController;
     <?=  $form->field($model, 'lastNm')->textInput(
         [
             'class'         => 'form-control col-lg-4',
-            'style'        => 'width: 80%;float:right;',
+            'style'         => 'width: 80%;float:right;',
             'placeholder'   => "Last Name"
          ]
     );
@@ -73,11 +77,11 @@ use app\controllers\UsersController;
      </div>
 
      <div class="form-group field-is_active">
-     <label class="control-label" for="citizen_other">Citizen of Another Country</label>
+     <label class="control-label" for="citizen_other">Foreign Citizenship</label>
         <?= Html::dropDownList(
             'UsersPersonal[citizen_other]',
             $model->citizen_other,
-            $countryList,
+            $citizenOther,
             [
                 'id'     => 'citizen_other',
                 'class'  => 'form-control',
@@ -89,7 +93,7 @@ use app\controllers\UsersController;
      </div>
      
      <div class="form-group field-is_active">
-     <label class="control-label" for="visa_type">Visa Status</label>
+     <label class="control-label" for="visa_type">Visa Type</label>
         <?= Html::dropDownList(
             'UsersPersonal[visa_type]',
             $model->visa_type,
@@ -104,8 +108,18 @@ use app\controllers\UsersController;
         <div class="help-block"></div>
      </div>
 
+
+         <div class="form-group field-dates">
+            <div>
+               <?php echo("created_at: "  . $formatter->asDate($model->created_at, 'MM-dd-yyyy HH:mm:ss')); ?>
+            </div>
+            <div>
+               <?php echo("updated_at: "  . $formatter->asDate($model->updated_at, 'MM-dd-yyyy HH:mm:ss')); ?>
+            </div>
+         </div>
+
     <div class="form-group">
-        <?= Html::submitButton('Save Changes', ['class' => 'btn btn-primary',   'id' => 'addUserBtn',      'name' => 'User[saveUserPersonal]',    'value' => 'saveUserPersonal'    ]) ?>
+        <?= Html::submitButton('Save Changes', ['class' => 'btn btn-primary',   'id' => 'SaveUserBtn',      'name' => 'UsersPersonal[saveUserPersonal]',    'value' => 'saveUserPersonal'    ]) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

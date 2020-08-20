@@ -27,7 +27,19 @@ $this->title = "FCBE Workdesk";
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php $this->registerCsrfMetaTags() ?>
+
+<?php
+
+    if( isset($this->params['title']) && !empty($this->params['title'])){
+ ?>
+    <title><?= Html::encode($this->params['title']) ?></title>
+<?php
+    }else{
+ ?>
     <title><?= Html::encode($this->title) ?></title>
+<?php
+    }
+?>
     <?php $this->head() ?>
 </head>
 <body>
