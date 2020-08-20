@@ -32,6 +32,7 @@ class BaseController extends Controller
     *              BaseController only.
     **/
     public $_auth;
+    public $_cookies;
     public $_db;
     public $_data;
     public $_dataProvider;
@@ -59,11 +60,12 @@ class BaseController extends Controller
             return $this->redirect(['/site/index']);
         }
       
-        $this->_auth      = Yii::$app->authManager;
-        $this->_db        = Yii::$app->db;
-        $this->_request   = Yii::$app->request;
-        $this->_view      = Yii::$app->view;
-        $this->_user      = Yii::$app->user;
+        $this->_auth        = Yii::$app->authManager;
+        $this->_cookies     = Yii::$app->response->cookies;
+        $this->_db          = Yii::$app->db;
+        $this->_request     = Yii::$app->request;
+        $this->_view        = Yii::$app->view;
+        $this->_user        = Yii::$app->user;
 
         $this->_data             = [];
         $this->_dataProvider     = [];
@@ -84,6 +86,16 @@ class BaseController extends Controller
       
         $this->_data['errors']  = [];
         $this->_data['success'] = [];
+        
+        $_errors    = $this->_request->get('errors', '');
+        $_success   = $this->_request->get('success', '');
+        
+        if (null !== $_errors && !empty($_errors)) {
+            $this->_data['errors'] =  $_errors;
+        }
+        if (null !== $_success && !empty($_success)) {
+            $this->_data['success'] =  $_success;
+        }
     }
 
 

@@ -275,7 +275,7 @@ class User extends BaseModel implements IdentityInterface
             [':uuid' => $uuid]
         )->queryScalar();
         
-        return ($count == 1 ? true : false);        
+        return ($count == 1 ? true : false);
     }
 
 

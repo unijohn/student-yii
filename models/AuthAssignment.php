@@ -86,13 +86,13 @@ class AuthAssignment extends BaseModel
 
 
     public static function existsRoleAssigned($user_id = -1, $item_name = '')
-    {       
+    {
         $count = Yii::$app->db->createCommand(
             'SELECT COUNT(*) FROM ' . self::tableName() . ' WHERE user_id=:user_id and item_name=:item_name ',
             [':user_id' => $user_id, ':item_name' => $item_name]
         )->queryScalar();
         
-        return ($count == 1 ? true : false);        
+        return ($count == 1 ? true : false);
     }
 
 

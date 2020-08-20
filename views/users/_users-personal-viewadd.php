@@ -7,12 +7,64 @@
    use yii\bootstrap\ActiveForm;
 
 use app\controllers\UsersController;
+use app\models\BaseModel;
 
    $formatter = \Yii::$app->formatter;
 
    $usCitizen       = UsersController::getDropDownOpts('us_citizen', false);
    $citizenOther    = UsersController::getDropDownOpts('citizen_other', false);
    $visaType        = UsersController::getDropDownOpts('visa_type', false);
+
+    $class = 'form-control col-lg-4';
+    $style = 'width: 80%;float:right;';
+
+    $formFields = 
+    [
+        'uNbr' => [
+            'id'            => 'txt_uNbr',        
+            'class'         => $class,
+            'style'         => $style,
+            'placeholder'   => "U Number"
+        ],
+        'firstNm' => [
+            'id'            => 'txt_firstNm',        
+            'class'         => $class,
+            'style'         => $style,
+            'placeholder'   => "First Name"
+        ],
+        'middleNm' => [
+            'id'            => 'txt_middleNm',        
+            'class'         => $class,
+            'style'         => $style,
+            'placeholder'   => "Middle Name(s)"
+        ],
+        'lastNm' => [
+            'id'            => 'ddb_us_citizen',
+            'class'         => $class,
+            'style'         => $style,
+            'placeholder'   => "Last Name"
+        ],
+        'us_citizen' => [
+            'id'            => 'ddb_us_citizen',
+            'class'         => $class,
+            'style'         => $style,
+        ],
+        'citizen_other' => [
+            'id'            => 'ddb_citizen_other',
+            'class'         => $class,
+            'style'         => $style,
+        ],
+        'visa_type' => [
+            'id'            => 'ddb_visa_type',     
+            'class'         => $class,
+            'style'         => $style,
+        ],                              
+    ];    
+    
+    if( $model->us_citizen == BaseModel::CITIZEN_US_YES ) {
+        $formFields['citizen_other']['disabled']    = true;
+        $formFields['visa_type']['disabled']        = true;        
+    }
 
 ?>
 
@@ -24,54 +76,20 @@ use app\controllers\UsersController;
 
     <?= Html::hiddenInput('UsersPersonal[uuid]', $model->uuid) ?>
 
-    <?=  $form->field($model, 'uNbr')->textInput(
-        [
-            'class'         => 'form-control col-lg-4',
-            'style'         => 'width: 80%;float:right;',
-            'placeholder'   => "U Number"
-         ]
-    );
-    ?>
+    <?=  $form->field($model, 'uNbr')->textInput( $formFields['uNbr'] ); ?>
 
-    <?=  $form->field($model, 'firstNm')->textInput(
-        [
-            'class'         => 'form-control col-lg-4',
-            'style'         => 'width: 80%;float:right;',
-            'placeholder'   => "First Name"
-         ]
-    );
-    ?>
-    
-    <?=  $form->field($model, 'middleNm')->textInput(
-        [
-            'class'         => 'form-control col-lg-4',
-            'style'         => 'width: 80%;float:right;',
-            'placeholder'   => "Middle Name(s)"
-         ]
-    );
-    ?>  
-    
-    <?=  $form->field($model, 'lastNm')->textInput(
-        [
-            'class'         => 'form-control col-lg-4',
-            'style'         => 'width: 80%;float:right;',
-            'placeholder'   => "Last Name"
-         ]
-    );
-    ?>
+    <?=  $form->field($model, 'firstNm')->textInput( $formFields['firstNm'] ); ?>
+    <?=  $form->field($model, 'middleNm')->textInput( $formFields['middleNm'] ); ?>
+    <?=  $form->field($model, 'lastNm')->textInput( $formFields['lastNm'] ); ?>
     
      <div class="form-group field-is_active">
      <label class="control-label" for="us_citizen">US Citizen</label>
         <?= Html::dropDownList(
-            'UsersPersonal[us_citizen]',
-            $model->us_citizen,
-            $usCitizen,
-            [
-                'id'     => 'us_citizen',
-                'class'  => 'form-control',
-                'style'  => 'width: 80%;float:right;',
-            ]
-        )
+                'UsersPersonal[us_citizen]',
+                $model->us_citizen,
+                $usCitizen,
+                $formFields['us_citizen'] 
+            ) 
         ?>
         <div class="help-block"></div>
      </div>
@@ -79,15 +97,11 @@ use app\controllers\UsersController;
      <div class="form-group field-is_active">
      <label class="control-label" for="citizen_other">Foreign Citizenship</label>
         <?= Html::dropDownList(
-            'UsersPersonal[citizen_other]',
-            $model->citizen_other,
-            $citizenOther,
-            [
-                'id'     => 'citizen_other',
-                'class'  => 'form-control',
-                'style'  => 'width: 80%;float:right;',
-            ]
-        )
+                'UsersPersonal[citizen_other]',
+                $model->citizen_other,
+                $citizenOther,
+                $formFields['citizen_other'] 
+            ) 
         ?>
         <div class="help-block"></div>
      </div>
@@ -95,15 +109,11 @@ use app\controllers\UsersController;
      <div class="form-group field-is_active">
      <label class="control-label" for="visa_type">Visa Type</label>
         <?= Html::dropDownList(
-            'UsersPersonal[visa_type]',
-            $model->visa_type,
-            $visaType,
-            [
-                'id'     => 'visa_type',
-                'class'  => 'form-control',
-                'style'  => 'width: 80%;float:right;',
-            ]
-        )
+                'UsersPersonal[visa_type]',
+                $model->visa_type,
+                $visaType,
+                $formFields['visa_type'] 
+            ) 
         ?>
         <div class="help-block"></div>
      </div>
