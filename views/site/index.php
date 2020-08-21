@@ -26,13 +26,13 @@ $auth    = Yii::$app->authManager;
     </div>
 
 <?php
-   if (isset($data) && !empty($data)) {
+    if (isset($data) && !empty($data)) {
        /**
              echo ( "<Pre>" );
              print_r( $data );
              echo ( "</Pre>" );
         **/
-   }
+    }
  ?>
 
     <div class="body-content">
@@ -49,22 +49,22 @@ $auth    = Yii::$app->authManager;
    $isAssignedRole   = false;
 
 
-   /**
-    *  Quick fix for cookie timeout
-    **/
-   if (!is_null(Yii::$app->user->identity)) {
+    /**
+     *  Quick fix for cookie timeout
+     **/
+    if (!is_null(Yii::$app->user->identity)) {
        $userId           = Yii::$app->user->identity->getId();
        $isFrameworkAdmin = Yii::$app->user->identity->isFrameworkAdministrator($userId);
        $isAssignedRole   = Yii::$app->user->identity->isAssignedTemporaryRole($userId);
-   }
+    }
 
-   if (
+    if (
       \Yii::$app->user->can('[Framework][Access][Permit]')  ||
       \Yii::$app->user->can('[Framework][Access][GAApp]')  ||
       \Yii::$app->user->can('[Framework][Access][Sylla]')  ||
       
       $isFrameworkAdmin
-   ) {
+    ) {
        ?>
 
             <div class="col-lg-4">
@@ -77,13 +77,13 @@ $auth    = Yii::$app->authManager;
     
    print("<ul>");
     
-       if (
+    if (
       \Yii::$app->user->can('[Framework][Role][Permit]')  ||
       \Yii::$app->user->can('[Framework][Role][GAApp]')  ||
       \Yii::$app->user->can('[Framework][Role][Sylla]')  ||
       
       $isFrameworkAdmin
-   ) {
+    ) {
            print("<li>");
            print(HTML::a("User Management", Url::toRoute(['users/index', ], true)));
            print("</li>");
@@ -92,26 +92,26 @@ $auth    = Yii::$app->authManager;
            print("<li>Switch Role Identity</li>");
            print("<ul>");
       
-           if ($isAssignedRole) {
-               print("<li>");
-               print(HTML::a('Restore Role', Url::toRoute(['roles/reset', 'reset' => 'reset',], true)));
-               print("</li>");
-           } else {
-               foreach ($auth->getRoles() as $role) {
-                   if (strpos($role->description, "(10)") === false) {
-                       print("<li>");
-                       print(HTML::a($role->description, Url::toRoute(['roles/switch', 'role' => $role->name,], true)));
-                       print("</li>");
-                   }
-               }
-           }
+        if ($isAssignedRole) {
+            print("<li>");
+            print(HTML::a('Restore Role', Url::toRoute(['roles/reset', 'reset' => 'reset',], true)));
+            print("</li>");
+        } else {
+            foreach ($auth->getRoles() as $role) {
+                if (strpos($role->description, "(10)") === false) {
+                    print("<li>");
+                    print(HTML::a($role->description, Url::toRoute(['roles/switch', 'role' => $role->name,], true)));
+                    print("</li>");
+                }
+            }
+        }
       
-           print("</ul>");
-           print("</ul>");
-       }
+        print("</ul>");
+        print("</ul>");
+    }
 
-       if (
-      \Yii::$app->user->can('[Framework][Synch][Permit]')  ||
+    if (
+      \Yii::$app->user->can('[Framework][Synch][Permit]') ||
       \Yii::$app->user->can('[Framework][Synch][Sylla]')  ||
       
       $isFrameworkAdmin
@@ -121,43 +121,56 @@ $auth    = Yii::$app->authManager;
            print("</li>");
        }
 
-       if (
-      \Yii::$app->user->can('[Framework][Synch][Permit]')  ||
-      \Yii::$app->user->can('[Framework][Synch][GAApp]')  ||
-      \Yii::$app->user->can('[Framework][Synch][Sylla]')  ||
-      
-      $isFrameworkAdmin
-   ) {
-           print("<li>");
-           print(HTML::a("System Code Management", Url::toRoute(['codes/index', ], true)));
-           print("</li>");
-       }
+    if (
+        \Yii::$app->user->can('[Framework][Synch][Permit]') ||
+        \Yii::$app->user->can('[Framework][Synch][GAApp]')  ||
+        \Yii::$app->user->can('[Framework][Synch][Sylla]')  ||
+        
+        $isFrameworkAdmin
+    ) {
+        print("<li>");
+        print(HTML::a("System Code Management", Url::toRoute(['codes/index', ], true)));
+        print("</li>");
+    }
+    
+    if (
+        \Yii::$app->user->can('[Framework][Synch][Permit]') ||
+        \Yii::$app->user->can('[Framework][Synch][GAApp]')  ||
+        \Yii::$app->user->can('[Framework][Synch][Sylla]')  ||
+        
+        $isFrameworkAdmin
+    ) {
+        print("<li>");
+        print(HTML::a("Form Field Management", Url::toRoute(['fields/index', ], true)));
+        print("</li>");
+    }
 
-       if (
-      \Yii::$app->user->can('[Framework][Synch][Permit]')  ||
-      \Yii::$app->user->can('[Framework][Synch][GAApp]')  ||
-      \Yii::$app->user->can('[Framework][Synch][Sylla]')  ||
-      
-      $isFrameworkAdmin
-   ) {
-           print("<li>");
-           print(HTML::a("Data Synchronization", Url::toRoute(['framework/index', ], true)));
-           print("</li>");
-       }
+
+    if (
+        \Yii::$app->user->can('[Framework][Synch][Permit]') ||
+        \Yii::$app->user->can('[Framework][Synch][GAApp]')  ||
+        \Yii::$app->user->can('[Framework][Synch][Sylla]')  ||
+        
+        $isFrameworkAdmin
+    ) {
+        print("<li>");
+        print(HTML::a("Data Synchronization", Url::toRoute(['framework/index', ], true)));
+        print("</li>");
+    }
    
-       if (
-      \Yii::$app->user->can('[Framework][Backup][Permit]')  ||
-      \Yii::$app->user->can('[Framework][Backup][GAApp]')  ||
-      \Yii::$app->user->can('[Framework][Backup][Sylla]')  ||
-      
-      $isFrameworkAdmin
-   ) {
-           print("<li>");
-           print(HTML::a("Data Backup", Url::toRoute(['framework/index', ], true)));
-           print("</li>");
-       }
+    if (
+        \Yii::$app->user->can('[Framework][Backup][Permit]') ||
+        \Yii::$app->user->can('[Framework][Backup][GAApp]')  ||
+        \Yii::$app->user->can('[Framework][Backup][Sylla]')  ||
+        
+        $isFrameworkAdmin
+    ) {
+        print("<li>");
+        print(HTML::a("Data Backup", Url::toRoute(['framework/index', ], true)));
+        print("</li>");
+    }
    
-       print("</ul>");
+    print("</ul>");
    
        /****
         **  Eo Framework section of the dashboard :: Action Access

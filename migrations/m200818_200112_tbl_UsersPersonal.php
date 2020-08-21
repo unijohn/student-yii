@@ -41,10 +41,10 @@ class m200818_200112_tbl_UsersPersonal extends BaseMigration
         }
 
         $columns =
-      [
-         'uuid', 'uNbr', 'firstNm', 'middleNm', 'lastNm', 'salutation', 'us_citizen',
-         'citizen_other', 'visa_type', 'created_at'
-      ];
+        [
+            'uuid', 'uNbr', 'firstNm', 'middleNm', 'lastNm', 'salutation', 'us_citizen',
+            'citizen_other', 'visa_type', 'created_at'
+        ];
       
         $coursePersonal = [
          [

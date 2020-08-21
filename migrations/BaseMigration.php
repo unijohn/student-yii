@@ -70,6 +70,18 @@ class BaseMigration extends Migration
     const VISA_F1              = 1;
     const VISA_F2              = 2;
     const VISA_F3              = 3;
+    
+    const TYPE_PROMPT_DEFAULT  = -1;
+    
+    const TYPE_FIELD_SELECT    = 0;
+    const TYPE_FIELD_CHECKBOX  = 1;
+    const TYPE_FIELD_RADIO     = 2;
+    
+    const TYPE_ITEM_ACTIVE          = 0;
+    const TYPE_ITEM_HIDDEN          = 1;
+    const TYPE_ITEM_US_CITIZEN      = 2;
+    const TYPE_ITEM_VISA_TYPE       = 3;
+    const TYPE_ITEM_CITIZEN_OTHER   = 4;
    
 
     const tbl_YiiNames  = [
@@ -89,6 +101,7 @@ class BaseMigration extends Migration
       'tbl_TempAuthAssignment',
       'tbl_Users',
       'tbl_UsersPersonal',
+      'tbl_FormFields',
    ];
 
     public $_auth;
@@ -158,6 +171,12 @@ class BaseMigration extends Migration
     public static function getTblUserPersonalName()
     {
         return self::getWorkDeskTableName(6);
+    }
+    
+    
+    public static function getTblFormFieldsName()
+    {
+        return self::getWorkDeskTableName(7);
     }
 
 
