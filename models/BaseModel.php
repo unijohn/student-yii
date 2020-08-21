@@ -67,6 +67,7 @@ class BaseModel extends ActiveRecord
     const CITIZEN_US_MIN       = self::CITIZEN_US_NO;
     const CITIZEN_US_MAX       = self::CITIZEN_US_YES;
    
+    const CITIZEN_OTHER_NO     = 0;
     const CITIZEN_OTHER_MIN    = 0;
     const CITIZEN_OTHER_MAX    = 4;
    
@@ -74,7 +75,7 @@ class BaseModel extends ActiveRecord
     const VISA_F1              = 1;
     const VISA_F2              = 2;
     const VISA_F3              = 3;
-    const VISA_MAX             = self::VISA_NO;
+    const VISA_MIN             = self::VISA_NO;
     const VISA_MAX             = self::VISA_F3;
 
     const TYPE_FIELD_SELECT    = 0;

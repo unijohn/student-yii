@@ -69,8 +69,11 @@ jobs:
     - name: Check Codeception Version
       run: composer -V
 
-    - name: Codeception Bootstrap
-      run: vendor/bin/codecept bootstrap
+    - name: Conception: Unit
+      run: vendor/bin/codecept run unit
+
+#    - name: Codeception Bootstrap
+#      run: vendor/bin/codecept bootstrap
 
     # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
     # Docs: https://getcomposer.org/doc/articles/scripts.md
