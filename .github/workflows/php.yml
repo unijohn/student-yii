@@ -66,6 +66,8 @@ jobs:
     - name: Lint PHP Files
       run: composer ci-fix
       
+    - name: Codeception Unit Tests
+      run: vendor/bin/codecept run unit
 
     # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
     # Docs: https://getcomposer.org/doc/articles/scripts.md
