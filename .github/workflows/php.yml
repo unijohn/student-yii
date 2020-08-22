@@ -1,4 +1,4 @@
-name: PHP Composer
+name: Build Status
 # https://github.com/unijohn/student-yii/workflows/<WORKFLOW_NAME>/badge.svg
 # ![example workflow file path](https://github.com/unijohn/student-yii/workflows/.github/workflows/php.yml/badge.svg)
 # ![example branch parameter](https://github.com/unijohn/student-yii/workflows/<WORKFLOW_NAME>/badge.svg?branch=feature-1)
@@ -65,7 +65,15 @@ jobs:
 
     - name: Lint PHP Files
       run: composer ci-fix
-      
+
+    - name: Check Codeception Version
+      run: composer -V
+
+    - name: Conception Tests (Unit)
+      run: vendor/bin/codecept run unit
+
+#    - name: Codeception Bootstrap
+#      run: vendor/bin/codecept bootstrap
 
     # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
     # Docs: https://getcomposer.org/doc/articles/scripts.md

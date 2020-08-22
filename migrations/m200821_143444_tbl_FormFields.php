@@ -15,27 +15,7 @@ class m200821_143444_tbl_FormFields extends BaseMigration
     public function safeUp()
     {
         $created_at = $this->_time;
-
-        /**
-                if ($this->_db->getTableSchema(self::getTblSystemCodesName(), true) === null) {
-                    $this->createTable(self::getTblSystemCodesName(),
-                    [
-                        'id'              => $this->primaryKey(),
-                        'type'            => $this->integer()->notNull(),
-                        'code'            => $this->string(8)->notNull(),
-                        'description'     => $this->string(64),
-                        'is_active'       => $this->integer()->notNull(),
-                        'is_hidden'       => $this->integer()->notNull(),
-                        'created_at'      => $this->integer()->notNull(),
-                        'updated_at'      => $this->integer()->notNull(),
-                        'deleted_at'      => $this->integer(),
-                    ], $this->_tableOptions);
-
-                    $this->createIndex('idx_SystemCodes_type', self::getTblSystemCodesName(), 'type');
-                    $this->createIndex('idx_SystemCodes_code', self::getTblSystemCodesName(), 'code');
-                }
-         **/
-   
+  
         if ($this->_db->getTableSchema(self::getTblFormFieldsName(), true) === null) {
             $this->createTable(
                 self::getTblFormFieldsName(),

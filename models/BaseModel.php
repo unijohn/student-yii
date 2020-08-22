@@ -10,10 +10,12 @@ class BaseModel extends ActiveRecord
 {
     const STATUS_INACTIVE      = 0;
     const STATUS_ACTIVE        = 1;
+    const STATUS_ACTIVE_MIN    = self::STATUS_INACTIVE;
     const STATUS_ACTIVE_MAX    = self::STATUS_ACTIVE;
 
     const STATUS_HIDDEN        = 0;
     const STATUS_VISIBLE       = 1;
+    const STATUS_VISIBLE_MIN   = self::STATUS_HIDDEN;
     const STATUS_VISIBLE_MAX   = self::STATUS_VISIBLE;
    
     const SUBJECT_ACCT         = "ACCT";
@@ -62,22 +64,34 @@ class BaseModel extends ActiveRecord
     
     const CITIZEN_US_NO        = 0;
     const CITIZEN_US_YES       = 1;
-   
+    const CITIZEN_US_MIN       = self::CITIZEN_US_NO;
     const CITIZEN_US_MAX       = self::CITIZEN_US_YES;
    
-    const CITIZEN_OTHER_NO     = "AAAA";
-//    const CITIZEN_OTHER_YES    = 1;
-   
-    const CITIZEN_OTHER_MIN    = 1;
+    const CITIZEN_OTHER_NO     = 0;
+    const CITIZEN_OTHER_MIN    = 0;
     const CITIZEN_OTHER_MAX    = 4;
    
     const VISA_NO              = 0;
     const VISA_F1              = 1;
     const VISA_F2              = 2;
     const VISA_F3              = 3;
-   
+    const VISA_MIN             = self::VISA_NO;
     const VISA_MAX             = self::VISA_F3;
-   
+
+    const TYPE_FIELD_SELECT    = 0;
+    const TYPE_FIELD_CHECKBOX  = 1;
+    const TYPE_FIELD_RADIO     = 2;
+    const TYPE_FIELD_MIN       = self::TYPE_FIELD_SELECT;
+    const TYPE_FIELD_MAX       = self::TYPE_FIELD_MIN;
+    
+    const TYPE_ITEM_ACTIVE          = 0;
+    const TYPE_ITEM_HIDDEN          = 1;
+    const TYPE_ITEM_US_CITIZEN      = 2;
+    const TYPE_ITEM_VISA_TYPE       = 3;
+    const TYPE_ITEM_CITIZEN_OTHER   = 4;
+    const TYPE_ITEM_MIN             = self::TYPE_ITEM_ACTIVE;
+    const TYPE_ITEM_MAX             = self::TYPE_FIELD_MAX;
+
     const SCENARIO_INSERT   = 'insert';
     const SCENARIO_UPDATE   = 'update';
 

@@ -8,4 +8,5 @@ modules:
     enabled:
       - Asserts
       - Yii2:
+            config: 'config/test.php'
             part: [orm, email, fixtures]
