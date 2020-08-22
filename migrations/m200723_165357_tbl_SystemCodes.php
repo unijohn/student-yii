@@ -38,7 +38,7 @@ class m200723_165357_tbl_SystemCodes extends BaseMigration
                     'is_active'       => $this->integer()->notNull(),
                     'is_hidden'       => $this->integer()->notNull(),
                     'created_at'      => $this->integer()->notNull(),
-                    'updated_at'      => $this->integer()->notNull(),
+                    'updated_at'      => $this->integer(),
                     'deleted_at'      => $this->integer(),
                 ],
                 $this->_tableOptions
