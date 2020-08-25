@@ -82,6 +82,7 @@ class BaseMigration extends Migration
     const TYPE_ITEM_US_CITIZEN      = 2;
     const TYPE_ITEM_VISA_TYPE       = 3;
     const TYPE_ITEM_CITIZEN_OTHER   = 4;
+    const TYPE_ITEM_YEAR_FOUR       = 5;
    
 
     const tbl_YiiNames  = [
