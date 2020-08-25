@@ -37,6 +37,7 @@ class BaseController extends Controller
     public $_data;
     public $_dataProvider;
     public $_request;
+    public $_session;
     public $_view;
     public $_user;
 
@@ -64,6 +65,7 @@ class BaseController extends Controller
         $this->_cookies     = Yii::$app->response->cookies;
         $this->_db          = Yii::$app->db;
         $this->_request     = Yii::$app->request;
+        $this->_session     = Yii::$app->session;
         $this->_view        = Yii::$app->view;
         $this->_user        = Yii::$app->user;
 
@@ -86,16 +88,6 @@ class BaseController extends Controller
       
         $this->_data['errors']  = [];
         $this->_data['success'] = [];
-        
-        $_errors    = $this->_request->get('errors', '');
-        $_success   = $this->_request->get('success', '');
-        
-        if (null !== $_errors && !empty($_errors)) {
-            $this->_data['errors'] =  $_errors;
-        }
-        if (null !== $_success && !empty($_success)) {
-            $this->_data['success'] =  $_success;
-        }
     }
 
 
@@ -139,6 +131,82 @@ class BaseController extends Controller
                 'class' => 'yii\web\ErrorAction',
             ],
         ];
+    }
+    
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function beforeAction( $action )
+    {
+        // your custom code here, if you want the code to run before action filters,
+        // which are triggered on the [[EVENT_BEFORE_ACTION]] event, e.g. PageCache or AccessControl
+               
+        if (!parent::beforeAction($action)) {
+            return false;
+        }
+
+        $this->_session->open();
+        
+        if( $this->_session->has('errors') ){
+            $this->_data['errors'] = $this->_session['error'];
+
+//self::debug( "beforeAction: errors", false );            
+//self::debug( $this->_session['errors'], false );
+
+            $this->_session->remove('errors');
+        }
+
+        if( $this->_session->has('success') ){
+            $this->_data['success'] = $this->_session['success'];
+            
+            $this->_session->remove('success');
+        }
+
+        $this->_session->close();
+
+        return true; // or false to not run the action
+    }
+    
+    
+    /**
+     *  In the situations where ControllerY operates and redirects results to ControllerX, I'm using _session to handle
+     *  this passing of system feedback between controllers.  Currently only works when the actionMethod == "actionSave"
+     *  and id == "save" **AND** the _data[]['useSession'] has to be set to true.
+     *
+     * {@inheritdoc}
+     */
+    public function afterAction( $action, $result )
+    {
+        $result = parent::afterAction( $action, $result );
+        
+        if( $action->actionMethod == "actionSave" && $action->id == "save" ){
+
+            if( isset( $this->_data['errors'] ) && !empty( $this->_data['errors'] ) ) {                      
+            
+                if( isset( $this->_data['errors']['useSession'] ) && !empty( $this->_data['errors']['useSession'] ) ) {
+                    if( $this->_data['errors']['useSession'] ) {
+                        unset( $this->_data['errors']['useSession'] );
+
+                        $this->_session['errors'] = $this->_data['success'];
+                    }
+                }
+            }             
+            
+            if( isset( $this->_data['success'] ) && !empty( $this->_data['success'] ) ) {                      
+            
+                if( isset( $this->_data['success']['useSession'] ) && !empty( $this->_data['success']['useSession'] ) ) {
+                
+                    if( $this->_data['success']['useSession'] ) {
+                        unset( $this->_data['success']['useSession'] );
+                        
+                        $this->_session['success'] = $this->_data['success'];
+                    }
+                }
+            } 
+        }   
+
+        return $result;
     }
     
 

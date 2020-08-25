@@ -168,6 +168,32 @@ class FormFields extends BaseModel
 
 
     /**
+     * Find an entry in the system by field properties
+     *
+     * @returns (TBD)
+     */
+    public static function findFieldByProperties( $grouping = -1, $value = '', $value_int = '', $limit_one = true )
+    {
+        $tbl_formFields = FormFields::tableName();
+   
+        $query_fields = ( new \yii\db\Query() )
+         ->select([  'ff.id', 'ff.type', 'ff.grouping', 'ff.grouping_name', 'ff.value', 'ff.value_int', 'ff.is_active', 'ff.is_visible' ])
+         ->from($tbl_formFields . ' ff')
+         ->where('( ff.value =:value OR ff.value_int =:value_int) AND ff.grouping =:grouping')
+            ->addParams([ 
+                'value'     => $value, 
+                'value_int' => $value_int, 
+                'grouping'  => $grouping
+            ]);
+            
+         if( $limit_one )
+            $query_fields = $query_fields->limit(1)->one();
+
+        return $query_fields;
+    }
+
+
+    /**
      * Determining if this entry already exists in the system
      *
      * @return (TBD)
@@ -182,7 +208,6 @@ class FormFields extends BaseModel
         return ($count == 1 ? true : false);
     }
 
-//GH Test - 2020-007
 
     /**
      * Determining if this entry already exists in the system by field properties

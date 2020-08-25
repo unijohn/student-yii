@@ -362,10 +362,7 @@ class UsersController extends BaseController
         if (isset($this->_data['uuid']) && !empty($this->_data['uuid'])) {
             $this->_userPersonalModel = UsersPersonal::findOne($this->_data['uuid']);
         }
-                
-        
-//        self::debug( $this->_data['uuid'], false );
-//        self::debug( $this->_userPersonalModel );
+
       
         $this->_data['filterForm']['uuid']              = ArrayHelper::getValue($this->_request->get(), 'User.uuid', '');
         $this->_data['filterForm']['is_active']         = ArrayHelper::getValue($this->_request->get(), 'User.is_active', -1);

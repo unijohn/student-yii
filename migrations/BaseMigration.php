@@ -95,14 +95,14 @@ class BaseMigration extends Migration
    ];
    
     const tbl_WorkDeskNames = [
-      'tbl_Courses',
-      'tbl_CoursesCodesChild',
-      'tbl_SystemCodes',
-      'tbl_SystemCodesChild',
-      'tbl_TempAuthAssignment',
-      'tbl_Users',
-      'tbl_UsersPersonal',
-      'tbl_FormFields',
+      '{{tbl_Courses}}',
+      '{{tbl_CoursesCodesChild}}',
+      '{{tbl_SystemCodes}}',
+      '{{tbl_SystemCodesChild}}',
+      '{{tbl_TempAuthAssignment}}',
+      '{{tbl_Users}}',
+      '{{tbl_UsersPersonal}}',
+      '{{tbl_FormFields}}',
    ];
 
     public $_auth;
