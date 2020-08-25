@@ -15,6 +15,7 @@ use yii\web\Response;
 use app\controllers\BaseController;
 
 use app\models\BaseModel;
+use app\models\FormFields;
 use app\models\SystemCodes;
 use app\models\SystemCodesChild;
 use app\models\User;
@@ -64,6 +65,15 @@ class UsersPersonalController extends BaseController
         $this->_data['UserPersonal']['citizen_other']       = ArrayHelper::getValue($this->_request->post(), 'UsersPersonal.citizen_other', BaseModel::CITIZEN_OTHER_NO);
         $this->_data['UserPersonal']['visa_type']           = ArrayHelper::getValue($this->_request->post(), 'UsersPersonal.visa_type', BaseModel::VISA_NO);
         $this->_data['UserPersonal']['saveUserPersonal']    = ArrayHelper::getValue($this->_request->post(), 'UsersPersonal.saveUserPersonal', '');
+
+        if( empty( $this->_data['UserPersonal']['citizen_other'] ) ) {
+            $citizenOther = FormFields::findFieldByProperties( 
+                BaseModel::TYPE_ITEM_CITIZEN_OTHER, '',
+                BaseModel::CITIZEN_OTHER_NO 
+            );
+            
+            $this->_data['UserPersonal']['citizen_other'] = $citizenOther['value'];
+        }
 
         /**
                 $this->_data['filterForm']['uuid']              = ArrayHelper::getValue($this->_request->get(), 'User.uuid', '');
@@ -146,12 +156,14 @@ class UsersPersonalController extends BaseController
 
         if (strlen($this->_data['UserPersonal']['saveUserPersonal']) > 0) {
             if (!UsersPersonal::existsPersonal($this->_data['uuid'])) {
+                $this->_data['errors']['useSession'] = true;
+            
                 $this->_data['errors']['Save Personal Information'] =
                 [
-                    'value'     => "was unsuccessful",
-                    'bValue'    => false,
-                    'htmlTag'   => 'h4',
-                    'class'     => 'alert alert-danger',
+                    'value'         => "was unsuccessful",
+                    'bValue'        => false,
+                    'htmlTag'       => 'h4',
+                    'class'         => 'alert alert-danger',                
                 ];
                 
                 $this->_data['errors'][$this->_data['uuid']] =
@@ -171,14 +183,27 @@ class UsersPersonalController extends BaseController
                 $updateModel->us_citizen    = $this->_data['UserPersonal']['us_citizen'];
                 
                 if ($updateModel->us_citizen == BaseModel::CITIZEN_US_YES) {
-                    $updateModel->citizen_other = BaseModel::CITIZEN_OTHER_NO;
+                    $citizenOther = FormFields::findFieldByProperties( 
+                        BaseModel::TYPE_ITEM_CITIZEN_OTHER, '',
+                        BaseModel::CITIZEN_OTHER_NO 
+                    );
+                
+                    $updateModel->citizen_other = $citizenOther['value'];
                     $updateModel->visa_type     = BaseModel::VISA_NO;
                 } else {
+
                     $updateModel->citizen_other = $this->_data['UserPersonal']['citizen_other'];
                     $updateModel->visa_type     = $this->_data['UserPersonal']['visa_type'];
                 }
 
                 $this->_data['UserPersonal']['saveResult']   = $updateModel->save();
+
+/**
+                if( !$this->_data['UserPersonal']['saveResult'] ) {
+                    self::debug( $this->_userPersonalModel->getErrors(), false );
+                    self::debug( $this->_data['UserPersonal'] );
+                }
+ **/
       
                 $updateColumns = $updateModel->afterSave(false, $this->_data['UserPersonal']['saveUserPersonal']);
             }
@@ -195,27 +220,33 @@ class UsersPersonalController extends BaseController
                             } else {
                                 // Avoid setting this success header multiple times
                                 if (!isset($this->_data['success']['Save Personal Information'])) {
+                                    $this->_data['success']['useSession'] = true;                                
+                                
                                     $this->_data['success']['Save Personal Information'] =
                                     [
-                                       'value'     => "was successful",
-                                       'bValue'    => true,
-                                       'htmlTag'   => 'h4',
-                                       'class'     => 'alert alert-success',
+                                       'value'      => "was successful",
+                                       'bValue'     => true,
+                                       'htmlTag'    => 'h4',
+                                       'class'      => 'alert alert-success',
                                     ];
                                 }
                             }
-
+                            
                             $lookupNew = $this->keyLookup($key, $val);
-                            $lookupOld = $this->keyLookup($key, $this->_data['UserPersonal'][$key]);
+                            $lookupOld = $this->keyLookup($key, $this->_data['UserPersonal'][$key]);                            
+                            
+                            $labels = $this->_userPersonalModel->attributeLabels();
+                            
+//                            self::debug( $labels );
                    
-                            $this->_data['success'][$keyIndex] =
+                            $this->_data['success'][$labels[$key]] =
                             [
                                 'value'     => "was updated",
                                 'bValue'    => true,
                             ];
 
                             if (strpos($lookupNew, "Unknown") !== 0) {
-                                $this->_data['success'][$keyIndex] =
+                                $this->_data['success'][$labels[$key]] =
                                 [
                                     'value'  => "was updated ( " . $lookupNew . " -> " . $lookupOld . " )",
                                 ];
@@ -225,8 +256,8 @@ class UsersPersonalController extends BaseController
                 }
             }
         }
-
-        return $this->redirect(['users/view', 'uuid' => $this->_data['uuid'], 'success' => $this->_data['success'], 'errors' => $this->_data['errors'] ]);
+ 
+        return $this->redirect(['users/view', 'uuid' => $this->_data['uuid'] ]);
     }
    
     /**
@@ -241,7 +272,7 @@ class UsersPersonalController extends BaseController
         $visaType       = UsersController::getDropDownOpts('visa_type');
 //        $countryList    = UsersController::getDropDownOpts('country_list');
 
-        self::debug("KeyLookUp == START : " . $key . " => " . $value, false);
+//        self::debug("KeyLookUp == START : " . $key . " => " . $value, false);
       
         if ($key === "us_citizen") {
             if (isset($usCitizen[$value]) && !empty($usCitizen[$value])) {

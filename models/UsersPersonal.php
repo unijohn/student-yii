@@ -10,11 +10,12 @@ use app\migrations\BaseMigration;
 
 class UsersPersonal extends BaseModel
 {
+ 
     /**
        public uuid;
        public uNbr;
        public firstNm;
-       public middleNm;
+       public $middleNm;         
        public lastNm;
        public salutation;
        public us_citizen;
@@ -25,12 +26,16 @@ class UsersPersonal extends BaseModel
        public updated_at;
        public deleted_at;
      **/
+     
+ 
  
     const modelColumns =
     [
         'uuid', 'uNbr', 'firstNm', 'middleNm', 'lastNm', 'salutation', 'us_citizen', 'visa_type',
         'created_at', 'updated_at', 'deleted_at'
     ];
+
+ 
 
     public function init()
     {
@@ -58,7 +63,9 @@ class UsersPersonal extends BaseModel
             'firstNm'       => Yii::t('app', 'First Name'),
             'middleNm'      => Yii::t('app', 'Middle Name'),
             'lastNm'        => Yii::t('app', 'Last Name'),
-            'us_citizen'    => Yii::t('app', 'Are you a US Citizen?'),
+            'us_citizen'    => Yii::t('app', 'US Citizen'),
+            'citizen_other' => Yii::t('app', 'Foreign Citizenship'),            
+            'visa_type'     => Yii::t('app', 'Visa Type'),             
         ];
     }
 
