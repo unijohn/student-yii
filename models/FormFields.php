@@ -5,7 +5,7 @@ namespace app\models;
 use Yii;
 use yii\base\model;
 use yii\behaviors\TimestampBehavior;
-use yii2tech\ar\position\PositionBehavior;
+use yii2tech\ar\position\PositionBehavior;  // https://github.com/yii2tech/ar-position
 
 use app\migrations\BaseMigration;
 
@@ -22,6 +22,7 @@ class FormFields extends BaseModel
 
        public is_active;
        public is_visible;
+       public order_by;       
 
        public created_at;
        public updated_at;
@@ -31,7 +32,7 @@ class FormFields extends BaseModel
     const modelColumns =
     [
         'id', 'type', 'grouping', 'grouping_name', 'description', 'value', 'value_int',
-        'is_active', 'is_visible',
+        'is_active', 'is_visible', 'order_by',
         'created_at', 'updated_at', 'deleted_at'
     ];
 
