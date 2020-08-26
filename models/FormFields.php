@@ -61,8 +61,8 @@ class FormFields extends BaseModel
             'grouping'      => Yii::t('app', 'Group Id'),
             'grouping_name' => Yii::t('app', 'Group Name'),
             'description'   => Yii::t('app', 'Description'),
-            'value'         => Yii::t('app', 'Value (Number)'),
-            'value_int'     => Yii::t('app', 'Value (String)'),
+            'value'         => Yii::t('app', 'Value (Str)'),
+            'value_int'     => Yii::t('app', 'Value (#)'),
             
             'is_active'     => Yii::t('app', 'Is Active'),
             'is_visible'    => Yii::t('app', 'Is Visible'),
@@ -131,8 +131,9 @@ class FormFields extends BaseModel
     public function scenarios()
     {
         $scenarios = parent::scenarios();
-        $scenarios[self::SCENARIO_INSERT] = [ 'type', 'grouping', 'grouping_name', 'description', 'is_active', 'is_visible', 'created_at', ];
-        $scenarios[self::SCENARIO_UPDATE] = [ 'type', 'grouping', 'grouping_name', 'description', 'is_active', 'is_visible', 'updated_at', ];
+        $scenarios[self::SCENARIO_INSERT] = [ 'type', 'grouping', 'grouping_name', 'description', 'is_active', 'is_visible', 'order_by', 'created_at', ];
+        $scenarios[self::SCENARIO_UPDATE] = [ 'type', 'grouping', 'grouping_name', 'description', 'is_active', 'is_visible', 'order_by', 'updated_at', ];
+        $scenarios[self::SCENARIO_MOVE]   = [ 'order_by', 'updated_at', ];
    
         return $scenarios;
     }
@@ -145,11 +146,35 @@ class FormFields extends BaseModel
     {
         return
         [
+            [
+                'is_active',  'number', 'min' => self::STATUS_ACTIVE_MIN,  'max' => self::STATUS_ACTIVE_MAX,
+                'tooBig' => 'Select a valid option', 'tooSmall' => 'Select a valid option',
+            ],
+            [
+                'is_visible', 'number', 'min' => self::STATUS_VISIBLE_MIN, 'max' => self::STATUS_VISIBLE_MAX,
+                'tooBig' => 'Select a valid option', 'tooSmall' => 'Select a valid option',
+            ],
+            [
+                'type',       'number', 'min' => self::TYPE_FIELD_MIN,     'max' => self::TYPE_FIELD_MAX,
+                'tooBig' => 'Select a valid option', 'tooSmall' => 'Select a valid option',
+            ],
+            [
+                'grouping',   'number', 'min' => self::TYPE_ITEM_MIN,      'max' => self::TYPE_ITEM_MAX,
+                'tooBig' => 'Select a valid option', 'tooSmall' => 'Select a valid option',
+            ],
+            [
+                'value', 'default', 'value' => ''
+            ],
+            [
+                'value', 'default', 'value' => 0
+            ],
+               
+/**
             ['is_active', 'default', 'value'    => self::STATUS_ACTIVE ],
             ['is_active', 'filter', 'filter'    => 'intval' ],
             ['is_active', 'default', 'min'      => self::STATUS_ACTIVE_MIN ],
             ['is_active', 'default', 'max'      => self::STATUS_ACTIVE_MAX ],
-            
+
             ['is_visible', 'default', 'value'   => self::STATUS_VISIBLE ],
             ['is_visible', 'filter',  'filter'  => 'intval' ],
             ['is_visible', 'default', 'min'     => self::STATUS_VISIBLE_MIN ],
@@ -159,17 +184,24 @@ class FormFields extends BaseModel
             ['type', 'filter',  'filter'  => 'intval' ],
             ['type', 'default', 'min'     => self::TYPE_FIELD_MIN ],
             ['type', 'default', 'max'     => self::TYPE_FIELD_MAX ],
-            
+
             ['grouping', 'default', 'value'   => self::TYPE_ITEM_CITIZEN_OTHER ],
             ['grouping', 'filter',  'filter'  => 'intval' ],
             ['grouping', 'default', 'min'     => self::TYPE_ITEM_MIN ],
             ['grouping', 'default', 'max'     => self::TYPE_ITEM_MAX ],
+ **/
 
             [
                 [
-                   'type', 'grouping', 'grouping_name', 'description', 'is_active', 'is_visible', 'updated_at'
+                   'type', 'grouping', 'grouping_name', 'description', 'is_active', 'order_by', 'is_visible', 'updated_at'
                 ],
                 'required', 'on' => self::SCENARIO_UPDATE
+            ],
+            [
+                [
+                    'order_by', 'updated_at'
+                ],
+                'required', 'on' => self::SCENARIO_MOVE
             ],
         ];
     }
@@ -248,7 +280,7 @@ class FormFields extends BaseModel
 
         $query_fields->orderBy('ff.order_by');
 
-//       self::debug( $query_fields->createCommand()->getRawSql() );
+//        self::debug( $query_fields->createCommand()->getRawSql() );
             
         return $query_fields->all();
     }
@@ -292,6 +324,25 @@ class FormFields extends BaseModel
     public static function getSelectOptions($grouping = -1, $grouping_name = "", $prompt = false)
     {
         $results = FormFields::getFieldOptions(FormFields::TYPE_FIELD_SELECT, $grouping, $grouping_name, $prompt);
+        
+        $dropDown = [];
+        
+        foreach ($results as $row) {
+            $dropDown[$row['value_int']] = $row['description'];
+        }
+        
+        return $dropDown;
+    }
+
+
+    /**
+     * TBD
+     *
+     * @return (TBD)
+     */
+    public static function getFormFieldOptions($grouping = -1, $grouping_name = "", $prompt = false)
+    {
+        $results = FormFields::getFieldOptions(FormFields::TYPE_FIELD_NOT_SET, $grouping, $grouping_name, $prompt);
         
         $dropDown = [];
         
