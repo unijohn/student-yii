@@ -882,11 +882,11 @@ class m200821_143444_tbl_FormFields extends BaseMigration
 
         $this->batchInsert(self::getTblFormFieldsName(), $columns, $fieldRows);
         
-        $fieldRows = 
-        [ 
-            [ 
-                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_YEAR_FOUR, 'calendar_year_four', 'Select Year', '', -1, self::STATUS_ACTIVE, self::STATUS_VISIBLE, 0, $created_at,  
-            ], 
+        $fieldRows =
+        [
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_YEAR_FOUR, 'calendar_year_four', 'Select Year', '', -1, self::STATUS_ACTIVE, self::STATUS_VISIBLE, 0, $created_at,
+            ],
             [
                 self::TYPE_FIELD_SELECT, self::TYPE_ITEM_YEAR_FOUR, 'calendar_year_four', '2030', '2030', 2030, self::STATUS_INACTIVE, self::STATUS_HIDDEN, 1, $created_at,
             ],

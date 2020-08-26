@@ -242,7 +242,7 @@ class FormFields extends BaseModel
                 ]);
 
                
-        if( $prompt ) {
+        if ($prompt) {
             $query_fields->andWhere([ '!=', 'value_int', -1 ]);
         }
 
@@ -266,7 +266,7 @@ class FormFields extends BaseModel
         $query_fields = ( new \yii\db\Query() )
             ->select([  'ff.grouping', 'ff.grouping_name' ])
             ->distinct()
-            ->from($tbl_formFields . ' ff')            
+            ->from($tbl_formFields . ' ff')
             ->orderBy('ff.grouping')
             ->all();
 
@@ -276,7 +276,7 @@ class FormFields extends BaseModel
 
         $dropDown[-1] = "Select Type";
 
-        foreach( $query_fields as $row ) {
+        foreach ($query_fields as $row) {
             $dropDown[$row['grouping']] = $row['grouping_name'];
         }
         
@@ -295,7 +295,7 @@ class FormFields extends BaseModel
         
         $dropDown = [];
         
-        foreach( $results as $row ) {
+        foreach ($results as $row) {
             $dropDown[$row['value_int']] = $row['description'];
         }
         
