@@ -250,7 +250,6 @@ class FieldsController extends BaseController
      **/
     private function renderListing()
     {
-
 /**
         $results = FormFields::find()
         ->where(['grouping' => 5  ])
@@ -262,10 +261,12 @@ class FieldsController extends BaseController
         print( "        \$fieldRows = " . PHP_EOL );
         print( "        [ " . PHP_EOL );
         print( "            [ " . PHP_EOL );
-        print( "                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_YEAR_FOUR, 'calendar_year_four', 'Select Year', '', -1, self::STATUS_ACTIVE, self::STATUS_VISIBLE, 0, \$created_at,  " . PHP_EOL );
+        print( "                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_YEAR_FOUR, 'calendar_year_four', 'Select Year', '', -1, self::STATUS_ACTIVE, self::STATUS_VISIBLE, $count, \$created_at,  " . PHP_EOL );
         print( "            ], " . PHP_EOL );
-
+        
         for( $i = 2030; $i >= 1930; $i-- ) {
+        
+            $count++;
 
             if( $i >= 2021 ){
                 $isActive  = "self::STATUS_INACTIVE";
@@ -280,13 +281,13 @@ class FieldsController extends BaseController
             print( "                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_YEAR_FOUR, 'calendar_year_four', '$i', '$i', $i, $isActive, $isVisible, $count, \$created_at," . PHP_EOL );
             print( "            ]," . PHP_EOL );
 
-            $count++;
+//            $count++;
         }
 
         print( "        ];" . PHP_EOL );
 
         die();
- **/
+**/
     
         $this->_dataProvider = $this->getFieldsGridView();
 
@@ -343,10 +344,13 @@ class FieldsController extends BaseController
     }
 
 
+    /**
+     * TBD
+     *
+     * @return (TBD)
+     */
     public function actionDown()
-    {
-//        self::debug( "HERE" );
-        
+    {        
         $row = FormFields::find()
             ->where(['id' => $this->_data['id'] ])
             ->one();
@@ -358,19 +362,61 @@ class FieldsController extends BaseController
         
         return $this->renderListing();
     }
-    
+
+
+    /**
+     * TBD
+     *
+     * @return (TBD)
+     */    
+    public function actionLast()
+    {   
+        $row = FormFields::find()
+            ->where(['id' => $this->_data['id'] ])
+            ->one();
+            
+        $row->scenario      = FormFields::SCENARIO_MOVE;
+        $row->moveLast();
+        
+        $this->_data['filterForm']['grouping'] = $row['grouping'];
+        
+        return $this->renderListing();
+    }
+
+
+    /**
+     * TBD
+     *
+     * @return (TBD)
+     */    
     public function actionUp()
-    {
-//        self::debug( "HERE" );
-        
-        
-        
+    {  
         $row = FormFields::find()
             ->where(['id' => $this->_data['id'] ])
             ->one();
 
         $row->scenario      = FormFields::SCENARIO_MOVE;
         $row->movePrev();
+        
+        $this->_data['filterForm']['grouping'] = $row['grouping'];
+        
+        return $this->renderListing();
+    }
+
+
+    /**
+     * TBD
+     *
+     * @return (TBD)
+     */    
+    public function actionFirst()
+    {  
+        $row = FormFields::find()
+            ->where(['id' => $this->_data['id'] ])
+            ->one();
+
+        $row->scenario      = FormFields::SCENARIO_MOVE;
+        $row->moveFirst();
         
         $this->_data['filterForm']['grouping'] = $row['grouping'];
         
