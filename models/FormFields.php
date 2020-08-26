@@ -232,17 +232,55 @@ class FormFields extends BaseModel
         $tbl_formFields = FormFields::tableName();
    
         $query_fields = ( new \yii\db\Query() )
-         ->select([  'ff.id', 'ff.type', 'ff.grouping', 'ff.grouping_name', 'ff.value', 'ff.value_int', 'ff.is_active', 'ff.is_visible' ])
-         ->from($tbl_formFields . ' ff')
-         ->where('( ff.grouping =:grouping OR ff.grouping_name =:grouping_name) AND ff.type =:type')
-            ->addParams([
-                'grouping'      => $grouping,
-                'grouping_name' => $grouping_name,
-                'type'          => $type
-            ])
-         ->orderBy('ff.value_int');
+            ->select([  'ff.id', 'ff.type', 'ff.grouping', 'ff.grouping_name', 'ff.description', 'ff.value', 'ff.value_int', 'ff.is_active', 'ff.is_visible' ])
+            ->from($tbl_formFields . ' ff')
+            ->where('( ff.grouping =:grouping OR ff.grouping_name =:grouping_name) AND ff.type =:type')
+                ->addParams([
+                    'grouping'      => $grouping,
+                    'grouping_name' => $grouping_name,
+                    'type'          => $type
+                ]);
+
+               
+        if( $prompt ) {
+            $query_fields->andWhere([ '!=', 'value_int', -1 ]);
+        }
+
+        $query_fields->orderBy('ff.order_by');
+
+//       self::debug( $query_fields->createCommand()->getRawSql() );
             
-        return $query_fields;
+        return $query_fields->all();
+    }
+    
+    
+    /**
+     * TBD
+     *
+     * @return (TBD)
+     */
+    public static function getDistinctGroupings()
+    {
+        $tbl_formFields = FormFields::tableName();
+   
+        $query_fields = ( new \yii\db\Query() )
+            ->select([  'ff.grouping', 'ff.grouping_name' ])
+            ->distinct()
+            ->from($tbl_formFields . ' ff')            
+            ->orderBy('ff.grouping')
+            ->all();
+
+//       self::debug( $query_fields->createCommand()->getRawSql() );
+
+        $dropDown = [];
+
+        $dropDown[-1] = "Select Type";
+
+        foreach( $query_fields as $row ) {
+            $dropDown[$row['grouping']] = $row['grouping_name'];
+        }
+        
+        return $dropDown;
     }
 
 
@@ -253,7 +291,15 @@ class FormFields extends BaseModel
      */
     public static function getSelectOptions($grouping = -1, $grouping_name = "", $prompt = false)
     {
-        return FormFields::getFieldOptions(FormFields::TYPE_FIELD_SELECT, $grouping, $grouping_name, $prompt);
+        $results = FormFields::getFieldOptions(FormFields::TYPE_FIELD_SELECT, $grouping, $grouping_name, $prompt);
+        
+        $dropDown = [];
+        
+        foreach( $results as $row ) {
+            $dropDown[$row['value_int']] = $row['description'];
+        }
+        
+        return $dropDown;
     }
 
 

@@ -78,10 +78,11 @@ class BaseModel extends ActiveRecord
     const VISA_MIN             = self::VISA_NO;
     const VISA_MAX             = self::VISA_F3;
 
-    const TYPE_FIELD_SELECT    = 0;
-    const TYPE_FIELD_CHECKBOX  = 1;
-    const TYPE_FIELD_RADIO     = 2;
-    const TYPE_FIELD_MIN       = self::TYPE_FIELD_SELECT;
+    const TYPE_FIELD_NOT_SET   = 0;
+    const TYPE_FIELD_SELECT    = 1;
+    const TYPE_FIELD_CHECKBOX  = 2;
+    const TYPE_FIELD_RADIO     = 3;
+    const TYPE_FIELD_MIN       = self::TYPE_FIELD_NOT_SET;
     const TYPE_FIELD_MAX       = self::TYPE_FIELD_MIN;
     
     const TYPE_ITEM_ACTIVE          = 0;
