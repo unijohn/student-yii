@@ -15,7 +15,7 @@ class UsersPersonal extends BaseModel
        public uuid;
        public uNbr;
        public firstNm;
-       public $middleNm;         
+       public $middleNm;
        public lastNm;
        public salutation;
        public us_citizen;
@@ -64,8 +64,8 @@ class UsersPersonal extends BaseModel
             'middleNm'      => Yii::t('app', 'Middle Name'),
             'lastNm'        => Yii::t('app', 'Last Name'),
             'us_citizen'    => Yii::t('app', 'US Citizen'),
-            'citizen_other' => Yii::t('app', 'Foreign Citizenship'),            
-            'visa_type'     => Yii::t('app', 'Visa Type'),             
+            'citizen_other' => Yii::t('app', 'Foreign Citizenship'),
+            'visa_type'     => Yii::t('app', 'Visa Type'),
         ];
     }
 

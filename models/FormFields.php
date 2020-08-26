@@ -5,6 +5,7 @@ namespace app\models;
 use Yii;
 use yii\base\model;
 use yii\behaviors\TimestampBehavior;
+use yii2tech\ar\position\PositionBehavior;
 
 use app\migrations\BaseMigration;
 
@@ -101,6 +102,13 @@ class FormFields extends BaseModel
                 // if you're using datetime instead of UNIX timestamp:
                 'value' => time(),
             ],
+            'positionBehavior' => [
+                'class' => PositionBehavior::className(),
+                'positionAttribute' => 'order_by',
+                'groupAttributes' => [
+                    'grouping' // multiple lists varying by 'categoryId'
+                ],
+            ],
 /**
          'softDeleteBehavior' => [
             'class' => SoftDeleteBehavior::className(),
@@ -172,7 +180,7 @@ class FormFields extends BaseModel
      *
      * @returns (TBD)
      */
-    public static function findFieldByProperties( $grouping = -1, $value = '', $value_int = '', $limit_one = true )
+    public static function findFieldByProperties($grouping = -1, $value = '', $value_int = '', $limit_one = true)
     {
         $tbl_formFields = FormFields::tableName();
    
@@ -180,32 +188,17 @@ class FormFields extends BaseModel
          ->select([  'ff.id', 'ff.type', 'ff.grouping', 'ff.grouping_name', 'ff.value', 'ff.value_int', 'ff.is_active', 'ff.is_visible' ])
          ->from($tbl_formFields . ' ff')
          ->where('( ff.value =:value OR ff.value_int =:value_int) AND ff.grouping =:grouping')
-            ->addParams([ 
-                'value'     => $value, 
-                'value_int' => $value_int, 
+            ->addParams([
+                'value'     => $value,
+                'value_int' => $value_int,
                 'grouping'  => $grouping
             ]);
             
-         if( $limit_one )
+        if ($limit_one) {
             $query_fields = $query_fields->limit(1)->one();
+        }
 
         return $query_fields;
-    }
-
-
-    /**
-     * Determining if this entry already exists in the system
-     *
-     * @return (TBD)
-     */
-    public static function existsField($id = '')
-    {
-        $count = Yii::$app->db->createCommand(
-            'SELECT COUNT(*) FROM ' . self::tableName() . ' WHERE uuid =:uuid ',
-            [':id' => $id]
-        )->queryScalar();
-        
-        return ($count == 1 ? true : false);
     }
 
 
@@ -230,12 +223,43 @@ class FormFields extends BaseModel
 
 
     /**
+     * TBD
+     *
+     * @return (TBD)
+     */
+    public static function getFieldOptions($type = -1, $grouping = -1, $grouping_name = "", $prompt = false)
+    {
+        $tbl_formFields = FormFields::tableName();
+   
+        $query_fields = ( new \yii\db\Query() )
+         ->select([  'ff.id', 'ff.type', 'ff.grouping', 'ff.grouping_name', 'ff.value', 'ff.value_int', 'ff.is_active', 'ff.is_visible' ])
+         ->from($tbl_formFields . ' ff')
+         ->where('( ff.grouping =:grouping OR ff.grouping_name =:grouping_name) AND ff.type =:type')
+            ->addParams([
+                'grouping'      => $grouping,
+                'grouping_name' => $grouping_name,
+                'type'          => $type
+            ])
+         ->orderBy('ff.value_int');
+            
+        return $query_fields;
+    }
+
+
+    /**
+     * TBD
+     *
+     * @return (TBD)
+     */
+    public static function getSelectOptions($grouping = -1, $grouping_name = "", $prompt = false)
+    {
+        return FormFields::getFieldOptions(FormFields::TYPE_FIELD_SELECT, $grouping, $grouping_name, $prompt);
+    }
+
+
+    /**
      *
      *    Relationships & Model section
      *
      **/
-    public function getUserInformation()
-    {
-        return $this->hasOne(User::className(), ['uuid' => 'uuid']);
-    }
 }
