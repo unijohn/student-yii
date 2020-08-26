@@ -13,6 +13,7 @@ $config = [
     'name' => 'FCBE Workdesk',
     'language' => 'en-US',
     'charset' => 'UTF-8',    
+    'timeZone' => 'America/Chicago',    
     
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
