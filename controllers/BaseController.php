@@ -137,7 +137,7 @@ class BaseController extends Controller
     /**
      * {@inheritdoc}
      */
-    public function beforeAction( $action )
+    public function beforeAction($action)
     {
         // your custom code here, if you want the code to run before action filters,
         // which are triggered on the [[EVENT_BEFORE_ACTION]] event, e.g. PageCache or AccessControl
@@ -148,16 +148,16 @@ class BaseController extends Controller
 
         $this->_session->open();
         
-        if( $this->_session->has('errors') ){
+        if ($this->_session->has('errors')) {
             $this->_data['errors'] = $this->_session['error'];
 
-//self::debug( "beforeAction: errors", false );            
-//self::debug( $this->_session['errors'], false );
+            //self::debug( "beforeAction: errors", false );
+            //self::debug( $this->_session['errors'], false );
 
             $this->_session->remove('errors');
         }
 
-        if( $this->_session->has('success') ){
+        if ($this->_session->has('success')) {
             $this->_data['success'] = $this->_session['success'];
             
             $this->_session->remove('success');
@@ -176,35 +176,31 @@ class BaseController extends Controller
      *
      * {@inheritdoc}
      */
-    public function afterAction( $action, $result )
+    public function afterAction($action, $result)
     {
-        $result = parent::afterAction( $action, $result );
+        $result = parent::afterAction($action, $result);
         
-        if( $action->actionMethod == "actionSave" && $action->id == "save" ){
-
-            if( isset( $this->_data['errors'] ) && !empty( $this->_data['errors'] ) ) {                      
-            
-                if( isset( $this->_data['errors']['useSession'] ) && !empty( $this->_data['errors']['useSession'] ) ) {
-                    if( $this->_data['errors']['useSession'] ) {
-                        unset( $this->_data['errors']['useSession'] );
+        if ($action->actionMethod == "actionSave" && $action->id == "save") {
+            if (isset($this->_data['errors']) && !empty($this->_data['errors'])) {
+                if (isset($this->_data['errors']['useSession']) && !empty($this->_data['errors']['useSession'])) {
+                    if ($this->_data['errors']['useSession']) {
+                        unset($this->_data['errors']['useSession']);
 
                         $this->_session['errors'] = $this->_data['success'];
                     }
                 }
-            }             
+            }
             
-            if( isset( $this->_data['success'] ) && !empty( $this->_data['success'] ) ) {                      
-            
-                if( isset( $this->_data['success']['useSession'] ) && !empty( $this->_data['success']['useSession'] ) ) {
-                
-                    if( $this->_data['success']['useSession'] ) {
-                        unset( $this->_data['success']['useSession'] );
+            if (isset($this->_data['success']) && !empty($this->_data['success'])) {
+                if (isset($this->_data['success']['useSession']) && !empty($this->_data['success']['useSession'])) {
+                    if ($this->_data['success']['useSession']) {
+                        unset($this->_data['success']['useSession']);
                         
                         $this->_session['success'] = $this->_data['success'];
                     }
                 }
-            } 
-        }   
+            }
+        }
 
         return $result;
     }
