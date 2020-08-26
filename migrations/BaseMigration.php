@@ -73,16 +73,18 @@ class BaseMigration extends Migration
     
     const TYPE_PROMPT_DEFAULT  = -1;
     
-    const TYPE_FIELD_SELECT    = 0;
-    const TYPE_FIELD_CHECKBOX  = 1;
-    const TYPE_FIELD_RADIO     = 2;
+    const TYPE_FIELD_NOT_SET   = 0;
+    const TYPE_FIELD_SELECT    = 1;
+    const TYPE_FIELD_CHECKBOX  = 2;
+    const TYPE_FIELD_RADIO     = 3;
     
-    const TYPE_ITEM_ACTIVE          = 0;
-    const TYPE_ITEM_HIDDEN          = 1;
-    const TYPE_ITEM_US_CITIZEN      = 2;
-    const TYPE_ITEM_VISA_TYPE       = 3;
-    const TYPE_ITEM_CITIZEN_OTHER   = 4;
-    const TYPE_ITEM_YEAR_FOUR       = 5;
+    const TYPE_FORM_FIELD           = 0;
+    const TYPE_ITEM_ACTIVE          = 1;
+    const TYPE_ITEM_VISIBLE         = 2;
+    const TYPE_ITEM_US_CITIZEN      = 3;
+    const TYPE_ITEM_VISA_TYPE       = 4;
+    const TYPE_ITEM_CITIZEN_OTHER   = 5;
+    const TYPE_ITEM_YEAR_FOUR       = 6;
    
 
     const tbl_YiiNames  = [
