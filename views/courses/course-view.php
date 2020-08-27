@@ -10,7 +10,9 @@
 
    use yii\widgets\ActiveForm;
    
-   use app\controllers\CodesController;   
+//   use app\controllers\CodesController;   
+   
+   use app\models\FormFields;
    
    $this->title = 'Framework | Courses | View | Update';
 
@@ -18,8 +20,8 @@
    
    $formatter = \Yii::$app->formatter;
    
-   $isActive   = CodesController::getDropDownOpts('is_active');
-   $isHidden   = CodesController::getDropDownOpts('is_hidden');
+   $isActive    = FormFields::getSelectOptions(-1, 'is_active',  false);
+   $isVisible   = FormFields::getSelectOptions(-1, 'is_visible', false);      
 ?>
 
    <div class="site-about">
@@ -62,30 +64,31 @@
          <div class="form-group form-inline field-subject_area">
             <label class="control-label" for="Courses[subject_area]">Subject</label>
             <?= Html::input(
-     'text',
-     'Courses[subject_area]',
-     $model->subject_area,
-     [
-                  'id'     => 'code',
-                  'class'  => 'form-control',
-                  'style'  => 'width: 80%;float:right;',
-               ]
- ) ?>
+                'text',
+                'Courses[subject_area]',
+                $model->subject_area,
+                [
+                    'id'     => 'subject_area',
+                    'class'  => 'form-control',
+                    'style'  => 'width: 80%;float:right;',
+                ]
+            ) ?>
             <div class="help-block"></div>
          </div>
          
          <div class="form-group form-inline field-course_number">
             <label class="control-label" for="Courses[course_number]">Course</label>
             <?= Html::input(
-     'text',
-     'Courses[course_number]',
-     $model->course_number,
-     [
-                  'id'     => 'course_number',
-                  'class'  => 'form-control',
-                  'style'  => 'width: 80%;float:right;',
-               ]
- ) ?>   
+                'text',
+                'Courses[course_number]',
+                $model->course_number,
+                [
+                    'id'     => 'course_number',
+                    'class'  => 'form-control',
+                    'style'  => 'width: 80%;float:right;',
+                ]
+            ) 
+            ?>   
             <div class="help-block"></div>
          </div>
          
@@ -100,7 +103,8 @@
                   'class'  => 'form-control',
                   'style'  => 'width: 80%;float:right;',
                ]
-            ) ?>   
+            ) 
+            ?>   
             <div class="help-block"></div>
          </div>         
             
@@ -123,11 +127,11 @@
          <div class="form-group form-inline field-is_hidden">
          <label class="control-label" for="is_hidden">Is Visible</label>
             <?= Html::dropDownList(
-                'Courses[is_hidden]',
-                $model->is_hidden,
-                $isHidden,
+                'Courses[is_visible]',
+                $model->is_visible,
+                $isVisible,
                 [
-                  'id'     => 'is_hidden',
+                  'id'     => 'is_visible',
                   'class'  => 'form-control',
                   'style'  => 'width: 80%;float:right;',
                ]

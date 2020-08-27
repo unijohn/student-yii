@@ -3,6 +3,8 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
+use app\models\FormFields;
+
 /* @var $this yii\web\View */
 /* @var $model app\models\PostSearch */
 /* @var $form yii\widgets\ActiveForm */
@@ -12,18 +14,14 @@ use yii\widgets\ActiveForm;
    $pageCount['100'] = 100;
    $pageCount['200'] = 200;
    
-   $isActive['-1']   = 'Select Status';
-   $isActive['1']    = 'Active';
-   $isActive['0']    = 'Inactive';
-   
-   $isHidden['-1']   = 'Select Status';
-   $isHidden['1']    = 'Visible';
-   $isHidden['0']    = 'Hidden';
+   $isActive    = FormFields::getSelectOptions(-1, 'is_active',  false);
+   $isVisible   = FormFields::getSelectOptions(-1, 'is_visible', false);   
 
-   $subjectArea['-1']   = 'Select Subject';
+   $subjectArea['ZZZZ']   = 'Select Subject';
    foreach ($model_subjects as $area) {
        $subjectArea[ $area['subject_area'] ] = $area['subject_area'];
    }
+   
 ?>
 
 
@@ -48,7 +46,7 @@ use yii\widgets\ActiveForm;
    <label class="control-label" for="Courses[subject_area]">Subject</label>
       <?= Html::dropDownList(
         'Courses[subject_area]',
-        $subject_area,
+        $data['subject_area'],
         $subjectArea,
         [
             'id'     => 'subject',
@@ -65,12 +63,12 @@ use yii\widgets\ActiveForm;
       <?= Html::input(
           'text',
           'Courses[course_number]',
-          $course_number,
+          $data['course_number'],
           [
             'id'     => 'course_number',
             'class'  => 'form-control',
             'style'  => 'width: 60%;float:right;',
-            'value'  => $course_number,
+            'value'  => $data['course_number'],
          ]
       )
       ?>   
@@ -81,7 +79,7 @@ use yii\widgets\ActiveForm;
    <label class="control-label" for="Courses[is_active]">Is Active</label>
       <?= Html::dropDownList(
           'Courses[is_active]',
-          $is_active,
+          $data['is_active'],
           $isActive,
           [
             'id'     => 'is_active',
@@ -94,11 +92,11 @@ use yii\widgets\ActiveForm;
    </div>
    
    <div class="form-group form-inline field-is_hidden" style="!white-space:nowrap;">
-   <label class="control-label" for="Courses[is_hidden]">Is Hidden</label>
+   <label class="control-label" for="Courses[is_visible]">Is Visible</label>
       <?= Html::dropDownList(
-          'Courses[is_hidden]',
-          $is_hidden,
-          $isHidden,
+          'Courses[is_visible]',
+          $data['is_visible'],
+          $isVisible,
           [
             'id'     => 'is_hidden',
             'class'  => 'form-control',
@@ -110,10 +108,10 @@ use yii\widgets\ActiveForm;
    </div>
 
    <div class="form-group form-inline field-pagination_count">
-   <label class="control-label" for="pagination_count"># per Page</label>
+   <label class="control-label" for="Courses[pagination_count]"># per Page</label>
       <?= Html::dropDownList(
-          'pagination_count',
-          $pagination_count,
+          'Courses[pagination_count]',
+          $data['pagination_count'],
           $pageCount,
           [
             'id'     => 'pagination_count',

@@ -45,8 +45,11 @@ class Courses extends BaseModel
         return [
 //         'id' => Yii::t('app', 'ID'),
 
-         'subject_area'    => Yii::t('app', 'Subject'),
-         'course_number'   => Yii::t('app', 'Course'),
+         'subject_area'     => Yii::t('app', 'Subject'),
+         'course_number'    => Yii::t('app', 'Course'),
+         'section_number'   => Yii::t('app', 'Section #'), 
+         'is_active'        => Yii::t('app', 'Is Active'),
+         'is_visible'       => Yii::t('app', 'Is Visible'),                  
       ];
     }
 
@@ -106,8 +109,8 @@ class Courses extends BaseModel
     public function scenarios()
     {
         $scenarios = parent::scenarios();
-        $scenarios[self::SCENARIO_INSERT] = [ 'subject_area', 'course_number', 'section_number', 'is_active', 'is_hidden' ];
-        $scenarios[self::SCENARIO_UPDATE] = [ 'subject_area', 'course_number', 'section_number', 'is_active', 'is_hidden' ];
+        $scenarios[self::SCENARIO_INSERT] = [ 'subject_area', 'course_number', 'section_number', 'is_active', 'is_visible' ];
+        $scenarios[self::SCENARIO_UPDATE] = [ 'subject_area', 'course_number', 'section_number', 'is_active', 'is_visible' ];
    
         return $scenarios;
     }
@@ -124,14 +127,14 @@ class Courses extends BaseModel
          ['is_active', 'filter',  'filter'   => 'intval'                   ],
          ['is_active', 'integer', 'max'      => self::STATUS_ACTIVE_MAX    ],
 
-         ['is_hidden', 'default', 'value'    => self::STATUS_VISIBLE       ],
-         ['is_hidden', 'integer', 'min'      => self::STATUS_HIDDEN        ],
-         ['is_hidden', 'filter',  'filter'   => 'intval'                   ],
-         ['is_hidden', 'integer', 'max'      => self::STATUS_VISIBLE_MAX   ],
+         ['is_visible', 'default', 'value'    => self::STATUS_VISIBLE       ],
+         ['is_visible', 'integer', 'min'      => self::STATUS_HIDDEN        ],
+         ['is_visible', 'filter',  'filter'   => 'intval'                   ],
+         ['is_visible', 'integer', 'max'      => self::STATUS_VISIBLE_MAX   ],
          
          [
             [
-               'subject_area', 'course_number', 'section_number', 'is_active', 'is_hidden'
+               'subject_area', 'course_number', 'section_number', 'is_active', 'is_visible'
             ],
             'required', 'on' => self::SCENARIO_UPDATE
          ],

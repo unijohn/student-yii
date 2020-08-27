@@ -22,7 +22,7 @@ class m200804_171045_tbl_Courses extends BaseMigration
             'course_number'   => $this->string(8)->notNull(),
             'section_number'  => $this->string(8)->notNull(),
             'is_active'       => $this->integer()->notNull(),
-            'is_hidden'       => $this->integer()->notNull(),
+            'is_visible'      => $this->integer()->notNull(),
             'created_at'      => $this->integer()->notNull(),
             'updated_at'      => $this->integer()->notNull(),
             'deleted_at'      => $this->integer(),
@@ -46,7 +46,7 @@ class m200804_171045_tbl_Courses extends BaseMigration
          ], $this->_tableOptions);
         }
       
-        $courseColumns = [ 'id', 'subject_area', 'course_number', 'section_number', 'is_active', 'is_hidden', 'created_at', 'updated_at' ];
+        $courseColumns = [ 'id', 'subject_area', 'course_number', 'section_number', 'is_active', 'is_visible', 'created_at', 'updated_at' ];
       
         $courseCodesChildColumns = [ 'parent', 'child', 'created_at' ];
       

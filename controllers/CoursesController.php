@@ -15,8 +15,10 @@ use yii\web\Response;
 
 use app\controllers\BaseController;
 
+use app\models\BaseModel;
 use app\models\Courses;
 use app\models\CoursesCodesChild;
+use app\models\FormFields;
 use app\models\SystemCodes;
 
 class CoursesController extends BaseController
@@ -70,10 +72,15 @@ class CoursesController extends BaseController
         }
 
         $this->_data['filterForm']['subject_area']      = ArrayHelper::getValue($this->_request->get(), 'Courses.subject_area', '');
+        
+        if( $this->_data['filterForm']['subject_area'] == 'ZZZZ' ) {
+            $this->_data['filterForm']['subject_area'] = "";
+        }
+        
         $this->_data['filterForm']['course_number']     = ArrayHelper::getValue($this->_request->get(), 'Courses.course_number', '');
         $this->_data['filterForm']['is_active']         = ArrayHelper::getValue($this->_request->get(), 'Courses.is_active', -1);
-        $this->_data['filterForm']['is_hidden']         = ArrayHelper::getValue($this->_request->get(), 'Courses.is_hidden', -1);
-        $this->_data['filterForm']['paginationCount']   = $this->_request->get('pagination_count', 25);
+        $this->_data['filterForm']['is_visible']        = ArrayHelper::getValue($this->_request->get(), 'Courses.is_visible', -1);
+        $this->_data['filterForm']['pagination_count']  = ArrayHelper::getValue($this->_request->get(), 'Courses.pagination_count', 25);
  
         $this->_data['tagid']            = $this->_request->post('tagid', '');
         $this->_data['addTag']           = $this->_request->post('addTag', '');
@@ -87,7 +94,7 @@ class CoursesController extends BaseController
         $this->_data['Courses']['course_number']  = ArrayHelper::getValue($this->_request->post(), 'Courses.course_number', '');
         $this->_data['Courses']['section_number'] = ArrayHelper::getValue($this->_request->post(), 'Courses.section_number', '');
         $this->_data['Courses']['is_active']      = ArrayHelper::getValue($this->_request->post(), 'Courses.is_active', -1);
-        $this->_data['Courses']['is_hidden']      = ArrayHelper::getValue($this->_request->post(), 'Courses.is_hidden', -1);
+        $this->_data['Courses']['is_visible']     = ArrayHelper::getValue($this->_request->post(), 'Courses.is_visible', -1);
       
         /**
          *    if inserting a new record, set the filter to that new record's type as a UX feature
@@ -152,7 +159,7 @@ class CoursesController extends BaseController
 //      $params[':table_name']  = Courses::tableName();
 //      $params[':id']          = 1;
 
-        $sql  = "SELECT  id, subject_area, course_number, section_number, is_active, is_hidden, created_at, updated_at " ;
+        $sql  = "SELECT  id, subject_area, course_number, section_number, is_active, is_visible, created_at, updated_at " ;
         $sql .= "FROM " . $tableNm . " WHERE length(id) > 0 ";
 
         $countSQL  = "SELECT COUNT(*) " ;
@@ -185,12 +192,17 @@ class CoursesController extends BaseController
             $params[':is_active']   = $this->_data['filterForm']['is_active'];
         }
       
-        if ($this->_data['filterForm']['is_hidden'] > -1 && strlen($this->_data['filterForm']['is_hidden']) > 0) {
-            $andWhere = "AND is_hidden =:is_hidden ";
+        if ($this->_data['filterForm']['is_visible'] > -1 && strlen($this->_data['filterForm']['is_visible']) > 0) {
+            $andWhere = "AND is_visible =:is_visible ";
       
             $sql        .= $andWhere;
             $countSQL   .= $andWhere;
-        }
+            
+            $params[':is_visible']   = $this->_data['filterForm']['is_visible'];            
+        }        
+      
+//self::debug( $this->_data['filterForm']['subject_area'] . " :: " . strlen($this->_data['filterForm']['subject_area']), false );
+//self::debug( $params );      
       
         $count = Yii::$app->db->createCommand(
             $countSQL,
@@ -236,7 +248,7 @@ class CoursesController extends BaseController
             ],
          ],
          'pagination' => [
-            'pageSize' => $this->_data['filterForm']['paginationCount'],
+            'pageSize' => $this->_data['filterForm']['pagination_count'],
          ],
       ]);
       
@@ -442,16 +454,20 @@ class CoursesController extends BaseController
 
         if (strlen($this->_data['addTag']) > 0) {
             if (!is_null($tagRelationExists)) {
-                $this->_data['errors']['Add Tag'] = [
-               'value'     => "was unsuccessful",
-               'bValue'    => false,
-               'htmlTag'   => 'h4',
-               'class'     => 'alert alert-danger',
-            ];
+                $this->_data['errors']['Add Tag'] = 
+                [
+                   'value'     => "was unsuccessful",
+                   'bValue'    => false,
+                   'htmlTag'   => 'h4',
+                   'class'     => 'alert alert-danger',
+                ];
             
-                $this->_data['errors'][$tagChild['description']] = [
-               'value' => "was not added; relationship already exists.",
-            ];
+                $this->_data['errors'][$tagChild['description']] = 
+                [
+                    'value' => "was not added; relationship already exists.",
+                ];
+                
+                $this->_data['errors']['useSession'] = true;                
             
                 $isError = true;
                 $exitEarly = $isError;
@@ -466,27 +482,34 @@ class CoursesController extends BaseController
                   ->limit(1)
                   ->one();
             
-                    $this->_data['success']['Add Tag'] = [
-                  'value'        => "was successful",
-                  'bValue'       => true,
-                  'htmlTag'      => 'h4',
-                  'class'        => 'alert alert-success',
-               ];
+                    $this->_data['success']['Add Tag'] = 
+                    [
+                        'value'        => "was successful",
+                        'bValue'       => true,
+                        'htmlTag'      => 'h4',
+                        'class'        => 'alert alert-success',
+                    ];
                
-                    $this->_data['success'][$tagChild['description']] = [
-                  'value' => "was added",
-               ];
+                    $this->_data['success'][$tagChild['description']] = 
+                    [
+                        'value' => "was added",
+                    ];
+                    
+                    $this->_data['success']['useSession'] = true;                    
                 } else {
-                    $this->_data['errors']['Add Tag'] = [
-                  'value'     => "was unsuccessful",
-                  'bValue'    => false,
-                  'htmlTag'   => 'h4',
-                  'class'     => 'alert alert-danger',
-               ];
+                    $this->_data['errors']['Add Tag'] = 
+                    [
+                      'value'     => "was unsuccessful",
+                      'bValue'    => false,
+                      'htmlTag'   => 'h4',
+                      'class'     => 'alert alert-danger',
+                   ];
                
                     $this->_data['errors']['Add Course Tag'] = [
-                  'value' => "was not successful; no tags were added. (Result: " . strval($result) . ") ",
-               ];
+                        'value' => "was not successful; no tags were added. (Result: " . strval($result) . ") ",
+                    ];
+                    
+                    $this->_data['errors']['useSession'] = true;
                 }
             
                 $exitEarly = true;
@@ -497,29 +520,37 @@ class CoursesController extends BaseController
             $result = $this->removeCourseTag($this->_data['id'], $this->_data['tagid']);
       
             if ($result > 0) {
-                $this->_data['success']['Remove Tag'] = [
-               'value'        => "was successful",
-               'bValue'       => true,
-               'htmlTag'      => 'h4',
-               'class'        => 'alert alert-success',
-            ];
+                $this->_data['success']['Remove Tag'] = 
+                [
+                   'value'        => "was successful",
+                   'bValue'       => true,
+                   'htmlTag'      => 'h4',
+                   'class'        => 'alert alert-success',
+                ];
             
-                $this->_data['success'][$tagChild['description']] = [
-               'value' => "was removed",
-            ];
+                $this->_data['success'][$tagChild['description']] = 
+                [
+                   'value' => "was removed",
+                ];
+
+                $this->_data['success']['useSession'] = true;                         
             } else {
-                $this->_data['errors']['Remove Tag'] = [
-               'value'     => "was unsuccessful",
-               'bValue'    => false,
-               'htmlTag'   => 'h4',
-               'class'     => 'alert alert-danger',
-            ];
+                $this->_data['errors']['Remove Tag'] = 
+                [
+                   'value'     => "was unsuccessful",
+                   'bValue'    => false,
+                   'htmlTag'   => 'h4',
+                   'class'     => 'alert alert-danger',
+                ];
             
-                $this->_data['errors'][$tagChild['description']] = [
-               'value' => "was not successful; no tags were removed. (Result: " . strval($result) . ") ",
-            ];
+                $this->_data['errors'][$tagChild['description']] = 
+                [
+                   'value' => "was not successful; no tags were removed. (Result: " . strval($result) . ") ",
+                ];
+                
+                $this->_data['errors']['useSession'] = true;                         
             }
-         
+            
             $exitEarly = true;
         }
 
@@ -532,44 +563,53 @@ class CoursesController extends BaseController
             $exitEarly = false;
 
             if (!isset($this->_coursesModel->subject_area) || empty($this->_coursesModel->subject_area)) {
-                $this->_data['errors']['Save Course'] = [
-               'value'     => "was unsuccessful",
-               'htmlTag'   => 'h4',
-               'class'     => 'alert alert-danger',
-            ];
+                $this->_data['errors']['Save Course'] = 
+                [
+                    'value'     => "was unsuccessful",
+                    'htmlTag'   => 'h4',
+                    'class'     => 'alert alert-danger',
+                ];
    
-                $this->_data['errors']['subject'] = [
-               'value' => "is blank",
-            ];
-            
+                $this->_data['errors']['subject'] = 
+                [
+                    'value' => "is blank",
+                ];
+
+                $this->_data['errors']['useSession'] = true;   
                 $exitEarly = true;
             }
 
             if (!isset($this->_coursesModel->course_number) || empty($this->_coursesModel->course_number)) {
-                $this->_data['errors']['Save Course'] = [
-               'value'     => "was unsuccessful",
-               'htmlTag'   => 'h4',
-               'class'     => 'alert alert-danger',
-            ];
+                $this->_data['errors']['Save Course'] = 
+                [
+                    'value'     => "was unsuccessful",
+                    'htmlTag'   => 'h4',
+                    'class'     => 'alert alert-danger',
+                ];
    
-                $this->_data['errors']['course'] = [
-               'value' => "is blank",
-            ];
-            
+                $this->_data['errors']['course'] = 
+                [
+                    'value' => "is blank",
+                ];
+
+                $this->_data['errors']['useSession'] = true;   
                 $exitEarly = true;
             }
          
             if (!isset($this->_coursesModel->section_number) || empty($this->_coursesModel->section_number)) {
-                $this->_data['errors']['Save Course'] = [
-               'value'     => "was unsuccessful",
-               'htmlTag'   => 'h4',
-               'class'     => 'alert alert-danger',
-            ];
+                $this->_data['errors']['Save Course'] = 
+                [
+                    'value'     => "was unsuccessful",
+                    'htmlTag'   => 'h4',
+                    'class'     => 'alert alert-danger',
+                ];
    
-                $this->_data['errors']['section'] = [
-               'value' => "is blank",
-            ];
+                $this->_data['errors']['section'] = 
+                [
+                    'value' => "is blank",
+                ];
    
+                $this->_data['errors']['useSession'] = true;   
                 $exitEarly = true;
             }
         }
@@ -603,26 +643,58 @@ class CoursesController extends BaseController
         $updateColumns = $updateModel->getDirtyAttributes();
 
         $updateModel->is_active    = $this->_data['Courses']['is_active'];
-        $updateModel->is_hidden    = $this->_data['Courses']['is_hidden'];
+        $updateModel->is_visible   = $this->_data['Courses']['is_visible'];
 
-        $this->_data['savePermit'] = $updateModel->save();
+        $this->_data['saveCourse'] = $updateModel->save();
+        
+        $updateColumns = $updateModel->afterSave(false, $this->_data['saveCourse']);
+        
+        //self::debug( $updateColumns );
       
-        if (isset($this->_data['savePermit']) && !empty($this->_data['savePermit'])) {
-            if (count($updateColumns) > 0) {
-                $this->_data['success']['Save Course'] = [
-               'value'     => "was successful",
-               'bValue'    => true,
-               'htmlTag'   => 'h4',
-               'class'     => 'alert alert-success',
-            ];
-            
+        if (isset($this->_data['saveCourse']) && !empty($this->_data['saveCourse'])) {
+            if (count($updateColumns) > 0) {            
                 foreach ($updateColumns as $key => $val) {
                     $keyIndex = ucfirst(strtolower(str_replace("_", " ", $key)));
-            
-                    $this->_data['success'][$keyIndex] = [
-                  'value'     => "was updated ",
-                  'bValue'    => true,
-               ];
+                    
+                    if ($key !== "updated_at" && $key !== "deleted_at") {
+                        if ($val == $this->_data['Courses'][$key]) {
+                            // For some reason, afterSave() is stating that the value for this key has updated
+                            continue;
+                        } else {
+                            // Avoid setting this success header multiple times
+                            if (!isset($this->_data['success']['Save Course'])) {
+//                                $this->_data['success']['useSession'] = true;
+                            
+                                $this->_data['success']['Save Course'] =
+                                [
+                                   'value'      => "was successful",
+                                   'bValue'     => true,
+                                   'htmlTag'    => 'h4',
+                                   'class'      => 'alert alert-success',
+                                ];
+                                
+                                $this->_data['success']['useSession'] = true;                                   
+                            }
+                        }
+                        
+                        $lookupNew = $this->keyLookup($key, $val);
+                        $lookupOld = $this->keyLookup($key, $this->_data['Courses'][$key]);
+                        
+                        $labels = $this->_coursesModel->attributeLabels();                   
+               
+                        $this->_data['success'][$labels[$key]] =
+                        [
+                            'value'     => "was updated",
+                            'bValue'    => true,
+                        ];
+
+                        if (strpos($lookupNew, "Unknown") !== 0) {
+                            $this->_data['success'][$labels[$key]] =
+                            [
+                                'value'  => "was updated ( " . $lookupNew . " -> " . $lookupOld . " )",
+                            ];
+                        }
+                    } 
                 }
             }
         }
@@ -632,6 +704,11 @@ class CoursesController extends BaseController
         $this->_tagsModel          = CoursesCodesChild::findTagsById($this->_data['id']);
         $this->_coursesChildModel  = SystemCodes::findUnassignedTagOptionsForCourses($this->_data['id']);
 
+        // Using 'useSession' and redirecting users back to view so reloads/refresh does not bring up 'Reload Post' screen
+        // on web browsers
+        return $this->redirect(['courses/view', 'id' => $this->_data['id'] ]);
+
+/**
         return $this->render('course-view', [
             'data'         => $this->_data,
             'dataProvider' => $this->_dataProvider,
@@ -639,5 +716,26 @@ class CoursesController extends BaseController
             'tags'         => $this->_tagsModel,
             'allTags'      => $this->_coursesChildModel,
       ]);
+ **/
+    }
+    
+    
+    /**
+     * TBD
+     *
+     * @return (TBD)
+     */
+    private function keyLookup($key, $value)
+    {
+        $isActive       = FormFields::getSelectOptions( -1, 'is_active',  true);
+        $isVisible      = FormFields::getSelectOptions( -1, 'is_visible', true);
+
+        if( $key == 'is_active'  && array_key_exists( $value, $isActive ) ) {
+            return $isActive[ $value ];
+        }
+        elseif( $key == 'is_visible' && array_key_exists( $value, $isVisible ) ) {
+            return $isVisible[ strval($value)];
+        }         
+        return "Unknown key : " . $key . " :: " . $value;
     }
 }
