@@ -58,7 +58,7 @@ class FormFields extends BaseModel
         [
             'id'            => Yii::t('app', 'ID'),
         
-            'type'          => Yii::t('app', 'Type'),
+            'form_field'    => Yii::t('app', 'Form Field'),
             'grouping'      => Yii::t('app', 'Group Id'),
             'grouping_name' => Yii::t('app', 'Group Name'),
             'description'   => Yii::t('app', 'Description'),
@@ -132,9 +132,9 @@ class FormFields extends BaseModel
     public function scenarios()
     {
         $scenarios = parent::scenarios();
-        $scenarios[self::SCENARIO_INSERT] = [ 'type', 'grouping', 'grouping_name', 'description', 'is_active', 'is_visible', 'order_by', 'created_at', ];
-        $scenarios[self::SCENARIO_UPDATE] = [ 'type', 'grouping', 'grouping_name', 'description', 'is_active', 'is_visible', 'order_by', 'updated_at', ];
-        $scenarios[self::SCENARIO_MOVE]   = [ 'order_by', 'updated_at', ];
+        $scenarios[self::SCENARIO_INSERT] = [ 'form_field', 'grouping', 'grouping_name', 'description', 'is_active', 'is_visible', 'order_by', 'created_at', ];
+        $scenarios[self::SCENARIO_UPDATE] = [ 'form_field', 'grouping', 'grouping_name', 'description', 'is_active', 'is_visible', 'order_by', 'updated_at', ];
+//        $scenarios[self::SCENARIO_MOVE]   = [ 'order_by', 'updated_at', ];
    
         return $scenarios;
     }
@@ -156,7 +156,7 @@ class FormFields extends BaseModel
                 'tooBig' => 'Select a valid option', 'tooSmall' => 'Select a valid option',
             ],
             [
-                'type',       'number', 'min' => self::TYPE_FIELD_MIN,     'max' => self::TYPE_FIELD_MAX,
+                'form_field', 'number', 'min' => self::TYPE_FIELD_MIN,     'max' => self::TYPE_FIELD_MAX,
                 'tooBig' => 'Select a valid option', 'tooSmall' => 'Select a valid option',
             ],
             [
@@ -194,15 +194,9 @@ class FormFields extends BaseModel
 
             [
                 [
-                   'type', 'grouping', 'grouping_name', 'description', 'is_active', 'order_by', 'is_visible', 'updated_at'
+                   'form_field', 'grouping', 'grouping_name', 'description', 'is_active', 'order_by', 'is_visible', 'updated_at'
                 ],
                 'required', 'on' => self::SCENARIO_UPDATE
-            ],
-            [
-                [
-                    'order_by', 'updated_at'
-                ],
-                'required', 'on' => self::SCENARIO_MOVE
             ],
         ];
     }
@@ -218,7 +212,7 @@ class FormFields extends BaseModel
         $tbl_formFields = FormFields::tableName();
    
         $query_fields = ( new \yii\db\Query() )
-         ->select([  'ff.id', 'ff.type', 'ff.grouping', 'ff.grouping_name', 'ff.value', 'ff.value_int', 'ff.is_active', 'ff.is_visible' ])
+         ->select([  'ff.id', 'ff.form_field', 'ff.grouping', 'ff.grouping_name', 'ff.value', 'ff.value_int', 'ff.is_active', 'ff.is_visible' ])
          ->from($tbl_formFields . ' ff')
          ->where('( ff.value =:value OR ff.value_int =:value_int) AND ff.grouping =:grouping')
             ->addParams([
@@ -240,12 +234,12 @@ class FormFields extends BaseModel
      *
      * @return (TBD)
      */
-    public static function existsFieldByProperties($type = -1, $grouping = -1, $grouping_name = '')
+    public static function existsFieldByProperties($form_field = -1, $grouping = -1, $grouping_name = '')
     {
         $count = Yii::$app->db->createCommand(
-            'SELECT COUNT(*) FROM ' . self::tableName() . ' WHERE type =:type AND grouping =: grouping AND grouping_name =: $grouping_name ',
+            'SELECT COUNT(*) FROM ' . self::tableName() . ' WHERE form_field =:form_field AND grouping =: grouping AND grouping_name =: $grouping_name ',
             [
-                ':type '            => $type,
+                ':form_field '      => $form_field,
                 ':grouping'         => $grouping,
                 ':grouping_name'    => $grouping_name
             ]
@@ -260,18 +254,18 @@ class FormFields extends BaseModel
      *
      * @return (TBD)
      */
-    public static function getFieldOptions($type = -1, $grouping = -1, $grouping_name = "", $prompt = false)
+    public static function getFieldOptions($form_field = -1, $grouping = -1, $grouping_name = "", $prompt = false)
     {
         $tbl_formFields = FormFields::tableName();
    
         $query_fields = ( new \yii\db\Query() )
-            ->select([  'ff.id', 'ff.type', 'ff.grouping', 'ff.grouping_name', 'ff.description', 'ff.value', 'ff.value_int', 'ff.is_active', 'ff.is_visible' ])
+            ->select([  'ff.id', 'ff.form_field', 'ff.grouping', 'ff.grouping_name', 'ff.description', 'ff.value', 'ff.value_int', 'ff.is_active', 'ff.is_visible' ])
             ->from($tbl_formFields . ' ff')
-            ->where('( ff.grouping =:grouping OR ff.grouping_name =:grouping_name) AND ff.type =:type')
+            ->where('( ff.grouping =:grouping OR ff.grouping_name =:grouping_name) AND ff.form_field =:form_field')
                 ->addParams([
                     'grouping'      => $grouping,
                     'grouping_name' => $grouping_name,
-                    'type'          => $type
+                    'form_field'    => $form_field
                 ]);
 
                
@@ -281,7 +275,7 @@ class FormFields extends BaseModel
 
         $query_fields->orderBy('ff.order_by');
 
-//        self::debug( $query_fields->createCommand()->getRawSql() );
+//       self::debug( $query_fields->createCommand()->getRawSql(), false );
             
         return $query_fields->all();
     }

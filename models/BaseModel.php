@@ -97,7 +97,8 @@ class BaseModel extends ActiveRecord
 
     const SCENARIO_INSERT   = 'insert';
     const SCENARIO_UPDATE   = 'update';
-    const SCENARIO_MOVE     = 'move';
+    const SCENARIO_DELETE   = 'delete';
+//    const SCENARIO_MOVE     = 'move';
 
 
     public $_changedAttributes;

@@ -11,7 +11,7 @@ use app\models\FormFields;
 /* @var $model app\models\PostSearch */
 /* @var $form yii\widgets\ActiveForm */
 
-   $fieldType   = FormFields::getFormFieldOptions(-1, 'form_field', false);
+   $fieldType   = FormFields::getFormFieldOptions(-1, 'form_field', false);  
    $grouping    = FormFields::getDistinctGroupings();
    
 //FormFields::debug( $fieldType );   
@@ -24,11 +24,11 @@ use app\models\FormFields;
         'method' => 'post',
     ]); ?>
 
-    <?= $form->field($model, 'type')
+    <?= $form->field($model, 'form_field')
             ->dropdownList(
                 $fieldType,
                 [
-                   'id'     => 'type',
+                   'id'     => 'form_field',
                    'class'  => 'form-control',
                    'style'  => 'width: 60%;float:right;',
 //                   'value'  => $filterForm['type'],

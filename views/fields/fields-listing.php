@@ -72,22 +72,22 @@
             },
          ],
          [
-            'attribute' => 'type',
+            'attribute' => 'form_field',
             'label' => 'Type',
             'format' => 'raw',
             'value' => function ($data) {
                 $strValue = "";
-                if ($data['type'] == "0") {
+                if ($data['form_field'] == "0") {
                     $strValue = "Fields";
                 }                
-                elseif ($data['type'] == "1") {
+                elseif ($data['form_field'] == "1") {
                     $strValue = "Select";
-                } elseif ($data['type'] == "2") {
+                } elseif ($data['form_field'] == "2") {
                     $strValue = "Checkbox";
-                } elseif ($data['type'] == "3") {
+                } elseif ($data['form_field'] == "3") {
                     $strValue = "Radio";
                 } else {
-                    $strValue = $data['type'] ;
+                    $strValue = $data['form_field'] ;
                 }
                
                 return HTML::a($strValue, Url::toRoute(['fields/view', 'id' => $data['id'] ], true));

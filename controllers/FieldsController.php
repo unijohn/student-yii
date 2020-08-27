@@ -59,17 +59,6 @@ class FieldsController extends BaseController
             $this->_data['id']   = $this->_request->get('id', '');
         }
 
-        /**
-                if (strlen($this->_data['id']) > 0) {
-                    $this->_codesModel = SystemCodes::find()
-                    ->where(['id' => $this->_data['id'] ])
-                    ->limit(1)->one();
-
-                    $this->_tagsModel       = SystemCodes::findAllTagsById($this->_data['id']);
-                    $this->_codeChildModel  = $this->getCodeChildModel($this->_data['id'], $this->_codesModel->code);
-                }
-         **/
-
 //        $this->_data['filterForm']['type']              = ArrayHelper::getValue($this->_request->get(), 'FormFields.type', '');
         $this->_data['filterForm']['grouping']          = ArrayHelper::getValue($this->_request->get(), 'FormFields.grouping', '');
         $this->_data['filterForm']['is_active']         = ArrayHelper::getValue($this->_request->get(), 'FormFields.is_active', -1);
@@ -80,17 +69,23 @@ class FieldsController extends BaseController
                 $this->_data['tagid']            = $this->_request->post('tagid', '');
                 $this->_data['addTag']           = $this->_request->post('addTag', '');
                 $this->_data['dropTag']          = $this->_request->post('dropTag', '');
-
-
-                $this->_data['SystemCodes']['code']          = ArrayHelper::getValue($this->_request->post(), 'SystemCodes.code', '');
-                $this->_data['SystemCodes']['description']   = ArrayHelper::getValue($this->_request->post(), 'SystemCodes.description', '');
-                $this->_data['SystemCodes']['id']            = ArrayHelper::getValue($this->_request->post(), 'SystemCodes.id', '');
-                $this->_data['SystemCodes']['insert']        = ArrayHelper::getValue($this->_request->post(), 'SystemCodes.insert', '');
-                $this->_data['SystemCodes']['is_active']     = ArrayHelper::getValue($this->_request->post(), 'SystemCodes.is_active', -1);
-                $this->_data['SystemCodes']['is_hidden']     = ArrayHelper::getValue($this->_request->post(), 'SystemCodes.is_hidden', -1);
-                $this->_data['SystemCodes']['type']          = ArrayHelper::getValue($this->_request->post(), 'SystemCodes.type', '');
-                $this->_data['SystemCodes']['update']        = ArrayHelper::getValue($this->_request->post(), 'SystemCodes.update', '');
          **/
+
+        $this->_data['FormFields']['id']            = ArrayHelper::getValue($this->_request->post(), 'FormFields.id',           '');
+        $this->_data['FormFields']['form_field']    = ArrayHelper::getValue($this->_request->post(), 'FormFields.form_field',   FormFields::TYPE_FIELD_MIN);
+        $this->_data['FormFields']['grouping']      = ArrayHelper::getValue($this->_request->post(), 'FormFields.grouping',     FormFields::TYPE_ITEM_MAX);
+        $this->_data['FormFields']['description']   = ArrayHelper::getValue($this->_request->post(), 'FormFields.description',  '');        
+        
+        $this->_data['FormFields']['value']      = ArrayHelper::getValue($this->_request->post(), 'FormFields.value',           '');
+        $this->_data['FormFields']['value_int']   = ArrayHelper::getValue($this->_request->post(), 'FormFields.value_int',       0);             
+
+        $this->_data['FormFields']['is_active']     = ArrayHelper::getValue($this->_request->post(), 'FormFields.is_active',    FormFields::STATUS_ACTIVE);
+        $this->_data['FormFields']['is_hidden']     = ArrayHelper::getValue($this->_request->post(), 'FormFields.is_visible',   FormFields::STATUS_VISIBLE);
+        $this->_data['FormFields']['type']          = ArrayHelper::getValue($this->_request->post(), 'FormFields.type', '');
+        
+        $this->_data['FormFields']['insert']        = ArrayHelper::getValue($this->_request->post(), 'FormFields.insert', '');
+        $this->_data['FormFields']['update']        = ArrayHelper::getValue($this->_request->post(), 'FormFields.update', '');
+
   
 /**
          *    if inserting a new record, set the filter to that new record's type as a UX feature
@@ -150,7 +145,7 @@ class FieldsController extends BaseController
     {
         $params  = [];
 
-        $sql  = "SELECT id, type, grouping, grouping_name, description, value, value_int, is_active, is_visible, order_by, created_at, updated_at " ;
+        $sql  = "SELECT id, form_field, grouping, grouping_name, description, value, value_int, is_active, is_visible, order_by, created_at, updated_at " ;
         $sql .= "FROM " . $this->_tbl_FormFields . " WHERE id > 0 ";
 
         $countSQL  = "SELECT COUNT(*) " ;
@@ -597,6 +592,8 @@ class FieldsController extends BaseController
     public function actionSave()
     {
         $isError = false;
+        
+self::debug( $this->_data );                
  
         $tagRelationExists = SystemCodesChild::find()
             ->where([ 'parent' => $this->_data['id'] ])

@@ -21,7 +21,7 @@ class m200821_143444_tbl_FormFields extends BaseMigration
                 self::getTblFormFieldsName(),
                 [
                     'id'            => $this->primaryKey(),
-                    'type'          => $this->integer()->notNull(),     // select, checkbox, radio
+                    'form_field'    => $this->integer()->notNull(),     // select, checkbox, radio
                     'grouping'      => $this->integer()->notNull(),     // TYPE_ITEM_ACTIVE, TYPE_ITEM_HIDDEN
                     'grouping_name' => $this->string(64)->notNull(),    // is_active, is_hidden
                     'description'   => $this->string(64)->notNull(),    // 'Active', 'Inactive', 'Visible', 'Hidden'
@@ -40,10 +40,10 @@ class m200821_143444_tbl_FormFields extends BaseMigration
                 $this->_tableOptions
             );
          
-            $this->createIndex('idx_FormFields_type', self::getTblFormFieldsName(), 'type');
+            $this->createIndex('idx_FormFields_form_field', self::getTblFormFieldsName(), 'form_field');
         }
         
-        $columns   = [ 'type', 'grouping', 'grouping_name', 'description', 'value', 'value_int', 'is_active', 'is_visible', 'order_by', 'created_at' ];
+        $columns   = [ 'form_field', 'grouping', 'grouping_name', 'description', 'value', 'value_int', 'is_active', 'is_visible', 'order_by', 'created_at' ];
 
         $fieldRows =
         [
