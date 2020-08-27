@@ -6,28 +6,30 @@ use app\models\User;
 
 class UserTest extends \Codeception\Test\Unit
 {
-   public function testFindUserById()
-   {
-      /**
-       *  If this unit test fails, did you rebuild tlb_Users?
-       **/
-   
-      expect_that($user = User::findIdentity(7));
-      expect($user->uuid)->equals('adminusr');
-      
-      expect_not(User::findIdentity(13));
-   }
+    public function testFindUserById()
+    {
+        /**
+        *  If this unit test fails, did you rebuild tlb_Users?
+        **/
+        
+        expect_that($user = User::findIdentity(7));
+        expect($user->uuid)->equals('adminusr');
+        
+        expect_not(User::findIdentity(13));
+    }
 
 
    public function testFindUserByAccessToken()
    {
-      codecept_debug( "[FCBE-WORKDESK]   Currently randomly generating access_token and auth_key" );
-      codecept_debug( "[FCBE-WORKDESK]   Need to revise it in the future" );
-
-      expect_that($user = User::findIdentityByAccessToken('RIQFHOWd5GBOknxtm1U2wmquI0qBpOvp'));
-      expect($user->uuid)->equals('adminusr');
-      
-      expect_not(User::findIdentityByAccessToken('non-existing'));        
+        codecept_debug( "[FCBE-WORKDESK]   Currently randomly generating access_token and auth_key" );
+        codecept_debug( "[FCBE-WORKDESK]   Need to revise it in the future" );
+        
+        $user = User::findIdentity(7);
+        
+        expect_that($user = User::findIdentityByAccessToken($user->access_token));
+        expect($user->uuid)->equals('adminusr');
+        
+        expect_not(User::findIdentityByAccessToken('non-existing'));        
    }
 
 
