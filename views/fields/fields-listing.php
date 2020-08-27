@@ -40,7 +40,7 @@
             <div class="col-lg-4">
                <h2>Add Form Fields</h2>
                <div id='formfields-add-form'>      
-                  <?= $this->render('_fields-listing-add', ['model' => $model, 'filterForm' => $data['filterForm'] ]); ?>  
+                  <?= $this->render('_fields-listing-add', ['model' => $model, 'FormFields' => $data['FormFields'] ]); ?>  
                </div>
             </div>
             <div class="col-lg-4">
