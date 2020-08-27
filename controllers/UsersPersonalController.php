@@ -260,7 +260,8 @@ class UsersPersonalController extends BaseController
  
         return $this->redirect(['users/view', 'uuid' => $this->_data['uuid'] ]);
     }
-   
+
+
     /**
      * TBD
      *

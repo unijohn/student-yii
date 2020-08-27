@@ -84,7 +84,16 @@ class BaseController extends Controller
          *    Capturing the possible post() variables used across all controllers
          **/
         $this->_data['id']      = $this->_request->post('id', '');
+        
+        if( empty( $this->_data['id'] ) ) {
+            $this->_data['id']  = $this->_request->get('id', '');
+        }
+        
         $this->_data['uuid']    = $this->_request->post('uuid', '');
+        
+        if( empty( $this->_data['uuid'] ) ) {
+            $this->_data['uuid'] = $this->_request->get('uuid', '');
+        }        
       
         $this->_data['errors']  = [];
         $this->_data['success'] = [];
