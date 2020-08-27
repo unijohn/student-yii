@@ -71,20 +71,29 @@ class FieldsController extends BaseController
                 $this->_data['dropTag']          = $this->_request->post('dropTag', '');
          **/
 
-        $this->_data['FormFields']['id']            = ArrayHelper::getValue($this->_request->post(), 'FormFields.id',           '');
-        $this->_data['FormFields']['form_field']    = ArrayHelper::getValue($this->_request->post(), 'FormFields.form_field',   FormFields::TYPE_FIELD_MIN);
-        $this->_data['FormFields']['grouping']      = ArrayHelper::getValue($this->_request->post(), 'FormFields.grouping',     FormFields::TYPE_ITEM_MAX);
-        $this->_data['FormFields']['description']   = ArrayHelper::getValue($this->_request->post(), 'FormFields.description',  '');        
+        $this->_data['FormFields']['id']            = ArrayHelper::getValue($this->_request->post(), 'FormFields.id', '');
+        $this->_data['FormFields']['form_field']    = ArrayHelper::getValue($this->_request->post(), 'FormFields.form_field', FormFields::TYPE_FIELD_NOT_SET);
+        $this->_data['FormFields']['grouping']      = ArrayHelper::getValue($this->_request->post(), 'FormFields.grouping', FormFields::TYPE_FIELD_MIN);
+        $this->_data['FormFields']['description']   = ArrayHelper::getValue($this->_request->post(), 'FormFields.description', '');
         
-        $this->_data['FormFields']['value']      = ArrayHelper::getValue($this->_request->post(), 'FormFields.value',           '');
-        $this->_data['FormFields']['value_int']   = ArrayHelper::getValue($this->_request->post(), 'FormFields.value_int',       0);             
+        $this->_data['FormFields']['value']         = ArrayHelper::getValue($this->_request->post(), 'FormFields.value', '');
+        $this->_data['FormFields']['value_int']     = ArrayHelper::getValue($this->_request->post(), 'FormFields.value_int', 0);
 
-        $this->_data['FormFields']['is_active']     = ArrayHelper::getValue($this->_request->post(), 'FormFields.is_active',    FormFields::STATUS_ACTIVE);
-        $this->_data['FormFields']['is_hidden']     = ArrayHelper::getValue($this->_request->post(), 'FormFields.is_visible',   FormFields::STATUS_VISIBLE);
+        $this->_data['FormFields']['is_active']     = ArrayHelper::getValue($this->_request->post(), 'FormFields.is_active', FormFields::STATUS_ACTIVE);
+        $this->_data['FormFields']['is_hidden']     = ArrayHelper::getValue($this->_request->post(), 'FormFields.is_visible', FormFields::STATUS_VISIBLE);
         $this->_data['FormFields']['type']          = ArrayHelper::getValue($this->_request->post(), 'FormFields.type', '');
         
         $this->_data['FormFields']['insert']        = ArrayHelper::getValue($this->_request->post(), 'FormFields.insert', '');
         $this->_data['FormFields']['update']        = ArrayHelper::getValue($this->_request->post(), 'FormFields.update', '');
+        
+        /**
+                if( isset() && !empty() ) {
+
+                }
+                if( isset() && !empty() ) {
+
+                }
+         **/
 
   
 /**
@@ -245,44 +254,44 @@ class FieldsController extends BaseController
      **/
     private function renderListing()
     {
-/**
-        $results = FormFields::find()
-        ->where(['grouping' => 5  ])
-        ->all();
+        /**
+                $results = FormFields::find()
+                ->where(['grouping' => 5  ])
+                ->all();
 
-        $count = 1;
+                $count = 1;
 
-        print( "<pre>" );
-        print( "        \$fieldRows = " . PHP_EOL );
-        print( "        [ " . PHP_EOL );
-        print( "            [ " . PHP_EOL );
-        print( "                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_YEAR_FOUR, 'calendar_year_four', 'Select Year', '', -1, self::STATUS_ACTIVE, self::STATUS_VISIBLE, $count, \$created_at,  " . PHP_EOL );
-        print( "            ], " . PHP_EOL );
-        
-        for( $i = 2030; $i >= 1930; $i-- ) {
-        
-            $count++;
+                print( "<pre>" );
+                print( "        \$fieldRows = " . PHP_EOL );
+                print( "        [ " . PHP_EOL );
+                print( "            [ " . PHP_EOL );
+                print( "                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_YEAR_FOUR, 'calendar_year_four', 'Select Year', '', -1, self::STATUS_ACTIVE, self::STATUS_VISIBLE, $count, \$created_at,  " . PHP_EOL );
+                print( "            ], " . PHP_EOL );
 
-            if( $i >= 2021 ){
-                $isActive  = "self::STATUS_INACTIVE";
-                $isVisible = "self::STATUS_HIDDEN";
-            }
-            else {
-                $isActive  = "self::STATUS_ACTIVE";
-                $isVisible = "self::STATUS_VISIBLE";
-            }
+                for( $i = 2030; $i >= 1930; $i-- ) {
 
-            print( "            [" . PHP_EOL );
-            print( "                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_YEAR_FOUR, 'calendar_year_four', '$i', '$i', $i, $isActive, $isVisible, $count, \$created_at," . PHP_EOL );
-            print( "            ]," . PHP_EOL );
+                    $count++;
 
-//            $count++;
-        }
+                    if( $i >= 2021 ){
+                        $isActive  = "self::STATUS_INACTIVE";
+                        $isVisible = "self::STATUS_HIDDEN";
+                    }
+                    else {
+                        $isActive  = "self::STATUS_ACTIVE";
+                        $isVisible = "self::STATUS_VISIBLE";
+                    }
 
-        print( "        ];" . PHP_EOL );
+                    print( "            [" . PHP_EOL );
+                    print( "                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_YEAR_FOUR, 'calendar_year_four', '$i', '$i', $i, $isActive, $isVisible, $count, \$created_at," . PHP_EOL );
+                    print( "            ]," . PHP_EOL );
 
-        die();
-**/
+        //            $count++;
+                }
+
+                print( "        ];" . PHP_EOL );
+
+                die();
+        **/
     
         $this->_dataProvider = $this->getFieldsGridView();
 
@@ -345,7 +354,7 @@ class FieldsController extends BaseController
      * @return (TBD)
      */
     public function actionDown()
-    {        
+    {
         $row = FormFields::find()
             ->where(['id' => $this->_data['id'] ])
             ->one();
@@ -363,9 +372,9 @@ class FieldsController extends BaseController
      * TBD
      *
      * @return (TBD)
-     */    
+     */
     public function actionLast()
-    {   
+    {
         $row = FormFields::find()
             ->where(['id' => $this->_data['id'] ])
             ->one();
@@ -383,9 +392,9 @@ class FieldsController extends BaseController
      * TBD
      *
      * @return (TBD)
-     */    
+     */
     public function actionUp()
-    {  
+    {
         $row = FormFields::find()
             ->where(['id' => $this->_data['id'] ])
             ->one();
@@ -403,9 +412,9 @@ class FieldsController extends BaseController
      * TBD
      *
      * @return (TBD)
-     */    
+     */
     public function actionFirst()
-    {  
+    {
         $row = FormFields::find()
             ->where(['id' => $this->_data['id'] ])
             ->one();
@@ -425,29 +434,31 @@ class FieldsController extends BaseController
      */
     public function actionAdd()
     {
-        $this->_dataProvider = $this->getCodesGridView();
+//        $this->_dataProvider = $this->getCodesGridView();
 
         $exitEarly = false;
+        $msgHeader = "Add Form Field";
 
-        if (isset($this->_data['SystemCodes']['insert']) && !empty($this->_data['SystemCodes']['insert'])) {
-            if ($this->_data['SystemCodes']['type'] < 1) {
-                $this->_data['errors']['Add System Code'] =
+        if (isset($this->_data['FormFields']['insert']) && !empty($this->_data['FormFields']['insert'])) {
+            if ($this->_data['FormFields']['form_field'] < 1) {
+                $this->_data['errors'][$msgHeader] =
                 [
                    'value'     => "was unsuccessful",
                    'htmlTag'   => 'h4',
                    'class'     => 'alert alert-danger',
                 ];
             
-                $this->_data['errors']['type'] =
+                $this->_data['errors']['form_field'] =
                 [
                     'value' => "was not selected",
                 ];
-            
+
+                $this->_data['errors']['useSession'] = true;
                 $exitEarly = true;
             }
 
-            if (empty($this->_data['SystemCodes']['code'])) {
-                $this->_data['errors']['Add System Code'] =
+            if (empty($this->_data['FormFields']['grouping'])) {
+                $this->_data['errors'][$msgHeader] =
                 [
                    'value'     => "was unsuccessful",
                    'htmlTag'   => 'h4',
@@ -459,11 +470,12 @@ class FieldsController extends BaseController
                     'value' => "is blank",
                 ];
 
+                $this->_data['errors']['useSession'] = true;
                 $exitEarly = true;
             }
       
-            if (empty($this->_data['SystemCodes']['description'])) {
-                $this->_data['errors']['Add System Code'] =
+            if (empty($this->_data['FormFields']['description'])) {
+                $this->_data['errors'][$msgHeader] =
                 [
                    'value'     => "was unsuccessful",
                    'htmlTag'   => 'h4',
@@ -474,39 +486,55 @@ class FieldsController extends BaseController
                 [
                     'value' => "is blank",
                 ];
-            
+
+                $this->_data['errors']['useSession'] = true;
                 $exitEarly = true;
             }
         }
 
         if ($exitEarly) {
-            return $this->render(
-                'codes-listing',
-                [
-                   'data'         => $this->_data,
-                   'dataProvider' => $this->_dataProvider,
-                   'model'        => $this->_codesModel,
-                ]
-            );
+            return $this->renderListing();
         }
 
-        $idExists = SystemCodes::existsSystemCode($this->_systemCodes->type, $this->_systemCodes->code);
+        /**
+                $this->_data['FormFields']['id']            = ArrayHelper::getValue($this->_request->post(), 'FormFields.id',           '');
+                $this->_data['FormFields']['form_field']    = ArrayHelper::getValue($this->_request->post(), 'FormFields.form_field',   FormFields::TYPE_FIELD_MIN);
+                $this->_data['FormFields']['grouping']      = ArrayHelper::getValue($this->_request->post(), 'FormFields.grouping',     FormFields::TYPE_ITEM_MAX);
+                $this->_data['FormFields']['description']   = ArrayHelper::getValue($this->_request->post(), 'FormFields.description',  '');
 
-        $this->_systemCodes->type        = $this->_data['SystemCodes']['type'];
-        $this->_systemCodes->code        = $this->_data['SystemCodes']['code'];
-        $this->_systemCodes->description = $this->_data['SystemCodes']['description'];
+                $this->_data['FormFields']['value']         = ArrayHelper::getValue($this->_request->post(), 'FormFields.value',           '');
+                $this->_data['FormFields']['value_int']     = ArrayHelper::getValue($this->_request->post(), 'FormFields.value_int',       0);
+
+                $this->_data['FormFields']['is_active']     = ArrayHelper::getValue($this->_request->post(), 'FormFields.is_active',    FormFields::STATUS_ACTIVE);
+                $this->_data['FormFields']['is_hidden']     = ArrayHelper::getValue($this->_request->post(), 'FormFields.is_visible',   FormFields::STATUS_VISIBLE);
+                $this->_data['FormFields']['type']          = ArrayHelper::getValue($this->_request->post(), 'FormFields.type', '');
+         **/
+         
+        $idExists = FormFields::existsFieldByProperties(
+            $this->_data['FormFields']['form_field'], $this->_data['FormFields']['grouping'], '', $this->_data['FormFields']['description'],
+            $this->_data['FormFields']['value'],      $this->_data['FormFields']['value_int']
+        );
+
+        $this->_fieldsModel->form_field     = $this->_data['FormFields']['form_field'];
+        $this->_fieldsModel->grouping       = $this->_data['FormFields']['grouping'];
+        $this->_fieldsModel->description    = $this->_data['FormFields']['description'];
+        $this->_fieldsModel->value          = $this->_data['FormFields']['value'];
+        $this->_fieldsModel->value_int      = $this->_data['FormFields']['value_int'];
 
         if ($idExists) {
-            if (isset($this->_data['SystemCodes']['insert']) && !empty($this->_data['SystemCodes']['insert'])) {
-                $this->_data['errors']['Add System Code'] =
+            if (isset($this->_data['FormFields']['insert']) && !empty($this->_data['FormFields']['insert'])) {
+                $this->_data['errors'][$msgHeader] =
                 [
                     'value'     => "was unsuccessful",
                     'htmlTag'   => 'h4',
                     'class'     => 'alert alert-danger',
                 ];
 
-                $keyError          = $this->keyLookup('type', $this->_systemCodes->type);
-                $keyError .= " ( " . $this->_systemCodes->code . " )";
+//$keyIndex = ucfirst(strtolower(str_replace("_", " ", $key)));
+
+                $keyError  = "( " . $this->keyLookup( 'form_field', $this->_fieldsModel->form_field ) . " ) ";
+                $keyError .= $this->keyLookup( 'grouping_name', $this->_fieldsModel->grouping ) . ": ";
+                $keyError .= $this->_fieldsModel->description;
 
                 $this->_data['errors'][$keyError] =
                 [
@@ -516,32 +544,30 @@ class FieldsController extends BaseController
                 /**
                  *    if inserting a new record, set the filter to that new record's type as a UX feature
                  **/
-                $this->_data['filterForm']['type'] = $this->_systemCodes->type;
+                $this->_data['filterForm']['form_field']    = $this->_fieldsModel->form_field;
+                $this->_data['filterForm']['grouping']      = $this->_fieldsModel->grouping;                
             }
-         
-            return $this->render(
-                'codes-listing',
-                [
-                   'data'         => $this->_data,
-                   'dataProvider' => $this->_dataProvider,
-                   'model'        => $this->_codesModel,
-                ]
-            );
+            
+            $this->_data['errors']['useSession'] = true;
+            return $this->renderListing();
         }
       
-        $updateModel               = new SystemCodes();
-        $updateModel->scenario     = SystemCodes::SCENARIO_INSERT;
+        $updateModel               = new FormFields();
+        $updateModel->scenario     = FormFields::SCENARIO_INSERT;
 
-        $updateModel->type         = $this->_data['SystemCodes']['type'];
-        $updateModel->code         = $this->_data['SystemCodes']['code'];
-        $updateModel->description  = $this->_data['SystemCodes']['description'];
-      
-        $this->_data['SystemCodes']['insert'] = $updateModel->save();
+        $updateModel->form_field    = $this->_data['FormFields']['form_field'];
+        $updateModel->grouping      = $this->_data['FormFields']['grouping'];
+        $updateModel->grouping_name = $this->keyLookup( 'grouping_name', $this->_data['FormFields']['grouping']);        
+        $updateModel->description   = $this->_data['FormFields']['description'];
+        $updateModel->value         = $this->_data['FormFields']['value'];
+        $updateModel->value_int     = $this->_data['FormFields']['value_int'];                
+
+        $this->_data['FormFields']['insert'] = $updateModel->save();
          
 //      $updateColumns = $updateModel->afterSave( false, $this->_data['addSystemCode']);
 
-        if (!$this->_data['SystemCodes']['insert']) {
-            $this->_data['errors']['Add System Code'] =
+        if (!$this->_data['FormFields']['insert']) {
+            $this->_data['errors'][$msgHeader] =
             [
                 'value'     => "was unsuccessful",
                 'htmlTag'   => 'h4',
@@ -552,8 +578,10 @@ class FieldsController extends BaseController
             [
                 'value'     => "was not saved",
             ];
+            
+            $this->_data['errors']['useSession'] = true;            
         } else {
-            $this->_data['success']['Add System Code'] =
+            $this->_data['success'][$msgHeader] =
             [
                 'value'     => "was successful",
                 'bValue'    => true,
@@ -561,26 +589,27 @@ class FieldsController extends BaseController
                 'class'     => 'alert alert-success',
             ];
          
-            $keySuccess          = $this->keyLookup('type', $this->_systemCodes->type);
-            $keySuccess .= " ( " . $this->_systemCodes->code . " )";
+            $keySuccess  = "( " . $this->keyLookup( 'form_field', $this->_fieldsModel->form_field ) . " ) ";
+            $keySuccess .= $this->keyLookup( 'grouping_name', $this->_fieldsModel->grouping ) . ": ";
+            $keySuccess .= $this->_fieldsModel->description;
          
             $this->_data['success'][$keySuccess] =
             [
                 'value'     => "was added",
                 'bValue'    => true,
             ];
+            
+            $this->_data['success']['useSession'] = true;
         }
 
-        $this->_dataProvider = $this->getCodesGridView();
 
-        return $this->render(
-            'codes-listing',
-            [
-                'data'         => $this->_data,
-                'dataProvider' => $this->_dataProvider,
-                'model'        => $this->_codesModel,
-            ]
-        );
+        /**
+         * Setting the Grouping filter to newly insert record to easily verify that the record is in the system
+         **/
+        $this->_data['filterForm']['grouping'] = $updateModel->grouping;
+
+        $this->_dataProvider = $this->getFieldsGridView();
+        return $this->renderListing();
     }
    
    
@@ -593,7 +622,7 @@ class FieldsController extends BaseController
     {
         $isError = false;
         
-self::debug( $this->_data );                
+        self::debug($this->_data);
  
         $tagRelationExists = SystemCodesChild::find()
             ->where([ 'parent' => $this->_data['id'] ])
@@ -852,30 +881,20 @@ self::debug( $this->_data );
      */
     private function keyLookup($key, $value)
     {
-        $codeType   = self::getDropDownOpts('type');
-        $isActive   = self::getDropDownOpts('is_active');
-        $isHidden   = self::getDropDownOpts('is_hidden');
-      
-        if ($key === "type") {
-            if (isset($codeType[$value]) && !empty($codeType[$value])) {
-                return $codeType[$value];
-            } else {
-                return "Unknown value : " . $key . " :: " . $value;
-            }
-        } elseif ($key === "is_active") {
-            if (isset($isActive[$value]) && !empty($isActive[$value])) {
-                return $isActive[$value];
-            } else {
-                return "Unknown value : " . $key . " :: " . $value;
-            }
-        } elseif ($key === "is_hidden") {
-            if (isset($isHidden[$value]) && !empty($isHidden[$value])) {
-                return $isHidden[$value];
-            } else {
-                return "Unknown value : " . $key . " :: " . $value;
-            }
+        $formField      = FormFields::getFormFieldOptions(-1, 'form_field', false);  
+        $grouping       = FormFields::getDistinctGroupings();
+        $isActive       = FormFields::getSelectOptions(-1, 'is_active', true);
+        $isVisible      = FormFields::getSelectOptions(-1, 'is_visible', true);
+
+        if ($key == 'form_field'  && array_key_exists($value, $formField)) {
+            return $formField[ $value ];
+        } elseif ($key == 'grouping_name'  && array_key_exists($value, $grouping)) {
+            return $grouping[ $value ];
+        } elseif ($key == 'is_active'  && array_key_exists($value, $isActive)) {
+            return $isActive[ $value ];
+        } elseif ($key == 'is_visible' && array_key_exists($value, $isVisible)) {
+            return $isVisible[ strval($value)];
         }
-   
         return "Unknown key : " . $key . " :: " . $value;
     }
 
