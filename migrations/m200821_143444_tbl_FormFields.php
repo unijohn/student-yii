@@ -49,16 +49,16 @@ class m200821_143444_tbl_FormFields extends BaseMigration
         [
             // form_field
             [
-                self::TYPE_FIELD_NOT_SET, self::TYPE_FORM_FIELD, 'form_field', 'Select Form Field Type', '', self::TYPE_PROMPT_DEFAULT, self::STATUS_ACTIVE, self::STATUS_VISIBLE, 1, $created_at,
+                self::TYPE_FIELD_NOT_SET, self::TYPE_ITEM_FORM_FIELD, 'form_field', 'Select Form Field Type', '', self::TYPE_PROMPT_DEFAULT, self::STATUS_ACTIVE, self::STATUS_VISIBLE, 1, $created_at,
             ],
             [
-                self::TYPE_FIELD_NOT_SET, self::TYPE_FORM_FIELD, 'form_field', 'Select / Dropdown',      '', self::TYPE_FIELD_SELECT,   self::STATUS_ACTIVE, self::STATUS_VISIBLE, 2, $created_at,
+                self::TYPE_FIELD_NOT_SET, self::TYPE_ITEM_FORM_FIELD, 'form_field', 'Select / Dropdown',      '', self::TYPE_FIELD_SELECT,   self::STATUS_ACTIVE, self::STATUS_VISIBLE, 2, $created_at,
             ],
             [
-                self::TYPE_FIELD_NOT_SET, self::TYPE_FORM_FIELD, 'form_field', 'Checkbox',               '', self::TYPE_FIELD_CHECKBOX, self::STATUS_ACTIVE, self::STATUS_VISIBLE, 3, $created_at,
+                self::TYPE_FIELD_NOT_SET, self::TYPE_ITEM_FORM_FIELD, 'form_field', 'Checkbox',               '', self::TYPE_FIELD_CHECKBOX, self::STATUS_ACTIVE, self::STATUS_VISIBLE, 3, $created_at,
             ],
             [
-                self::TYPE_FIELD_NOT_SET, self::TYPE_FORM_FIELD, 'form_field', 'Radio',                  '', self::TYPE_FIELD_RADIO,    self::STATUS_ACTIVE, self::STATUS_VISIBLE, 4, $created_at,
+                self::TYPE_FIELD_NOT_SET, self::TYPE_ITEM_FORM_FIELD, 'form_field', 'Radio',                  '', self::TYPE_FIELD_RADIO,    self::STATUS_ACTIVE, self::STATUS_VISIBLE, 4, $created_at,
             ],
         
             // is_active
@@ -96,19 +96,19 @@ class m200821_143444_tbl_FormFields extends BaseMigration
             
             // visa_type
             [
-                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_VISA_TYPE, 'visa_type', 'Select Visa Status', '',  self::TYPE_PROMPT_DEFAULT,  self::STATUS_ACTIVE, self::STATUS_VISIBLE, 0, $created_at,
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_VISA_TYPE, 'visa_type', 'Select Visa Status', '',  self::TYPE_PROMPT_DEFAULT,  self::STATUS_ACTIVE, self::STATUS_VISIBLE, 1, $created_at,
             ],
             [
-                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_VISA_TYPE, 'visa_type', 'Not Applicable', '',      self::VISA_NO,              self::STATUS_ACTIVE, self::STATUS_VISIBLE, 1, $created_at,
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_VISA_TYPE, 'visa_type', 'Not Applicable', '',      self::VISA_NO,              self::STATUS_ACTIVE, self::STATUS_VISIBLE, 2, $created_at,
             ],
             [
-                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_VISA_TYPE, 'visa_type', 'F-1',            '',      self::VISA_F1,              self::STATUS_ACTIVE, self::STATUS_VISIBLE, 2, $created_at,
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_VISA_TYPE, 'visa_type', 'F-1',            '',      self::VISA_F1,              self::STATUS_ACTIVE, self::STATUS_VISIBLE, 3, $created_at,
             ],
             [
-                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_VISA_TYPE, 'visa_type', 'F-2',            '',      self::VISA_F2,              self::STATUS_ACTIVE, self::STATUS_VISIBLE, 3, $created_at,
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_VISA_TYPE, 'visa_type', 'F-2',            '',      self::VISA_F2,              self::STATUS_ACTIVE, self::STATUS_VISIBLE, 4, $created_at,
             ],
             [
-                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_VISA_TYPE, 'visa_type', 'F-3',            '',      self::VISA_F3,              self::STATUS_ACTIVE, self::STATUS_VISIBLE, 4, $created_at,
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_VISA_TYPE, 'visa_type', 'F-3',            '',      self::VISA_F3,              self::STATUS_ACTIVE, self::STATUS_VISIBLE, 5, $created_at,
             ],
         ];
                 
@@ -882,11 +882,11 @@ class m200821_143444_tbl_FormFields extends BaseMigration
 
         $this->batchInsert(self::getTblFormFieldsName(), $columns, $fieldRows);
         
-        $fieldRows = 
-        [ 
-            [ 
-                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_YEAR_FOUR, 'calendar_year_four', 'Select Year', '', -1, self::STATUS_ACTIVE, self::STATUS_VISIBLE, 1, $created_at,  
-            ], 
+        $fieldRows =
+        [
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_YEAR_FOUR, 'calendar_year_four', 'Select Year', '', -1, self::STATUS_ACTIVE, self::STATUS_VISIBLE, 1, $created_at,
+            ],
             [
                 self::TYPE_FIELD_SELECT, self::TYPE_ITEM_YEAR_FOUR, 'calendar_year_four', '2030', '2030', 2030, self::STATUS_INACTIVE, self::STATUS_HIDDEN, 2, $created_at,
             ],
