@@ -47,9 +47,9 @@ class Courses extends BaseModel
 
          'subject_area'     => Yii::t('app', 'Subject'),
          'course_number'    => Yii::t('app', 'Course'),
-         'section_number'   => Yii::t('app', 'Section #'), 
+         'section_number'   => Yii::t('app', 'Section #'),
          'is_active'        => Yii::t('app', 'Is Active'),
-         'is_visible'       => Yii::t('app', 'Is Visible'),                  
+         'is_visible'       => Yii::t('app', 'Is Visible'),
       ];
     }
 

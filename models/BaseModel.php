@@ -85,20 +85,21 @@ class BaseModel extends ActiveRecord
     const TYPE_FIELD_MIN       = self::TYPE_FIELD_NOT_SET;
     const TYPE_FIELD_MAX       = self::TYPE_FIELD_RADIO;
     
-    const TYPE_ITEM_FORM_FIELD      = 0;
-    const TYPE_ITEM_ACTIVE          = 1;
-    const TYPE_ITEM_VISIBLE         = 2;
-    const TYPE_ITEM_US_CITIZEN      = 3;
-    const TYPE_ITEM_VISA_TYPE       = 4;
-    const TYPE_ITEM_CITIZEN_OTHER   = 5;
-    const TYPE_ITEM_YEAR_FOUR       = 6;
+    const TYPE_ITEM_NOT_SET         = 0;
+    const TYPE_ITEM_FORM_FIELD      = 1;
+    const TYPE_ITEM_ACTIVE          = 2;
+    const TYPE_ITEM_VISIBLE         = 3;
+    const TYPE_ITEM_US_CITIZEN      = 4;
+    const TYPE_ITEM_VISA_TYPE       = 5;
+    const TYPE_ITEM_CITIZEN_OTHER   = 6;
+    const TYPE_ITEM_YEAR_FOUR       = 7;
     const TYPE_ITEM_MIN             = self::TYPE_ITEM_FORM_FIELD;
     const TYPE_ITEM_MAX             = self::TYPE_ITEM_YEAR_FOUR;
 
     const SCENARIO_INSERT   = 'insert';
     const SCENARIO_UPDATE   = 'update';
     const SCENARIO_DELETE   = 'delete';
-//    const SCENARIO_MOVE     = 'move';
+    const SCENARIO_MOVE     = 'move';
 
 
     public $_changedAttributes;

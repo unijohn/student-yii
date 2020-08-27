@@ -22,7 +22,7 @@ class FormFields extends BaseModel
 
        public is_active;
        public is_visible;
-       public order_by;       
+       public order_by;
 
        public created_at;
        public updated_at;
@@ -167,8 +167,14 @@ class FormFields extends BaseModel
                 'value', 'default', 'value' => ''
             ],
             [
-                'value', 'default', 'value' => 0
+                'value_int', 'default', 'value' => 0
             ],
+            [
+                'is_active', 'default', 'value' => self::STATUS_ACTIVE
+            ],
+            [
+                'is_visible', 'default', 'value' => self::STATUS_VISIBLE
+            ],                        
                
 /**
             ['is_active', 'default', 'value'    => self::STATUS_ACTIVE ],
@@ -234,16 +240,69 @@ class FormFields extends BaseModel
      *
      * @return (TBD)
      */
-    public static function existsFieldByProperties($form_field = -1, $grouping = -1, $grouping_name = '')
+    public static function existsFieldByProperties($form_field = -1, $grouping = -1, $grouping_name = '', $description = '', $value = '', $value_int = -1)
     {
+        $params = [];
+        $tbl_formFields = FormFields::tableName();        
+    
+        $countSQL  = "SELECT COUNT(*) " ;
+        $countSQL .= "FROM " . $tbl_formFields . " WHERE id > 0 ";
+        
+        if ($form_field > -1) {
+            $andWhere = "AND form_field =:form_field ";
+      
+            $countSQL   .= $andWhere;
+         
+            $params[':form_field']   = $form_field;
+        }
+        
+        if ($grouping > -1) {
+            $andWhere = "AND grouping =:grouping ";
+      
+            $countSQL   .= $andWhere;
+         
+            $params[':grouping']   = $grouping;
+        }
+        
+        if ($grouping_name !== '') {
+            $andWhere = "AND grouping_name =:grouping_name ";
+      
+            $countSQL   .= $andWhere;
+         
+            $params[':grouping_name']   = $grouping_name;
+        }
+        
+        if ($description !== '') {
+            $andWhere = "AND description =:description ";
+      
+            $countSQL   .= $andWhere;
+         
+            $params[':description']   = $description;
+        }
+
+        if ($value !== '') {
+            $andWhere = "AND value =:value ";
+      
+            $countSQL   .= $andWhere;
+         
+            $params[':value']   = $value;
+        }
+        
+        if ($value_int > -1) {
+            $andWhere = "AND value_int =:value_int ";
+      
+            $countSQL   .= $andWhere;
+         
+            $params[':value_int']   = $value_int;
+        }
+   
         $count = Yii::$app->db->createCommand(
-            'SELECT COUNT(*) FROM ' . self::tableName() . ' WHERE form_field =:form_field AND grouping =: grouping AND grouping_name =: $grouping_name ',
-            [
-                ':form_field '      => $form_field,
-                ':grouping'         => $grouping,
-                ':grouping_name'    => $grouping_name
-            ]
+            $countSQL,
+            $params
         )->queryScalar();
+        
+//self::debug( $countSQL, false );        
+//self::debug( $count, true );        
         
         return ($count == 1 ? true : false);
     }
@@ -301,7 +360,7 @@ class FormFields extends BaseModel
 
         $dropDown = [];
 
-        $dropDown[-1] = "Select Type";
+        $dropDown[0] = "Select Type";
 
         foreach ($query_fields as $row) {
             $dropDown[$row['grouping']] = $row['grouping_name'];
