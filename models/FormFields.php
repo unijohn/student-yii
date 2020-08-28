@@ -134,7 +134,7 @@ class FormFields extends BaseModel
         $scenarios = parent::scenarios();
         $scenarios[self::SCENARIO_INSERT] = [ 'form_field', 'grouping', 'grouping_name', 'description', 'is_active', 'is_visible', 'order_by', 'created_at', ];
         $scenarios[self::SCENARIO_UPDATE] = [ 'form_field', 'grouping', 'grouping_name', 'description', 'is_active', 'is_visible', 'order_by', 'updated_at', ];
-//        $scenarios[self::SCENARIO_MOVE]   = [ 'order_by', 'updated_at', ];
+        $scenarios[self::SCENARIO_MOVE]   = [ 'order_by', 'updated_at', ];
    
         return $scenarios;
     }
@@ -175,28 +175,6 @@ class FormFields extends BaseModel
             [
                 'is_visible', 'default', 'value' => self::STATUS_VISIBLE
             ],
-               
-/**
-            ['is_active', 'default', 'value'    => self::STATUS_ACTIVE ],
-            ['is_active', 'filter', 'filter'    => 'intval' ],
-            ['is_active', 'default', 'min'      => self::STATUS_ACTIVE_MIN ],
-            ['is_active', 'default', 'max'      => self::STATUS_ACTIVE_MAX ],
-
-            ['is_visible', 'default', 'value'   => self::STATUS_VISIBLE ],
-            ['is_visible', 'filter',  'filter'  => 'intval' ],
-            ['is_visible', 'default', 'min'     => self::STATUS_VISIBLE_MIN ],
-            ['is_visible', 'default', 'max'     => self::STATUS_VISIBLE_MAX ],
-
-            ['type', 'default', 'value'   => self::TYPE_FIELD_SELECT ],
-            ['type', 'filter',  'filter'  => 'intval' ],
-            ['type', 'default', 'min'     => self::TYPE_FIELD_MIN ],
-            ['type', 'default', 'max'     => self::TYPE_FIELD_MAX ],
-
-            ['grouping', 'default', 'value'   => self::TYPE_ITEM_CITIZEN_OTHER ],
-            ['grouping', 'filter',  'filter'  => 'intval' ],
-            ['grouping', 'default', 'min'     => self::TYPE_ITEM_MIN ],
-            ['grouping', 'default', 'max'     => self::TYPE_ITEM_MAX ],
- **/
 
             [
                 [
@@ -204,6 +182,12 @@ class FormFields extends BaseModel
                 ],
                 'required', 'on' => self::SCENARIO_UPDATE
             ],
+            [
+                [
+                   'order_by', 'updated_at'
+                ],
+                'required', 'on' => self::SCENARIO_MOVE
+            ],            
         ];
     }
 
