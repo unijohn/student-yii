@@ -110,8 +110,130 @@ class m200821_143444_tbl_FormFields extends BaseMigration
             [
                 self::TYPE_FIELD_SELECT, self::TYPE_ITEM_VISA_TYPE, 'visa_type', 'F-3',            '',      self::VISA_F3,              self::STATUS_ACTIVE, self::STATUS_VISIBLE, 5, $created_at,
             ],
+            
+            // term
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_TERM, 'term', 'Select Semester',   '',  self::TYPE_PROMPT_DEFAULT, self::STATUS_ACTIVE, self::STATUS_VISIBLE, 1, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_TERM, 'term', 'Not Set',           '',  self::TERM_NOT_SET,        self::STATUS_ACTIVE, self::STATUS_VISIBLE, 2, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_TERM, 'term', 'Spring',            '',  self::TERM_SPRING,         self::STATUS_ACTIVE, self::STATUS_VISIBLE, 3, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_TERM, 'term', 'Maymester',         '',  self::TERM_MAYMESTER,      self::STATUS_ACTIVE, self::STATUS_VISIBLE, 4, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_TERM, 'term', 'Summer',            '',  self::TERM_SUMMER,         self::STATUS_ACTIVE, self::STATUS_VISIBLE, 5, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_TERM, 'term', 'First Session',     '',  self::TERM_SESSION_ONE,    self::STATUS_ACTIVE, self::STATUS_VISIBLE, 6, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_TERM, 'term', 'Second Session',    '',  self::TERM_SESSION_TWO,    self::STATUS_ACTIVE, self::STATUS_VISIBLE, 7, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_TERM, 'term', 'Fall',              '',  self::TERM_FALL,           self::STATUS_ACTIVE, self::STATUS_VISIBLE, 8, $created_at,
+            ],
+            
+            // month_two
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_MONTH_TWO, 'month_two', 'Select Month',    '',  self::TYPE_PROMPT_DEFAULT, self::STATUS_ACTIVE, self::STATUS_VISIBLE, 1, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_MONTH_TWO, 'month_two', 'Not Set',         '',  self::MONTH_TWO_NOT_SET,   self::STATUS_ACTIVE, self::STATUS_VISIBLE, 2, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_MONTH_TWO, 'month_two', 'January',         '',  self::MONTH_TWO_JAN,       self::STATUS_ACTIVE, self::STATUS_VISIBLE, 3, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_MONTH_TWO, 'month_two', 'February',        '',  self::MONTH_TWO_FEB,       self::STATUS_ACTIVE, self::STATUS_VISIBLE, 4, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_MONTH_TWO, 'month_two', 'March',           '',  self::MONTH_TWO_MAR,       self::STATUS_ACTIVE, self::STATUS_VISIBLE, 5, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_MONTH_TWO, 'month_two', 'April',           '',  self::MONTH_TWO_APR,       self::STATUS_ACTIVE, self::STATUS_VISIBLE, 6, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_MONTH_TWO, 'month_two', 'May',             '',  self::MONTH_TWO_MAY,       self::STATUS_ACTIVE, self::STATUS_VISIBLE, 7, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_MONTH_TWO, 'month_two', 'June',            '',  self::MONTH_TWO_JUN,       self::STATUS_ACTIVE, self::STATUS_VISIBLE, 8, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_MONTH_TWO, 'month_two', 'July',            '',  self::MONTH_TWO_JUL,       self::STATUS_ACTIVE, self::STATUS_VISIBLE, 9, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_MONTH_TWO, 'month_two', 'August',          '',  self::MONTH_TWO_AUG,       self::STATUS_ACTIVE, self::STATUS_VISIBLE, 10, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_MONTH_TWO, 'month_two', 'September',       '',  self::MONTH_TWO_SEPT,      self::STATUS_ACTIVE, self::STATUS_VISIBLE, 11, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_MONTH_TWO, 'month_two', 'October',         '',  self::MONTH_TWO_OCT,       self::STATUS_ACTIVE, self::STATUS_VISIBLE, 12, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_MONTH_TWO, 'month_two', 'November',        '',  self::MONTH_TWO_NOV,       self::STATUS_ACTIVE, self::STATUS_VISIBLE, 13, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_MONTH_TWO, 'month_two', 'December',        '',  self::MONTH_TWO_DEC,       self::STATUS_ACTIVE, self::STATUS_VISIBLE, 14, $created_at,
+            ],
+            
+            // skill_strength
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_SKILL_STRENGTH, 'skill_strength', 'Select Strength',   '', self::TYPE_PROMPT_DEFAULT,  self::STATUS_ACTIVE, self::STATUS_VISIBLE, 1, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_SKILL_STRENGTH, 'skill_strength', 'Not Set',           '', self::SKILL_STR_NOT_SET,    self::STATUS_ACTIVE, self::STATUS_VISIBLE, 2, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_SKILL_STRENGTH, 'skill_strength', 'None',              '', self::SKILL_STR_NONE,       self::STATUS_ACTIVE, self::STATUS_VISIBLE, 3, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_SKILL_STRENGTH, 'skill_strength', 'Beginner',          '', self::SKILL_STR_BEGIN,      self::STATUS_ACTIVE, self::STATUS_VISIBLE, 4, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_SKILL_STRENGTH, 'skill_strength', 'Intermediate',      '', self::SKILL_STR_INTERMED,   self::STATUS_ACTIVE, self::STATUS_VISIBLE, 5, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_SKILL_STRENGTH, 'skill_strength', 'Expert',            '', self::SKILL_STR_EXPERT,     self::STATUS_ACTIVE, self::STATUS_VISIBLE, 6, $created_at,
+            ],
+            
+            // pref_ranking
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_PREFERENCE_RANK, 'pref_ranking', 'Select Preference',  '', self::TYPE_PROMPT_DEFAULT,  self::STATUS_ACTIVE, self::STATUS_VISIBLE, 1, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_PREFERENCE_RANK, 'pref_ranking', 'Not Set',            '', self::PREF_NOT_SET,         self::STATUS_ACTIVE, self::STATUS_VISIBLE, 2, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_PREFERENCE_RANK, 'pref_ranking', '1',                  '', self::PREF_ONE,             self::STATUS_ACTIVE, self::STATUS_VISIBLE, 3, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_PREFERENCE_RANK, 'pref_ranking', '2',                  '', self::PREF_TWO,             self::STATUS_ACTIVE, self::STATUS_VISIBLE, 4, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_PREFERENCE_RANK, 'pref_ranking', '3',                  '', self::PREF_THREE,           self::STATUS_ACTIVE, self::STATUS_VISIBLE, 5, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_PREFERENCE_RANK, 'pref_ranking', '4',                  '', self::PREF_FOUR,            self::STATUS_ACTIVE, self::STATUS_VISIBLE, 6, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_PREFERENCE_RANK, 'pref_ranking', '5',                  '', self::PREF_FIVE,            self::STATUS_ACTIVE, self::STATUS_VISIBLE, 7, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_PREFERENCE_RANK, 'pref_ranking', '6',                  '', self::PREF_SIX,             self::STATUS_ACTIVE, self::STATUS_VISIBLE, 8, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_PREFERENCE_RANK, 'pref_ranking', '7',                  '', self::PREF_SEVEN,           self::STATUS_ACTIVE, self::STATUS_VISIBLE, 9, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_PREFERENCE_RANK, 'pref_ranking', '8',                  '', self::PREF_EIGHT,           self::STATUS_ACTIVE, self::STATUS_VISIBLE, 10, $created_at,
+            ],
         ];
-                
+
         $this->batchInsert(self::getTblFormFieldsName(), $columns, $fieldRows);
         
         $fieldRows =

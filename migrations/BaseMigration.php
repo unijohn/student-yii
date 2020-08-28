@@ -71,12 +71,50 @@ class BaseMigration extends Migration
     const VISA_F2              = 2;
     const VISA_F3              = 3;
     
-    const TYPE_PROMPT_DEFAULT  = -1;
+    const TYPE_PROMPT_DEFAULT   = -1;
     
-    const TYPE_FIELD_NOT_SET   = 0;
-    const TYPE_FIELD_SELECT    = 1;
-    const TYPE_FIELD_CHECKBOX  = 2;
-    const TYPE_FIELD_RADIO     = 3;
+    const TYPE_FIELD_NOT_SET    = 0;
+    const TYPE_FIELD_SELECT     = 1;
+    const TYPE_FIELD_CHECKBOX   = 2;
+    const TYPE_FIELD_RADIO      = 3;
+    
+    const TERM_NOT_SET          = 0;
+    const TERM_SPRING           = 1;
+    const TERM_MAYMESTER        = 2;
+    const TERM_SUMMER           = 3;
+    const TERM_SESSION_ONE      = 4;
+    const TERM_SESSION_TWO      = 5;
+    const TERM_FALL             = 6;
+    
+    const MONTH_TWO_NOT_SET     = 0;
+    const MONTH_TWO_JAN         = 1;
+    const MONTH_TWO_FEB         = 2;
+    const MONTH_TWO_MAR         = 3;
+    const MONTH_TWO_APR         = 4;
+    const MONTH_TWO_MAY         = 5;
+    const MONTH_TWO_JUN         = 6;
+    const MONTH_TWO_JUL         = 7;
+    const MONTH_TWO_AUG         = 8;
+    const MONTH_TWO_SEPT        = 9;
+    const MONTH_TWO_OCT         = 10;
+    const MONTH_TWO_NOV         = 11;
+    const MONTH_TWO_DEC         = 12;
+    
+    const SKILL_STR_NOT_SET     = 0;
+    const SKILL_STR_NONE        = 1;
+    const SKILL_STR_BEGIN       = 2;
+    const SKILL_STR_INTERMED    = 3;
+    const SKILL_STR_EXPERT      = 4;
+    
+    const PREF_NOT_SET          = 0;
+    const PREF_ONE              = 1;
+    const PREF_TWO              = 2;
+    const PREF_THREE            = 3;
+    const PREF_FOUR             = 4;
+    const PREF_FIVE             = 5;
+    const PREF_SIX              = 6;
+    const PREF_SEVEN            = 7;
+    const PREF_EIGHT            = 8;
     
     const TYPE_ITEM_NOT_SET         = 0;
     const TYPE_ITEM_FORM_FIELD      = 1;
@@ -86,6 +124,10 @@ class BaseMigration extends Migration
     const TYPE_ITEM_VISA_TYPE       = 5;
     const TYPE_ITEM_CITIZEN_OTHER   = 6;
     const TYPE_ITEM_YEAR_FOUR       = 7;
+    const TYPE_ITEM_TERM            = 8;
+    const TYPE_ITEM_MONTH_TWO       = 9;
+    const TYPE_ITEM_SKILL_STRENGTH  = 10;
+    const TYPE_ITEM_PREFERENCE_RANK = 11;
 
 
     const tbl_YiiNames  = [

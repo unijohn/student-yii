@@ -174,7 +174,7 @@ class FormFields extends BaseModel
             ],
             [
                 'is_visible', 'default', 'value' => self::STATUS_VISIBLE
-            ],                        
+            ],
                
 /**
             ['is_active', 'default', 'value'    => self::STATUS_ACTIVE ],
@@ -243,7 +243,7 @@ class FormFields extends BaseModel
     public static function existsFieldByProperties($form_field = -1, $grouping = -1, $grouping_name = '', $description = '', $value = '', $value_int = -1)
     {
         $params = [];
-        $tbl_formFields = FormFields::tableName();        
+        $tbl_formFields = FormFields::tableName();
     
         $countSQL  = "SELECT COUNT(*) " ;
         $countSQL .= "FROM " . $tbl_formFields . " WHERE id > 0 ";
@@ -301,8 +301,8 @@ class FormFields extends BaseModel
             $params
         )->queryScalar();
         
-//self::debug( $countSQL, false );        
-//self::debug( $count, true );        
+        //self::debug( $countSQL, false );
+        //self::debug( $count, true );
         
         return ($count == 1 ? true : false);
     }
