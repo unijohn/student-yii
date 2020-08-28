@@ -80,7 +80,7 @@ class FieldsController extends BaseController
         $this->_data['FormFields']['value_int']     = ArrayHelper::getValue($this->_request->post(), 'FormFields.value_int', 0);
 
         $this->_data['FormFields']['is_active']     = ArrayHelper::getValue($this->_request->post(), 'FormFields.is_active', FormFields::STATUS_ACTIVE);
-        $this->_data['FormFields']['is_hidden']     = ArrayHelper::getValue($this->_request->post(), 'FormFields.is_visible', FormFields::STATUS_VISIBLE);
+        $this->_data['FormFields']['is_visible']    = ArrayHelper::getValue($this->_request->post(), 'FormFields.is_visible', FormFields::STATUS_VISIBLE);
         $this->_data['FormFields']['type']          = ArrayHelper::getValue($this->_request->post(), 'FormFields.type', '');
         
         $this->_data['FormFields']['insert']        = ArrayHelper::getValue($this->_request->post(), 'FormFields.insert', '');
@@ -344,6 +344,10 @@ class FieldsController extends BaseController
      */
     public function actionView()
     {
+        $this->_fieldsModel = FormFields::find()
+            ->where(['id' => $this->_data['id'] ])
+            ->limit(1)->one();    
+    
         return $this->renderView();
     }
 
@@ -523,6 +527,8 @@ class FieldsController extends BaseController
 
         if ($idExists) {
             if (isset($this->_data['FormFields']['insert']) && !empty($this->_data['FormFields']['insert'])) {
+                $this->_data['errors']['useSession'] = true;            
+                
                 $this->_data['errors'][$msgHeader] =
                 [
                     'value'     => "was unsuccessful",
@@ -578,9 +584,7 @@ class FieldsController extends BaseController
             [
                 'value'     => "was not saved",
             ];
-            
-            $this->_data['errors']['useSession'] = true;            
-        } else {
+        } else {            
             $this->_data['success'][$msgHeader] =
             [
                 'value'     => "was successful",
@@ -620,10 +624,12 @@ class FieldsController extends BaseController
      */
     public function actionSave()
     {
-        $isError = false;
+        $isError    = false;
+        $msgHeader  = "Save Form Field";        
         
-        self::debug($this->_data);
- 
+//        self::debug($this->_data);
+
+/** 
         $tagRelationExists = SystemCodesChild::find()
             ->where([ 'parent' => $this->_data['id'] ])
             ->andWhere([ 'child' => $this->_data['tagid'] ])
@@ -726,19 +732,27 @@ class FieldsController extends BaseController
          
             $exitEarly = true;
         }
+ **/
 
-        if (isset($this->_data['SystemCodes']['update']) && !empty($this->_data['SystemCodes']['update'])) {
-            $this->_systemCodes              = new SystemCodes();
-      
-            $this->_systemCodes->id          = $this->_data['SystemCodes']['id'];
-            $this->_systemCodes->type        = $this->_data['SystemCodes']['type'];
-            $this->_systemCodes->code        = $this->_data['SystemCodes']['code'];
-            $this->_systemCodes->description = $this->_data['SystemCodes']['description'];
+        if (isset($this->_data['FormFields']['update']) && !empty($this->_data['FormFields']['update'])) {
+            $this->_fieldsModel                 = new FormFields();
+
+            $this->_fieldsModel->id             = $this->_data['FormFields']['id'];
+
+            $this->_fieldsModel->form_field     = $this->_data['FormFields']['form_field'];
+            $this->_fieldsModel->grouping       = $this->_data['FormFields']['grouping'];
+            $this->_fieldsModel->grouping_name  = $this->keyLookup( 'grouping_name', $this->_data['FormFields']['grouping']);   
+            $this->_fieldsModel->description    = $this->_data['FormFields']['description'];
+            $this->_fieldsModel->value          = $this->_data['FormFields']['value'];
+            $this->_fieldsModel->value_int      = $this->_data['FormFields']['value_int'];
+            
+            $this->_fieldsModel->is_active      = $this->_data['FormFields']['is_active'];            
+            $this->_fieldsModel->is_visible     = $this->_data['FormFields']['is_visible'];            
    
             $exitEarly = false;
 
-            if (!isset($this->_systemCodes->type) || empty($this->_systemCodes->type)) {
-                $this->_data['errors']['Save System Code'] =
+            if (!isset($this->_fieldsModel->form_field) || empty($this->_fieldsModel->form_field)) {
+                $this->_data['errors'][$msgHeader] =
                 [
                     'value'     => "was unsuccessful",
                     'htmlTag'   => 'h4',
@@ -749,32 +763,34 @@ class FieldsController extends BaseController
                    Unsure what kind of error will be caught here; TBD
                  **/
              
-                $this->_data['errors']['type'] =
+                $this->_data['errors']['form_field'] =
                 [
                     'value' => "is invalid",
                 ];
-            
+
+                $this->_data['errors']['useSession'] = true;
                 $exitEarly = true;
             }
          
-            if (!isset($this->_systemCodes->code) || empty($this->_systemCodes->code)) {
-                $this->_data['errors']['Save System Code'] =
+            if (!isset($this->_fieldsModel->grouping) || empty($this->_fieldsModel->grouping)) {
+                $this->_data['errors'][$msgHeader] =
                 [
                     'value'     => "was unsuccessful",
                     'htmlTag'   => 'h4',
                     'class'     => 'alert alert-danger',
                 ];
    
-                $this->_data['errors']['code'] =
+                $this->_data['errors']['grouping'] =
                 [
-                    'value' => "is blank",
+                    'value' => "is invalid",
                 ];
             
+                $this->_data['errors']['useSession'] = true;
                 $exitEarly = true;
             }
          
-            if (!isset($this->_systemCodes->description) || empty($this->_systemCodes->description)) {
-                $this->_data['errors']['Save System Code'] =
+            if (!isset($this->_fieldsModel->description) || empty($this->_fieldsModel->description)) {
+                $this->_data['errors'][$msgHeader] =
                 [
                    'value'     => "was unsuccessful",
                    'htmlTag'   => 'h4',
@@ -786,66 +802,70 @@ class FieldsController extends BaseController
                     'value' => "is blank",
                 ];
    
+                $this->_data['errors']['useSession'] = true;
                 $exitEarly = true;
             }
    
             if ($exitEarly) {
-                $this->_tagsModel       = SystemCodes::findAllTagsById($this->_data['id']);
-                $this->_codeChildModel  = $this->getCodeChildModel($this->_data['id'], $this->_codesModel->code);
-         
-                return $this->render(
-                    'codes-view',
-                    [
-                        'data'         => $this->_data,
-                        'dataProvider' => $this->_dataProvider,
-                        'model'        => $this->_codesModel,
-                        'tags'         => $this->_tagsModel,
-                        'allTags'      => $this->_codeChildModel,
-                    ]
-                );
+                return $this->renderView();
             }
-      
-            $updateModel                = SystemCodes::findOne($this->_systemCodes->id);
-            $updateModel->scenario      = SystemCodes::SCENARIO_UPDATE;
- 
-            $updateModel->code          = $this->_data['SystemCodes']['code'];
-            $updateModel->description   = $this->_data['SystemCodes']['description'];
-
-            //$updateColumns = $updateModel->getDirtyAttributes();
-
-            $updateModel->type          = $this->_data['SystemCodes']['type'];
-            $updateModel->is_active      = $this->_data['SystemCodes']['is_active'];
-            $updateModel->is_hidden      = $this->_data['SystemCodes']['is_hidden'];
-
-            $this->_data['SystemCodes']['update'] = $updateModel->save();
          
-            $updateColumns = $updateModel->afterSave(false, $this->_data['SystemCodes']['update']);
+            $updateModel                = FormFields::findOne($this->_fieldsModel->id);
+            $updateModel->scenario      = FormFields::SCENARIO_UPDATE;
+ 
+            $updateModel->form_field     = $this->_data['FormFields']['form_field'];
+            $updateModel->grouping       = $this->_data['FormFields']['grouping'];
+            $updateModel->grouping_name  = $this->keyLookup( 'grouping_name', $this->_data['FormFields']['grouping']);   
+            $updateModel->description    = $this->_data['FormFields']['description'];
+            $updateModel->value          = $this->_data['FormFields']['value'];
+            $updateModel->value_int      = $this->_data['FormFields']['value_int'];
+            
+            $updateModel->is_active      = $this->_data['FormFields']['is_active'];            
+            $updateModel->is_visible     = $this->_data['FormFields']['is_visible'];     
 
-            if ($this->_data['SystemCodes']['update'] && is_array($updateColumns)) {
+            $this->_data['FormFields']['update'] = $updateModel->save();
+         
+            $updateColumns = $updateModel->afterSave(false, $this->_data['FormFields']['update']);
+
+            if ($this->_data['FormFields']['update'] && is_array($updateColumns)) {
                 if (count($updateColumns) > 0) {
-                    $this->_data['success']['Save System Code'] =
-                    [
-                        'value'     => "was successful",
-                        'bValue'    => true,
-                        'htmlTag'   => 'h4',
-                        'class'     => 'alert alert-success',
-                    ];
-               
                     foreach ($updateColumns as $key => $val) {
                         $keyIndex = ucwords(strtolower(str_replace("_", " ", $key)));
-               
+                
                         if ($key !== "updated_at" && $key !== "deleted_at") {
+                            if ($val == $this->_data['FormFields'][$key]) {
+                                // For some reason, afterSave() is stating that the value for this key has updated
+                                continue;
+                            } else {
+                                // Avoid setting this success header multiple times
+                                if (!isset($this->_data['success'][$msgHeader])) {
+                                    $this->_data['success']['useSession'] = true;
+                                
+                                    $this->_data['success'][$msgHeader] =
+                                    [
+                                       'value'      => "was successful",
+                                       'bValue'     => true,
+                                       'htmlTag'    => 'h4',
+                                       'class'      => 'alert alert-success',
+                                    ];
+                                }
+                            }
+                            
                             $lookupNew = $this->keyLookup($key, $val);
-                            $lookupOld = $this->keyLookup($key, $this->_data['SystemCodes'][$key]);
-                  
-                            $this->_data['success'][$keyIndex] =
+                            $lookupOld = $this->keyLookup($key, $this->_data['FormFields'][$key]);
+                            
+                            $labels = $this->_fieldsModel->attributeLabels();
+                            
+//                            self::debug( $labels );
+                   
+                            $this->_data['success'][$labels[$key]] =
                             [
                                 'value'     => "was updated",
                                 'bValue'    => true,
                             ];
-                     
+
                             if (strpos($lookupNew, "Unknown") !== 0) {
-                                $this->_data['success'][$keyIndex] =
+                                $this->_data['success'][$labels[$key]] =
                                 [
                                     'value'  => "was updated ( " . $lookupNew . " -> " . $lookupOld . " )",
                                 ];
@@ -856,21 +876,7 @@ class FieldsController extends BaseController
             }
         }
 
-        $this->_codesModel      = $this->_codesModel->findOne($this->_data['id']);
-      
-        $this->_tagsModel       = SystemCodes::findAllTagsById($this->_data['id']);
-        $this->_codeChildModel  = $this->getCodeChildModel($this->_data['id'], $this->_codesModel->code);
-
-        return $this->render(
-            'codes-view',
-            [
-                'data'         => $this->_data,
-                'dataProvider' => $this->_dataProvider,
-                'model'        => $this->_codesModel,
-                'tags'         => $this->_tagsModel,
-                'allTags'      => $this->_codeChildModel,
-            ]
-        );
+        return $this->redirect(['fields/view', 'id' => $this->_data['id'] ]);
     }
 
    
