@@ -116,6 +116,11 @@ class BaseMigration extends Migration
     const PREF_SEVEN            = 7;
     const PREF_EIGHT            = 8;
     
+    const DOCUMENT_NOT_SET      = 0;
+    const DOCUMENT_PERS_STMT    = 1;
+    const DOCUMENT_ESSAY        = 2;
+    const DOCUMENT_LTR_REQ      = 3;
+    
     const TYPE_ITEM_NOT_SET         = 0;
     const TYPE_ITEM_FORM_FIELD      = 1;
     const TYPE_ITEM_ACTIVE          = 2;
@@ -128,6 +133,7 @@ class BaseMigration extends Migration
     const TYPE_ITEM_MONTH_TWO       = 9;
     const TYPE_ITEM_SKILL_STRENGTH  = 10;
     const TYPE_ITEM_PREFERENCE_RANK = 11;
+    const TYPE_ITEM_DOCUMENT        = 12;
 
 
     const tbl_YiiNames  = [

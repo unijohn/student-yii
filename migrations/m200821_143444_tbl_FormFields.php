@@ -232,6 +232,23 @@ class m200821_143444_tbl_FormFields extends BaseMigration
             [
                 self::TYPE_FIELD_SELECT, self::TYPE_ITEM_PREFERENCE_RANK, 'pref_ranking', '8',                  '', self::PREF_EIGHT,           self::STATUS_ACTIVE, self::STATUS_VISIBLE, 10, $created_at,
             ],
+            
+            // document
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_DOCUMENT, 'document', 'Select Document Type',      '',  self::TYPE_PROMPT_DEFAULT, self::STATUS_ACTIVE, self::STATUS_VISIBLE, 1, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_DOCUMENT, 'document', 'Not Set',                   '',  self::DOCUMENT_NOT_SET,    self::STATUS_ACTIVE, self::STATUS_VISIBLE, 2, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_DOCUMENT, 'document', 'Personal Statement',        '',  self::DOCUMENT_PERS_STMT,  self::STATUS_ACTIVE, self::STATUS_VISIBLE, 3, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_DOCUMENT, 'document', 'Essay',                     '',  self::DOCUMENT_ESSAY,      self::STATUS_ACTIVE, self::STATUS_VISIBLE, 4, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_DOCUMENT, 'document', 'Letter of Recommendation',  '',  self::DOCUMENT_LTR_REQ,    self::STATUS_ACTIVE, self::STATUS_VISIBLE, 5, $created_at,
+            ],
         ];
 
         $this->batchInsert(self::getTblFormFieldsName(), $columns, $fieldRows);

@@ -346,7 +346,7 @@ class FieldsController extends BaseController
     {
         $this->_fieldsModel = FormFields::find()
             ->where(['id' => $this->_data['id'] ])
-            ->limit(1)->one();    
+            ->limit(1)->one();
     
         return $this->renderView();
     }
@@ -515,8 +515,12 @@ class FieldsController extends BaseController
          **/
          
         $idExists = FormFields::existsFieldByProperties(
-            $this->_data['FormFields']['form_field'], $this->_data['FormFields']['grouping'], '', $this->_data['FormFields']['description'],
-            $this->_data['FormFields']['value'],      $this->_data['FormFields']['value_int']
+            $this->_data['FormFields']['form_field'],
+            $this->_data['FormFields']['grouping'],
+            '',
+            $this->_data['FormFields']['description'],
+            $this->_data['FormFields']['value'],
+            $this->_data['FormFields']['value_int']
         );
 
         $this->_fieldsModel->form_field     = $this->_data['FormFields']['form_field'];
@@ -527,7 +531,7 @@ class FieldsController extends BaseController
 
         if ($idExists) {
             if (isset($this->_data['FormFields']['insert']) && !empty($this->_data['FormFields']['insert'])) {
-                $this->_data['errors']['useSession'] = true;            
+                $this->_data['errors']['useSession'] = true;
                 
                 $this->_data['errors'][$msgHeader] =
                 [
@@ -536,10 +540,10 @@ class FieldsController extends BaseController
                     'class'     => 'alert alert-danger',
                 ];
 
-//$keyIndex = ucfirst(strtolower(str_replace("_", " ", $key)));
+                //$keyIndex = ucfirst(strtolower(str_replace("_", " ", $key)));
 
-                $keyError  = "( " . $this->keyLookup( 'form_field', $this->_fieldsModel->form_field ) . " ) ";
-                $keyError .= $this->keyLookup( 'grouping_name', $this->_fieldsModel->grouping ) . ": ";
+                $keyError  = "( " . $this->keyLookup('form_field', $this->_fieldsModel->form_field) . " ) ";
+                $keyError .= $this->keyLookup('grouping_name', $this->_fieldsModel->grouping) . ": ";
                 $keyError .= $this->_fieldsModel->description;
 
                 $this->_data['errors'][$keyError] =
@@ -551,7 +555,7 @@ class FieldsController extends BaseController
                  *    if inserting a new record, set the filter to that new record's type as a UX feature
                  **/
                 $this->_data['filterForm']['form_field']    = $this->_fieldsModel->form_field;
-                $this->_data['filterForm']['grouping']      = $this->_fieldsModel->grouping;                
+                $this->_data['filterForm']['grouping']      = $this->_fieldsModel->grouping;
             }
             
             $this->_data['errors']['useSession'] = true;
@@ -563,10 +567,10 @@ class FieldsController extends BaseController
 
         $updateModel->form_field    = $this->_data['FormFields']['form_field'];
         $updateModel->grouping      = $this->_data['FormFields']['grouping'];
-        $updateModel->grouping_name = $this->keyLookup( 'grouping_name', $this->_data['FormFields']['grouping']);        
+        $updateModel->grouping_name = $this->keyLookup('grouping_name', $this->_data['FormFields']['grouping']);
         $updateModel->description   = $this->_data['FormFields']['description'];
         $updateModel->value         = $this->_data['FormFields']['value'];
-        $updateModel->value_int     = $this->_data['FormFields']['value_int'];                
+        $updateModel->value_int     = $this->_data['FormFields']['value_int'];
 
         $this->_data['FormFields']['insert'] = $updateModel->save();
          
@@ -584,7 +588,7 @@ class FieldsController extends BaseController
             [
                 'value'     => "was not saved",
             ];
-        } else {            
+        } else {
             $this->_data['success'][$msgHeader] =
             [
                 'value'     => "was successful",
@@ -593,8 +597,8 @@ class FieldsController extends BaseController
                 'class'     => 'alert alert-success',
             ];
          
-            $keySuccess  = "( " . $this->keyLookup( 'form_field', $this->_fieldsModel->form_field ) . " ) ";
-            $keySuccess .= $this->keyLookup( 'grouping_name', $this->_fieldsModel->grouping ) . ": ";
+            $keySuccess  = "( " . $this->keyLookup('form_field', $this->_fieldsModel->form_field) . " ) ";
+            $keySuccess .= $this->keyLookup('grouping_name', $this->_fieldsModel->grouping) . ": ";
             $keySuccess .= $this->_fieldsModel->description;
          
             $this->_data['success'][$keySuccess] =
@@ -625,114 +629,114 @@ class FieldsController extends BaseController
     public function actionSave()
     {
         $isError    = false;
-        $msgHeader  = "Save Form Field";        
+        $msgHeader  = "Save Form Field";
         
 //        self::debug($this->_data);
 
-/** 
-        $tagRelationExists = SystemCodesChild::find()
-            ->where([ 'parent' => $this->_data['id'] ])
-            ->andWhere([ 'child' => $this->_data['tagid'] ])
-            ->limit(1)
-            ->one();
-         
-        $tagChild = SystemCodes::find()
-            ->where([ 'id' => $this->_data['tagid'] ])
-            ->limit(1)
-            ->one();
- 
-        if (strlen($this->_data['addTag']) > 0) {
-            if (!is_null($tagRelationExists)) {
-                $this->_data['errors']['Add Tag'] =
-                [
-                   'value'     => "was unsuccessful",
-                   'bValue'    => false,
-                   'htmlTag'   => 'h4',
-                   'class'     => 'alert alert-danger',
-                ];
-            
-                $this->_data['errors'][$tagChild['description']] =
-                [
-                    'value' => "was not added; relationship already exists.",
-                ];
-            
-                $isError = true;
-            }
+        /**
+                $tagRelationExists = SystemCodesChild::find()
+                    ->where([ 'parent' => $this->_data['id'] ])
+                    ->andWhere([ 'child' => $this->_data['tagid'] ])
+                    ->limit(1)
+                    ->one();
 
-            if (!$isError) {
-                $result = $this->addPermitTag($this->_data['id'], $this->_data['tagid']);
-         
-                if ($result > 0) {
-                    $tag = SystemCodes::find()
-                        ->where([ 'id' => $this->_data['tagid'] ])
-                        ->limit(1)
-                        ->one();
-            
-                    $this->_data['success']['Add Tag'] =
-                    [
-                        'value'        => "was successful",
-                        'bValue'       => true,
-                        'htmlTag'      => 'h4',
-                        'class'        => 'alert alert-success',
-                    ];
-               
-                    $this->_data['success'][$tagChild['description']] =
-                    [
-                        'value' => "was added",
-                    ];
-                } else {
-                    $this->_data['errors']['Add Tag'] =
-                    [
-                        'value'     => "was unsuccessful",
-                        'bValue'    => false,
-                        'htmlTag'   => 'h4',
-                        'class'     => 'alert alert-danger',
-                   ];
-               
-                    $this->_data['errors']['Add Permit Tag'] =
-                    [
-                        'value' => "was not successful; no tags were added. (Result: " . strval($result) . ") ",
-                    ];
+                $tagChild = SystemCodes::find()
+                    ->where([ 'id' => $this->_data['tagid'] ])
+                    ->limit(1)
+                    ->one();
+
+                if (strlen($this->_data['addTag']) > 0) {
+                    if (!is_null($tagRelationExists)) {
+                        $this->_data['errors']['Add Tag'] =
+                        [
+                           'value'     => "was unsuccessful",
+                           'bValue'    => false,
+                           'htmlTag'   => 'h4',
+                           'class'     => 'alert alert-danger',
+                        ];
+
+                        $this->_data['errors'][$tagChild['description']] =
+                        [
+                            'value' => "was not added; relationship already exists.",
+                        ];
+
+                        $isError = true;
+                    }
+
+                    if (!$isError) {
+                        $result = $this->addPermitTag($this->_data['id'], $this->_data['tagid']);
+
+                        if ($result > 0) {
+                            $tag = SystemCodes::find()
+                                ->where([ 'id' => $this->_data['tagid'] ])
+                                ->limit(1)
+                                ->one();
+
+                            $this->_data['success']['Add Tag'] =
+                            [
+                                'value'        => "was successful",
+                                'bValue'       => true,
+                                'htmlTag'      => 'h4',
+                                'class'        => 'alert alert-success',
+                            ];
+
+                            $this->_data['success'][$tagChild['description']] =
+                            [
+                                'value' => "was added",
+                            ];
+                        } else {
+                            $this->_data['errors']['Add Tag'] =
+                            [
+                                'value'     => "was unsuccessful",
+                                'bValue'    => false,
+                                'htmlTag'   => 'h4',
+                                'class'     => 'alert alert-danger',
+                           ];
+
+                            $this->_data['errors']['Add Permit Tag'] =
+                            [
+                                'value' => "was not successful; no tags were added. (Result: " . strval($result) . ") ",
+                            ];
+                        }
+
+                        $exitEarly = true;
+                    }
                 }
-            
-                $exitEarly = true;
-            }
-        }
 
-        if (strlen($this->_data['dropTag']) > 0) {
-            $result = $this->removePermitTag($this->_data['id'], $this->_data['tagid']);
-      
-            if ($result > 0) {
-                $this->_data['success']['Remove Tag'] =
-                [
-                    'value'        => "was successful",
-                    'bValue'       => true,
-                    'htmlTag'      => 'h4',
-                    'class'        => 'alert alert-success',
-                ];
-            
-                $this->_data['success'][$tagChild['description']] =
-                [
-                    'value' => "was removed",
-                ];
-            } else {
-                $this->_data['errors']['Remove Tag'] =
-                [
-                    'value'     => "was unsuccessful",
-                    'bValue'    => false,
-                    'htmlTag'   => 'h4',
-                    'class'     => 'alert alert-danger',
-                ];
-            
-                $this->_data['errors'][$tagChild['description']] =
-                [
-                    'value' => "was not successful; no tags were removed. (Result: " . strval($result) . ") ",
-                ];
-            }
-         
-            $exitEarly = true;
-        }
- **/
+                if (strlen($this->_data['dropTag']) > 0) {
+                    $result = $this->removePermitTag($this->_data['id'], $this->_data['tagid']);
+
+                    if ($result > 0) {
+                        $this->_data['success']['Remove Tag'] =
+                        [
+                            'value'        => "was successful",
+                            'bValue'       => true,
+                            'htmlTag'      => 'h4',
+                            'class'        => 'alert alert-success',
+                        ];
+
+                        $this->_data['success'][$tagChild['description']] =
+                        [
+                            'value' => "was removed",
+                        ];
+                    } else {
+                        $this->_data['errors']['Remove Tag'] =
+                        [
+                            'value'     => "was unsuccessful",
+                            'bValue'    => false,
+                            'htmlTag'   => 'h4',
+                            'class'     => 'alert alert-danger',
+                        ];
+
+                        $this->_data['errors'][$tagChild['description']] =
+                        [
+                            'value' => "was not successful; no tags were removed. (Result: " . strval($result) . ") ",
+                        ];
+                    }
+
+                    $exitEarly = true;
+                }
+         **/
 
         if (isset($this->_data['FormFields']['update']) && !empty($this->_data['FormFields']['update'])) {
             $this->_fieldsModel                 = new FormFields();
@@ -741,13 +745,13 @@ class FieldsController extends BaseController
 
             $this->_fieldsModel->form_field     = $this->_data['FormFields']['form_field'];
             $this->_fieldsModel->grouping       = $this->_data['FormFields']['grouping'];
-            $this->_fieldsModel->grouping_name  = $this->keyLookup( 'grouping_name', $this->_data['FormFields']['grouping']);   
+            $this->_fieldsModel->grouping_name  = $this->keyLookup('grouping_name', $this->_data['FormFields']['grouping']);
             $this->_fieldsModel->description    = $this->_data['FormFields']['description'];
             $this->_fieldsModel->value          = $this->_data['FormFields']['value'];
             $this->_fieldsModel->value_int      = $this->_data['FormFields']['value_int'];
             
-            $this->_fieldsModel->is_active      = $this->_data['FormFields']['is_active'];            
-            $this->_fieldsModel->is_visible     = $this->_data['FormFields']['is_visible'];            
+            $this->_fieldsModel->is_active      = $this->_data['FormFields']['is_active'];
+            $this->_fieldsModel->is_visible     = $this->_data['FormFields']['is_visible'];
    
             $exitEarly = false;
 
@@ -815,13 +819,13 @@ class FieldsController extends BaseController
  
             $updateModel->form_field     = $this->_data['FormFields']['form_field'];
             $updateModel->grouping       = $this->_data['FormFields']['grouping'];
-            $updateModel->grouping_name  = $this->keyLookup( 'grouping_name', $this->_data['FormFields']['grouping']);   
+            $updateModel->grouping_name  = $this->keyLookup('grouping_name', $this->_data['FormFields']['grouping']);
             $updateModel->description    = $this->_data['FormFields']['description'];
             $updateModel->value          = $this->_data['FormFields']['value'];
             $updateModel->value_int      = $this->_data['FormFields']['value_int'];
             
-            $updateModel->is_active      = $this->_data['FormFields']['is_active'];            
-            $updateModel->is_visible     = $this->_data['FormFields']['is_visible'];     
+            $updateModel->is_active      = $this->_data['FormFields']['is_active'];
+            $updateModel->is_visible     = $this->_data['FormFields']['is_visible'];
 
             $this->_data['FormFields']['update'] = $updateModel->save();
          
@@ -887,7 +891,7 @@ class FieldsController extends BaseController
      */
     private function keyLookup($key, $value)
     {
-        $formField      = FormFields::getFormFieldOptions(-1, 'form_field', false);  
+        $formField      = FormFields::getFormFieldOptions(-1, 'form_field', false);
         $grouping       = FormFields::getDistinctGroupings();
         $isActive       = FormFields::getSelectOptions(-1, 'is_active', true);
         $isVisible      = FormFields::getSelectOptions(-1, 'is_visible', true);
