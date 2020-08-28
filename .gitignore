@@ -37,3 +37,6 @@ tests/_support/_generated
 
 #db files dir
 /db
+
+#apache file(s)
+.htaccess
