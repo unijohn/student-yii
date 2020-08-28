@@ -134,9 +134,9 @@ class BaseModel extends ActiveRecord
     const DOCUMENT_NOT_SET      = 0;
     const DOCUMENT_PERS_STMT    = 1;
     const DOCUMENT_ESSAY        = 2;
-    const DOCUMENT_LTR_REQ      = 3; 
+    const DOCUMENT_LTR_REQ      = 3;
     const DOCUMENT_MIN          = self::DOCUMENT_NOT_SET;
-    const DOCUMENT_MAX          = self::DOCUMENT_LTR_REQ;   
+    const DOCUMENT_MAX          = self::DOCUMENT_LTR_REQ;
     
     const TYPE_ITEM_NOT_SET         = 0;
     const TYPE_ITEM_FORM_FIELD      = 1;

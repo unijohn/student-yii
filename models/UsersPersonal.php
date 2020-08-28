@@ -140,24 +140,24 @@ class UsersPersonal extends BaseModel
         [
             [
                 'firstNm',  'string', 'length' => [2, 64],
-            ],       
+            ],
             [
                 'lastNm',   'string', 'length' => [2, 64],
-            ],       
+            ],
             [
                 'uNbr',     'string', 'length' => [9, 9],
-            ],                   
+            ],
             
             [
                 'us_citizen', 'number', 'min' => self::CITIZEN_OTHER_MIN,  'max' => self::CITIZEN_US_MAX,
                 'tooBig' => 'Select a valid option', 'tooSmall' => 'Select a valid option',
-//              'filter' => 'intval',                
+//              'filter' => 'intval',
             ],
             [
                 'visa_type', 'number', 'min' => self::VISA_MIN, 'max' => self::VISA_MAX,
                 'tooBig' => 'Select a valid option', 'tooSmall' => 'Select a valid option',
 //              'filter' => 'intval',
-            ],            
+            ],
             
             ['citizen_other', 'default', 'value'   => self::CITIZEN_OTHER_NO  ],
             ['citizen_other', 'string',  'min'     => self::CITIZEN_OTHER_MIN ],

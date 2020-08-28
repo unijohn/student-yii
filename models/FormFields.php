@@ -187,7 +187,7 @@ class FormFields extends BaseModel
                    'order_by', 'updated_at'
                 ],
                 'required', 'on' => self::SCENARIO_MOVE
-            ],            
+            ],
         ];
     }
 

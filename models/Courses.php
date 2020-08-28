@@ -121,22 +121,22 @@ class Courses extends BaseModel
     */
     public function rules()
     {
-        return 
+        return
         [
             [
                 'is_active',  'number', 'min' => self::STATUS_ACTIVE_MIN,  'max' => self::STATUS_ACTIVE_MAX,
                 'tooBig' => 'Select a valid option', 'tooSmall' => 'Select a valid option',
-            ],     
+            ],
             [
                 'is_visible', 'number', 'min' => self::STATUS_VISIBLE_MIN, 'max' => self::STATUS_VISIBLE_MAX,
                 'tooBig' => 'Select a valid option', 'tooSmall' => 'Select a valid option',
-            ],  
+            ],
             [
                 'is_active', 'default', 'value' => self::STATUS_ACTIVE
             ],
             [
                 'is_visible', 'default', 'value' => self::STATUS_VISIBLE
-            ],                         
+            ],
         
          
          [
