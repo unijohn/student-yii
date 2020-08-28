@@ -138,19 +138,30 @@ class UsersPersonal extends BaseModel
     {
         return
         [
-            ['us_citizen', 'default', 'value'   => self::CITIZEN_US_YES ],
-            ['us_citizen', 'integer', 'min'     => self::CITIZEN_US_NO  ],
-            ['us_citizen', 'filter',  'filter'  => 'intval'             ],
-            ['us_citizen', 'integer', 'max'     => self::CITIZEN_US_MAX ],
+            [
+                'firstNm',  'string', 'length' => [2, 64],
+            ],       
+            [
+                'lastNm',   'string', 'length' => [2, 64],
+            ],       
+            [
+                'uNbr',     'string', 'length' => [9, 9],
+            ],                   
+            
+            [
+                'us_citizen', 'number', 'min' => self::CITIZEN_OTHER_MIN,  'max' => self::CITIZEN_US_MAX,
+                'tooBig' => 'Select a valid option', 'tooSmall' => 'Select a valid option',
+//              'filter' => 'intval',                
+            ],
+            [
+                'visa_type', 'number', 'min' => self::VISA_MIN, 'max' => self::VISA_MAX,
+                'tooBig' => 'Select a valid option', 'tooSmall' => 'Select a valid option',
+//              'filter' => 'intval',
+            ],            
             
             ['citizen_other', 'default', 'value'   => self::CITIZEN_OTHER_NO  ],
             ['citizen_other', 'string',  'min'     => self::CITIZEN_OTHER_MIN ],
             ['citizen_other', 'string',  'max'     => self::CITIZEN_OTHER_MAX ],
-            
-            ['visa_type', 'default', 'value'   => self::VISA_NO  ],
-            ['visa_type', 'integer', 'min'     => self::VISA_NO  ],
-            ['visa_type', 'filter',  'filter'  => 'intval'       ],
-            ['visa_type', 'integer', 'max'     => self::VISA_MAX ],
          
             [
                 [

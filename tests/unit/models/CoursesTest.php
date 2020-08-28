@@ -31,4 +31,11 @@ class CoursesTest extends \Codeception\Test\Unit
       
       expect_not($course = Courses::existsCourse($idNotFind));      
    }
+   
+   public function testCountOfAllSubjectAreas()
+   {
+      $report = Courses::getAllSubjectAreas();
+   
+      expect(count($report))->equals(8);
+   }
 }
