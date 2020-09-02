@@ -98,10 +98,13 @@ class SiteController extends BaseController
         
             phpCAS::forceAuthentication();
 
-            $user = $userModel->findByUUID(phpCAS::getUser());
+		$uuid = phpCAS::getUser();
+
+            $user = $userModel->findByUUID( $uuid);
 
             if (!isset($user) || empty($user)) {
-                if( !$userModel->addUser( $user ) ) {
+                if( !$userModel->addUser( $uuid ) ) {
+			print( "User: $uuid"  . PHP_EOL );
                     die( "Gotta figure this logic out" );
                 }
                 else{
@@ -126,6 +129,16 @@ class SiteController extends BaseController
     
             return $this->goHome();
         } else {
+
+		$cas = new Cas('noideawtf');
+
+		// Logic To Be Determined
+		// Logging out of phpCAS logs out across all UofM properties
+		// Yii::$app->getUser()->logout() is for this application only
+		Yii::$app->getUser()->logout();
+//		phpCAS::logout(['url' => 'https://itfcbewebldev.memphis.edu/workdesk/web/' ]);
+
+		return $this->redirect(['site/index']);
         }
     }
 

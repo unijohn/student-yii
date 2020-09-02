@@ -217,21 +217,20 @@ class User extends BaseModel implements IdentityInterface
     public function addUser( $uuid = '' ) {
         
         if( !isset( $uuid ) || empty( $uuid ) ) {
+		self::debug( "What...?: $uuid", false );
             return false;
         }
 
         $newUser = new User();
         
         $newUser->uuid = $uuid;
-        $newUser->isActive = self::STATUS_ACTIVE;
+        $newUser->is_active = self::STATUS_ACTIVE;
         $newUser->generateAuthKey();
         $newUser->generateAccessToken();
-        
-        return $newUser->save();
     
+        return $newUser->save();
     }
 
-'is_active', 'auth_key', 'access_token'
 
     /**
      * @inheritdoc

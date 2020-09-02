@@ -21,12 +21,12 @@ class Cas extends Module //implements BootstrapInterface
         
         $this->_startCAS();
         
-        if( !$this->_user->isGuest ) {
-            Yii::$app->getUser()->login( $this->_user->getUser() );
-        }
-        else {
-            Yii::$app->getUser()->logout(true);
-        }
+//        if( !$this->_user->isGuest ) {
+//            Yii::$app->getUser()->login( $this->_user->getUser() );
+//        }
+//        else {
+//            Yii::$app->getUser()->logout(true);
+//        }
     }
 	    
 
