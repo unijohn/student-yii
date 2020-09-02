@@ -26,6 +26,7 @@ composer.phar
 
 # phpunit itself is not needed
 phpunit.phar
+
 # local phpunit config
 /phpunit.xml
 
@@ -40,3 +41,6 @@ tests/_support/_generated
 
 # phpdotenv
 .env
+
+#apache file(s)
+.htaccess
