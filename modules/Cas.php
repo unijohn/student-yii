@@ -66,8 +66,27 @@ class Cas extends Module //implements BootstrapInterface
 		$host       = $params['host'];
 		$port       = $params['port'];
 		$uri        = $params['uri'];
-		
-		$filename   = __DIR__ . '../../logs/phpCas.log';
+
+		if( YII_ENV_DEV ) {
+			$filename   = __DIR__ . '../../logs/phpCas.log';
+		}
+		else {
+			$filename   = '/var/www/itfcbewebldev.edu/html/workdesk/logs/phpCas.log';
+		}
+
+/*
+		if( file_exists( $filename ) ) {
+
+		}
+		else {
+			if( touch( $filename ) ){
+				echo "Yes";
+			}
+			else {
+				die( "no" );
+			}
+		}
+ */
 
 		// Enable debugging
 		phpCAS::setDebug($filename);

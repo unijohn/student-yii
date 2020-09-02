@@ -13,9 +13,9 @@ use app\controllers\BaseController;
 
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\User;
 
 use app\modules\Cas;
-
 
 class SiteController extends BaseController
 {
@@ -78,7 +78,7 @@ class SiteController extends BaseController
      */
     public function actionLogin()
     {
-        if (!YII_ENV_DEV) {    
+        if (!CAS_ENABLED) {
     
 //            self::debug("step one [DEV]", false );
     
@@ -95,14 +95,22 @@ class SiteController extends BaseController
             return $this->render('login', [
                 'model' => $model,
             ]);
-        }
-        else {       
+        } else {
+            $userModel = new User();
             $cas = new Cas('noideawtf');
         
-//            self::debug("step one [!DEV]", false );    
-            
-    		phpCAS::forceAuthentication();
-    		return $this->goBack();                
+            phpCAS::forceAuthentication();
+
+            $user = $userModel->findByUUID(phpCAS::getUser());
+
+            if (!isset($user) || empty($user)) {
+                die("User Insert Code");
+            }
+
+        
+
+            Yii::$app->getUser()->login($user);
+//    		return $this->goBack();
         }
     }
 
@@ -113,13 +121,11 @@ class SiteController extends BaseController
      */
     public function actionLogout()
     {
-        if (YII_ENV_DEV) {    
+        if (!CAS_ENABLED) {
             Yii::$app->user->logout();
     
             return $this->goHome();
-        }
-        else {
-        
+        } else {
         }
     }
 

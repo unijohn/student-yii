@@ -67,9 +67,9 @@ class BaseController extends Controller
          *  Also discovered infinite loop if SiteController extends BaseController.
          *  Hence this workaround to only redirect null user->identities once.  Hopefully.
          **/
-        if (is_null(Yii::$app->user->identity) && !isset($this->_session['redirect']) ) {
+        if (is_null(Yii::$app->user->identity) && !isset($this->_session['redirect'])) {
             $this->_session->open();
-            $this->_session['redirect'] = true;            
+            $this->_session['redirect'] = true;
             $this->_session->close();
         
             /* /site/index works but trying to learn named routes syntax */
