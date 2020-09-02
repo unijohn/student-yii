@@ -212,6 +212,28 @@ class User extends BaseModel implements IdentityInterface
 
 
     /**
+     *  New user via CAS access; needs User entry
+     **/
+    public function addUser( $uuid = '' ) {
+        
+        if( !isset( $uuid ) || empty( $uuid ) ) {
+            return false;
+        }
+
+        $newUser = new User();
+        
+        $newUser->uuid = $uuid;
+        $newUser->isActive = self::STATUS_ACTIVE;
+        $newUser->generateAuthKey();
+        $newUser->generateAccessToken();
+        
+        return $newUser->save();
+    
+    }
+
+'is_active', 'auth_key', 'access_token'
+
+    /**
      * @inheritdoc
      */
     public static function findIdentity($id)

@@ -78,10 +78,7 @@ class SiteController extends BaseController
      */
     public function actionLogin()
     {
-        if (!CAS_ENABLED) {
-    
-//            self::debug("step one [DEV]", false );
-    
+        if (!CAS_ENABLED) {    
             if (!Yii::$app->user->isGuest) {
                 return $this->goHome();
             }
@@ -104,13 +101,16 @@ class SiteController extends BaseController
             $user = $userModel->findByUUID(phpCAS::getUser());
 
             if (!isset($user) || empty($user)) {
-                die("User Insert Code");
+                if( !$userModel->addUser( $user ) ) {
+                    die( "Gotta figure this logic out" );
+                }
+                else{
+                    $user = $userModel->findByUUID(phpCAS::getUser());
+                }
             }
 
-        
-
             Yii::$app->getUser()->login($user);
-//    		return $this->goBack();
+            return $this->goHome();
         }
     }
 
