@@ -4,7 +4,7 @@ return [
     'adminEmail'    => 'fcbeweb@memphis.edu',
     'senderEmail'   => 'noreply@memphis.edu',
     'senderName'    => 'FCBE Workdesk',
-    
+
     'cas'   =>
     [
         // Required in phpCAS config, but probably not needed in this instance

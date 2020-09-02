@@ -118,9 +118,15 @@ $config = [
         'urlManager' => [
             'class'           => 'yii\web\UrlManager',
             'enablePrettyUrl' => true,
-            'showScriptName'  => false,
+            
+            // dev:         showScriptName => true
+            // test/prod:   showScriptName => false
+            'showScriptName' => false,
+            'enableStrictParsing' => false,
             'rules' => [
 //               'home' => '/site/index',
+                'login'     => 'site/login',
+                'users'     => 'users/index',
             ],
         ],
         
@@ -130,6 +136,8 @@ $config = [
 
 if (YII_ENV_DEV) {
     // configuration adjustments for 'dev' environment
+    $config['components']['urlManager']['showScriptName'] = true;
+    
     $config['bootstrap'][] = 'debug';
     $config['modules']['debug'] = [
         'class' => 'yii\debug\Module',
