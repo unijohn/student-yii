@@ -53,14 +53,6 @@ class BaseController extends Controller
     {
         parent::init();
       
-        /**
-         *  Quick fix for cookie timeout
-         **/
-        if (is_null(Yii::$app->user->identity)) {
-            /* /site/index works but trying to learn named routes syntax */
-            return $this->redirect(['/site/index']);
-        }
-      
         $this->_auth        = Yii::$app->authManager;
         $this->_cookies     = Yii::$app->response->cookies;
         $this->_db          = Yii::$app->db;
@@ -68,6 +60,21 @@ class BaseController extends Controller
         $this->_session     = Yii::$app->session;
         $this->_view        = Yii::$app->view;
         $this->_user        = Yii::$app->user;
+
+        /**
+         *  Quick fix for cookie timeout
+         *
+         *  Also discovered infinite loop if SiteController extends BaseController.
+         *  Hence this workaround to only redirect null user->identities once.  Hopefully.
+         **/
+        if (is_null(Yii::$app->user->identity) && !isset($this->_session['redirect']) ) {
+            $this->_session->open();
+            $this->_session['redirect'] = true;            
+            $this->_session->close();
+        
+            /* /site/index works but trying to learn named routes syntax */
+            return $this->redirect(['/site/index']);
+        }
 
         $this->_data             = [];
         $this->_dataProvider     = [];

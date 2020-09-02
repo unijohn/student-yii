@@ -2,15 +2,22 @@
 
 namespace app\controllers;
 
+use phpCAS;
+
 use Yii;
 use yii\filters\AccessControl;
-use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
+
+use app\controllers\BaseController;
+
 use app\models\LoginForm;
 use app\models\ContactForm;
 
-class SiteController extends Controller
+use app\modules\Cas;
+
+
+class SiteController extends BaseController
 {
     /**
      * {@inheritdoc}
@@ -71,19 +78,32 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
+        if (!YII_ENV_DEV) {    
+    
+//            self::debug("step one [DEV]", false );
+    
+            if (!Yii::$app->user->isGuest) {
+                return $this->goHome();
+            }
+    
+            $model = new LoginForm();
+            if ($model->load(Yii::$app->request->post()) && $model->login(Yii::$app->user, 3660)) {
+                return $this->goBack();
+            }
+    
+            $model->password = '';
+            return $this->render('login', [
+                'model' => $model,
+            ]);
         }
-
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login(Yii::$app->user, 3660)) {
-            return $this->goBack();
+        else {       
+            $cas = new Cas('noideawtf');
+        
+//            self::debug("step one [!DEV]", false );    
+            
+    		phpCAS::forceAuthentication();
+    		return $this->goBack();                
         }
-
-        $model->password = '';
-        return $this->render('login', [
-            'model' => $model,
-        ]);
     }
 
     /**
@@ -93,9 +113,14 @@ class SiteController extends Controller
      */
     public function actionLogout()
     {
-        Yii::$app->user->logout();
-
-        return $this->goHome();
+        if (YII_ENV_DEV) {    
+            Yii::$app->user->logout();
+    
+            return $this->goHome();
+        }
+        else {
+        
+        }
     }
 
     /**
