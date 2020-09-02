@@ -44,7 +44,7 @@ $config = [
                     ]
                 ],
             ],
-        ],    
+        ], 
         'user' => [
             'class' => 'yii\web\User',
             
@@ -130,6 +130,13 @@ $config = [
             ],
         ],
         
+    ],
+    'modules' =>
+    [
+        'cas' => 
+        [
+            'class' => 'app\modules\Cas',
+        ],
     ],
     'params' => $params,
 ];

@@ -14,11 +14,13 @@ return [
         'host'          => 'sso.memphis.edu',
         
         // Port of your CAS server. Normally for a https server it's 443
-        'port'          => '443',
+        'port'          => 443,
         
         // Context of the CAS Server
         'uri'           => '/idp/profile/cas/',
         'context'       => '/idp/profile/cas/',  // Duplicate entries for now: 2 Sept 2020
+        
+        'log_file'      => '', // Set within module
         
         // Path to the ca chain that issued the cas server certificate
         'ca_cert_path'  => 'ssl/sso-memphis-edu-chain.pem',
