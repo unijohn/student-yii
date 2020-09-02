@@ -78,7 +78,7 @@ class SiteController extends BaseController
      */
     public function actionLogin()
     {
-        if (!CAS_ENABLED) {    
+        if (!CAS_ENABLED) {
             if (!Yii::$app->user->isGuest) {
                 return $this->goHome();
             }
@@ -98,16 +98,15 @@ class SiteController extends BaseController
         
             phpCAS::forceAuthentication();
 
-		$uuid = phpCAS::getUser();
+            $uuid = phpCAS::getUser();
 
-            $user = $userModel->findByUUID( $uuid);
+            $user = $userModel->findByUUID($uuid);
 
             if (!isset($user) || empty($user)) {
-                if( !$userModel->addUser( $uuid ) ) {
-			print( "User: $uuid"  . PHP_EOL );
-                    die( "Gotta figure this logic out" );
-                }
-                else{
+                if (!$userModel->addUser($uuid)) {
+                    print("User: $uuid"  . PHP_EOL);
+                    die("Gotta figure this logic out");
+                } else {
                     $user = $userModel->findByUUID(phpCAS::getUser());
                 }
             }
@@ -129,16 +128,15 @@ class SiteController extends BaseController
     
             return $this->goHome();
         } else {
+            $cas = new Cas('noideawtf');
 
-		$cas = new Cas('noideawtf');
+            // Logic To Be Determined
+            // Logging out of phpCAS logs out across all UofM properties
+            // Yii::$app->getUser()->logout() is for this application only
+            Yii::$app->getUser()->logout();
+            //		phpCAS::logout(['url' => 'https://itfcbewebldev.memphis.edu/workdesk/web/' ]);
 
-		// Logic To Be Determined
-		// Logging out of phpCAS logs out across all UofM properties
-		// Yii::$app->getUser()->logout() is for this application only
-		Yii::$app->getUser()->logout();
-//		phpCAS::logout(['url' => 'https://itfcbewebldev.memphis.edu/workdesk/web/' ]);
-
-		return $this->redirect(['site/index']);
+            return $this->redirect(['site/index']);
         }
     }
 

@@ -214,10 +214,10 @@ class User extends BaseModel implements IdentityInterface
     /**
      *  New user via CAS access; needs User entry
      **/
-    public function addUser( $uuid = '' ) {
-        
-        if( !isset( $uuid ) || empty( $uuid ) ) {
-		self::debug( "What...?: $uuid", false );
+    public function addUser($uuid = '')
+    {
+        if (!isset($uuid) || empty($uuid)) {
+            self::debug("What...?: $uuid", false);
             return false;
         }
 
