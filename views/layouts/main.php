@@ -164,7 +164,22 @@ $this->title = "FCBE Workdesk";
     <div>
       <h2>Scratchpad</h2>
       <pre>
+      
 <?php
+    if( ENV_SHOW_ENV_VALUES ) {
+        print_r( $_ENV );
+    }
+    
+    if( ENV_SHOW_COOKIE_VALUES ) {
+        $cookies = Yii::$app->request->cookies;
+        print_r( $cookies );    
+    }
+    
+    if( ENV_SHOW_SESSION_VALUES ) {
+        $session = Yii::$app->session;
+        print_r( $session );    
+    }
+
 /*
     $cookies = Yii::$app->request->cookies;
     print_r( $cookies );
@@ -187,11 +202,7 @@ $this->title = "FCBE Workdesk";
  */
  
  ?>
-
-<?php
-//   print_r( $session );
- ?>
-
+ 
       </pre>
     </div>
 </div>
