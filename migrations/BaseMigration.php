@@ -10,66 +10,68 @@ use yii\rbac\DbManager;
 
 class BaseMigration extends Migration
 {
-    const STATUS_INACTIVE      = 0;
-    const STATUS_ACTIVE        = 1;
+    const STATUS_INACTIVE       = 0;
+    const STATUS_ACTIVE         = 1;
    
-    const STATUS_HIDDEN        = 0;
-    const STATUS_VISIBLE       = 1;
+    const STATUS_HIDDEN         = 0;
+    const STATUS_VISIBLE        = 1;
 
-    const SYS_FRAMEWORKID      = 1;
-    const SYS_STUDENTID        = 2;
-    const SYS_FACULTYID        = 3;
-    const SYS_ADMINISTRATIONID = 4;
+    const SYS_FRAMEWORKID       = 1;
+    const SYS_STUDENTID         = 2;
+    const SYS_FACULTYID         = 3;
+    const SYS_ADMINISTRATIONID  = 4;
    
-    const CL_UGADID            = 1;
-    const CL_GRADID            = 2;
-    const CL_PHDID             = 3;
+    const CL_UGADID             = 1;
+    const CL_GRADID             = 2;
+    const CL_PHDID              = 3;
 
-    const DEPT_ACCT            = 1;
-    const DEPT_ECON            = 2;
-    const DEPT_FIN             = 3;
-    const DEPT_BIT             = 4;
-    const DEPT_MGMT            = 5;
-    const DEPT_MCSM            = 6;
+    const DEPT_ACCT             = 1;
+    const DEPT_ECON             = 2;
+    const DEPT_FIN              = 3;
+    const DEPT_BIT              = 4;
+    const DEPT_MGMT             = 5;
+    const DEPT_MCSM             = 6;
 
-    const FEATURE_PERMIT       = 1;
-    const FEATURE_GAAAP        = 2;
-    const FEATURE_SYLLA        = 3;
+    const FEATURE_PERMIT        = 1;
+    const FEATURE_GAAAP         = 2;
+    const FEATURE_SYLLA         = 3;
+    const FEATURE_COURSEASSIGN  = 4;
 
-    const ACTION_ACCESS        = 1;
-    const ACTION_CREATE        = 2;
-    const ACTION_READ          = 3;
-    const ACTION_UPDATE        = 4;
-    const ACTION_sDELETE       = 5;
-    const ACTION_hDELETE       = 6;
-    const ACTION_BACKUP        = 7;
-    const ACTION_ROLE          = 8;
-    const ACTION_SYNCH         = 9;
-    const ACTION_MANAGE        = 10;
+    const ACTION_ACCESS         = 1;
+    const ACTION_CREATE         = 2;
+    const ACTION_READ           = 3;
+    const ACTION_UPDATE         = 4;
+    const ACTION_sDELETE        = 5;
+    const ACTION_hDELETE        = 6;
+    const ACTION_BACKUP         = 7;
+    const ACTION_ROLE           = 8;
+    const ACTION_SYNCH          = 9;
+    const ACTION_MANAGE         = 10;
    
-    const ROLE_ADMIN           = 1;
-    const ROLE_UGAD_STUDENT    = 2;
-    const ROLE_GRAD_STUDENT    = 3;
-    const ROLE_PHD_STUDENT     = 4;
-    const ROLE_UGAD_ADVISOR    = 5;
-    const ROLE_GRAD_ADVISOR    = 6;
-    const ROLE_PHD_ADVISOR     = 7;
+    const ROLE_ADMIN            = 1;
+    const ROLE_GENERIC          = 2;
+    const ROLE_UGAD_STUDENT     = 2;
+    const ROLE_GRAD_STUDENT     = 3;
+    const ROLE_PHD_STUDENT      = 4;
+    const ROLE_UGAD_ADVISOR     = 5;
+    const ROLE_GRAD_ADVISOR     = 6;
+    const ROLE_PHD_ADVISOR      = 7;
    
-    const TYPE_PERMIT          = 1;
-    const TYPE_DEPARTMENT      = 2;
-    const TYPE_CAREERLEVEL     = 3;
-    const TYPE_MASTERS         = 4;
+    const TYPE_PERMIT           = 1;
+    const TYPE_DEPARTMENT       = 2;
+    const TYPE_CAREERLEVEL      = 3;
+    const TYPE_MASTERS          = 4;
    
-    const CITIZEN_US_NO        = 0;
-    const CITIZEN_US_YES       = 1;
+    const CITIZEN_US_NO         = 0;
+    const CITIZEN_US_YES        = 1;
    
-    const CITIZEN_OTHER_NO     = 0;
-    const CITIZEN_OTHER_YES    = 1;
+    const CITIZEN_OTHER_NO      = 0;
+    const CITIZEN_OTHER_YES     = 1;
    
-    const VISA_NO              = 0;
-    const VISA_F1              = 1;
-    const VISA_F2              = 2;
-    const VISA_F3              = 3;
+    const VISA_NO               = 0;
+    const VISA_F1               = 1;
+    const VISA_F2               = 2;
+    const VISA_F3               = 3;
     
     const TYPE_PROMPT_DEFAULT   = -1;
     
