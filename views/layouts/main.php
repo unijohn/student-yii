@@ -167,7 +167,9 @@ $this->title = "FCBE Workdesk";
       
 <?php
     if( ENV_SHOW_ENV_VALUES ) {
-        print_r( $_ENV );
+//        print_r( $_ENV );
+	print( "DW_USE: " . $_ENV['DW_USE'] . PHP_EOL );
+	print( "DW_DB_HOST: " . $_ENV['DW_DB_HOST'] . PHP_EOL );
     }
     
     if( ENV_SHOW_COOKIE_VALUES ) {
