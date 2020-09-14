@@ -44,5 +44,8 @@ tests/_support/_generated
 # phpdotenv
 .env
 
+# mostly more env settings
+web/index.php
+
 #apache file(s)
 .htaccess
