@@ -168,28 +168,33 @@ $this->title = "FCBE Workdesk";
 <?php
     if( ENV_SHOW_ENV_VALUES ) {
 //        print_r( $_ENV );
-	print( "DW_USE: " . $_ENV['DW_USE'] . PHP_EOL );
+        print( "DW_USE: " . $_ENV['DW_USE'] . PHP_EOL );
 
-	$serverName = $_ENV['DW_DB_HOST'];  
-	$connectionInfo =
-	[
-	  "Database" => $_ENV['DW_DB_NAME'],
-	  "UID" => $_ENV['DW_DB_USER'],
-	  "PWD" => $_ENV['DW_DB_PASS'],
-	  "CharacterSet" => "UTF-8",
-	];
-	$conn = sqlsrv_connect( $serverName, $connectionInfo);
+        if( $_ENV['DW_USE'] ) {
+            $serverName = $_ENV['DW_DB_HOST'];  
+            $connectionInfo =
+            [
+                "Database"      => $_ENV['DW_DB_NAME'],
+                "UID"           => $_ENV['DW_DB_USER'],
+                "PWD"           => $_ENV['DW_DB_PASS'],
+                "CharacterSet"  => "UTF-8",
+	        ];
+	        
+	        if( function_exists( 'sqlsrv_connect' ) ){
+                $conn = sqlsrv_connect( $serverName, $connectionInfo);
 
-	if( $conn ) {
-		print( "DW Status:  <strong>Connected</strong>" . PHP_EOL );
-	}else{
-		print( "DW Status:  <span style='color: red;'>Error Detected</span>" . PHP_EOL );
-		print( "DW_DB_HOST: " . $_ENV['DW_DB_HOST'] . PHP_EOL );
-		print( "DW_DB_USER: " . $_ENV['DW_DB_USER'] . PHP_EOL );
-		print( "DW_DB_NAME: " . $_ENV['DW_DB_NAME'] . PHP_EOL );
-
-		print_r( sqlsrv_errors() );
-	}
+            	if( $conn ) {
+            		print( "DW Status:  <strong>Connected</strong>" . PHP_EOL );
+            	} else {
+            		print( "DW Status:  <span style='color: red;'>Error Detected</span>" . PHP_EOL );
+            		print( "DW_DB_HOST: " . $_ENV['DW_DB_HOST'] . PHP_EOL );
+            		print( "DW_DB_USER: " . $_ENV['DW_DB_USER'] . PHP_EOL );
+            		print( "DW_DB_NAME: " . $_ENV['DW_DB_NAME'] . PHP_EOL );
+            
+            		print_r( sqlsrv_errors() );
+            	}
+            }
+        }
     }
     
     if( ENV_SHOW_COOKIE_VALUES ) {
