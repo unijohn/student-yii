@@ -159,9 +159,9 @@ class UsersPersonal extends BaseModel
 //              'filter' => 'intval',
             ],
             
-            ['citizen_other', 'default', 'value'   => self::CITIZEN_OTHER_NO  ],
-            ['citizen_other', 'string',  'min'     => self::CITIZEN_OTHER_MIN ],
-            ['citizen_other', 'string',  'max'     => self::CITIZEN_OTHER_MAX ],
+            [
+        'citizen_other', 'string', 'length'  => [1, 16],
+            ],
          
             [
                 [
@@ -192,9 +192,15 @@ class UsersPersonal extends BaseModel
         $newUser->lastNm        = "TBS-Last";
         $newUser->middleNm      = "TBS-MI";
         $newUser->salutation    = "TB.";
-        $newUser->us_citizen    = self::CITIZEN_US_YES;     
-        $newUser->citizen_other = self::CITIZEN_OTHER_NO;        
-        $newUser->visa_type     = self::VISA_NO;   
+        $newUser->us_citizen    = intval(self::CITIZEN_US_YES);
+        $newUser->citizen_other = strval(self::CITIZEN_OTHER_NO);
+        $newUser->visa_type     = intval(self::VISA_NO);
+
+        if ($newUser->validate()) {
+            return $newUser->save();
+        } else {
+            self::debug($newUser->errors);
+        }
     
         return $newUser->save();
     }
