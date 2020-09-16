@@ -124,7 +124,7 @@ class UsersPersonal extends BaseModel
     public function scenarios()
     {
         $scenarios = parent::scenarios();
-        $scenarios[self::SCENARIO_INSERT] = [ 'uuid', 'uNbr', 'firstNm', 'lastNm', 'us_citizen', 'citizen_other', 'created_at', ];
+        $scenarios[self::SCENARIO_INSERT] = [ 'uuid', 'uNbr', 'firstNm', 'lastNm', 'us_citizen', 'citizen_other', 'visa_type', 'created_at', ];
         $scenarios[self::SCENARIO_UPDATE] = [ 'uNbr', 'firstNm', 'lastNm', 'us_citizen', 'citizen_other', 'updated_at', ];
    
         return $scenarios;
@@ -170,6 +170,33 @@ class UsersPersonal extends BaseModel
                 'required', 'on' => self::SCENARIO_UPDATE
             ],
         ];
+    }
+
+
+    /**
+     *  New user via CAS access; needs UsersPersonal entry
+     **/
+    public function addPersonal($uuid = '')
+    {
+        if (!isset($uuid) || empty($uuid)) {
+            self::debug("What...?  How...?: $uuid", false);
+            return false;
+        }
+
+        $newUser = new UsersPersonal();
+        
+        $newUser->uuid = $uuid;
+
+        $newUser->uNbr          = "U87654321";
+        $newUser->firstNm       = "TBS-First";
+        $newUser->lastNm        = "TBS-Last";
+        $newUser->middleNm      = "TBS-MI";
+        $newUser->salutation    = "TB.";
+        $newUser->us_citizen    = self::CITIZEN_US_YES;     
+        $newUser->citizen_other = self::CITIZEN_OTHER_NO;        
+        $newUser->visa_type     = self::VISA_NO;   
+    
+        return $newUser->save();
     }
 
 

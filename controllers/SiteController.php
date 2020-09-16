@@ -14,6 +14,7 @@ use app\controllers\BaseController;
 use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\User;
+use app\models\UsersPersonal;
 
 use app\modules\Cas;
 
@@ -93,7 +94,8 @@ class SiteController extends BaseController
                 'model' => $model,
             ]);
         } else {
-            $userModel = new User();
+            $userModel          = new User();
+            $userPersonalModel  = new UsersPersonal();
             $cas = new Cas('noideawtf');
         
             phpCAS::forceAuthentication();
@@ -101,13 +103,24 @@ class SiteController extends BaseController
             $uuid = phpCAS::getUser();
 
             $user = $userModel->findByUUID($uuid);
+            
+            self::debug( "userModel->findByUUID($uuid)", false );
 
             if (!isset($user) || empty($user)) {
                 if (!$userModel->addUser($uuid)) {
                     print("User: $uuid"  . PHP_EOL);
                     die("Gotta figure this logic out");
                 } else {
-                    $user = $userModel->findByUUID(phpCAS::getUser());
+                    $userPersonal = $userPersonalModel->existsPersonal( $uuid );
+                    self::debug( $userPersonal . ": Before userPersonalModel->addPersonal($uuid)", false );
+                
+                    if( !$userPersonalModel->addPersonal($uuid)) {
+                        print("UserPersonal: $uuid"  . PHP_EOL);
+                        die("Gotta figure this logic out [2]");
+                    }
+                    else{                   
+                        $user = $userModel->findByUUID(phpCAS::getUser());
+                    }
                 }
             }
 
