@@ -104,21 +104,21 @@ class SiteController extends BaseController
 
             $user = $userModel->findByUUID($uuid);
             
-            self::debug( "userModel->findByUUID($uuid)", false );
+            self::debug("userModel->findByUUID($uuid)", false);
 
             if (!isset($user) || empty($user)) {
                 if (!$userModel->addUser($uuid)) {
                     print("User: $uuid"  . PHP_EOL);
                     die("Gotta figure this logic out");
                 } else {
-                    $userPersonal = $userPersonalModel->existsPersonal( $uuid );
-                    self::debug( $userPersonal . ": Before userPersonalModel->addPersonal($uuid)", false );
+                    $userPersonal = $userPersonalModel->existsPersonal($uuid);
+                    self::debug($userPersonal . ": Before userPersonalModel->addPersonal($uuid)", false);
                 
-                    if( !$userPersonalModel->addPersonal($uuid)) {
-                        print("UserPersonal: $uuid"  . PHP_EOL);
+                    if (!$userPersonalModel->addPersonal($uuid)) {
+                        print("UserPersonal->addPersonal failed: $uuid"  . PHP_EOL);
+                        self::debug($userPersonalModel->errors, false);
                         die("Gotta figure this logic out [2]");
-                    }
-                    else{                   
+                    } else {
                         $user = $userModel->findByUUID(phpCAS::getUser());
                     }
                 }

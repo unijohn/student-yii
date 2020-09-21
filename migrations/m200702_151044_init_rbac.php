@@ -16,30 +16,30 @@ class m200702_151044_init_rbac extends BaseMigration
          *    createPermissions:  systems level
          **/
 
-        $systemsAccess = 
+        $systemsAccess =
         [
-            self::SYS_FRAMEWORKID => 
+            self::SYS_FRAMEWORKID =>
             [
                 'id'           => self::SYS_FRAMEWORKID,
                 'key'          => '[Framework]',
                 'name'         => '[Framework]',
                 'description'  => 'Framework selfServe',
             ],
-            self::SYS_STUDENTID => 
+            self::SYS_STUDENTID =>
             [
                 'id'           => self::SYS_STUDENTID,
                 'key'          => '[Student]',
                 'name'         => '[Student]',
                 'description'  => 'Student selfServe',
             ],
-            self::SYS_FACULTYID => 
+            self::SYS_FACULTYID =>
             [
                 'id'           => self::SYS_FACULTYID,
                 'name'         => '[Faculty]',
                 'key'          => '[Faculty]',
                 'description'  => 'Faculty selfServe',
             ],
-            self::SYS_ADMINISTRATIONID => 
+            self::SYS_ADMINISTRATIONID =>
             [
                 'id'           => self::SYS_ADMINISTRATIONID,
                 'name'         => '[Administration]',
@@ -48,23 +48,23 @@ class m200702_151044_init_rbac extends BaseMigration
             ],
         ];
       
-        $careerLevelAccess = 
+        $careerLevelAccess =
         [
-            self::CL_UGADID => 
+            self::CL_UGADID =>
             [
                 'id'           => self::CL_UGADID,
                 'name'         => '[UGAD]',
                 'key'          => '[UGAD]',
                 'description'  => 'Undergraduate Career Level',
             ],
-            self::CL_GRADID => 
+            self::CL_GRADID =>
             [
                 'id'           => self::CL_GRADID,
                 'name'         => '[GRAD]',
                 'key'          => '[GRAD]',
                 'description'  => 'Graduate Career Level',
             ],
-            self::CL_PHDID => 
+            self::CL_PHDID =>
             [
                 'id'           => self::CL_PHDID,
                 'name'         => '[PHD]',
@@ -73,44 +73,44 @@ class m200702_151044_init_rbac extends BaseMigration
             ],
         ];
 
-        $departmentAccess = 
+        $departmentAccess =
         [
-            self::DEPT_ACCT => 
+            self::DEPT_ACCT =>
             [
                 'id'              => self::DEPT_ACCT,
                 'key'             => '[ACCT]',
                 'name'            => '[ACCT]',
                 'description'     => 'Accounting Department',
             ],
-            self::DEPT_ECON => 
+            self::DEPT_ECON =>
             [
                 'id'              => self::DEPT_ECON,
                 'key'             => '[ECON]',
                 'name'            => '[ECON]',
                 'description'     => 'Economics Department',
             ],
-            self::DEPT_FIN => 
+            self::DEPT_FIN =>
             [
                 'id'              => self::DEPT_FIN,
                 'key'             => '[FIN]',
                 'name'            => '[FIN]',
                 'description'     => 'Finance Department',
             ],
-            self::DEPT_BIT => 
+            self::DEPT_BIT =>
             [
                 'id'              => self::DEPT_BIT,
                 'key'             => '[BIT]',
                 'name'            => '[BIT]',
                 'description'     => 'BIT Department',
             ],
-            self::DEPT_MGMT => 
+            self::DEPT_MGMT =>
             [
                 'id'              => self::DEPT_MGMT,
                 'key'             => '[MGMT]',
                 'name'            => '[MGMT]',
                 'description'     => 'Management Department',
             ],
-            self::DEPT_MCSM => 
+            self::DEPT_MCSM =>
             [
                 'id'              => self::DEPT_MCSM,
                 'key'             => '[MCSM]',
@@ -119,30 +119,30 @@ class m200702_151044_init_rbac extends BaseMigration
             ],
         ];
       
-        $featureAccess = 
+        $featureAccess =
         [
-            self::FEATURE_PERMIT => 
+            self::FEATURE_PERMIT =>
             [
                 'id'              => self::FEATURE_PERMIT,
                 'key'             => '[Permit]',
                 'name'            => '[Permit]',
                 'description'     => 'Permit Feature',
             ],
-            self::FEATURE_GAAAP => 
+            self::FEATURE_GAAAP =>
             [
                 'id'              => self::FEATURE_GAAAP,
                 'key'             => '[GAApp]',
                 'name'            => '[GAApp]',
                 'description'     => 'Graduate Assistant Applications',
             ],
-            self::FEATURE_SYLLA => 
+            self::FEATURE_SYLLA =>
             [
                 'id'              => self::FEATURE_SYLLA,
                 'key'             => '[Sylla]',
                 'name'            => '[Sylla]',
                 'description'     => 'Course Syllabi',
             ],
-            self::FEATURE_COURSEASSIGN => 
+            self::FEATURE_COURSEASSIGN =>
             [
                 'id'              => self::FEATURE_COURSEASSIGN,
                 'key'             => '[RAssign]',
@@ -151,72 +151,72 @@ class m200702_151044_init_rbac extends BaseMigration
             ],
         ];
 
-        $actionAccess = 
+        $actionAccess =
         [
-            self::ACTION_ACCESS => 
+            self::ACTION_ACCESS =>
             [
                 'id'           => self::ACTION_ACCESS,
                 'key'          => '[Access]',
                 'name'         => '[Access]',
                 'description'  => '(System) Access Permission',
             ],
-            self::ACTION_CREATE => 
+            self::ACTION_CREATE =>
             [
                 'id'           => self::ACTION_CREATE,
                 'key'          => '[Create]',
                 'name'         => '[Create]',
                 'description'  => 'Create Permission',
             ],
-            self::ACTION_READ => 
+            self::ACTION_READ =>
             [
                 'id'           => self::ACTION_READ,
                 'key'          => '[Read]',
                 'name'         => '[Read]',
                 'description'  => 'Read-Only Permission',
             ],
-            self::ACTION_UPDATE => 
+            self::ACTION_UPDATE =>
             [
                 'id'           => self::ACTION_UPDATE,
                 'key'          => '[Update]',
                 'name'         => '[Update]',
                 'description'  => 'Update Permission',
             ],
-            self::ACTION_sDELETE => 
+            self::ACTION_sDELETE =>
             [
                 'id'           => self::ACTION_sDELETE,
                 'key'          => '[sDelete]',
                 'name'         => '[sDelete]',
                 'description'  => 'Soft-Delete (flag) Permission',
             ],
-            self::ACTION_hDELETE => 
+            self::ACTION_hDELETE =>
             [
                 'id'           => self::ACTION_hDELETE,
                 'key'          => '[hDelete]',
                 'name'         => '[hDelete]',
                 'description'  => 'Hard-Delete (row removal) Permission',
             ],
-            self::ACTION_BACKUP => 
+            self::ACTION_BACKUP =>
             [
                 'id'           => self::ACTION_BACKUP,
                 'key'          => '[Backup]',
                 'name'         => '[Backup]',
                 'description'  => 'Remote Backup Permission',
             ],
-            self::ACTION_ROLE => 
+            self::ACTION_ROLE =>
             [
                 'id'           => self::ACTION_ROLE,
                 'key'          => '[Role]',
                 'name'         => '[Role]',
                 'description'  => 'Role Assignment Permission',
             ],
-            self::ACTION_SYNCH => 
+            self::ACTION_SYNCH =>
             [
                 'id'           => self::ACTION_SYNCH,
                 'key'          => '[Synch]',
                 'name'         => '[Synch]',
                 'description'  => 'Data Warehouse Sync Permission',
             ],
-            self::ACTION_MANAGE => 
+            self::ACTION_MANAGE =>
             [
                 'id'           => self::ACTION_MANAGE,
                 'key'          => '[Manage]',
@@ -231,19 +231,19 @@ class m200702_151044_init_rbac extends BaseMigration
         foreach ($systemsAccess as $system) {
             foreach ($actionAccess as $action) {
                 foreach ($careerLevelAccess as $career) {
-                    $newPermission = 
+                    $newPermission =
                     [
-                        'system'          => 
+                        'system'          =>
                         [
                             'name'         => $system['name'],
                             'description'  => $system['description'],
                         ],
-                        'action'          => 
+                        'action'          =>
                         [
                             'name'         => $action['name'],
                             'description'  => $action['description'],
                         ],
-                        'career'          => 
+                        'career'          =>
                         [
                             'name'         => $career['name'],
                             'description'  => $career['description'],
@@ -255,19 +255,19 @@ class m200702_151044_init_rbac extends BaseMigration
                 }
                     
                 foreach ($departmentAccess as $department) {
-                    $newPermission = 
+                    $newPermission =
                     [
-                        'system'       => 
+                        'system'       =>
                         [
                             'name'         => $system['name'],
                             'description'  => $system['description'],
                         ],
-                        'action'       => 
+                        'action'       =>
                         [
                             'name'         => $action['name'],
                             'description'  => $action['description'],
                         ],
-                        'department'   => 
+                        'department'   =>
                         [
                             'name'         => $department['name'],
                             'description'  => $department['description'],
@@ -279,19 +279,19 @@ class m200702_151044_init_rbac extends BaseMigration
                 }
                     
                 foreach ($featureAccess as $feature) {
-                    $newPermission = 
+                    $newPermission =
                     [
-                        'system'          => 
+                        'system'          =>
                         [
                             'name'         => $system['name'],
                             'description'  => $system['description'],
                         ],
-                        'action'          => 
+                        'action'          =>
                         [
                             'name'         => $action['name'],
                             'description'  => $action['description'],
                         ],
-                        'feature'         => 
+                        'feature'         =>
                         [
                             'name'         => $feature['name'],
                             'description'  => $feature['description'],
@@ -348,32 +348,32 @@ class m200702_151044_init_rbac extends BaseMigration
             $permAuthList[$newKey] = $newAuthItem;
         }
  
-        $roleAccess = 
+        $roleAccess =
         [
-            self::ROLE_ADMIN => 
+            self::ROLE_ADMIN =>
             [
                 'id'              =>self::ROLE_ADMIN,
                 'name'            => 'Framework-Administrator',
                 'description'     => 'Framework Administrator (10)',
                 'allEverything'   => true,
             ],
-            self::ROLE_GENERIC => 
+            self::ROLE_GENERIC =>
             [
                 'id'              =>self::ROLE_GENERIC,
                 'name'            => 'Generic | Unknown User',
                 'description'     => 'Unidentified User (0)',
                 'allEverything'   => false,
-                'permissions'     => 
+                'permissions'     =>
                 [
                 ],
             ],
-            self::ROLE_UGAD_STUDENT => 
+            self::ROLE_UGAD_STUDENT =>
             [
                 'id'              => self::ROLE_UGAD_STUDENT,
                 'name'            => 'Student-Undergraduate',
                 'description'     => 'Undergraduate Student (1)',
                 'allEverything'   => false,
-                'permissions'     => 
+                'permissions'     =>
                 [
                     //    2:  Student Self Serve                . 1: Access                         . 1:  Permits
                     $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_ACCESS]['key'] . $featureAccess[self::FEATURE_PERMIT]['key'],
@@ -382,13 +382,13 @@ class m200702_151044_init_rbac extends BaseMigration
                     $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_ACCESS]['key'] . $careerLevelAccess[self::CL_UGADID]['key'],
                 ],
             ],
-            self::ROLE_GRAD_STUDENT => 
+            self::ROLE_GRAD_STUDENT =>
             [
                 'id'              => self::ROLE_GRAD_STUDENT,
                 'name'            => 'Student-Graduate',
                 'description'     => 'Graduate Student (1)',
                 'allEverything'   => false,
-                'permissions'     => 
+                'permissions'     =>
                 [
                     //    2:  Student Self Serve                . 1: Access                         . 1:  Permits
                     $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_ACCESS]['key'] . $featureAccess[self::FEATURE_PERMIT]['key'],
@@ -397,13 +397,13 @@ class m200702_151044_init_rbac extends BaseMigration
                     $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_ACCESS]['key'] . $careerLevelAccess[self::CL_GRADID]['key'],
                 ],
             ],
-            self::ROLE_PHD_STUDENT => 
+            self::ROLE_PHD_STUDENT =>
             [
                 'id'              => self::ROLE_PHD_STUDENT,
                 'name'            => 'Student-Doctorate',
                 'description'     => 'Doctorate Student (1)',
                 'allEverything'   => false,
-                'permissions'     => 
+                'permissions'     =>
                 [
                     //    2:  Student Self Serve                . 1: Access                         . 1:  Permits
                     $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_ACCESS]['key'] . $featureAccess[self::FEATURE_PERMIT]['key'],
@@ -477,7 +477,7 @@ class m200702_151044_init_rbac extends BaseMigration
             $roleRole               = $this->_auth->createRole($role['name']);
             $roleRole->description  = $role['description'];
 
-            $newRoleChild = 
+            $newRoleChild =
             [
                 'role'      => $roleRole,
             ];
