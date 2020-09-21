@@ -5,6 +5,7 @@ namespace app\models;
 use Yii;
 use yii\base\model;
 use yii\behaviors\TimestampBehavior;
+use yii2tech\ar\position\PositionBehavior;  // https://github.com/yii2tech/ar-position
 
 use app\models\BaseModel;
 use app\models\CoursesCodesChild;

@@ -184,7 +184,7 @@ class FormFields extends BaseModel
             ],
             [
                 'value_str',    'string', 'length' => [0, 64],
-            ],                                    
+            ],
 
             [
                 [
@@ -295,12 +295,12 @@ class FormFields extends BaseModel
             $params
         )->queryScalar();
 
-/*        
-        self::debug( Yii::$app->db->createCommand(
-            $countSQL,
-            $params
-        )->getRawSql() );
- */        
+        /*
+                self::debug( Yii::$app->db->createCommand(
+                    $countSQL,
+                    $params
+                )->getRawSql() );
+         */
         
         //self::debug( $countSQL, false );
         //self::debug( $count, true );

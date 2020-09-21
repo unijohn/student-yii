@@ -142,7 +142,7 @@ class BaseModel extends ActiveRecord
     const FIELD_PREF_RANKING        = 10;
     const FIELD_DOCUMENT_TYPE       = 11;
     const FIELD_FORM_MIN            = self::FIELD_FORM;
-    const FIELD_FORM_MAX            = self::FIELD_DOCUMENT_TYPE;    
+    const FIELD_FORM_MAX            = self::FIELD_DOCUMENT_TYPE;
 
     const TYPE_FIELD_NOT_SET   = 0;
     const TYPE_FIELD_SELECT    = 1;
