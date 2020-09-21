@@ -13,9 +13,9 @@ use app\models\FormFields;
 /* @var $form yii\widgets\ActiveForm */
 
    $pageCount   = FieldsController::getDropDownOpts('pageCount');
-   $grouping    = FormFields::getDistinctGroupings();
-   $isActive    = FormFields::getSelectOptions(-1, 'is_active',  false);
-   $isVisible   = FormFields::getSelectOptions(-1, 'is_visible', false);
+   $type        = FormFields::getDistinctGroupings();
+   $isActive    = FormFields::getSelectOptions(-1, 'Is-Active',  true);
+   $isVisible   = FormFields::getSelectOptions(-1, 'Is-Visible', true);
     
 //  FieldsController::debug( $filterForm );   
 
@@ -29,7 +29,7 @@ use app\models\FormFields;
     ]); ?>
       
    <div class="form-group form-inline field-type" style="!white-space:nowrap;">
-   <label class="control-label" for="FormFields[grouping_name]">Grouping</label>
+   <label class="control-label" for="FormFields[type]">Type</label>
    
 <?php
    /**
@@ -39,9 +39,9 @@ use app\models\FormFields;
  ?>   
    
     <?= Html::dropDownList(
-        'FormFields[grouping]',
-        $filterForm['grouping'],
-        $grouping,
+        'FormFields[type]',
+        $filterForm['type'],
+        $type,
         [
             'id'     => 'type',
             'class'  => 'form-control',

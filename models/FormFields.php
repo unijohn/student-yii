@@ -58,12 +58,12 @@ class FormFields extends BaseModel
         [
             'id'            => Yii::t('app', 'ID'),
         
-            'form_field'    => Yii::t('app', 'Form Field'),
-            'grouping'      => Yii::t('app', 'Group Id'),
-            'grouping_name' => Yii::t('app', 'Group Name'),
+            'form_field'    => Yii::t('app', 'Form Field Type'),
+            'type'          => Yii::t('app', 'Data Type'),
+            'type_str'      => Yii::t('app', 'Data Type (Str)'),
             'description'   => Yii::t('app', 'Description'),
-            'value'         => Yii::t('app', 'Value (Str)'),
-            'value_int'     => Yii::t('app', 'Value (#)'),
+            'value'         => Yii::t('app', 'Value'),
+            'value_str'     => Yii::t('app', 'Value (Str)'),
             
             'is_active'     => Yii::t('app', 'Is Active'),
             'is_visible'    => Yii::t('app', 'Is Visible'),
@@ -107,7 +107,7 @@ class FormFields extends BaseModel
                 'class' => PositionBehavior::className(),
                 'positionAttribute' => 'order_by',
                 'groupAttributes' => [
-                    'grouping' // multiple lists varying by 'categoryId'
+                    'type' // multiple lists varying by 'categoryId'
                 ],
             ],
 /**
@@ -132,8 +132,8 @@ class FormFields extends BaseModel
     public function scenarios()
     {
         $scenarios = parent::scenarios();
-        $scenarios[self::SCENARIO_INSERT] = [ 'form_field', 'grouping', 'grouping_name', 'description', 'is_active', 'is_visible', 'order_by', 'created_at', ];
-        $scenarios[self::SCENARIO_UPDATE] = [ 'form_field', 'grouping', 'grouping_name', 'description', 'is_active', 'is_visible', 'order_by', 'updated_at', ];
+        $scenarios[self::SCENARIO_INSERT] = [ 'form_field', 'type', 'type_str', 'description', 'value', 'value_str', 'is_active', 'is_visible', 'order_by', 'created_at', ];
+        $scenarios[self::SCENARIO_UPDATE] = [ 'form_field', 'type', 'type_str', 'description', 'value', 'value_str', 'is_active', 'is_visible', 'order_by', ];
         $scenarios[self::SCENARIO_MOVE]   = [ 'order_by', 'updated_at', ];
    
         return $scenarios;
@@ -160,7 +160,7 @@ class FormFields extends BaseModel
                 'tooBig' => 'Select a valid option', 'tooSmall' => 'Select a valid option',
             ],
             [
-                'grouping',   'number', 'min' => self::TYPE_ITEM_MIN,      'max' => self::TYPE_ITEM_MAX,
+                'type',   'number', 'min' => self::TYPE_ITEM_MIN,      'max' => self::TYPE_ITEM_MAX,
                 'tooBig' => 'Select a valid option', 'tooSmall' => 'Select a valid option',
             ],
             [
@@ -178,7 +178,7 @@ class FormFields extends BaseModel
 
             [
                 [
-                   'form_field', 'grouping', 'grouping_name', 'description', 'is_active', 'order_by', 'is_visible', 'updated_at'
+                   'form_field', 'type', 'type_str', 'description', 'is_active', 'order_by', 'is_visible', 'updated_at'
                 ],
                 'required', 'on' => self::SCENARIO_UPDATE
             ],
@@ -197,18 +197,18 @@ class FormFields extends BaseModel
      *
      * @returns (TBD)
      */
-    public static function findFieldByProperties($grouping = -1, $value = '', $value_int = '', $limit_one = true)
+    public static function findFieldByProperties($type = -1, $value_str = '', $value = '', $limit_one = true)
     {
         $tbl_formFields = FormFields::tableName();
    
         $query_fields = ( new \yii\db\Query() )
-         ->select([  'ff.id', 'ff.form_field', 'ff.grouping', 'ff.grouping_name', 'ff.value', 'ff.value_int', 'ff.is_active', 'ff.is_visible' ])
+         ->select([  'ff.id', 'ff.form_field', 'ff.type', 'ff.type_str', 'ff.value', 'ff.value_int', 'ff.is_active', 'ff.is_visible' ])
          ->from($tbl_formFields . ' ff')
-         ->where('( ff.value =:value OR ff.value_int =:value_int) AND ff.grouping =:grouping')
+         ->where('( ff.value_str =:value_str OR ff.value =:value) AND ff.type =:type')
             ->addParams([
+                'value_str' => $value_str,
                 'value'     => $value,
-                'value_int' => $value_int,
-                'grouping'  => $grouping
+                'type'      => $type
             ]);
             
         if ($limit_one) {
@@ -224,7 +224,7 @@ class FormFields extends BaseModel
      *
      * @return (TBD)
      */
-    public static function existsFieldByProperties($form_field = -1, $grouping = -1, $grouping_name = '', $description = '', $value = '', $value_int = -1)
+    public static function existsFieldByProperties($form_field = -1, $type = -1, $type_str = '', $description = '', $value_str = '', $value = -1)
     {
         $params = [];
         $tbl_formFields = FormFields::tableName();
@@ -240,20 +240,20 @@ class FormFields extends BaseModel
             $params[':form_field']   = $form_field;
         }
         
-        if ($grouping > -1) {
-            $andWhere = "AND grouping =:grouping ";
+        if ($type > -1) {
+            $andWhere = "AND type =:type ";
       
             $countSQL   .= $andWhere;
          
-            $params[':grouping']   = $grouping;
+            $params[':type']   = $type;
         }
         
-        if ($grouping_name !== '') {
-            $andWhere = "AND grouping_name =:grouping_name ";
+        if ($type_str !== '') {
+            $andWhere = "AND type_str =:type_str ";
       
             $countSQL   .= $andWhere;
          
-            $params[':grouping_name']   = $grouping_name;
+            $params[':type_str']   = $type_str;
         }
         
         if ($description !== '') {
@@ -264,20 +264,20 @@ class FormFields extends BaseModel
             $params[':description']   = $description;
         }
 
-        if ($value !== '') {
-            $andWhere = "AND value =:value ";
+        if ($value_str !== '') {
+            $andWhere = "AND value_str =:value_str ";
+      
+            $countSQL   .= $andWhere;
+         
+            $params[':value_str']   = $value_str;
+        }
+        
+        if ($value > -1) {
+            $andWhere = "AND value =:value";
       
             $countSQL   .= $andWhere;
          
             $params[':value']   = $value;
-        }
-        
-        if ($value_int > -1) {
-            $andWhere = "AND value_int =:value_int ";
-      
-            $countSQL   .= $andWhere;
-         
-            $params[':value_int']   = $value_int;
         }
    
         $count = Yii::$app->db->createCommand(
@@ -297,23 +297,23 @@ class FormFields extends BaseModel
      *
      * @return (TBD)
      */
-    public static function getFieldOptions($form_field = -1, $grouping = -1, $grouping_name = "", $prompt = false)
+    public static function getFieldOptions($form_field = -1, $type = -1, $type_str = "", $prompt = false)
     {
         $tbl_formFields = FormFields::tableName();
    
         $query_fields = ( new \yii\db\Query() )
-            ->select([  'ff.id', 'ff.form_field', 'ff.grouping', 'ff.grouping_name', 'ff.description', 'ff.value', 'ff.value_int', 'ff.is_active', 'ff.is_visible' ])
+            ->select([  'ff.id', 'ff.form_field', 'ff.type', 'ff.type_str', 'ff.description', 'ff.value', 'ff.value_str', 'ff.is_active', 'ff.is_visible' ])
             ->from($tbl_formFields . ' ff')
-            ->where('( ff.grouping =:grouping OR ff.grouping_name =:grouping_name) AND ff.form_field =:form_field')
+            ->where('( ff.type =:type OR ff.type_str =:type_str) AND ff.form_field =:form_field')
                 ->addParams([
-                    'grouping'      => $grouping,
-                    'grouping_name' => $grouping_name,
+                    'type'          => $type,
+                    'type_str'      => $type_str,
                     'form_field'    => $form_field
                 ]);
 
                
-        if ($prompt) {
-            $query_fields->andWhere([ '!=', 'value_int', -1 ]);
+        if (!$prompt) {
+            $query_fields->andWhere([ '!=', 'value', -1 ]);
         }
 
         $query_fields->orderBy('ff.order_by');
@@ -334,10 +334,10 @@ class FormFields extends BaseModel
         $tbl_formFields = FormFields::tableName();
    
         $query_fields = ( new \yii\db\Query() )
-            ->select([  'ff.grouping', 'ff.grouping_name' ])
+            ->select([  'ff.type', 'ff.type_str' ])
             ->distinct()
             ->from($tbl_formFields . ' ff')
-            ->orderBy('ff.grouping')
+            ->orderBy('ff.type')
             ->all();
 
 //       self::debug( $query_fields->createCommand()->getRawSql() );
@@ -347,7 +347,7 @@ class FormFields extends BaseModel
         $dropDown[0] = "Select Type";
 
         foreach ($query_fields as $row) {
-            $dropDown[$row['grouping']] = $row['grouping_name'];
+            $dropDown[$row['type']] = $row['type_str'];
         }
         
         return $dropDown;
@@ -359,16 +359,16 @@ class FormFields extends BaseModel
      *
      * @return (TBD)
      */
-    public static function getSelectOptions($grouping = -1, $grouping_name = "", $prompt = false)
+    public static function getSelectOptions($type= -1, $type_str = "", $prompt = false)
     {
-        $results = FormFields::getFieldOptions(FormFields::TYPE_FIELD_SELECT, $grouping, $grouping_name, $prompt);
+        $results = FormFields::getFieldOptions(FormFields::TYPE_FIELD_SELECT, $type, $type_str, $prompt);
         
         $dropDown = [];
         
         foreach ($results as $row) {
-            $dropDown[$row['value_int']] = $row['description'];
+            $dropDown[$row['value']] = $row['description'];
         }
-        
+               
         return $dropDown;
     }
 
@@ -378,14 +378,14 @@ class FormFields extends BaseModel
      *
      * @return (TBD)
      */
-    public static function getFormFieldOptions($grouping = -1, $grouping_name = "", $prompt = false)
+    public static function getFormFieldOptions($type = -1, $type_str = "", $prompt = false)
     {
-        $results = FormFields::getFieldOptions(FormFields::TYPE_FIELD_NOT_SET, $grouping, $grouping_name, $prompt);
+        $results = FormFields::getFieldOptions(FormFields::TYPE_FIELD_NOT_SET, $type, $type_str, $prompt);
         
         $dropDown = [];
         
         foreach ($results as $row) {
-            $dropDown[$row['value_int']] = $row['description'];
+            $dropDown[$row['value']] = $row['description'];
         }
         
         return $dropDown;

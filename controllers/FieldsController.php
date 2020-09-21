@@ -60,7 +60,7 @@ class FieldsController extends BaseController
         }
 
 //        $this->_data['filterForm']['type']              = ArrayHelper::getValue($this->_request->get(), 'FormFields.type', '');
-        $this->_data['filterForm']['grouping']          = ArrayHelper::getValue($this->_request->get(), 'FormFields.grouping', '');
+        $this->_data['filterForm']['type']              = ArrayHelper::getValue($this->_request->get(), 'FormFields.type', '');
         $this->_data['filterForm']['is_active']         = ArrayHelper::getValue($this->_request->get(), 'FormFields.is_active', -1);
         $this->_data['filterForm']['is_visible']        = ArrayHelper::getValue($this->_request->get(), 'FormFields.is_visible', -1);
         $this->_data['filterForm']['paginationCount']   = ArrayHelper::getValue($this->_request->get(), 'FormFields.pagination_count', 10);
@@ -73,11 +73,11 @@ class FieldsController extends BaseController
 
         $this->_data['FormFields']['id']            = ArrayHelper::getValue($this->_request->post(), 'FormFields.id', '');
         $this->_data['FormFields']['form_field']    = ArrayHelper::getValue($this->_request->post(), 'FormFields.form_field', FormFields::TYPE_FIELD_NOT_SET);
-        $this->_data['FormFields']['grouping']      = ArrayHelper::getValue($this->_request->post(), 'FormFields.grouping', FormFields::TYPE_FIELD_MIN);
+        $this->_data['FormFields']['type']          = ArrayHelper::getValue($this->_request->post(), 'FormFields.type', FormFields::TYPE_FIELD_MIN);
         $this->_data['FormFields']['description']   = ArrayHelper::getValue($this->_request->post(), 'FormFields.description', '');
         
         $this->_data['FormFields']['value']         = ArrayHelper::getValue($this->_request->post(), 'FormFields.value', '');
-        $this->_data['FormFields']['value_int']     = ArrayHelper::getValue($this->_request->post(), 'FormFields.value_int', 0);
+        $this->_data['FormFields']['value_str']     = ArrayHelper::getValue($this->_request->post(), 'FormFields.value_str', 0);
 
         $this->_data['FormFields']['is_active']     = ArrayHelper::getValue($this->_request->post(), 'FormFields.is_active', FormFields::STATUS_ACTIVE);
         $this->_data['FormFields']['is_visible']    = ArrayHelper::getValue($this->_request->post(), 'FormFields.is_visible', FormFields::STATUS_VISIBLE);
@@ -154,19 +154,19 @@ class FieldsController extends BaseController
     {
         $params  = [];
 
-        $sql  = "SELECT id, form_field, grouping, grouping_name, description, value, value_int, is_active, is_visible, order_by, created_at, updated_at " ;
+        $sql  = "SELECT id, form_field, type, type_str, description, value, value_str, is_active, is_visible, order_by, created_at, updated_at " ;
         $sql .= "FROM " . $this->_tbl_FormFields . " WHERE id > 0 ";
 
         $countSQL  = "SELECT COUNT(*) " ;
         $countSQL .= "FROM " . $this->_tbl_FormFields . " WHERE id > 0 ";
 
-        if ($this->_data['filterForm']['grouping'] > -1 && strlen($this->_data['filterForm']['grouping']) > 0) {
-            $andWhere = "AND grouping =:grouping ";
+        if ($this->_data['filterForm']['type'] > -1 && strlen($this->_data['filterForm']['type']) > 0) {
+            $andWhere = "AND type =:type ";
       
             $sql        .= $andWhere;
             $countSQL   .= $andWhere;
          
-            $params[':grouping']   = $this->_data['filterForm']['grouping'];
+            $params[':type']   = $this->_data['filterForm']['type'];
         }
       
         if ($this->_data['filterForm']['is_active'] > -1 && strlen($this->_data['filterForm']['is_active']) > 0) {
@@ -199,9 +199,8 @@ class FieldsController extends BaseController
          'sort' => [
             'defaultOrder' =>
             [
-               'grouping'  => SORT_ASC,
-               'order_by'  => SORT_ASC,
-               //'id'             => SORT_ASC,
+               'type'       => SORT_ASC,
+               'order_by'   => SORT_ASC,
             ],
             'attributes' =>
             [
@@ -210,17 +209,17 @@ class FieldsController extends BaseController
                   'default' => SORT_ASC,
                   'label'   => 'ID',
                ],
-               'type' =>
+               'form_field' =>
                [
                   'default' => SORT_ASC,
-                  'label'   => 'Type',
+                  'label'   => 'Form Field',
                ],
-               'grouping_name' =>
+               'type_str' =>
                [
                   'default' => SORT_ASC,
                   'label'   => 'Grouping',
                ],
-               'grouping' =>
+               'type' =>
                [
                   'default' => SORT_ASC,
                   'label'   => 'Grouping',
@@ -366,7 +365,7 @@ class FieldsController extends BaseController
         $row->scenario      = FormFields::SCENARIO_MOVE;
         $row->moveNext();
         
-        $this->_data['filterForm']['grouping'] = $row['grouping'];
+        $this->_data['filterForm']['type'] = $row['type'];
         
         return $this->renderListing();
     }
@@ -386,7 +385,7 @@ class FieldsController extends BaseController
         $row->scenario      = FormFields::SCENARIO_MOVE;
         $row->moveLast();
         
-        $this->_data['filterForm']['grouping'] = $row['grouping'];
+        $this->_data['filterForm']['type'] = $row['type'];
         
         return $this->renderListing();
     }
@@ -406,7 +405,7 @@ class FieldsController extends BaseController
         $row->scenario      = FormFields::SCENARIO_MOVE;
         $row->movePrev();
         
-        $this->_data['filterForm']['grouping'] = $row['grouping'];
+        $this->_data['filterForm']['type'] = $row['type'];
         
         return $this->renderListing();
     }
@@ -426,7 +425,7 @@ class FieldsController extends BaseController
         $row->scenario      = FormFields::SCENARIO_MOVE;
         $row->moveFirst();
         
-        $this->_data['filterForm']['grouping'] = $row['grouping'];
+        $this->_data['filterForm']['type'] = $row['type'];
         
         return $this->renderListing();
     }
@@ -461,7 +460,7 @@ class FieldsController extends BaseController
                 $exitEarly = true;
             }
 
-            if (empty($this->_data['FormFields']['grouping'])) {
+            if (empty($this->_data['FormFields']['type'])) {
                 $this->_data['errors'][$msgHeader] =
                 [
                    'value'     => "was unsuccessful",
@@ -469,7 +468,7 @@ class FieldsController extends BaseController
                    'class'     => 'alert alert-danger',
                 ];
 
-                $this->_data['errors']['code'] =
+                $this->_data['errors']['type'] =
                 [
                     'value' => "is blank",
                 ];
@@ -516,18 +515,18 @@ class FieldsController extends BaseController
          
         $idExists = FormFields::existsFieldByProperties(
             $this->_data['FormFields']['form_field'],
-            $this->_data['FormFields']['grouping'],
+            $this->_data['FormFields']['type'],
             '',
             $this->_data['FormFields']['description'],
             $this->_data['FormFields']['value'],
-            $this->_data['FormFields']['value_int']
+            $this->_data['FormFields']['value_str']
         );
 
         $this->_fieldsModel->form_field     = $this->_data['FormFields']['form_field'];
-        $this->_fieldsModel->grouping       = $this->_data['FormFields']['grouping'];
+        $this->_fieldsModel->type           = $this->_data['FormFields']['type'];
         $this->_fieldsModel->description    = $this->_data['FormFields']['description'];
         $this->_fieldsModel->value          = $this->_data['FormFields']['value'];
-        $this->_fieldsModel->value_int      = $this->_data['FormFields']['value_int'];
+        $this->_fieldsModel->value_str      = $this->_data['FormFields']['value_str'];
 
         if ($idExists) {
             if (isset($this->_data['FormFields']['insert']) && !empty($this->_data['FormFields']['insert'])) {
@@ -543,7 +542,7 @@ class FieldsController extends BaseController
                 //$keyIndex = ucfirst(strtolower(str_replace("_", " ", $key)));
 
                 $keyError  = "( " . $this->keyLookup('form_field', $this->_fieldsModel->form_field) . " ) ";
-                $keyError .= $this->keyLookup('grouping_name', $this->_fieldsModel->grouping) . ": ";
+                $keyError .= $this->keyLookup('type_str', $this->_fieldsModel->grouping) . ": ";
                 $keyError .= $this->_fieldsModel->description;
 
                 $this->_data['errors'][$keyError] =
@@ -555,7 +554,7 @@ class FieldsController extends BaseController
                  *    if inserting a new record, set the filter to that new record's type as a UX feature
                  **/
                 $this->_data['filterForm']['form_field']    = $this->_fieldsModel->form_field;
-                $this->_data['filterForm']['grouping']      = $this->_fieldsModel->grouping;
+                $this->_data['filterForm']['type']      = $this->_fieldsModel->grouping;
             }
             
             $this->_data['errors']['useSession'] = true;
@@ -566,11 +565,11 @@ class FieldsController extends BaseController
         $updateModel->scenario     = FormFields::SCENARIO_INSERT;
 
         $updateModel->form_field    = $this->_data['FormFields']['form_field'];
-        $updateModel->grouping      = $this->_data['FormFields']['grouping'];
-        $updateModel->grouping_name = $this->keyLookup('grouping_name', $this->_data['FormFields']['grouping']);
+        $updateModel->type          = $this->_data['FormFields']['type'];
+        $updateModel->type_str      = $this->keyLookup('type_str', $this->_data['FormFields']['type']);
         $updateModel->description   = $this->_data['FormFields']['description'];
         $updateModel->value         = $this->_data['FormFields']['value'];
-        $updateModel->value_int     = $this->_data['FormFields']['value_int'];
+        $updateModel->value_str     = $this->_data['FormFields']['value_str'];
 
         $this->_data['FormFields']['insert'] = $updateModel->save();
          
@@ -598,7 +597,7 @@ class FieldsController extends BaseController
             ];
          
             $keySuccess  = "( " . $this->keyLookup('form_field', $this->_fieldsModel->form_field) . " ) ";
-            $keySuccess .= $this->keyLookup('grouping_name', $this->_fieldsModel->grouping) . ": ";
+            $keySuccess .= $this->keyLookup('type_str', $this->_fieldsModel->type) . ": ";
             $keySuccess .= $this->_fieldsModel->description;
          
             $this->_data['success'][$keySuccess] =
@@ -614,7 +613,7 @@ class FieldsController extends BaseController
         /**
          * Setting the Grouping filter to newly insert record to easily verify that the record is in the system
          **/
-        $this->_data['filterForm']['grouping'] = $updateModel->grouping;
+        $this->_data['filterForm']['type'] = $updateModel->type;
 
         $this->_dataProvider = $this->getFieldsGridView();
         return $this->renderListing();
@@ -630,8 +629,6 @@ class FieldsController extends BaseController
     {
         $isError    = false;
         $msgHeader  = "Save Form Field";
-        
-//        self::debug($this->_data);
 
         /**
                 $tagRelationExists = SystemCodesChild::find()
@@ -739,16 +736,20 @@ class FieldsController extends BaseController
          **/
 
         if (isset($this->_data['FormFields']['update']) && !empty($this->_data['FormFields']['update'])) {
+        
+//            self::debug( "742" , false );
+//            self::debug( $this->_data['FormFields']['update'], false );
+        
             $this->_fieldsModel                 = new FormFields();
 
             $this->_fieldsModel->id             = $this->_data['FormFields']['id'];
 
             $this->_fieldsModel->form_field     = $this->_data['FormFields']['form_field'];
-            $this->_fieldsModel->grouping       = $this->_data['FormFields']['grouping'];
-            $this->_fieldsModel->grouping_name  = $this->keyLookup('grouping_name', $this->_data['FormFields']['grouping']);
+            $this->_fieldsModel->type           = $this->_data['FormFields']['type'];
+            $this->_fieldsModel->type_str       = $this->keyLookup('type_str', $this->_data['FormFields']['type']);
             $this->_fieldsModel->description    = $this->_data['FormFields']['description'];
             $this->_fieldsModel->value          = $this->_data['FormFields']['value'];
-            $this->_fieldsModel->value_int      = $this->_data['FormFields']['value_int'];
+            $this->_fieldsModel->value_str      = $this->_data['FormFields']['value_str'];
             
             $this->_fieldsModel->is_active      = $this->_data['FormFields']['is_active'];
             $this->_fieldsModel->is_visible     = $this->_data['FormFields']['is_visible'];
@@ -776,7 +777,7 @@ class FieldsController extends BaseController
                 $exitEarly = true;
             }
          
-            if (!isset($this->_fieldsModel->grouping) || empty($this->_fieldsModel->grouping)) {
+            if (!isset($this->_fieldsModel->type) || empty($this->_fieldsModel->type)) {
                 $this->_data['errors'][$msgHeader] =
                 [
                     'value'     => "was unsuccessful",
@@ -784,7 +785,7 @@ class FieldsController extends BaseController
                     'class'     => 'alert alert-danger',
                 ];
    
-                $this->_data['errors']['grouping'] =
+                $this->_data['errors']['type'] =
                 [
                     'value' => "is invalid",
                 ];
@@ -813,19 +814,37 @@ class FieldsController extends BaseController
             if ($exitEarly) {
                 return $this->renderView();
             }
-         
-            $updateModel                = FormFields::findOne($this->_fieldsModel->id);
-            $updateModel->scenario      = FormFields::SCENARIO_UPDATE;
+
+            $updateModel                    = FormFields::findOne($this->_fieldsModel->id);
+            $updateModel->scenario          = FormFields::SCENARIO_UPDATE;
  
-            $updateModel->form_field     = $this->_data['FormFields']['form_field'];
-            $updateModel->grouping       = $this->_data['FormFields']['grouping'];
-            $updateModel->grouping_name  = $this->keyLookup('grouping_name', $this->_data['FormFields']['grouping']);
-            $updateModel->description    = $this->_data['FormFields']['description'];
-            $updateModel->value          = $this->_data['FormFields']['value'];
-            $updateModel->value_int      = $this->_data['FormFields']['value_int'];
+            $updateModel->form_field        = $this->_data['FormFields']['form_field'];
+            $updateModel->type              = $this->_data['FormFields']['type'];
+            $updateModel->type_str          = $this->keyLookup('type_str', $this->_data['FormFields']['type']);
+            $updateModel->description       = $this->_data['FormFields']['description'];
+            $updateModel->value             = $this->_data['FormFields']['value'];
+            $updateModel->value_str          = $this->_data['FormFields']['value_str'];
             
-            $updateModel->is_active      = $this->_data['FormFields']['is_active'];
-            $updateModel->is_visible     = $this->_data['FormFields']['is_visible'];
+            $updateModel->is_active         = $this->_data['FormFields']['is_active'];
+            $updateModel->is_visible        = $this->_data['FormFields']['is_visible'];
+
+            if (!$updateModel->validate()) {
+                $this->_data['errors'][$msgHeader] =
+                [
+                   'value'     => "was unsuccessful",
+                   'htmlTag'   => 'h4',
+                   'class'     => 'alert alert-danger',
+                ];
+   
+                $this->_data['errors']['description'] =
+                [
+                    'value' => $updateModel->errors,
+                ];
+   
+                $this->_data['errors']['useSession'] = true;
+                
+                self::debug($updateModel->errors);
+            }
 
             $this->_data['FormFields']['update'] = $updateModel->save();
          
@@ -858,20 +877,22 @@ class FieldsController extends BaseController
                             $lookupNew = $this->keyLookup($key, $val);
                             $lookupOld = $this->keyLookup($key, $this->_data['FormFields'][$key]);
                             
+//                            self::debug( $lookupNew . " vs. " . $lookupOld, true );
+                            
                             $labels = $this->_fieldsModel->attributeLabels();
                             
 //                            self::debug( $labels );
                    
                             $this->_data['success'][$labels[$key]] =
                             [
-                                'value'     => "was updated",
+                                'value'     => "was updated ( <strong>" . $val . "</strong> -> <strong>" . $this->_data['FormFields'][$key] . "</strong> )",
                                 'bValue'    => true,
                             ];
 
                             if (strpos($lookupNew, "Unknown") !== 0) {
                                 $this->_data['success'][$labels[$key]] =
                                 [
-                                    'value'  => "was updated ( " . $lookupNew . " -> " . $lookupOld . " )",
+                                    'value'  => "was updated ( <strong>" . $lookupNew . "</strong> -> <strong>" . $lookupOld . "</strong> )",
                                 ];
                             }
                         }
@@ -891,20 +912,21 @@ class FieldsController extends BaseController
      */
     private function keyLookup($key, $value)
     {
-        $formField      = FormFields::getFormFieldOptions(-1, 'form_field', false);
-        $grouping       = FormFields::getDistinctGroupings();
-        $isActive       = FormFields::getSelectOptions(-1, 'is_active', true);
-        $isVisible      = FormFields::getSelectOptions(-1, 'is_visible', true);
+        $formField      = FormFields::getFormFieldOptions(-1, 'Form-Field', false);
+        $typeField      = FormFields::getDistinctGroupings();
+        $isActive       = FormFields::getSelectOptions(-1, 'Is-Active', true);
+        $isVisible      = FormFields::getSelectOptions(-1, 'Is-Visible', true);
 
         if ($key == 'form_field'  && array_key_exists($value, $formField)) {
             return $formField[ $value ];
-        } elseif ($key == 'grouping_name'  && array_key_exists($value, $grouping)) {
-            return $grouping[ $value ];
+        } elseif ($key == 'type_str'  && array_key_exists($value, $typeField)) {
+            return $typeField[ $value ];
         } elseif ($key == 'is_active'  && array_key_exists($value, $isActive)) {
             return $isActive[ $value ];
         } elseif ($key == 'is_visible' && array_key_exists($value, $isVisible)) {
             return $isVisible[ strval($value)];
         }
+        
         return "Unknown key : " . $key . " :: " . $value;
     }
 

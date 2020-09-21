@@ -94,11 +94,11 @@
             },
          ],
          [
-            'attribute' => 'grouping_name',
+            'attribute' => 'type_str',
             'label' => 'Grouping',
             'format' => 'raw',
             'value' => function ($data) {
-                return HTML::a($data['grouping_name'], Url::toRoute(['fields/view', 'id' => $data['id']  ], true));
+                return HTML::a($data['type_str'], Url::toRoute(['fields/view', 'id' => $data['id']  ], true));
             },
          ],
          [
@@ -114,15 +114,15 @@
             'label' => 'Value (Str)',
             'format' => 'raw',
             'value' => function ($data) {
-                return HTML::a($data['value'], Url::toRoute(['fields/view', 'id' => $data['id']  ], true));
+                return HTML::a($data['value_str'], Url::toRoute(['fields/view', 'id' => $data['id']  ], true));
             },
          ],
          [
-            'attribute' => 'value_int',
+            'attribute' => 'value',
             'label' => 'Value (#)',
             'format' => 'raw',
             'value' => function ($data) {
-                return HTML::a($data['value_int'], Url::toRoute(['fields/view', 'id' => $data['id']  ], true));
+                return HTML::a($data['value'], Url::toRoute(['fields/view', 'id' => $data['id']  ], true));
             },
          ],                  
          'created_at:datetime',

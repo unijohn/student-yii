@@ -15,6 +15,9 @@ class BaseMigration extends Migration
    
     const STATUS_HIDDEN         = 0;
     const STATUS_VISIBLE        = 1;
+    
+    const STATUS_WORKDESK_DATA  = 0;
+    const STATUS_BANNER_DATA    = 1;
 
     const SYS_FRAMEWORKID       = 1;
     const SYS_STUDENTID         = 2;
@@ -24,6 +27,7 @@ class BaseMigration extends Migration
     const CL_UGADID             = 1;
     const CL_GRADID             = 2;
     const CL_PHDID              = 3;
+    const CL_CERTID             = 4;
 
     const DEPT_ACCT             = 1;
     const DEPT_ECON             = 2;
@@ -61,6 +65,10 @@ class BaseMigration extends Migration
     const TYPE_DEPARTMENT       = 2;
     const TYPE_CAREERLEVEL      = 3;
     const TYPE_MASTERS          = 4;
+    const TYPE_FACULTY_RANK     = 5;
+    const TYPE_EMPLOYEE_CLASS   = 6;
+    const TYPE_SCHOOL_DEPT      = 7;
+    const TYPE_UNIVERSITY_DEPT  = 8;
    
     const CITIZEN_US_NO         = 0;
     const CITIZEN_US_YES        = 1;
@@ -74,7 +82,30 @@ class BaseMigration extends Migration
     const VISA_F3               = 3;
     
     const TYPE_PROMPT_DEFAULT   = -1;
+
+    const TYPE_DEPARTMENT_NOT_SET   = 0;
+    const TYPE_DEPARTMENT_ACCT      = 1;
+    const TYPE_DEPARTMENT_BITM      = 2;
+    const TYPE_DEPARTMENT_ECON      = 3;
+    const TYPE_DEPARTMENT_FIR       = 4;
+    const TYPE_DEPARTMENT_MSCM      = 5;
+    const TYPE_DEPARTMENT_MGMT      = 6;
     
+    const TYPE_CAREERLEVEL_NOT_SET  = 0;
+    const TYPE_CAREERLEVEL_UGAD     = 1;
+    const TYPE_CAREERLEVEL_GRAD     = 2;
+    const TYPE_CAREERLEVEL_PHD      = 3;
+    const TYPE_CAREERLEVEL_CERT     = 4;
+    
+    const TYPE_MASTERS_NOT_SET      = 0;
+    const TYPE_MASTERS_MA_ECON      = 1;
+    const TYPE_MASTERS_MS_ACCT      = 2;
+    const TYPE_MASTERS_MS_IS        = 3;
+    const TYPE_MASTERS_MSBA_FIR     = 4;
+    const TYPE_MASTERS_EMBA         = 5;
+    const TYPE_MASTERS_PMBA         = 6;
+    const TYPE_MASTERS_OMBA         = 7;
+
     const TYPE_FIELD_NOT_SET    = 0;
     const TYPE_FIELD_SELECT     = 1;
     const TYPE_FIELD_CHECKBOX   = 2;
@@ -136,7 +167,42 @@ class BaseMigration extends Migration
     const TYPE_ITEM_SKILL_STRENGTH  = 10;
     const TYPE_ITEM_PREFERENCE_RANK = 11;
     const TYPE_ITEM_DOCUMENT        = 12;
+    
+    const TYPE_PERMIT_OPEN_REQ      = 0;
+    const TYPE_PERMIT_ISSUED        = 1;
+    const TYPE_PERMIT_DUPLICATE     = 2;
+    
+    const TYPE_FACULTY_RANK_NOT_SET = 0;
+    const TYPE_FACULTY_RANK_01      = 1;
+    const TYPE_FACULTY_RANK_02      = 2;
+    const TYPE_FACULTY_RANK_03      = 3;
+    const TYPE_FACULTY_RANK_09      = 4;
+    const TYPE_FACULTY_RANK_UA      = 5;
+    
+    const TYPE_EMPLOYEE_CLASS_NOT_SET   = 0;
+    const TYPE_EMPLOYEE_CLASS_AE        = 1;
+    const TYPE_EMPLOYEE_CLASS_AD        = 2;
+    const TYPE_EMPLOYEE_CLASS_F9        = 3;
+    const TYPE_EMPLOYEE_CLASS_FA        = 4;
+    const TYPE_EMPLOYEE_CLASS_CL        = 5;
 
+    const TYPE_SCHOOL_DEPT_NOT_SET          = 0;
+    const TYPE_SCHOOL_DEPT_PROVOST          = 1;
+    const TYPE_SCHOOL_DEPT_FCBE_ACAD_PROG   = 2;
+    const TYPE_SCHOOL_DEPT_COL_FCBE         = 3;
+    const TYPE_SCHOOL_DEPT_CIO_ITS          = 4;
+    const TYPE_SCHOOL_DEPT_FCBE_ACAD_ADMIN  = 5;
+    const TYPE_SCHOOL_DEPT_MSCM             = 6;
+    const TYPE_SCHOOL_DEPT_ECON             = 7;
+    const TYPE_SCHOOL_DEPT_FIR              = 8;
+    const TYPE_SCHOOL_DEPT_BITM             = 9;
+    const TYPE_SCHOOL_DEPT_MGMT             = 10;
+    const TYPE_SCHOOL_DEPT_ACCT             = 11;
+    
+    const TYPE_UNIVERSITY_DEPT_NOT_SET      = 0;
+    const TYPE_UNIVERSITY_DEPT_ACAD_AFFAIR  = 1;
+    const TYPE_UNIVERSITY_DEPT_ITS          = 2;
+    const TYPE_UNIVERSITY_DEPT_COL_FCBE     = 3;
 
     const tbl_YiiNames  = [
       'auth_assignment',

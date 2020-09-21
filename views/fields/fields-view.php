@@ -20,11 +20,11 @@
    $formatter = \Yii::$app->formatter;
 
    
-   $formField   = FormFields::getFormFieldOptions(-1, 'form_field', false);   
-   $grouping    = FormFields::getDistinctGroupings();   
+   $formField   = FormFields::getFormFieldOptions(-1, 'Form-Field', false);   
+   $typeField   = FormFields::getDistinctGroupings();   
    
-   $isActive    = FormFields::getSelectOptions(-1, 'is_active',  false);
-   $isVisible   = FormFields::getSelectOptions(-1, 'is_visible', false);      
+   $isActive    = FormFields::getSelectOptions(-1, 'Is-Active',  false);
+   $isVisible   = FormFields::getSelectOptions(-1, 'Is-Visible', false);      
 ?>
 
    <div class="site-about">
@@ -54,7 +54,7 @@
          <?= Html::hiddenInput('id', $model->id) ?>
 
          <div class="form-group form-inline field-form_field">
-         <label class="control-label" for="FormFields[form_field]">Type</label>
+         <label class="control-label" for="FormFields[form_field]"> <?php print( $model->getAttributeLabel('form_field') ); ?></label>
             <?= Html::dropDownList(
                 'FormFields[form_field]',
                 $model->form_field,
@@ -69,14 +69,14 @@
             <div class="help-block"></div>
          </div>         
          
-         <div class="form-group form-inline field-grouping">
-            <label class="control-label" for="FormFields[grouping]">Grouping</label>
+         <div class="form-group form-inline field-type">
+            <label class="control-label" for="FormFields[type]"><?php print( $model->getAttributeLabel('type') ); ?></label>
             <?= Html::dropDownList(
-                'FormFields[grouping]',
-                $model->grouping,
-                $grouping,
+                'FormFields[type]',
+                $model->type,
+                $typeField,
                 [
-                    'id'     => 'grouping',
+                    'id'     => 'type',
                     'class'  => 'form-control',
                     'style'  => 'width: 80%;float:right;',
                 ]
@@ -86,7 +86,7 @@
          </div>
          
          <div class="form-group form-inline field-description">
-            <label class="control-label" for="FormFields[description]">Description</label>
+            <label class="control-label" for="FormFields[description]"><?php print( $model->getAttributeLabel('description') ); ?></label>
             <?= Html::input(
                 'text',
                 'FormFields[description]',
@@ -101,7 +101,7 @@
          </div>
 
          <div class="form-group form-inline field-value">
-            <label class="control-label" for="FormFields[value]">Value (Str)</label>
+            <label class="control-label" for="FormFields[value]"><?php print( $model->getAttributeLabel('value') ); ?></label>
             <?= Html::input(
                 'text',
                 'FormFields[value]',
@@ -113,25 +113,25 @@
                ]
             ) ?>   
             <div class="help-block"></div>
-         </div>     
-         
-         <div class="form-group form-inline field-value_int">
-            <label class="control-label" for="FormFields[value_int]">Value (#)</label>
+         </div> 
+
+         <div class="form-group form-inline field-value">
+            <label class="control-label" for="FormFields[value_str]"><?php print( $model->getAttributeLabel('value_str') ); ?></label>
             <?= Html::input(
                 'text',
-                'FormFields[value_int]',
-                $model->value_int,
+                'FormFields[value_str]',
+                $model->value_str,
                 [
-                  'id'     => 'value_int',
+                  'id'     => 'value_str',
                   'class'  => 'form-control',
                   'style'  => 'width: 80%;float:right;',
                ]
             ) ?>   
             <div class="help-block"></div>
-         </div>    
+         </div>     
             
          <div class="form-group form-inline field-is_active">
-         <label class="control-label" for="FormFields[is_active]">Is Active</label>
+         <label class="control-label" for="FormFields[is_active]"><?php print( $model->getAttributeLabel('is_active') ); ?></label>
             <?= Html::dropDownList(
                 'FormFields[is_active]',
                 $model->is_active,
@@ -147,7 +147,7 @@
          </div>
          
          <div class="form-group form-inline field-is_visible">
-         <label class="control-label" for="FormFields[is_visible]">Is Visible</label>
+         <label class="control-label" for="FormFields[is_visible]"><?php print( $model->getAttributeLabel('is_visible') ); ?></label>
             <?= Html::dropDownList(
                 'FormFields[is_visible]',
                 $model->is_visible,

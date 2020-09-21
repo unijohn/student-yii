@@ -17,6 +17,11 @@ class BaseModel extends ActiveRecord
     const STATUS_VISIBLE       = 1;
     const STATUS_VISIBLE_MIN   = self::STATUS_HIDDEN;
     const STATUS_VISIBLE_MAX   = self::STATUS_VISIBLE;
+    
+    const STATUS_WORKDESK_DATA  = 0;
+    const STATUS_BANNER_DATA    = 1;
+    const STATUS_BANNER_MIN     = self::STATUS_WORKDESK_DATA;
+    const STATUS_BANNER_MAX     = self::STATUS_BANNER_DATA;
    
     const SUBJECT_ACCT         = "ACCT";
     const SUBJECT_BA           = "BA";
@@ -36,27 +41,35 @@ class BaseModel extends ActiveRecord
     /**
      * SystemCodes types
      **/
-    const TYPE_PERMIT          = 1;
-    const TYPE_DEPARTMENT      = 2;
-    const TYPE_CAREERLEVEL     = 3;
-    const TYPE_MASTERS         = 4;
-
-    const TYPE_MAX             = self::TYPE_MASTERS;
+    const TYPE_PERMIT           = 1;
+    const TYPE_DEPARTMENT       = 2;
+    const TYPE_CAREERLEVEL      = 3;
+    const TYPE_MASTERS          = 4;
+    const TYPE_FACULTY_RANK     = 5;
+    const TYPE_EMPLOYEE_CLASS   = 6;
+    const TYPE_SCHOOL_DEPT      = 7;
+    const TYPE_UNIVERSITY_DEPT  = 8;
+    
+    const TYPE_MIN              = self::TYPE_PERMIT;
+    const TYPE_MAX              = self::TYPE_UNIVERSITY_DEPT;
    
-    const DEPT_ACCT            = 1;
-    const DEPT_ECON            = 2;
-    const DEPT_FIN             = 3;
-    const DEPT_BIT             = 4;
-    const DEPT_MGMT            = 5;
-    const DEPT_MCSM            = 6;
+    const DEPT_ACCT             = 1;
+    const DEPT_ECON             = 2;
+    const DEPT_FIN              = 3;
+    const DEPT_BIT              = 4;
+    const DEPT_MGMT             = 5;
+    const DEPT_MCSM             = 6;
    
-    const DEPT_MAX             = self::DEPT_MCSM;
+    const DEPT_MIN              = self::DEPT_ACCT;
+    const DEPT_MAX              = self::DEPT_MCSM;
    
-    const CL_UGADID            = 1;
-    const CL_GRADID            = 2;
-    const CL_PHDID             = 3;
+    const CL_UGADID             = 1;
+    const CL_GRADID             = 2;
+    const CL_PHDID              = 3;
+    const CL_CERTID             = 4;
    
-    const CL_MAX               = self::CL_PHDID;
+    const CL_MIN                = self::CL_UGADID;
+    const CL_MAX                = self::CL_CERTID;
    
     /**
      * UsersPersonal types
@@ -77,6 +90,41 @@ class BaseModel extends ActiveRecord
     const VISA_F3              = 3;
     const VISA_MIN             = self::VISA_NO;
     const VISA_MAX             = self::VISA_F3;
+
+    const TYPE_PERMIT_OPEN_REQ      = 0;
+    const TYPE_PERMIT_ISSUED        = 1;
+    const TYPE_PERMIT_DUPLICATE     = 2;
+    const TYPE_PERMIT_MIN           = self::TYPE_PERMIT_OPEN_REQ;
+    const TYPE_PERMIT_MAX           = self::TYPE_PERMIT_DUPLICATE;
+
+    const TYPE_DEPARTMENT_NOT_SET   = 0;
+    const TYPE_DEPARTMENT_ACCT      = 1;
+    const TYPE_DEPARTMENT_BITM      = 2;
+    const TYPE_DEPARTMENT_ECON      = 3;
+    const TYPE_DEPARTMENT_FIR       = 4;
+    const TYPE_DEPARTMENT_MSCM      = 5;
+    const TYPE_DEPARTMENT_MGMT      = 6;
+    const TYPE_DEPARTMENT_MIN       = self::TYPE_DEPARTMENT_NOT_SET;
+    const TYPE_DEPARTMENT_MAX       = self::TYPE_DEPARTMENT_MGMT;
+
+    const TYPE_CAREERLEVEL_NOT_SET  = 0;
+    const TYPE_CAREERLEVEL_UGAD     = 1;
+    const TYPE_CAREERLEVEL_GRAD     = 2;
+    const TYPE_CAREERLEVEL_PHD      = 3;
+    const TYPE_CAREERLEVEL_CERT     = 4;
+    const TYPE_CAREERLEVEL_MIN      = self::TYPE_CAREERLEVEL_NOT_SET;
+    const TYPE_CAREERLEVEL_MAX      = self::TYPE_CAREERLEVEL_CERT;
+
+    const TYPE_MASTERS_NOT_SET      = 0;
+    const TYPE_MASTERS_MA_ECON      = 1;
+    const TYPE_MASTERS_MS_ACCT      = 2;
+    const TYPE_MASTERS_MS_IS        = 3;
+    const TYPE_MASTERS_MSBA_FIR     = 4;
+    const TYPE_MASTERS_EMBA         = 5;
+    const TYPE_MASTERS_PMBA         = 6;
+    const TYPE_MASTERS_OMBA         = 7;
+    const TYPE_MASTERS_MIN          = self::TYPE_MASTERS_NOT_SET;
+    const TYPE_MASETERS_MAX         = self::TYPE_MASTERS_OMBA;
 
     const TYPE_FIELD_NOT_SET   = 0;
     const TYPE_FIELD_SELECT    = 1;
@@ -153,6 +201,46 @@ class BaseModel extends ActiveRecord
     const TYPE_ITEM_DOCUMENT        = 12;
     const TYPE_ITEM_MIN             = self::TYPE_ITEM_FORM_FIELD;
     const TYPE_ITEM_MAX             = self::TYPE_ITEM_DOCUMENT;
+    
+    const TYPE_FACULTY_RANK_NOT_SET = 0;
+    const TYPE_FACULTY_RANK_01      = 1;
+    const TYPE_FACULTY_RANK_02      = 2;
+    const TYPE_FACULTY_RANK_03      = 3;
+    const TYPE_FACULTY_RANK_09      = 4;
+    const TYPE_FACULTY_RANK_UA      = 5;
+    const TYPE_FACULTY_MIN          = self::TYPE_FACULTY_RANK_NOT_SET;
+    const TYPE_FACULTY_MAX          = self::TYPE_FACULTY_RANK_UA;
+
+    const TYPE_EMPLOYEE_CLASS_NOT_SET   = 0;
+    const TYPE_EMPLOYEE_CLASS_AE        = 1;
+    const TYPE_EMPLOYEE_CLASS_AD        = 2;
+    const TYPE_EMPLOYEE_CLASS_F9        = 3;
+    const TYPE_EMPLOYEE_CLASS_FA        = 4;
+    const TYPE_EMPLOYEE_CLASS_CL        = 5;
+    const TYPE_EMPLOYEE_CLASS_MIN       = self::TYPE_EMPLOYEE_CLASS_NOT_SET;
+    const TYPE_EMPLOYEE_CLASS_MAX       = self::TYPE_EMPLOYEE_CLASS_AE;
+    
+    const TYPE_SCHOOL_DEPT_NOT_SET          = 0;
+    const TYPE_SCHOOL_DEPT_PROVOST          = 1;
+    const TYPE_SCHOOL_DEPT_FCBE_ACAD_PROG   = 2;
+    const TYPE_SCHOOL_DEPT_COL_FCBE         = 3;
+    const TYPE_SCHOOL_DEPT_CIO_ITS          = 4;
+    const TYPE_SCHOOL_DEPT_FCBE_ACAD_ADMIN  = 5;
+    const TYPE_SCHOOL_DEPT_MSCM             = 6;
+    const TYPE_SCHOOL_DEPT_ECON             = 7;
+    const TYPE_SCHOOL_DEPT_FIR              = 8;
+    const TYPE_SCHOOL_DEPT_BITM             = 9;
+    const TYPE_SCHOOL_DEPT_MGMT             = 10;
+    const TYPE_SCHOOL_DEPT_ACCT             = 11;
+    const TYPE_SCHOOL_DEPT_MIN              = self::TYPE_SCHOOL_DEPT_NOT_SET;
+    const TYPE_SCHOOL_DEPT_MAX              = self::TYPE_SCHOOL_DEPT_ACCT;
+    
+    const TYPE_UNIVERSITY_DEPT_NOT_SET          = 0;
+    const TYPE_UNIVERSITY_DEPT_ACAD_AFFAIR      = 1;
+    const TYPE_UNIVERSITY_DEPT_ITS              = 2;
+    const TYPE_UNIVERSITY_DEPT_COL_FCBE         = 3;
+    const TYPE_UNIVERSITY_MIN                   = self::TYPE_UNIVERSITY_DEPT_NOT_SET;
+    const TYPE_UNIVERSITY_MAX                   = self::TYPE_UNIVERSITY_DEPT_ACAD_AFFAIR;
 
     const SCENARIO_INSERT   = 'insert';
     const SCENARIO_UPDATE   = 'update';
