@@ -165,7 +165,7 @@ class FormFieldsTest extends \Codeception\Test\Unit
         expect_not($formField = FormFields::existsFieldByProperties( 0, 1, 'Active', true));          
         
         // Wrong data types everywhere
-        expect_not($formField = FormFields::existsFieldByProperties( 'true', $this->tooLong, false, 'ERROR-HERE'));             
+        expect_not($formField = FormFields::existsFieldByProperties( 'true', $this->tooLong, decoct(264), 'ERROR-HERE'));             
     }
     
     
@@ -194,6 +194,63 @@ class FormFieldsTest extends \Codeception\Test\Unit
         expect_not($formField = FormFields::getSelectOptions(10000, "ERROR-HERE", true));                                                
         
         // Wrong data types everywhere
-        expect_not($formField = FormFields::getSelectOptions( 'true', 0xFFF, 'ERROR-HERE'));                 
+        expect_not($formField = FormFields::getSelectOptions( 'true', decoct(264), 'ERROR-HERE'));                 
+    }
+    
+    
+    public function testGetFormFieldOptions()
+    {
+        // function getFormFieldOptions($type = -1, $type_str = "", $prompt = false)
+        
+        /** Valid: expect_that **/
+        // All valid values
+        expect_that($formField = FormFields::getFormFieldOptions( 1, 'Form-Field', true) );     
+        
+        // All valid values except $type_str
+        expect_that($formField = FormFields::getFormFieldOptions( 1, '', false) );           
+        
+        // All valid values except $type
+        expect_that($formField = FormFields::getFormFieldOptions( -1, 'Form-Field', true) );     
+
+        /** NOT Valid: expect_not **/
+        // No values
+        expect_not($formField = FormFields::getFormFieldOptions());        
+        
+        // No valid values
+        expect_not($formField = FormFields::getFormFieldOptions(10000, "ERROR-HERE", false));                                                
+        
+        // Wrong data types everywhere
+        expect_not($formField = FormFields::getFormFieldOptions( 'true', decoct(264), 'ERROR-HERE'));   
+    }
+    
+    
+    public function testMoveFormFields()
+    {
+        $row = FormFields::find()
+            ->where(['id' => 6 ])
+            ->one();
+        
+        // Starting position: id: 6
+        //
+        // Start position: 2
+        // Min position: 1
+        // Max position: 3   
+
+        expect_that( $row->movePrev() );
+        expect_not( $row->movePrev() );  
+        
+        $this->assertTrue( $row->getIsFirst() );              
+        
+        expect_that( $row->moveNext() );
+        expect_that( $row->moveNext() );
+        expect_not( $row->moveNext() );
+        
+        $this->assertTrue( $row->getIsLast() );                      
+
+        expect_that( $row->moveFirst() );
+        expect_that( $row->moveLast() );                
+        
+        // Too far; invalid positioning
+        expect_not( $row->moveToPosition(3000) );
     }
 }
