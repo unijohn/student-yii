@@ -54,13 +54,15 @@
             "php-cs-fixer fix controllers/ -v",
             "php-cs-fixer fix models/ -v",
             "php-cs-fixer fix migrations/ -v",
-            "php-cs-fixer fix views/ --rules=-method_argument_space -v"
+            "php-cs-fixer fix views/ --rules=-method_argument_space -v",
+	    "php-cs-fixer fix tests/unit/models/ -v"
         ],
         "ci-php-cs-fixer-dry": [
             "php-cs-fixer fix controllers/ --dry-run -v",
             "php-cs-fixer fix models/ --dry-run -v",
             "php-cs-fixer fix migrations/ --dry-run -v",
-            "php-cs-fixer fix views/ --dry-run -v"
+            "php-cs-fixer fix views/ --dry-run -v",
+	    "php-cs-fixer fix tests/unit/models/ --dry-run -v"
         ],
         "ci-fix": [
             "@ci-php-cs-fixer-fix"
