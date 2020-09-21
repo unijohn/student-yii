@@ -177,6 +177,16 @@ class FormFields extends BaseModel
             ],
 
             [
+                'type_str',     'string', 'length' => [0, 64],
+            ],
+            [
+                'description',  'string', 'length' => [0, 64],
+            ],
+            [
+                'value_str',    'string', 'length' => [0, 64],
+            ],                                    
+
+            [
                 [
                    'form_field', 'type', 'type_str', 'description', 'is_active', 'order_by', 'is_visible', 'updated_at'
                 ],
@@ -284,6 +294,13 @@ class FormFields extends BaseModel
             $countSQL,
             $params
         )->queryScalar();
+
+/*        
+        self::debug( Yii::$app->db->createCommand(
+            $countSQL,
+            $params
+        )->getRawSql() );
+ */        
         
         //self::debug( $countSQL, false );
         //self::debug( $count, true );
@@ -318,7 +335,7 @@ class FormFields extends BaseModel
 
         $query_fields->orderBy('ff.order_by');
 
-//       self::debug( $query_fields->createCommand()->getRawSql(), false );
+//        self::debug( $query_fields->createCommand()->getRawSql(), false );
             
         return $query_fields->all();
     }
@@ -340,7 +357,7 @@ class FormFields extends BaseModel
             ->orderBy('ff.type')
             ->all();
 
-//       self::debug( $query_fields->createCommand()->getRawSql() );
+//        self::debug( $query_fields->createCommand()->getRawSql() );
 
         $dropDown = [];
 
@@ -368,6 +385,8 @@ class FormFields extends BaseModel
         foreach ($results as $row) {
             $dropDown[$row['value']] = $row['description'];
         }
+        
+        //self::debug( $dropDown );
                
         return $dropDown;
     }

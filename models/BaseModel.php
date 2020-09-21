@@ -126,6 +126,24 @@ class BaseModel extends ActiveRecord
     const TYPE_MASTERS_MIN          = self::TYPE_MASTERS_NOT_SET;
     const TYPE_MASETERS_MAX         = self::TYPE_MASTERS_OMBA;
 
+    /**
+     * FormFields types
+     **/
+     
+    const FIELD_FORM                = 1;
+    const FIELD_ACTIVE              = 2;
+    const FIELD_VISIBLE             = 3;
+    const FIELD_US_CITIZEN          = 4;
+    const FIELD_OTHER_CITIZEN       = 5;
+    const FIELD_CALENDAR_YEAR_FOUR  = 6;
+    const FIELD_TERM                = 7;
+    const FIELD_CALENDAR_MONTH_TWO  = 8;
+    const FIELD_SKILL_STRENGTH      = 9;
+    const FIELD_PREF_RANKING        = 10;
+    const FIELD_DOCUMENT_TYPE       = 11;
+    const FIELD_FORM_MIN            = self::FIELD_FORM;
+    const FIELD_FORM_MAX            = self::FIELD_DOCUMENT_TYPE;    
+
     const TYPE_FIELD_NOT_SET   = 0;
     const TYPE_FIELD_SELECT    = 1;
     const TYPE_FIELD_CHECKBOX  = 2;
