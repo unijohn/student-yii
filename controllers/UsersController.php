@@ -17,6 +17,7 @@ use app\controllers\BaseController;
 
 use app\models\AuthAssignment;
 use app\models\AuthItem;
+use app\models\FormFields;
 use app\models\SystemCodes;
 use app\models\SystemCodesChild;
 use app\models\User;
@@ -24,7 +25,7 @@ use app\models\UsersPersonal;
 
 class UsersController extends BaseController
 {
-    const dropDownOptsKeys  = [ 'pageCount',  'is_active', 'us_citizen', 'citizen_other', 'visa_type', 'country_list' ];
+    const dropDownOptsKeys  = [ 'pageCount',  'is_active', 'is_active_employee', ' is_active_student', 'us_citizen', 'citizen_other', 'visa_type', 'country_list' ];
    
     const dropDownOpts      =
     [
@@ -47,14 +48,7 @@ class UsersController extends BaseController
          '0'   => 'No',
          '1'   => 'Yes',
       ],
-/**
-      'citizen_other' =>
-      [
-         '-1'  => 'Select Foreign Citizenship Status',
-         '0'   => 'Not Applicable',
-         '1'   => 'Yes',
-      ],
- **/
+
       'visa_type' =>
       [
          '-1'  => 'Select Visa Status',

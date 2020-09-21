@@ -192,6 +192,7 @@ class UsersPersonal extends BaseModel
         $newUser->lastNm        = "TBS-Last";
         $newUser->middleNm      = "TBS-MI";
         $newUser->salutation    = "TB.";
+<<<<<<< Updated upstream
         $newUser->us_citizen    = intval(self::CITIZEN_US_YES);
         $newUser->citizen_other = strval(self::CITIZEN_OTHER_NO);
         $newUser->visa_type     = intval(self::VISA_NO);
@@ -201,6 +202,15 @@ class UsersPersonal extends BaseModel
         } else {
             self::debug($newUser->errors);
         }
+||||||| merged common ancestors
+        $newUser->us_citizen    = self::CITIZEN_US_YES;     
+        $newUser->citizen_other = self::CITIZEN_OTHER_NO;        
+        $newUser->visa_type     = self::VISA_NO;   
+=======
+        $newUser->us_citizen    = self::CITIZEN_US_YES;
+        $newUser->citizen_other = self::CITIZEN_OTHER_NO;
+        $newUser->visa_type     = self::VISA_NO;
+>>>>>>> Stashed changes
     
         return $newUser->save();
     }

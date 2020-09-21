@@ -15,12 +15,13 @@ use yii\web\Response;
 
 use app\controllers\BaseController;
 
+use app\models\FormFields;
 use app\models\SystemCodes;
 use app\models\SystemCodesChild;
 
 class CodesController extends BaseController
 {
-    const dropDownOptsKeys  = [ 'pageCount', 'type', 'is_active', 'is_hidden' ];
+    const dropDownOptsKeys  = [ 'pageCount', 'type', 'is_active', 'is_visible' ];
    
     const dropDownOpts      =
     [
@@ -38,18 +39,10 @@ class CodesController extends BaseController
             '2'     => 'Department',
             '3'     => 'CareerLevel',
             '4'     => 'Masters',
-        ],
-        'is_active' =>
-        [
-            '-1'    => 'Select Status',
-            '0'     => 'Inactive',
-            '1'     => 'Active',
-        ],
-        'is_hidden' =>
-        [
-            '-1'    => 'Select Status',
-            '0'     => 'Hidden',
-            '1'     => 'Visible',
+            '5'     => 'Faculty Rank',
+            '6'     => 'Employee Class',
+            '7'     => 'Department - School',
+            '8'     => 'Department - University',
         ],
     ];
    
@@ -97,7 +90,7 @@ class CodesController extends BaseController
 
         $this->_data['filterForm']['type']              = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.type', '');
         $this->_data['filterForm']['is_active']         = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.is_active', -1);
-        $this->_data['filterForm']['is_hidden']         = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.is_hidden', -1);
+        $this->_data['filterForm']['is_visible']        = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.is_visible', -1);
         $this->_data['filterForm']['paginationCount']   = ArrayHelper::getValue($this->_request->get(), 'SystemCodes.pagination_count', 10);
       
         $this->_data['tagid']            = $this->_request->post('tagid', '');
@@ -109,7 +102,7 @@ class CodesController extends BaseController
         $this->_data['SystemCodes']['id']            = ArrayHelper::getValue($this->_request->post(), 'SystemCodes.id', '');
         $this->_data['SystemCodes']['insert']        = ArrayHelper::getValue($this->_request->post(), 'SystemCodes.insert', '');
         $this->_data['SystemCodes']['is_active']     = ArrayHelper::getValue($this->_request->post(), 'SystemCodes.is_active', -1);
-        $this->_data['SystemCodes']['is_hidden']     = ArrayHelper::getValue($this->_request->post(), 'SystemCodes.is_hidden', -1);
+        $this->_data['SystemCodes']['is_visible']    = ArrayHelper::getValue($this->_request->post(), 'SystemCodes.is_visible', -1);
         $this->_data['SystemCodes']['type']          = ArrayHelper::getValue($this->_request->post(), 'SystemCodes.type', '');
         $this->_data['SystemCodes']['update']        = ArrayHelper::getValue($this->_request->post(), 'SystemCodes.update', '');
       
@@ -173,7 +166,7 @@ class CodesController extends BaseController
       
         $params  = [];
 
-        $sql  = "SELECT  id, type, code, description, is_active, is_hidden, created_at, updated_at " ;
+        $sql  = "SELECT  id, type, code, description, is_active, is_visible, created_at, updated_at " ;
         $sql .= "FROM " . $tableNm . " WHERE id > 0 ";
 
         $countSQL  = "SELECT COUNT(*) " ;
@@ -197,8 +190,8 @@ class CodesController extends BaseController
             $params[':is_active']   = $this->_data['filterForm']['is_active'];
         }
       
-        if ($this->_data['filterForm']['is_hidden'] > -1 && strlen($this->_data['filterForm']['is_hidden']) > 0) {
-            $andWhere = "AND is_hidden =:is_hidden ";
+        if ($this->_data['filterForm']['is_visible'] > -1 && strlen($this->_data['filterForm']['is_visible']) > 0) {
+            $andWhere = "AND is_visible =:is_visible ";
       
             $sql        .= $andWhere;
             $countSQL   .= $andWhere;
@@ -658,7 +651,7 @@ class CodesController extends BaseController
 
             $updateModel->type          = $this->_data['SystemCodes']['type'];
             $updateModel->is_active      = $this->_data['SystemCodes']['is_active'];
-            $updateModel->is_hidden      = $this->_data['SystemCodes']['is_hidden'];
+            $updateModel->is_visible      = $this->_data['SystemCodes']['is_visible'];
 
             $this->_data['SystemCodes']['update'] = $updateModel->save();
          
@@ -725,24 +718,17 @@ class CodesController extends BaseController
     private function keyLookup($key, $value)
     {
         $codeType   = self::getDropDownOpts('type');
-        $isActive   = self::getDropDownOpts('is_active');
-        $isHidden   = self::getDropDownOpts('is_hidden');
+        
+        $isActive   = FormFields::getSelectOptions(-1, 'is_active', true);
+        $isVisible  = FormFields::getSelectOptions(-1, 'is_visible', true);
       
-        if ($key === "type") {
+        if ($key == 'is_active'  && array_key_exists($value, $isActive)) {
+            return $isActive[ $value ];
+        } elseif ($key == 'is_visible' && array_key_exists($value, $isVisible)) {
+            return $isVisible[ strval($value)];
+        } elseif ($key === "type") {
             if (isset($codeType[$value]) && !empty($codeType[$value])) {
                 return $codeType[$value];
-            } else {
-                return "Unknown value : " . $key . " :: " . $value;
-            }
-        } elseif ($key === "is_active") {
-            if (isset($isActive[$value]) && !empty($isActive[$value])) {
-                return $isActive[$value];
-            } else {
-                return "Unknown value : " . $key . " :: " . $value;
-            }
-        } elseif ($key === "is_hidden") {
-            if (isset($isHidden[$value]) && !empty($isHidden[$value])) {
-                return $isHidden[$value];
             } else {
                 return "Unknown value : " . $key . " :: " . $value;
             }
@@ -763,8 +749,10 @@ class CodesController extends BaseController
    
         if (!isset($key) || empty($key)) {
             return $dropDownOpts;
-        } elseif (!in_array($key, self::dropDownOptsKeys)) {
-            return $dropDownOpts;
+        } elseif ($key == 'is_active') {
+            return FormFields::getSelectOptions(-1, 'is_active', $prompt);
+        } elseif ($key == 'is_visible') {
+            return FormFields::getSelectOptions(-1, 'is_visible', $prompt);
         }
       
         if (!$prompt) {

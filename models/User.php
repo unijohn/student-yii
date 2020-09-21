@@ -67,9 +67,11 @@ class User extends BaseModel implements IdentityInterface
     public function attributeLabels()
     {
         return [
-//            'id' => Yii::t('app', 'ID'),
+            'id'        => Yii::t('app', 'System ID'),
             'uuid'      => Yii::t('app', 'UUID'),
-            'is_active' => Yii::t('app', 'Account Status'),
+            'is_active' => Yii::t('app', 'Workdesk Account Status'),
+            'is_active_employee'    => Yii::t('app', 'UofM Employee Status'),
+            'is_active_student'     => Yii::t('app', 'UofM Student Status'),
             
 //            'auth_key' => Yii::t('app', 'Published'),
 //            'access_token' => Yii::t('app', 'Title'),
@@ -146,8 +148,8 @@ class User extends BaseModel implements IdentityInterface
     public function scenarios()
     {
         $scenarios = parent::scenarios();
-        $scenarios[self::SCENARIO_INSERT] = [ 'uuid', 'is_active', 'auth_key', 'access_token' ];
-        $scenarios[self::SCENARIO_UPDATE] = [ 'is_active', 'access_token' ];
+        $scenarios[self::SCENARIO_INSERT] = [ 'uuid', 'is_active', 'is_active_employee', 'is_active_student', 'auth_key', 'access_token' ];
+        $scenarios[self::SCENARIO_UPDATE] = [ 'is_active', 'is_active_employee', 'is_active_student', 'access_token' ];
    
         return $scenarios;
     }
@@ -158,18 +160,37 @@ class User extends BaseModel implements IdentityInterface
      */
     public function rules()
     {
-        return [
-         [ 'uuid', 'string', 'min' => 2, 'max' => 16 ],
-         [ 'uuid', 'unique' ],
-         [ 'uuid', 'default', 'value' => null ],
-
-         ['is_active', 'default', 'value'    => self::STATUS_ACTIVE     ],
-         ['is_active', 'integer', 'min'      => self::STATUS_INACTIVE   ],
-         ['is_active', 'integer', 'max'      => self::TYPE_MAX          ],
-         ['is_active', 'filter',  'filter'   => 'intval'],
-         
-         [['is_active'], 'required' ],
-      ];
+        return
+        [
+            [
+                'uuid', 'string', 'min' => 2, 'max' => 10,
+            ],
+            [
+                'is_active',  'number', 'min' => self::STATUS_ACTIVE_MIN,  'max' => self::STATUS_ACTIVE_MAX,
+                'tooBig' => 'Select a valid option', 'tooSmall' => 'Is Workdesk account active?',
+            ],
+            [
+                'is_active_employee',  'number', 'min' => self::STATUS_ACTIVE_MIN,  'max' => self::STATUS_ACTIVE_MAX,
+                'tooBig' => 'Select a valid option', 'tooSmall' => 'Is user an current employee of UofM?',
+            ],
+            [
+                'is_active_student',  'number', 'min' => self::STATUS_ACTIVE_MIN,  'max' => self::STATUS_ACTIVE_MAX,
+                'tooBig' => 'Select a valid option', 'tooSmall' => 'Is user an current student of UofM?',
+            ],
+            
+            [
+                'auth_key', 'string', 'min' => 32, 'max' => 32,
+            ],
+            [
+                'access_token', 'string', 'min' => 32, 'max' => 32,
+            ],
+            [
+                [
+                   'uuid', 'is_active', 'is_active_employee', 'is_active_student', 'auth_key', 'access_token',
+                ],
+                'required', 'on' => self::SCENARIO_INSERT
+            ],
+        ];
     }
 
 
@@ -217,14 +238,16 @@ class User extends BaseModel implements IdentityInterface
     public function addUser($uuid = '')
     {
         if (!isset($uuid) || empty($uuid)) {
-            self::debug("What...?: $uuid", false);
+            self::debug("What...?  How...?: $uuid", false);
             return false;
         }
 
         $newUser = new User();
         
-        $newUser->uuid = $uuid;
-        $newUser->is_active = self::STATUS_ACTIVE;
+        $newUser->uuid                  = $uuid;
+        $newUser->is_active             = self::STATUS_ACTIVE;
+        $newUser->is_active_employee    = self::STATUS_ACTIVE;
+        $newUser->is_active_student     = self::STATUS_ACTIVE;
         $newUser->generateAuthKey();
         $newUser->generateAccessToken();
     

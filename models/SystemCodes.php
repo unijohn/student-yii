@@ -69,6 +69,14 @@ class SystemCodes extends BaseModel
             // if you're using datetime instead of UNIX timestamp:
             'value' => time(),
          ],
+         
+        'positionBehavior' => [
+            'class' => PositionBehavior::className(),
+            'positionAttribute' => 'order_by',
+            'groupAttributes' => [
+                'grouping' // multiple lists varying by 'categoryId'
+            ],
+        ],
 
 /**
          'softDeleteBehavior' => [

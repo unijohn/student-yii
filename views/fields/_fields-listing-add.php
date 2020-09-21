@@ -11,8 +11,8 @@ use app\models\FormFields;
 /* @var $model app\models\PostSearch */
 /* @var $form yii\widgets\ActiveForm */
 
-   $formField   = FormFields::getFormFieldOptions(-1, 'form_field', false);  
-   $grouping    = FormFields::getDistinctGroupings();
+   $formField   = FormFields::getFormFieldOptions(-1, 'Form-Field', true);  
+   $typeField   = FormFields::getDistinctGroupings();
    
 //FormFields::debug( $fieldType );   
 
@@ -36,14 +36,14 @@ use app\models\FormFields;
         )
     ?>
     
-    <?= $form->field($model, 'grouping')
+    <?= $form->field($model, 'type')
             ->dropdownList(
-                $grouping,
+                $typeField,
                 [
-                   'id'     => 'grouping',
+                   'id'     => 'type',
                    'class'  => 'form-control',
                    'style'  => 'width: 60%;float:right;',
-                   'value'  => $FormFields['grouping'],
+                   'value'  => $FormFields['type'],
                 ]
         )
     ?>
@@ -57,19 +57,19 @@ use app\models\FormFields;
             ]
             ) ?>   
             
-    <?=  $form->field($model, 'value')
+    <?=  $form->field($model, 'value_str')
             ->textInput(
                 [
-               'id'     => 'value',
+               'id'     => 'value_str',
                'class'  => 'form-control',
                'style'  => 'width: 60%;float:right;',
             ]
             ) ?>     
             
-    <?=  $form->field($model, 'value_int')
+    <?=  $form->field($model, 'value')
             ->textInput(
                 [
-               'id'     => 'value_int',
+               'id'     => 'value',
                'class'  => 'form-control',
                'style'  => 'width: 60%;float:right;',
             ]

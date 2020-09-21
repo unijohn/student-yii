@@ -12,7 +12,7 @@ use app\controllers\CodesController;
    $pageCount  = CodesController::getDropDownOpts('pageCount');
    $codeType   = CodesController::getDropDownOpts('type', true);
    $isActive   = CodesController::getDropDownOpts('is_active', true);
-   $isHidden   = CodesController::getDropDownOpts('is_hidden', true);
+   $isVisible  = CodesController::getDropDownOpts('is_visible', true);
 ?>
 
 
@@ -63,13 +63,13 @@ use app\controllers\CodesController;
    </div>
    
    <div class="form-group form-inline field-is_hidden" style="!white-space:nowrap;">
-   <label class="control-label" for="SystemCodes[is_hidden]">Is Hidden</label>
+   <label class="control-label" for="SystemCodes[is_visible]">Is Visible</label>
       <?= Html::dropDownList(
-          'SystemCodes[is_hidden]',
-          $is_hidden,
-          $isHidden,
+          'SystemCodes[is_visible]',
+          $is_visible,
+          $isVisible,
           [
-            'id'     => 'is_hidden',
+            'id'     => 'is_visible',
             'class'  => 'form-control',
             'style'  => 'width: 60%;float:right;',
          ]

@@ -104,7 +104,13 @@ class SiteController extends BaseController
 
             $user = $userModel->findByUUID($uuid);
             
+<<<<<<< Updated upstream
             self::debug("userModel->findByUUID($uuid)", false);
+||||||| merged common ancestors
+            self::debug( "userModel->findByUUID($uuid)", false );
+=======
+//            self::debug( "userModel->findByUUID($uuid)", false );
+>>>>>>> Stashed changes
 
             if (!isset($user) || empty($user)) {
                 if (!$userModel->addUser($uuid)) {
@@ -114,9 +120,17 @@ class SiteController extends BaseController
                     $userPersonal = $userPersonalModel->existsPersonal($uuid);
                     self::debug($userPersonal . ": Before userPersonalModel->addPersonal($uuid)", false);
                 
+<<<<<<< Updated upstream
                     if (!$userPersonalModel->addPersonal($uuid)) {
                         print("UserPersonal->addPersonal failed: $uuid"  . PHP_EOL);
                         self::debug($userPersonalModel->errors, false);
+||||||| merged common ancestors
+                    if( !$userPersonalModel->addPersonal($uuid)) {
+                        print("UserPersonal: $uuid"  . PHP_EOL);
+=======
+                    if (!$userPersonalModel->addPersonal($uuid)) {
+                        print("UserPersonal: $uuid"  . PHP_EOL);
+>>>>>>> Stashed changes
                         die("Gotta figure this logic out [2]");
                     } else {
                         $user = $userModel->findByUUID(phpCAS::getUser());

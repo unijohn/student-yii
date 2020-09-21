@@ -34,7 +34,7 @@
                      'model'              => $model,
                      'type'               => $data['filterForm']['type'],
                      'is_active'          => $data['filterForm']['is_active'],
-                     'is_hidden'          => $data['filterForm']['is_hidden'],
+                     'is_visible'          => $data['filterForm']['is_visible'],
                      'pagination_count'   => $data['filterForm']['paginationCount']
                   ]); ?>   
                </div>
@@ -84,7 +84,17 @@
                     $strValue = "CareerLevel";
                 } elseif ($data['type'] == "4") {
                     $strValue = "Masters";
-                } else {
+                } elseif ($data['type'] == "5") {
+                    $strValue = "Faculty Rank";
+                } elseif ($data['type'] == "6") {
+                    $strValue = "Employee Class";
+                } elseif ($data['type'] == "7") {
+                    $strValue = "Department - School";
+                } elseif ($data['type'] == "8") {
+                    $strValue = "Department - University";
+                } 
+                
+                else {
                     $strValue = $data['type'] ;
                 }
                
