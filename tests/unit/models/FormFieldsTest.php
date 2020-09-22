@@ -117,7 +117,7 @@ class FormFieldsTest extends \Codeception\Test\Unit
     
         /** Valid: expect_that **/
         // All valid values
-        $this->assertTrue($formField = FormFields::existsFieldByProperties(1, 1, 'Form-Field', 'Checkbox', '', 3) );
+        $this->assertTrue($formField = FormFields::existsFieldByProperties(1, 1, 'Form-Field', 'Checkbox', '', 3));
 
         // All valid values except $value
         expect_that($formField = FormFields::existsFieldByProperties(1, 1, 'Form-Field', 'Radio'));
