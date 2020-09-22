@@ -159,15 +159,16 @@ class BaseMigration extends Migration
     const TYPE_ITEM_FORM_FIELD      = 1;
     const TYPE_ITEM_ACTIVE          = 2;
     const TYPE_ITEM_VISIBLE         = 3;
-    const TYPE_ITEM_US_CITIZEN      = 4;
-    const TYPE_ITEM_VISA_TYPE       = 5;
-    const TYPE_ITEM_CITIZEN_OTHER   = 6;
-    const TYPE_ITEM_YEAR_FOUR       = 7;
-    const TYPE_ITEM_TERM            = 8;
-    const TYPE_ITEM_MONTH_TWO       = 9;
-    const TYPE_ITEM_SKILL_STRENGTH  = 10;
-    const TYPE_ITEM_PREFERENCE_RANK = 11;
-    const TYPE_ITEM_DOCUMENT        = 12;
+    const TYPE_ITEM_BANNER_DATA     = 4;    
+    const TYPE_ITEM_US_CITIZEN      = 5;
+    const TYPE_ITEM_VISA_TYPE       = 6;
+    const TYPE_ITEM_CITIZEN_OTHER   = 7;
+    const TYPE_ITEM_YEAR_FOUR       = 8;
+    const TYPE_ITEM_TERM            = 9;
+    const TYPE_ITEM_MONTH_TWO       = 10;
+    const TYPE_ITEM_SKILL_STRENGTH  = 11;
+    const TYPE_ITEM_PREFERENCE_RANK = 12;
+    const TYPE_ITEM_DOCUMENT        = 13;
     
     const TYPE_PERMIT_OPEN_REQ      = 0;
     const TYPE_PERMIT_ISSUED        = 1;

@@ -86,6 +86,17 @@ class m200821_143444_tbl_FormFields extends BaseMigration
                 self::TYPE_FIELD_SELECT, self::TYPE_ITEM_VISIBLE, 'Is-Visible', 'Hidden',        '', self::STATUS_HIDDEN,       self::STATUS_ACTIVE, self::STATUS_VISIBLE, 3, $created_at,
             ],
             
+            // is_banner_data
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_BANNER_DATA, 'Is-Banner-Data', 'Is Field Banner-Related',  '', self::TYPE_PROMPT_DEFAULT,  self::STATUS_ACTIVE, self::STATUS_VISIBLE, 1, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_BANNER_DATA, 'Is-Banner-Data', 'Banner',                   '', self::STATUS_BANNER_DATA,   self::STATUS_ACTIVE, self::STATUS_VISIBLE, 2, $created_at,
+            ],
+            [
+                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_BANNER_DATA, 'Is-Banner-Data', 'Workdesk',                 '', self::STATUS_WORKDESK_DATA, self::STATUS_ACTIVE, self::STATUS_VISIBLE, 3, $created_at,
+            ],
+            
             // us_citizen
             [
                 self::TYPE_FIELD_SELECT, self::TYPE_ITEM_US_CITIZEN, 'US-Citizen', 'Select US Citizenship Status', '', self::TYPE_PROMPT_DEFAULT,   self::STATUS_ACTIVE, self::STATUS_VISIBLE, 1, $created_at,

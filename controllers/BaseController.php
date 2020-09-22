@@ -51,8 +51,9 @@ class BaseController extends Controller
      * For fields used across multiple views and features, centralizing their DB
      * wording here
      **/
-    const IS_ACTIVE_TYPE_STR    = 'Is-Active';
-    const IS_VISIBLE_TYPE_STR   = 'Is-Visible';
+    const IS_ACTIVE_TYPE_STR        = 'Is-Active';
+    const IS_VISIBLE_TYPE_STR       = 'Is-Visible';
+    const IS_BANNER_DATA_TYPE_STR   = 'Is-Banner-Data';    
 
     /**
      * {@inheritdoc}

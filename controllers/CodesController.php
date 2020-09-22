@@ -86,6 +86,7 @@ class CodesController extends BaseController
         $this->_data['dropTag']          = $this->_request->post('dropTag', '');
   
         $this->_data['SystemCodes']['code']          = ArrayHelper::getValue($this->_request->post(), 'SystemCodes.code', '');
+        $this->_data['SystemCodes']['code_str']      = ArrayHelper::getValue($this->_request->post(), 'SystemCodes.code_str', '');        
         $this->_data['SystemCodes']['description']   = ArrayHelper::getValue($this->_request->post(), 'SystemCodes.description', '');
         $this->_data['SystemCodes']['id']            = ArrayHelper::getValue($this->_request->post(), 'SystemCodes.id', '');
         $this->_data['SystemCodes']['insert']        = ArrayHelper::getValue($this->_request->post(), 'SystemCodes.insert', '');
@@ -154,7 +155,7 @@ class CodesController extends BaseController
       
         $params  = [];
 
-        $sql  = "SELECT  id, type, type_str, code, description, is_active, is_visible, order_by, created_at, updated_at " ;
+        $sql  = "SELECT  id, type, type_str, code, code_str, description, is_active, is_visible, order_by, created_at, updated_at " ;
         $sql .= "FROM " . $tableNm . " WHERE id > 0 ";
 
         $countSQL  = "SELECT COUNT(*) " ;
@@ -212,7 +213,7 @@ class CodesController extends BaseController
                   'default' => SORT_ASC,
                   'label'   => 'Type',
                ],
-               'code' =>
+               'code_str' =>
                [
                   'default' => SORT_ASC,
                   'label'   => 'Code',
@@ -558,7 +559,11 @@ class CodesController extends BaseController
      */
     public function actionSave()
     {
-        $isError = false;
+        $isError    = false;
+
+        $msgAddTagHeader    = "Add Tag";
+        $msgRemoveTagHeader = "Remove Tag";
+        $msgHeader          = "Save System Code";        
  
         $tagRelationExists = SystemCodesChild::find()
             ->where([ 'parent' => $this->_data['id'] ])
@@ -573,7 +578,7 @@ class CodesController extends BaseController
  
         if (strlen($this->_data['addTag']) > 0) {
             if (!is_null($tagRelationExists)) {
-                $this->_data['errors']['Add Tag'] =
+                $this->_data['errors'][$msgAddTagHeader] =
                 [
                    'value'     => "was unsuccessful",
                    'bValue'    => false,
@@ -598,7 +603,7 @@ class CodesController extends BaseController
                         ->limit(1)
                         ->one();
             
-                    $this->_data['success']['Add Tag'] =
+                    $this->_data['success'][$msgAddTagHeader] =
                     [
                         'value'        => "was successful",
                         'bValue'       => true,
@@ -611,7 +616,7 @@ class CodesController extends BaseController
                         'value' => "was added",
                     ];
                 } else {
-                    $this->_data['errors']['Add Tag'] =
+                    $this->_data['errors'][$msgAddTagHeader] =
                     [
                         'value'     => "was unsuccessful",
                         'bValue'    => false,
@@ -619,7 +624,7 @@ class CodesController extends BaseController
                         'class'     => 'alert alert-danger',
                    ];
                
-                    $this->_data['errors']['Add Permit Tag'] =
+                    $this->_data['errors'][$msgAddTagHeader] =
                     [
                         'value' => "was not successful; no tags were added. (Result: " . strval($result) . ") ",
                     ];
@@ -633,7 +638,7 @@ class CodesController extends BaseController
             $result = $this->removePermitTag($this->_data['id'], $this->_data['tagid']);
       
             if ($result > 0) {
-                $this->_data['success']['Remove Tag'] =
+                $this->_data['success'][$msgRemoveTagHeader] =
                 [
                     'value'        => "was successful",
                     'bValue'       => true,
@@ -646,7 +651,7 @@ class CodesController extends BaseController
                     'value' => "was removed",
                 ];
             } else {
-                $this->_data['errors']['Remove Tag'] =
+                $this->_data['errors'][$msgRemoveTagHeader] =
                 [
                     'value'     => "was unsuccessful",
                     'bValue'    => false,
@@ -674,7 +679,7 @@ class CodesController extends BaseController
             $exitEarly = false;
 
             if (!isset($this->_systemCodes->type) || empty($this->_systemCodes->type)) {
-                $this->_data['errors']['Save System Code'] =
+                $this->_data['errors'][$msgHeader] =
                 [
                     'value'     => "was unsuccessful",
                     'htmlTag'   => 'h4',
@@ -694,7 +699,7 @@ class CodesController extends BaseController
             }
          
             if (!isset($this->_systemCodes->code) || empty($this->_systemCodes->code)) {
-                $this->_data['errors']['Save System Code'] =
+                $this->_data['errors'][$msgHeader] =
                 [
                     'value'     => "was unsuccessful",
                     'htmlTag'   => 'h4',
@@ -710,7 +715,7 @@ class CodesController extends BaseController
             }
          
             if (!isset($this->_systemCodes->description) || empty($this->_systemCodes->description)) {
-                $this->_data['errors']['Save System Code'] =
+                $this->_data['errors'][$msgHeader] =
                 [
                    'value'     => "was unsuccessful",
                    'htmlTag'   => 'h4',
@@ -745,13 +750,14 @@ class CodesController extends BaseController
             $updateModel->scenario      = SystemCodes::SCENARIO_UPDATE;
  
             $updateModel->code          = $this->_data['SystemCodes']['code'];
+            $updateModel->code_str      = $this->_data['SystemCodes']['code_str'];
             $updateModel->description   = $this->_data['SystemCodes']['description'];
 
             //$updateColumns = $updateModel->getDirtyAttributes();
 
             $updateModel->type          = $this->_data['SystemCodes']['type'];
-            $updateModel->is_active      = $this->_data['SystemCodes']['is_active'];
-            $updateModel->is_visible      = $this->_data['SystemCodes']['is_visible'];
+            $updateModel->is_active     = $this->_data['SystemCodes']['is_active'];
+            $updateModel->is_visible    = $this->_data['SystemCodes']['is_visible'];
 
             $this->_data['SystemCodes']['update'] = $updateModel->save();
          
@@ -759,7 +765,7 @@ class CodesController extends BaseController
 
             if ($this->_data['SystemCodes']['update'] && is_array($updateColumns)) {
                 if (count($updateColumns) > 0) {
-                    $this->_data['success']['Save System Code'] =
+                    $this->_data['success'][$msgHeader] =
                     [
                         'value'     => "was successful",
                         'bValue'    => true,
@@ -769,44 +775,54 @@ class CodesController extends BaseController
                
                     foreach ($updateColumns as $key => $val) {
                         $keyIndex = ucwords(strtolower(str_replace("_", " ", $key)));
-               
+
                         if ($key !== "updated_at" && $key !== "deleted_at") {
+                            if ($val == $this->_data['SystemCodes'][$key]) {
+                                // For some reason, afterSave() is stating that the value for this key has updated
+                                continue;
+                            } else {
+                                // Avoid setting this success header multiple times
+                                if (!isset($this->_data['success'][$msgHeader])) {
+                                    $this->_data['success']['useSession'] = true;
+                                
+                                    $this->_data['success'][$msgHeader] =
+                                    [
+                                       'value'      => "was successful",
+                                       'bValue'     => true,
+                                       'htmlTag'    => 'h4',
+                                       'class'      => 'alert alert-success',
+                                    ];
+                                }
+                            }
+                            
                             $lookupNew = $this->keyLookup($key, $val);
-                            $lookupOld = $this->keyLookup($key, $this->_data['SystemCodes'][$key]);
-                  
-                            $this->_data['success'][$keyIndex] =
+                            $lookupOld = $this->keyLookup($key, $this->_data['SystemCodes'][$key]);   
+                            
+//                            self::debug( $lookupNew . " vs. " . $lookupOld, true );
+                            
+                            $labels = $this->_codesModel->attributeLabels();
+                            
+//                            self::debug( $labels );
+                   
+                            $this->_data['success'][$labels[$key]] =
                             [
-                                'value'     => "was updated",
+                                'value'     => "was updated ( <strong>" . $val . "</strong> -> <strong>" . $this->_data['SystemCodes'][$key] . "</strong> )",
                                 'bValue'    => true,
-                            ];
-                     
+                            ];      
+                            
                             if (strpos($lookupNew, "Unknown") !== 0) {
-                                $this->_data['success'][$keyIndex] =
+                                $this->_data['success'][$labels[$key]] =
                                 [
-                                    'value'  => "was updated ( " . $lookupNew . " -> " . $lookupOld . " )",
+                                    'value'  => "was updated ( <strong>" . $lookupNew . "</strong> -> <strong>" . $lookupOld . "</strong> )",
                                 ];
                             }
                         }
                     }
                 }
-            }
+            }                                                                           
         }
 
-        $this->_codesModel      = $this->_codesModel->findOne($this->_data['id']);
-      
-        $this->_tagsModel       = SystemCodes::findAllTagsById($this->_data['id']);
-        $this->_codeChildModel  = $this->getCodeChildModel($this->_data['id'], $this->_codesModel->code);
-
-        return $this->render(
-            'codes-view',
-            [
-                'data'         => $this->_data,
-                'dataProvider' => $this->_dataProvider,
-                'model'        => $this->_codesModel,
-                'tags'         => $this->_tagsModel,
-                'allTags'      => $this->_codeChildModel,
-            ]
-        );
+        return $this->redirect(['codes/view', 'id' => $this->_data['id'] ]);
     }
 
    
@@ -819,8 +835,8 @@ class CodesController extends BaseController
     {
         $codeType   = self::getDropDownOpts('type');
         
-        $isActive   = FormFields::getSelectOptions(-1, 'is_active', true);
-        $isVisible  = FormFields::getSelectOptions(-1, 'is_visible', true);
+        $isActive   = FormFields::getSelectOptions(-1, 'Is-Active', true);
+        $isVisible  = FormFields::getSelectOptions(-1, 'Is-Visible', true);
       
         if ($key == 'is_active'  && array_key_exists($value, $isActive)) {
             return $isActive[ $value ];
@@ -843,6 +859,32 @@ class CodesController extends BaseController
      *
      * @return (TBD)
      */
+    private function FormFieldskeyLookup($key, $value)
+    {
+        $formField      = FormFields::getFormFieldOptions(-1, 'Form-Field', false);
+        $typeField      = FormFields::getDistinctGroupings();
+        $isActive       = FormFields::getSelectOptions(-1, 'Is-Active', true);
+        $isVisible      = FormFields::getSelectOptions(-1, 'Is-Visible', true);
+
+        if ($key == 'form_field'  && array_key_exists($value, $formField)) {
+            return $formField[ $value ];
+        } elseif ($key == 'type_str'  && array_key_exists($value, $typeField)) {
+            return $typeField[ $value ];
+        } elseif ($key == 'is_active'  && array_key_exists($value, $isActive)) {
+            return $isActive[ $value ];
+        } elseif ($key == 'is_visible' && array_key_exists($value, $isVisible)) {
+            return $isVisible[ strval($value)];
+        }
+        
+        return "Unknown key : " . $key . " :: " . $value;
+    }
+
+
+    /**
+     * TBD
+     *
+     * @return (TBD)
+     */
     public static function getDropDownOpts($key = "", $prompt = false)
     {
         $dropDownOpts     = self::dropDownOpts;
@@ -853,6 +895,8 @@ class CodesController extends BaseController
             return FormFields::getSelectOptions(-1, CodesController::IS_ACTIVE_TYPE_STR, $prompt);
         } elseif ($key == CodesController::IS_VISIBLE_TYPE_STR) {
             return FormFields::getSelectOptions(-1, CodesController::IS_VISIBLE_TYPE_STR, $prompt);
+        } elseif ($key == CodesController::IS_BANNER_DATA_TYPE_STR) {
+            return FormFields::getSelectOptions(-1, CodesController::IS_BANNER_DATA_TYPE_STR, $prompt);
         } elseif ($key == 'type') {
             return SystemCodes::getDistinctTypes($prompt);
         }

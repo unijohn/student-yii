@@ -71,7 +71,7 @@
          ],
  **/
          [
-            'attribute' => 'type',
+            'attribute' => 'type_str',
             'label' => 'Type',
             'format' => 'raw',
             'value' => function ($data) {
@@ -102,11 +102,11 @@
             },
          ],
          [
-            'attribute' => 'code',
+            'attribute' => 'code_str',
             'label' => 'Code',
             'format' => 'raw',
             'value' => function ($data) {
-                return HTML::a($data['code'], Url::toRoute(['codes/view', 'id' => $data['id']  ], true));
+                return HTML::a($data['code_str'], Url::toRoute(['codes/view', 'id' => $data['id']  ], true));
             },
          ],
          [

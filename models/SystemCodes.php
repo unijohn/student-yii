@@ -26,16 +26,33 @@ class SystemCodes extends BaseModel
     {
         return '{{tbl_SystemCodes}}';
     }
-    
+
    
     /**
     * @inheritdoc
     */
     public function attributeLabels()
     {
-        return [
-//         'id' => Yii::t('app', 'ID'),
-      ];
+        return
+        [
+            'id'                => Yii::t('app', 'ID'),
+        
+            'type'              => Yii::t('app', 'Code Type'),
+            'type_str'          => Yii::t('app', 'Code Type (Str)'),
+            'code'              => Yii::t('app', 'Code'),
+            'code_str'          => Yii::t('app', 'Code (Str)'),            
+            'description'       => Yii::t('app', 'Description'),
+            
+            'is_active'         => Yii::t('app', 'Is Active'),
+            'is_visible'        => Yii::t('app', 'Is Visible'),
+            'is_banner_data'    => Yii::t('app', 'Source Data'),     
+            
+            'order_by'          => Yii::t('app', 'Ordering'),                      
+            
+            'created_at'        => Yii::t('app', 'Created' ),
+            'updated_at'        => Yii::t('app', 'Updated' ),
+            'deleted_at'        => Yii::t('app', 'Deleted' ),
+        ];
     }
 
 
