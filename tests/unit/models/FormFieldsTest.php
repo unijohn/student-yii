@@ -117,13 +117,13 @@ class FormFieldsTest extends \Codeception\Test\Unit
     
         /** Valid: expect_that **/
         // All valid values
-        expect_that($formField = FormFields::existsFieldByProperties(0, 1, 'Form-Field', 'Checkbox', '', 2));
+        $this->assertTrue($formField = FormFields::existsFieldByProperties(1, 1, 'Form-Field', 'Checkbox', '', 3) );
 
         // All valid values except $value
-        expect_that($formField = FormFields::existsFieldByProperties(0, 1, 'Form-Field', 'Radio'));
+        expect_that($formField = FormFields::existsFieldByProperties(1, 1, 'Form-Field', 'Radio'));
         
         // Valid values except $type_str, $value
-        expect_that($formField = FormFields::existsFieldByProperties(1, 2, '', 'Active'));
+        $this->assertTrue($formField = FormFields::existsFieldByProperties(2, 2, '', 'Active'));
         
         /** NOT Valid: expect_not **/
         // No values
@@ -143,13 +143,13 @@ class FormFieldsTest extends \Codeception\Test\Unit
         
         /** Valid: expect_that **/
         // All valid values
-        expect_that($formField = FormFields::getFieldOptions(0, 1, 'Form-Field', true));
+        expect_that($formField = FormFields::getFieldOptions(1, 1, 'Form-Field', true));
         
         // All valid values except $type_str
-        expect_that($formField = FormFields::getFieldOptions(0, 1, '', true));
+        expect_that($formField = FormFields::getFieldOptions(1, 1, '', true));
         
         // All valid values except $type
-        expect_that($formField = FormFields::getFieldOptions(0, -1, 'Form-Field', false));
+        expect_that($formField = FormFields::getFieldOptions(1, -1, 'Form-Field', false));
         
         /** NOT Valid: expect_not **/
         // No values
@@ -172,7 +172,7 @@ class FormFieldsTest extends \Codeception\Test\Unit
         
         /** Valid: expect_that **/
         // All valid values
-        expect_that($formField = FormFields::getSelectOptions(1, 'Is-Active', true));
+        expect_that($formField = FormFields::getSelectOptions(2, FormFields::IS_ACTIVE_TYPE_STR, true));
         
         // All valid values except $type_str
         expect_that($formField = FormFields::getSelectOptions(2, '', true));
@@ -224,10 +224,11 @@ class FormFieldsTest extends \Codeception\Test\Unit
     public function testMoveFormFields()
     {
         $row = FormFields::find()
-            ->where(['id' => 6 ])
+            ->where(['id' => 7 ])
             ->one();
         
-        // Starting position: id: 6
+        // Starting position: id: 7
+        // Is-Active, Active
         //
         // Start position: 2
         // Min position: 1
