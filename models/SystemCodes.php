@@ -132,27 +132,62 @@ class SystemCodes extends BaseModel
     */
     public function rules()
     {
-        return [
-         ['type', 'default', 'value'    => self::TYPE_PERMIT ],
-         ['type', 'integer', 'min'      => self::TYPE_PERMIT ],
-         ['type', 'integer', 'max'      => self::TYPE_MAX    ],
-         ['type', 'filter',  'filter'   => 'intval'],
-
-         ['is_active', 'default', 'value'    => self::STATUS_ACTIVE   ],
-         ['is_active', 'integer', 'min'      => self::STATUS_INACTIVE ],
-         ['is_active', 'filter',  'filter'   => 'intval'],
-
-         ['is_visible', 'default', 'value'    => self::STATUS_VISIBLE ],
-         ['is_visible', 'integer', 'min'      => self::STATUS_HIDDEN  ],
-         ['is_visible', 'filter',  'filter'   => 'intval'],
-
-         [
+        return 
+        [
             [
-               'type', 'code', 'description', 'is_active', 'is_visible'
+                'is_active',  'number', 'min' => self::STATUS_ACTIVE_MIN,  'max' => self::STATUS_ACTIVE_MAX,
+                'tooBig' => 'Select a valid option', 'tooSmall' => 'Select a valid option',
             ],
-            'required', 'on' => self::SCENARIO_UPDATE
-         ],
-      ];
+            [
+                'is_visible', 'number', 'min' => self::STATUS_VISIBLE_MIN, 'max' => self::STATUS_VISIBLE_MAX,
+                'tooBig' => 'Select a valid option', 'tooSmall' => 'Select a valid option',
+            ],       
+            [
+                'is_banner_data', 'number', 'min' => self::STATUS_BANNER_MIN, 'max' => self::STATUS_BANNER_MAX,
+                'tooBig' => 'Select a valid option', 'tooSmall' => 'Select a valid option',
+            ],      
+            [
+                'type', 'number', 'min' => self::TYPE_MIN, 'max' => self::TYPE_MAX,
+                'tooBig' => 'Select a valid option', 'tooSmall' => 'Select a valid option',
+            ],                           
+            
+            [
+                'is_active', 'default', 'value' => self::STATUS_ACTIVE
+            ],
+            [
+                'is_visible', 'default', 'value' => self::STATUS_VISIBLE
+            ],
+            [
+                'is_banner_data', 'default', 'value' => self::STATUS_BANNER_MIN
+            ],            
+            
+            [
+                'description', 'string', 'length' => [0, 64], 
+            ], 
+            [
+                'code_str', 'string', 'length' => [0, 64], 
+            ],    
+            [
+                'type_str', 'string', 'length' => [0, 64], 
+            ],                    
+            
+            [
+                ['type_str', 'code_str', 'description'], 'trim'
+            ],
+            
+            [
+                [
+                    'type', 'type_str', 'code', 'code_str', 'description', 'is_active', 'is_visible', 'updated_at'
+                ],
+                'required', 'on' => self::SCENARIO_UPDATE
+            ],
+            [
+                [
+                    'order_by', 'updated_at'
+                ],
+                'required', 'on' => self::SCENARIO_MOVE
+            ],                                   
+        ];
     }
 
 

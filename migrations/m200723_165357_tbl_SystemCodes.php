@@ -35,8 +35,8 @@ class m200723_165357_tbl_SystemCodes extends BaseMigration
                     'type'              => $this->integer()->notNull(),
                     'type_str'          => $this->string(64)->notNull(),
                     'code'              => $this->integer()->notNull(),
-                    'code_str'          => $this->string(64)->notNull(),
-                    'description'       => $this->string(64),
+                    'code_str'          => $this->string(64),
+                    'description'       => $this->string(64)->notNull(),
 
                     'is_active'         => $this->integer()->notNull(),
                     'is_visible'        => $this->integer()->notNull(),
