@@ -11,8 +11,8 @@ use app\controllers\CodesController;
 
    $pageCount  = CodesController::getDropDownOpts('pageCount');
    $codeType   = CodesController::getDropDownOpts('type', true);
-   $isActive   = CodesController::getDropDownOpts('is_active', true);
-   $isVisible  = CodesController::getDropDownOpts('is_visible', true);
+   $isActive   = CodesController::getDropDownOpts(CodesController::IS_ACTIVE_TYPE_STR, true);
+   $isVisible  = CodesController::getDropDownOpts(CodesController::IS_VISIBLE_TYPE_STR, true);
 ?>
 
 

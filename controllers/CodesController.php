@@ -21,7 +21,7 @@ use app\models\SystemCodesChild;
 
 class CodesController extends BaseController
 {
-    const dropDownOptsKeys  = [ 'pageCount', 'type', 'is_active', 'is_visible' ];
+    const dropDownOptsKeys  = [ 'pageCount' ];
    
     const dropDownOpts      =
     [
@@ -31,18 +31,6 @@ class CodesController extends BaseController
             '25'    => '25',
             '50'    => '50',
             '100'   => '100',
-        ],
-        'type'      =>
-        [
-            '-1'    => 'Select Type',
-            '1'     => 'Permit',
-            '2'     => 'Department',
-            '3'     => 'CareerLevel',
-            '4'     => 'Masters',
-            '5'     => 'Faculty Rank',
-            '6'     => 'Employee Class',
-            '7'     => 'Department - School',
-            '8'     => 'Department - University',
         ],
     ];
    
@@ -166,7 +154,7 @@ class CodesController extends BaseController
       
         $params  = [];
 
-        $sql  = "SELECT  id, type, code, description, is_active, is_visible, created_at, updated_at " ;
+        $sql  = "SELECT  id, type, type_str, code, description, is_active, is_visible, order_by, created_at, updated_at " ;
         $sql .= "FROM " . $tableNm . " WHERE id > 0 ";
 
         $countSQL  = "SELECT COUNT(*) " ;
@@ -209,7 +197,8 @@ class CodesController extends BaseController
          'sort' => [
             'defaultOrder' =>
             [
-               'id'         => SORT_ASC,
+               'type_str'   => SORT_ASC,
+               'order_by'   => SORT_ASC,
             ],
             'attributes' =>
             [
@@ -218,7 +207,7 @@ class CodesController extends BaseController
                   'default' => SORT_ASC,
                   'label'   => 'ID',
                ],
-               'type' =>
+               'type_str' =>
                [
                   'default' => SORT_ASC,
                   'label'   => 'Type',
@@ -233,6 +222,11 @@ class CodesController extends BaseController
                   'default' => SORT_ASC,
                   'label'   => 'Description',
                ],
+               'order_by' =>
+               [
+                  'default' => SORT_ASC,
+                  'label'   => 'Ordering',
+               ],               
             ],
          ],
          'pagination' =>
@@ -246,11 +240,11 @@ class CodesController extends BaseController
 
 
     /**
-     * Displays listing of all users in the system.
+     *  Centralized render('fields-listing') call
      *
-     * @return string
-     */
-    public function actionIndex()
+     *  returns void
+     **/
+    private function renderListing()
     {
         $this->_dataProvider = $this->getCodesGridView();
 
@@ -263,14 +257,14 @@ class CodesController extends BaseController
             ]
         );
     }
-   
+
 
     /**
-     * Displays selected Permit ( 1 record ).
+     *  Centralized render('codes-view') call
      *
-     * @return string
-     */
-    public function actionView()
+     *  returns void
+     **/
+    private function renderView()
     {
         return $this->render(
             'codes-view',
@@ -282,6 +276,112 @@ class CodesController extends BaseController
                 'allTags'      => $this->_codeChildModel,
             ]
         );
+    }
+
+
+    /**
+     * Displays listing of all users in the system.
+     *
+     * @return string
+     */
+    public function actionIndex()
+    {
+        return $this->renderListing();
+    }
+   
+
+    /**
+     * Displays selected Permit ( 1 record ).
+     *
+     * @return string
+     */
+    public function actionView()
+    {
+        $this->_codesModel = SystemCodes::find()
+            ->where(['id' => $this->_data['id'] ])
+            ->limit(1)->one();
+    
+        return $this->renderView();    
+    }
+
+
+    /**
+     * TBD
+     *
+     * @return (TBD)
+     */
+    public function actionDown()
+    {
+        $row = SystemCodes::find()
+            ->where(['id' => $this->_data['id'] ])
+            ->one();
+            
+        $row->scenario      = SystemCodes::SCENARIO_MOVE;
+        $row->moveNext();
+        
+        $this->_data['filterForm']['type'] = $row['type'];
+        
+        return $this->renderListing();
+    }
+
+
+    /**
+     * TBD
+     *
+     * @return (TBD)
+     */
+    public function actionLast()
+    {
+        $row = SystemCodes::find()
+            ->where(['id' => $this->_data['id'] ])
+            ->one();
+            
+        $row->scenario      = SystemCodes::SCENARIO_MOVE;
+        $row->moveLast();
+        
+        $this->_data['filterForm']['type'] = $row['type'];
+        
+        return $this->renderListing();
+    }
+
+
+    /**
+     * TBD
+     *
+     * @return (TBD)
+     */
+    public function actionUp()
+    {
+        $row = SystemCodes::find()
+            ->where(['id' => $this->_data['id'] ])
+            ->one();
+
+        $row->scenario      = SystemCodes::SCENARIO_MOVE;
+        $row->movePrev();
+        
+        $this->_data['filterForm']['type'] = $row['type'];
+        
+        return $this->renderListing();
+    }
+
+
+    /**
+     * TBD
+     *
+     * @return (TBD)
+     */
+    public function actionFirst()
+    {
+        $row = SystemCodes::find()
+            ->where(['id' => $this->_data['id'] ])
+            ->one();
+
+        $row->scenario      = SystemCodes::SCENARIO_MOVE;
+        $row->moveFirst();
+        
+        $this->_data['filterForm']['type'] = $row['type'];
+        
+        return $this->renderListing();
     }
 
 
@@ -749,10 +849,12 @@ class CodesController extends BaseController
    
         if (!isset($key) || empty($key)) {
             return $dropDownOpts;
-        } elseif ($key == 'is_active') {
-            return FormFields::getSelectOptions(-1, 'is_active', $prompt);
-        } elseif ($key == 'is_visible') {
-            return FormFields::getSelectOptions(-1, 'is_visible', $prompt);
+        } elseif ($key == CodesController::IS_ACTIVE_TYPE_STR) {
+            return FormFields::getSelectOptions(-1, CodesController::IS_ACTIVE_TYPE_STR, $prompt);
+        } elseif ($key == CodesController::IS_VISIBLE_TYPE_STR) {
+            return FormFields::getSelectOptions(-1, CodesController::IS_VISIBLE_TYPE_STR, $prompt);
+        } elseif ($key == 'type') {
+            return SystemCodes::getDistinctTypes($prompt);
         }
       
         if (!$prompt) {
@@ -760,7 +862,7 @@ class CodesController extends BaseController
                 unset($dropDownOpts[$key][-1]);
             }
         }
-
+        
         return $dropDownOpts[$key];
     }
 

@@ -17,9 +17,9 @@
    
    $formatter = \Yii::$app->formatter;
   
-   $codeType   = CodesController::getDropDownOpts('type');
-   $isActive   = CodesController::getDropDownOpts('is_active');
-   $isHidden   = CodesController::getDropDownOpts('is_hidden');
+   $codeType   = CodesController::getDropDownOpts('type', true);
+   $isActive   = CodesController::getDropDownOpts(CodesController::IS_ACTIVE_TYPE_STR, true);
+   $isVisible  = CodesController::getDropDownOpts(CodesController::IS_VISIBLE_TYPE_STR, true);
 ?>
 
    <div class="site-about">
@@ -125,9 +125,9 @@
          <div class="form-group form-inline field-is_hidden">
          <label class="control-label" for="SystemCodes[is_hidden]">Is Visible</label>
             <?= Html::dropDownList(
-                'SystemCodes[is_hidden]',
-                $model->is_hidden,
-                $isHidden,
+                'SystemCodes[is_visible]',
+                $model->is_visible,
+                $isVisible,
                 [
                   'id'     => 'is_hidden',
                   'class'  => 'form-control',

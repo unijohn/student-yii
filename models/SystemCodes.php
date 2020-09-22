@@ -75,7 +75,7 @@ class SystemCodes extends BaseModel
             'class' => PositionBehavior::className(),
             'positionAttribute' => 'order_by',
             'groupAttributes' => [
-                'grouping' // multiple lists varying by 'categoryId'
+                'type' // multiple lists varying by 'categoryId'
             ],
         ],
 
@@ -102,8 +102,9 @@ class SystemCodes extends BaseModel
     public function scenarios()
     {
         $scenarios = parent::scenarios();
-        $scenarios[self::SCENARIO_INSERT] = [ 'type', 'code', 'description', 'is_active', 'is_hidden' ];
-        $scenarios[self::SCENARIO_UPDATE] = [ 'type', 'code', 'description', 'is_active', 'is_hidden' ];
+        $scenarios[self::SCENARIO_INSERT] = [ 'type', 'code', 'description', 'is_active', 'is_visible' ];
+        $scenarios[self::SCENARIO_UPDATE] = [ 'type', 'code', 'description', 'is_active', 'is_visible' ];
+        $scenarios[self::SCENARIO_MOVE]   = [ 'order_by', 'updated_at', ];
    
         return $scenarios;
     }
@@ -124,13 +125,13 @@ class SystemCodes extends BaseModel
          ['is_active', 'integer', 'min'      => self::STATUS_INACTIVE ],
          ['is_active', 'filter',  'filter'   => 'intval'],
 
-         ['is_hidden', 'default', 'value'    => self::STATUS_VISIBLE ],
-         ['is_hidden', 'integer', 'min'      => self::STATUS_HIDDEN  ],
-         ['is_hidden', 'filter',  'filter'   => 'intval'],
+         ['is_visible', 'default', 'value'    => self::STATUS_VISIBLE ],
+         ['is_visible', 'integer', 'min'      => self::STATUS_HIDDEN  ],
+         ['is_visible', 'filter',  'filter'   => 'intval'],
 
          [
             [
-               'type', 'code', 'description', 'is_active', 'is_hidden'
+               'type', 'code', 'description', 'is_active', 'is_visible'
             ],
             'required', 'on' => self::SCENARIO_UPDATE
          ],
@@ -148,6 +149,36 @@ class SystemCodes extends BaseModel
         return SystemCodes::find()
          ->where(['type' => self::TYPE_PERMIT ])
          ->all();
+    }
+
+
+    /**
+     * TBD
+     *
+     * @return (TBD)
+     */
+    public static function getDistinctTypes( $prompt = false )
+    {
+        $tbl_systemCodes = SystemCodes::tableName();
+   
+        $query_fields = ( new \yii\db\Query() )
+            ->select([  'sc.type', 'sc.type_str' ])
+            ->distinct()
+            ->from($tbl_systemCodes . ' sc')
+            ->orderBy('sc.type')
+            ->all();
+
+        $dropDown = [];
+
+        if( $prompt ) {
+            $dropDown[0] = "Select Type";
+        }
+
+        foreach ($query_fields as $row) {
+            $dropDown[$row['type']] = $row['type_str'];
+        }
+        
+        return $dropDown;
     }
       
 
@@ -194,7 +225,7 @@ class SystemCodes extends BaseModel
         $tbl_SystemCodesChild   = SystemCodesChild::tableName();
    
         $query_codes = ( new \yii\db\Query() )
-         ->select([  'sc2.id', 'sc2.type', 'sc2.code', 'sc2.description', 'sc2.is_active', 'sc2.is_hidden' ])
+         ->select([  'sc2.id', 'sc2.type', 'sc2.code', 'sc2.description', 'sc2.is_active', 'sc2.is_visible' ])
          ->from($tbl_SystemsCodes . ' sc')
          ->innerJoin($tbl_SystemCodesChild, $tbl_SystemCodesChild . '.parent = sc.id')
          ->innerJoin($tbl_SystemsCodes . ' sc2', $tbl_SystemCodesChild . '.child = sc2.id')
@@ -230,7 +261,7 @@ class SystemCodes extends BaseModel
         $tbl_SystemCodesChild   = SystemCodesChild::tableName();
    
         $query_codes = ( new \yii\db\Query() )
-         ->select([  'sc2.id', 'sc2.type', 'sc2.code', 'sc2.description', 'sc2.is_active', 'sc2.is_hidden' ])
+         ->select([  'sc2.id', 'sc2.type', 'sc2.code', 'sc2.description', 'sc2.is_active', 'sc2.is_visible' ])
          ->from($tbl_SystemsCodes . ' sc')
          ->innerJoin($tbl_SystemCodesChild, $tbl_SystemCodesChild . '.parent = sc.id')
          ->innerJoin($tbl_SystemsCodes . ' sc2', $tbl_SystemCodesChild . '.child = sc2.id')
