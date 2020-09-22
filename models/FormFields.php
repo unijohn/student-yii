@@ -68,9 +68,9 @@ class FormFields extends BaseModel
             'is_active'     => Yii::t('app', 'Is Active'),
             'is_visible'    => Yii::t('app', 'Is Visible'),
             
-            'created_at'    => Yii::t('app', 'Created' ),
-            'updated_at'    => Yii::t('app', 'Updated' ),
-            'deleted_at'    => Yii::t('app', 'Deleted' ),
+            'created_at'    => Yii::t('app', 'Created'),
+            'updated_at'    => Yii::t('app', 'Updated'),
+            'deleted_at'    => Yii::t('app', 'Deleted'),
         ];
     }
 

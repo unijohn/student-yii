@@ -53,7 +53,7 @@ class m200821_143444_tbl_FormFields extends BaseMigration
             ],
             [
                 self::TYPE_FIELD_HTML_OPTS, self::TYPE_ITEM_FORM_FIELD, 'Form-Field', 'HTML Option [Special]',  '', self::TYPE_FIELD_HTML_OPTS, self::STATUS_ACTIVE, self::STATUS_VISIBLE, 2, $created_at,
-            ],            
+            ],
             [
                 self::TYPE_FIELD_HTML_OPTS, self::TYPE_ITEM_FORM_FIELD, 'Form-Field', 'Select / Dropdown',      '', self::TYPE_FIELD_SELECT,    self::STATUS_ACTIVE, self::STATUS_VISIBLE, 3, $created_at,
             ],

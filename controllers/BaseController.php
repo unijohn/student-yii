@@ -53,7 +53,7 @@ class BaseController extends Controller
      **/
     const IS_ACTIVE_TYPE_STR        = 'Is-Active';
     const IS_VISIBLE_TYPE_STR       = 'Is-Visible';
-    const IS_BANNER_DATA_TYPE_STR   = 'Is-Banner-Data';    
+    const IS_BANNER_DATA_TYPE_STR   = 'Is-Banner-Data';
 
     /**
      * {@inheritdoc}

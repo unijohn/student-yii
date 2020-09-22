@@ -159,7 +159,7 @@ class BaseMigration extends Migration
     const TYPE_ITEM_FORM_FIELD      = 1;
     const TYPE_ITEM_ACTIVE          = 2;
     const TYPE_ITEM_VISIBLE         = 3;
-    const TYPE_ITEM_BANNER_DATA     = 4;    
+    const TYPE_ITEM_BANNER_DATA     = 4;
     const TYPE_ITEM_US_CITIZEN      = 5;
     const TYPE_ITEM_VISA_TYPE       = 6;
     const TYPE_ITEM_CITIZEN_OTHER   = 7;
