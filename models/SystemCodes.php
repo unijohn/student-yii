@@ -132,7 +132,7 @@ class SystemCodes extends BaseModel
     */
     public function rules()
     {
-        return 
+        return
         [
             [
                 'is_active',  'number', 'min' => self::STATUS_ACTIVE_MIN,  'max' => self::STATUS_ACTIVE_MAX,
@@ -141,15 +141,15 @@ class SystemCodes extends BaseModel
             [
                 'is_visible', 'number', 'min' => self::STATUS_VISIBLE_MIN, 'max' => self::STATUS_VISIBLE_MAX,
                 'tooBig' => 'Select a valid option', 'tooSmall' => 'Select a valid option',
-            ],       
+            ],
             [
                 'is_banner_data', 'number', 'min' => self::STATUS_BANNER_MIN, 'max' => self::STATUS_BANNER_MAX,
                 'tooBig' => 'Select a valid option', 'tooSmall' => 'Select a valid option',
-            ],      
+            ],
             [
                 'type', 'number', 'min' => self::TYPE_MIN, 'max' => self::TYPE_MAX,
                 'tooBig' => 'Select a valid option', 'tooSmall' => 'Select a valid option',
-            ],                           
+            ],
             
             [
                 'is_active', 'default', 'value' => self::STATUS_ACTIVE
@@ -159,7 +159,7 @@ class SystemCodes extends BaseModel
             ],
             [
                 'is_banner_data', 'default', 'value' => self::STATUS_BANNER_MIN
-            ],            
+            ],
             
             [
                 'type_str',    'string', 'max' => 64
@@ -169,7 +169,7 @@ class SystemCodes extends BaseModel
             ],
             [
                 'code_str',    'string', 'max' => 64
-            ],                        
+            ],
 
             [
                 [
@@ -182,7 +182,7 @@ class SystemCodes extends BaseModel
                     'order_by', 'updated_at'
                 ],
                 'required', 'on' => self::SCENARIO_MOVE
-            ],                                   
+            ],
         ];
     }
 
@@ -192,11 +192,11 @@ class SystemCodes extends BaseModel
      *
      * @returns model filtered by $type
      */
-    public static function findbyType( $type = -1 )
+    public static function findbyType($type = -1)
     {
         if ($type < 0 || intval($type) === 0 || gettype($type) != 'integer') {
             return false;
-        } 
+        }
         
         return SystemCodes::find()
          ->where(['type' => $type ])
@@ -209,16 +209,16 @@ class SystemCodes extends BaseModel
      *
      * @returns model filtered by $type_str
      */
-    public static function findbyTypeStr( $type_str = "")
+    public static function findbyTypeStr($type_str = "")
     {
-        if ( $type_str == "" || strlen( $type_str ) == 0 || gettype($type_str) != 'string')  {
+        if ($type_str == "" || strlen($type_str) == 0 || gettype($type_str) != 'string') {
             return false;
-        }    
+        }
     
         return SystemCodes::find()
          ->where(['type_str' => $type_str ])
          ->all();
-    }    
+    }
 
 
     /**
@@ -239,7 +239,7 @@ class SystemCodes extends BaseModel
      */
     public static function findbyDepartment()
     {
-        return SystemCodes::findbyType(self::TYPE_DEPARTMENT);    
+        return SystemCodes::findbyType(self::TYPE_DEPARTMENT);
     }
 
 
@@ -250,7 +250,7 @@ class SystemCodes extends BaseModel
      */
     public static function findbyCareerLevel()
     {
-        return SystemCodes::findbyType(self::TYPE_CAREERLEVEL);        
+        return SystemCodes::findbyType(self::TYPE_CAREERLEVEL);
     }
 
 
@@ -261,52 +261,52 @@ class SystemCodes extends BaseModel
      */
     public static function findbyMasters()
     {
-        return SystemCodes::findbyType(self::TYPE_MASTERS);            
-    }    
+        return SystemCodes::findbyType(self::TYPE_MASTERS);
+    }
     
 
-   /**
-     * TBD
-     *
-     * @returns model filtered by TYPE_FACULTY_RANK
-     */
+    /**
+      * TBD
+      *
+      * @returns model filtered by TYPE_FACULTY_RANK
+      */
     public static function findbyFacultyRank()
     {
-        return SystemCodes::findbyType(self::TYPE_FACULTY_RANK);            
-    }    
+        return SystemCodes::findbyType(self::TYPE_FACULTY_RANK);
+    }
     
     
-   /**
-     * TBD
-     *
-     * @returns model filtered by TYPE_EMPLOYEE_CLASS
-     */
+    /**
+      * TBD
+      *
+      * @returns model filtered by TYPE_EMPLOYEE_CLASS
+      */
     public static function findbyEmployeeClass()
     {
-        return SystemCodes::findbyType(self::TYPE_EMPLOYEE_CLASS);            
-    }   
+        return SystemCodes::findbyType(self::TYPE_EMPLOYEE_CLASS);
+    }
 
 
-   /**
-     * TBD
-     *
-     * @returns model filtered by TYPE_SCHOOL_DEPT
-     */
+    /**
+      * TBD
+      *
+      * @returns model filtered by TYPE_SCHOOL_DEPT
+      */
     public static function findbySchoolDept()
     {
-        return SystemCodes::findbyType(self::TYPE_SCHOOL_DEPT);            
-    }   
+        return SystemCodes::findbyType(self::TYPE_SCHOOL_DEPT);
+    }
     
     
-   /**
-     * TBD
-     *
-     * @returns model filtered by TYPE_UNIVERSITY_DEPT
-     */
+    /**
+      * TBD
+      *
+      * @returns model filtered by TYPE_UNIVERSITY_DEPT
+      */
     public static function findbyUniversityDept()
     {
-        return SystemCodes::findbyType(self::TYPE_UNIVERSITY_DEPT);            
-    }   
+        return SystemCodes::findbyType(self::TYPE_UNIVERSITY_DEPT);
+    }
         
 
     /**
