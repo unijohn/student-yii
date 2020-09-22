@@ -6,26 +6,6 @@ use app\models\SystemCodes;
 
 class SystemCodesTest extends \Codeception\Test\Unit
 {
-
-/*
-    'id'                => $this->primaryKey(),
-    'type'              => $this->integer()->notNull(),
-    'type_str'          => $this->string(64)->notNull(),
-    'code'              => $this->integer()->notNull(),
-    'code_str'          => $this->string(64)->notNull(),
-    'description'       => $this->string(64),
-    
-    'is_active'         => $this->integer()->notNull(),
-    'is_visible'        => $this->integer()->notNull(),
-    'is_banner_data'    => $this->integer()->notNull(),
-    
-    'order_by'          => $this->integer()->notNull(),
-    
-    'created_at'        => $this->integer()->notNull(),
-    'updated_at'        => $this->integer(),
-    'deleted_at'        => $this->integer(),
- */                    
- 
     public $justRight   = "Just Right Enough";
     public $tooLong     = "Tooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo"; 
  
@@ -134,6 +114,46 @@ class SystemCodesTest extends \Codeception\Test\Unit
         $systemCode->is_banner_data = SystemCodes::STATUS_BANNER_DATA;
         expect($saveResult          = $systemCode->save())->equals(true);                            
     }
+    
+    public function testFindByMethods()
+    {
+        /*
+         * public static function findbyType( $type = -1 )
+         */
+    
+        // $type is right
+        expect( SystemCodes::findbyType( SystemCodes::TYPE_MASTERS ) );
+
+        // $type is wrong kind of data
+        expect( SystemCodes::findbyType( $this->tooLong ) )->equals(false);    
+
+        /*
+         * public static function findbyTypeStr( $type_str = "" )    
+         */    
+        // $type is right
+        expect( SystemCodes::findbyTypeStr( "Masters" ) );
+
+        // $type is wrong kind of data
+        expect( SystemCodes::findbyTypeStr( 10101010 ) )->equals(false);    
+    
+        // Calling the wrapper methods
+        expect( SystemCodes::findbyPermit()         );
+        expect( SystemCodes::findbyDepartment()     );
+        expect( SystemCodes::findbyCareerLevel()    );
+        expect( SystemCodes::findbyMasters()        );                        
+        expect( SystemCodes::findbyFacultyRank()    );      
+        expect( SystemCodes::findbyEmployeeClass()  );      
+        expect( SystemCodes::findbySchoolDept()     );      
+        expect( SystemCodes::findbyUniversityDept() );                                      
+    }
+    
+    public function testGetDistinctTypes(){
+        // public static function getDistinctTypes($prompt = false)
+        
+        expect( SystemCodes::getDistinctTypes( true ) );
+        expect( SystemCodes::getDistinctTypes( false ) );        
+    }
+ 
 
 /*
     public function testExistsSystemCode()

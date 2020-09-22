@@ -190,15 +190,124 @@ class SystemCodes extends BaseModel
     /**
      * TBD
      *
+     * @returns model filtered by $type
+     */
+    public static function findbyType( $type = -1 )
+    {
+        if ($type < 0 || intval($type) === 0 || gettype($type) != 'integer') {
+            return false;
+        } 
+        
+        return SystemCodes::find()
+         ->where(['type' => $type ])
+         ->all();
+    }
+    
+    
+    /**
+     * TBD
+     *
+     * @returns model filtered by $type_str
+     */
+    public static function findbyTypeStr( $type_str = "")
+    {
+        if ( $type_str == "" || strlen( $type_str ) == 0 || gettype($type_str) != 'string')  {
+            return false;
+        }    
+    
+        return SystemCodes::find()
+         ->where(['type_str' => $type_str ])
+         ->all();
+    }    
+
+
+    /**
+     * TBD
+     *
      * @returns model filtered by TYPE_PERMIT
      */
     public static function findbyPermit()
     {
-        return SystemCodes::find()
-         ->where(['type' => self::TYPE_PERMIT ])
-         ->all();
+        return SystemCodes::findbyType(self::TYPE_PERMIT);
+    }
+    
+    
+    /**
+     * TBD
+     *
+     * @returns model filtered by TYPE_DEPARTMENT
+     */
+    public static function findbyDepartment()
+    {
+        return SystemCodes::findbyType(self::TYPE_DEPARTMENT);    
     }
 
+
+    /**
+     * TBD
+     *
+     * @returns model filtered by TYPE_CAREERLEVEL
+     */
+    public static function findbyCareerLevel()
+    {
+        return SystemCodes::findbyType(self::TYPE_CAREERLEVEL);        
+    }
+
+
+    /**
+     * TBD
+     *
+     * @returns model filtered by TYPE_MASTERS
+     */
+    public static function findbyMasters()
+    {
+        return SystemCodes::findbyType(self::TYPE_MASTERS);            
+    }    
+    
+
+   /**
+     * TBD
+     *
+     * @returns model filtered by TYPE_FACULTY_RANK
+     */
+    public static function findbyFacultyRank()
+    {
+        return SystemCodes::findbyType(self::TYPE_FACULTY_RANK);            
+    }    
+    
+    
+   /**
+     * TBD
+     *
+     * @returns model filtered by TYPE_EMPLOYEE_CLASS
+     */
+    public static function findbyEmployeeClass()
+    {
+        return SystemCodes::findbyType(self::TYPE_EMPLOYEE_CLASS);            
+    }   
+
+
+   /**
+     * TBD
+     *
+     * @returns model filtered by TYPE_SCHOOL_DEPT
+     */
+    public static function findbySchoolDept()
+    {
+        return SystemCodes::findbyType(self::TYPE_SCHOOL_DEPT);            
+    }   
+    
+    
+   /**
+     * TBD
+     *
+     * @returns model filtered by TYPE_UNIVERSITY_DEPT
+     */
+    public static function findbyUniversityDept()
+    {
+        return SystemCodes::findbyType(self::TYPE_UNIVERSITY_DEPT);            
+    }   
+        
 
     /**
      * TBD
@@ -446,45 +555,6 @@ class SystemCodes extends BaseModel
          ->all();
 
         return $query_codes;
-    }
-
-
-    /**
-     * TBD
-     *
-     * @returns model filtered by TYPE_DEPARTMENT
-     */
-    public static function findbyDepartment()
-    {
-        return SystemCodes::find()
-         ->where(['type' => self::TYPE_DEPARTMENT ])
-         ->all();
-    }
-
-
-    /**
-     * TBD
-     *
-     * @returns model filtered by TYPE_CAREERLEVEL
-     */
-    public static function findbyCareerLevel()
-    {
-        return SystemCodes::find()
-         ->where(['type' => self::TYPE_CAREERLEVEL ])
-         ->all();
-    }
-
-
-    /**
-     * TBD
-     *
-     * @returns model filtered by TYPE_MASTERS
-     */
-    public static function findbyMasters()
-    {
-        return SystemCodes::find()
-         ->where(['type' => self::TYPE_MASTERS ])
-         ->all();
     }
 
 
