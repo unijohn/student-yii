@@ -1,6 +1,7 @@
 <h1 align="center">FCBE Workdesk</h1>
  
-![example workflow file path](https://github.com/unijohn/student-yii/workflows/PHP%20Composer/badge.svg)
+![Workflow Status](https://github.com/unijohn/student-yii/workflows/PHP%20Composer/badge.svg)
+![Build Status](https://github.com/unijohn/student-yii/workflows/Build%20Status/badge.svg)
 
 
 <h2 align="center">Based upon Yii 2 Basic Project Template</h2>
