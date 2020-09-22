@@ -39,7 +39,7 @@ class SystemCodes extends BaseModel
         
             'type'              => Yii::t('app', 'Code Type'),
             'type_str'          => Yii::t('app', 'Code Type (Str)'),
-            'code'              => Yii::t('app', 'Code'),
+            'code'              => Yii::t('app', 'Code (#)'),
             'code_str'          => Yii::t('app', 'Code (Str)'),            
             'description'       => Yii::t('app', 'Description'),
             
