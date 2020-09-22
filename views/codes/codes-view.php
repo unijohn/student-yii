@@ -17,9 +17,10 @@
    
    $formatter = \Yii::$app->formatter;
   
-   $codeType   = CodesController::getDropDownOpts('type');
-   $isActive   = CodesController::getDropDownOpts('is_active');
-   $isHidden   = CodesController::getDropDownOpts('is_hidden');
+   $codeType   = CodesController::getDropDownOpts('type', true);
+   $isActive   = CodesController::getDropDownOpts(CodesController::IS_ACTIVE_TYPE_STR, true);
+   $isVisible  = CodesController::getDropDownOpts(CodesController::IS_VISIBLE_TYPE_STR, true);
+   $isBanner   = CodesController::getDropDownOpts(CodesController::IS_BANNER_DATA_TYPE_STR, true);   
 ?>
 
    <div class="site-about">
@@ -61,7 +62,7 @@
          <?= Html::hiddenInput('id', $model->id) ?>
 
          <div class="form-group form-inline field-type">
-         <label class="control-label" for="SystemCodes[type]">Type</label>
+         <label class="control-label" for="SystemCodes[type]"><?php print( $model->getAttributeLabel('type') ); ?></label>
             <?= Html::dropDownList(
      'SystemCodes[type]',
      $model->type,
@@ -77,7 +78,7 @@
          </div>         
          
          <div class="form-group form-inline field-code">
-            <label class="control-label" for="SystemCodes[code]">Code</label>
+            <label class="control-label" for="SystemCodes[code]"><?php print( $model->getAttributeLabel('code') ); ?></label>
             <?= Html::input(
                 'text',
                 'SystemCodes[code]',
@@ -91,8 +92,23 @@
             <div class="help-block"></div>
          </div>
          
+         <div class="form-group form-inline field-code_str">
+            <label class="control-label" for="SystemCodes[code_str]"><?php print( $model->getAttributeLabel('code_str') ); ?></label>
+            <?= Html::input(
+                'text',
+                'SystemCodes[code_str]',
+                $model->code_str,
+                [
+                  'id'     => 'code_str',
+                  'class'  => 'form-control',
+                  'style'  => 'width: 80%;float:right;',
+               ]
+            ) ?>   
+            <div class="help-block"></div>
+         </div>         
+         
          <div class="form-group form-inline field-description">
-            <label class="control-label" for="SystemCodes[description]">Section</label>
+            <label class="control-label" for="SystemCodes[description]"><?php print( $model->getAttributeLabel('description') ); ?></label>
             <?= Html::input(
                 'text',
                 'SystemCodes[description]',
@@ -107,7 +123,7 @@
          </div>         
             
          <div class="form-group form-inline field-is_active">
-         <label class="control-label" for="SystemCodes[is_active]">Is Active</label>
+         <label class="control-label" for="SystemCodes[is_active]"><?php print( $model->getAttributeLabel('is_active') ); ?></label>
             <?= Html::dropDownList(
                 'SystemCodes[is_active]',
                 $model->is_active,
@@ -122,14 +138,14 @@
             <div class="help-block"></div>
          </div>
          
-         <div class="form-group form-inline field-is_hidden">
-         <label class="control-label" for="SystemCodes[is_hidden]">Is Visible</label>
+         <div class="form-group form-inline field-is_visible">
+         <label class="control-label" for="SystemCodes[is_visible]"><?php print( $model->getAttributeLabel('is_visible') ); ?></label>
             <?= Html::dropDownList(
-                'SystemCodes[is_hidden]',
-                $model->is_hidden,
-                $isHidden,
+                'SystemCodes[is_visible]',
+                $model->is_visible,
+                $isVisible,
                 [
-                  'id'     => 'is_hidden',
+                  'id'     => 'is_visible',
                   'class'  => 'form-control',
                   'style'  => 'width: 80%;float:right;',
                ]
@@ -137,17 +153,36 @@
             ?>
             <div class="help-block"></div>
          </div>
+
+         <div class="form-group form-inline field-is_banner_data">
+         <label class="control-label" for="SystemCodes[is_visible]"><?php print( $model->getAttributeLabel('is_banner_data') ); ?></label>
+            <?= Html::dropDownList(
+                'SystemCodes[is_banner_data]',
+                $model->is_banner_data,
+                $isBanner,
+                [
+                    'id'        => 'is_banner_data',
+                    'class'     => 'form-control',
+                    'style'     => 'width: 80%;float:right;',
+                    'disabled'  => 'disabled',         
+                    'title'     => 'This value is set by the system',
+               ]
+            )
+            ?>
+            <div class="help-block"></div>
+         </div>         
          
-         <div class="form-group field-dates">
+         
+         <div class="form-group field-dates">           
             <div>
-               <?php echo("created_at: "  . $formatter->asDate($model->created_at, 'MM-dd-yyyy HH:mm:ss')); ?>
+               <?php echo($model->getAttributeLabel('created_at') . ": " . $formatter->asDate($model->created_at, 'MM-dd-yyyy HH:mm:ss')); ?>
             </div>
             <div>
-               <?php echo("updated_at: "  . $formatter->asDate($model->updated_at, 'MM-dd-yyyy HH:mm:ss')); ?>
+               <?php echo($model->getAttributeLabel('updated_at') . ": " . $formatter->asDate($model->updated_at, 'MM-dd-yyyy HH:mm:ss')); ?>
             </div>
             <div>
-               <?php echo("deleted_at: "  . $formatter->asDate($model->deleted_at, 'MM-dd-yyyy HH:mm:ss')); ?>
-            </div>            
+               <?php echo($model->getAttributeLabel('deleted_at') . ": " . $formatter->asDate($model->deleted_at, 'MM-dd-yyyy HH:mm:ss')); ?>
+            </div>    
          </div>
     
          <div class="form-group">

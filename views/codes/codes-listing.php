@@ -71,7 +71,7 @@
          ],
  **/
          [
-            'attribute' => 'type',
+            'attribute' => 'type_str',
             'label' => 'Type',
             'format' => 'raw',
             'value' => function ($data) {
@@ -79,19 +79,19 @@
                 if ($data['type'] == "1") {
                     $strValue = "Permit";
                 } elseif ($data['type'] == "2") {
-                    $strValue = "Department";
+                    $strValue = "Departments";
                 } elseif ($data['type'] == "3") {
-                    $strValue = "CareerLevel";
+                    $strValue = "Career-Levels";
                 } elseif ($data['type'] == "4") {
                     $strValue = "Masters";
                 } elseif ($data['type'] == "5") {
-                    $strValue = "Faculty Rank";
+                    $strValue = "Faculty-Rank";
                 } elseif ($data['type'] == "6") {
-                    $strValue = "Employee Class";
+                    $strValue = "Employee-Class";
                 } elseif ($data['type'] == "7") {
-                    $strValue = "Department - School";
+                    $strValue = "Departments-School";
                 } elseif ($data['type'] == "8") {
-                    $strValue = "Department - University";
+                    $strValue = "Departments-University";
                 } 
                 
                 else {
@@ -102,11 +102,11 @@
             },
          ],
          [
-            'attribute' => 'code',
+            'attribute' => 'code_str',
             'label' => 'Code',
             'format' => 'raw',
             'value' => function ($data) {
-                return HTML::a($data['code'], Url::toRoute(['codes/view', 'id' => $data['id']  ], true));
+                return HTML::a($data['code_str'], Url::toRoute(['codes/view', 'id' => $data['id']  ], true));
             },
          ],
          [
@@ -120,6 +120,32 @@
          
          'created_at:datetime',
          'updated_at:datetime',
+         
+         [
+            'attribute' => 'order_by',
+            'label' => 'Ordering',
+         ],
+
+
+        [
+            'class' => 'yii\grid\ActionColumn',
+            'header' => 'Ordering',            
+            'template' => '{top} {up} {down} {bottom}',  // the default buttons + your custom button
+            'buttons' => [
+                'top' => function($url, $model, $key) {     // render your custom button                                   
+                    return HTML::a("<span class='glyphicon glyphicon-chevron-up'></span>", Url::toRoute(['codes/first', 'id' => $model['id'], ], true));
+                },     
+                'up' => function($url, $model, $key) {     // render your custom button                
+                    return HTML::a("<span class='glyphicon glyphicon-arrow-up'></span>", Url::toRoute(['codes/up', 'id' => $model['id'] ], true));
+                },
+                'down' => function($url, $model, $key) {     // render your custom button                                   
+                    return HTML::a("<span class='glyphicon glyphicon-arrow-down'></span>", Url::toRoute(['codes/down', 'id' => $model['id']  ], true));
+                },
+                'bottom' => function($url, $model, $key) {     // render your custom button                                   
+                    return HTML::a("<span class='glyphicon glyphicon-chevron-down'></span>", Url::toRoute(['codes/last', 'id' => $model['id']  ], true));
+                }                
+            ]
+        ],         
       
       ],
 //       'showFooter' => false,

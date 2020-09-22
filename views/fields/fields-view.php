@@ -169,13 +169,13 @@
          
          <div class="form-group field-dates">
             <div>
-               <?php echo("created_at: "  . $formatter->asDate($model->created_at, 'MM-dd-yyyy HH:mm:ss')); ?>
+               <?php echo($model->getAttributeLabel('created_at') . ": " . $formatter->asDate($model->created_at, 'MM-dd-yyyy HH:mm:ss')); ?>
             </div>
             <div>
-               <?php echo("updated_at: "  . $formatter->asDate($model->updated_at, 'MM-dd-yyyy HH:mm:ss')); ?>
+               <?php echo($model->getAttributeLabel('updated_at') . ": " . $formatter->asDate($model->updated_at, 'MM-dd-yyyy HH:mm:ss')); ?>
             </div>
             <div>
-               <?php echo("deleted_at: "  . $formatter->asDate($model->deleted_at, 'MM-dd-yyyy HH:mm:ss')); ?>
+               <?php echo($model->getAttributeLabel('deleted_at') . ": " . $formatter->asDate($model->deleted_at, 'MM-dd-yyyy HH:mm:ss')); ?>
             </div>            
          </div>
 <?php

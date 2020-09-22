@@ -21,7 +21,7 @@ use app\models\SystemCodesChild;
 
 class CodesController extends BaseController
 {
-    const dropDownOptsKeys  = [ 'pageCount', 'type', 'is_active', 'is_visible' ];
+    const dropDownOptsKeys  = [ 'pageCount' ];
    
     const dropDownOpts      =
     [
@@ -31,18 +31,6 @@ class CodesController extends BaseController
             '25'    => '25',
             '50'    => '50',
             '100'   => '100',
-        ],
-        'type'      =>
-        [
-            '-1'    => 'Select Type',
-            '1'     => 'Permit',
-            '2'     => 'Department',
-            '3'     => 'CareerLevel',
-            '4'     => 'Masters',
-            '5'     => 'Faculty Rank',
-            '6'     => 'Employee Class',
-            '7'     => 'Department - School',
-            '8'     => 'Department - University',
         ],
     ];
    
@@ -98,6 +86,7 @@ class CodesController extends BaseController
         $this->_data['dropTag']          = $this->_request->post('dropTag', '');
   
         $this->_data['SystemCodes']['code']          = ArrayHelper::getValue($this->_request->post(), 'SystemCodes.code', '');
+        $this->_data['SystemCodes']['code_str']      = ArrayHelper::getValue($this->_request->post(), 'SystemCodes.code_str', '');
         $this->_data['SystemCodes']['description']   = ArrayHelper::getValue($this->_request->post(), 'SystemCodes.description', '');
         $this->_data['SystemCodes']['id']            = ArrayHelper::getValue($this->_request->post(), 'SystemCodes.id', '');
         $this->_data['SystemCodes']['insert']        = ArrayHelper::getValue($this->_request->post(), 'SystemCodes.insert', '');
@@ -166,7 +155,7 @@ class CodesController extends BaseController
       
         $params  = [];
 
-        $sql  = "SELECT  id, type, code, description, is_active, is_visible, created_at, updated_at " ;
+        $sql  = "SELECT  id, type, type_str, code, code_str, description, is_active, is_visible, order_by, created_at, updated_at " ;
         $sql .= "FROM " . $tableNm . " WHERE id > 0 ";
 
         $countSQL  = "SELECT COUNT(*) " ;
@@ -209,7 +198,8 @@ class CodesController extends BaseController
          'sort' => [
             'defaultOrder' =>
             [
-               'id'         => SORT_ASC,
+               'type_str'   => SORT_ASC,
+               'order_by'   => SORT_ASC,
             ],
             'attributes' =>
             [
@@ -218,12 +208,12 @@ class CodesController extends BaseController
                   'default' => SORT_ASC,
                   'label'   => 'ID',
                ],
-               'type' =>
+               'type_str' =>
                [
                   'default' => SORT_ASC,
                   'label'   => 'Type',
                ],
-               'code' =>
+               'code_str' =>
                [
                   'default' => SORT_ASC,
                   'label'   => 'Code',
@@ -232,6 +222,11 @@ class CodesController extends BaseController
                [
                   'default' => SORT_ASC,
                   'label'   => 'Description',
+               ],
+               'order_by' =>
+               [
+                  'default' => SORT_ASC,
+                  'label'   => 'Ordering',
                ],
             ],
          ],
@@ -246,11 +241,11 @@ class CodesController extends BaseController
 
 
     /**
-     * Displays listing of all users in the system.
+     *  Centralized render('fields-listing') call
      *
-     * @return string
-     */
-    public function actionIndex()
+     *  returns void
+     **/
+    private function renderListing()
     {
         $this->_dataProvider = $this->getCodesGridView();
 
@@ -263,14 +258,14 @@ class CodesController extends BaseController
             ]
         );
     }
-   
+
 
     /**
-     * Displays selected Permit ( 1 record ).
+     *  Centralized render('codes-view') call
      *
-     * @return string
-     */
-    public function actionView()
+     *  returns void
+     **/
+    private function renderView()
     {
         return $this->render(
             'codes-view',
@@ -282,6 +277,112 @@ class CodesController extends BaseController
                 'allTags'      => $this->_codeChildModel,
             ]
         );
+    }
+
+
+    /**
+     * Displays listing of all users in the system.
+     *
+     * @return string
+     */
+    public function actionIndex()
+    {
+        return $this->renderListing();
+    }
+   
+
+    /**
+     * Displays selected Permit ( 1 record ).
+     *
+     * @return string
+     */
+    public function actionView()
+    {
+        $this->_codesModel = SystemCodes::find()
+            ->where(['id' => $this->_data['id'] ])
+            ->limit(1)->one();
+    
+        return $this->renderView();
+    }
+
+
+    /**
+     * TBD
+     *
+     * @return (TBD)
+     */
+    public function actionDown()
+    {
+        $row = SystemCodes::find()
+            ->where(['id' => $this->_data['id'] ])
+            ->one();
+            
+        $row->scenario      = SystemCodes::SCENARIO_MOVE;
+        $row->moveNext();
+        
+        $this->_data['filterForm']['type'] = $row['type'];
+        
+        return $this->renderListing();
+    }
+
+
+    /**
+     * TBD
+     *
+     * @return (TBD)
+     */
+    public function actionLast()
+    {
+        $row = SystemCodes::find()
+            ->where(['id' => $this->_data['id'] ])
+            ->one();
+            
+        $row->scenario      = SystemCodes::SCENARIO_MOVE;
+        $row->moveLast();
+        
+        $this->_data['filterForm']['type'] = $row['type'];
+        
+        return $this->renderListing();
+    }
+
+
+    /**
+     * TBD
+     *
+     * @return (TBD)
+     */
+    public function actionUp()
+    {
+        $row = SystemCodes::find()
+            ->where(['id' => $this->_data['id'] ])
+            ->one();
+
+        $row->scenario      = SystemCodes::SCENARIO_MOVE;
+        $row->movePrev();
+        
+        $this->_data['filterForm']['type'] = $row['type'];
+        
+        return $this->renderListing();
+    }
+
+
+    /**
+     * TBD
+     *
+     * @return (TBD)
+     */
+    public function actionFirst()
+    {
+        $row = SystemCodes::find()
+            ->where(['id' => $this->_data['id'] ])
+            ->one();
+
+        $row->scenario      = SystemCodes::SCENARIO_MOVE;
+        $row->moveFirst();
+        
+        $this->_data['filterForm']['type'] = $row['type'];
+        
+        return $this->renderListing();
     }
 
 
@@ -386,14 +487,7 @@ class CodesController extends BaseController
                 $this->_data['filterForm']['type'] = $this->_systemCodes->type;
             }
          
-            return $this->render(
-                'codes-listing',
-                [
-                   'data'         => $this->_data,
-                   'dataProvider' => $this->_dataProvider,
-                   'model'        => $this->_codesModel,
-                ]
-            );
+            return $this->renderListing();
         }
       
         $updateModel               = new SystemCodes();
@@ -458,7 +552,11 @@ class CodesController extends BaseController
      */
     public function actionSave()
     {
-        $isError = false;
+        $isError    = false;
+
+        $msgAddTagHeader    = "Add Tag";
+        $msgRemoveTagHeader = "Remove Tag";
+        $msgHeader          = "Save System Code";
  
         $tagRelationExists = SystemCodesChild::find()
             ->where([ 'parent' => $this->_data['id'] ])
@@ -473,7 +571,7 @@ class CodesController extends BaseController
  
         if (strlen($this->_data['addTag']) > 0) {
             if (!is_null($tagRelationExists)) {
-                $this->_data['errors']['Add Tag'] =
+                $this->_data['errors'][$msgAddTagHeader] =
                 [
                    'value'     => "was unsuccessful",
                    'bValue'    => false,
@@ -498,7 +596,7 @@ class CodesController extends BaseController
                         ->limit(1)
                         ->one();
             
-                    $this->_data['success']['Add Tag'] =
+                    $this->_data['success'][$msgAddTagHeader] =
                     [
                         'value'        => "was successful",
                         'bValue'       => true,
@@ -511,7 +609,7 @@ class CodesController extends BaseController
                         'value' => "was added",
                     ];
                 } else {
-                    $this->_data['errors']['Add Tag'] =
+                    $this->_data['errors'][$msgAddTagHeader] =
                     [
                         'value'     => "was unsuccessful",
                         'bValue'    => false,
@@ -519,7 +617,7 @@ class CodesController extends BaseController
                         'class'     => 'alert alert-danger',
                    ];
                
-                    $this->_data['errors']['Add Permit Tag'] =
+                    $this->_data['errors'][$msgAddTagHeader] =
                     [
                         'value' => "was not successful; no tags were added. (Result: " . strval($result) . ") ",
                     ];
@@ -533,7 +631,7 @@ class CodesController extends BaseController
             $result = $this->removePermitTag($this->_data['id'], $this->_data['tagid']);
       
             if ($result > 0) {
-                $this->_data['success']['Remove Tag'] =
+                $this->_data['success'][$msgRemoveTagHeader] =
                 [
                     'value'        => "was successful",
                     'bValue'       => true,
@@ -546,7 +644,7 @@ class CodesController extends BaseController
                     'value' => "was removed",
                 ];
             } else {
-                $this->_data['errors']['Remove Tag'] =
+                $this->_data['errors'][$msgRemoveTagHeader] =
                 [
                     'value'     => "was unsuccessful",
                     'bValue'    => false,
@@ -566,42 +664,23 @@ class CodesController extends BaseController
         if (isset($this->_data['SystemCodes']['update']) && !empty($this->_data['SystemCodes']['update'])) {
             $this->_systemCodes              = new SystemCodes();
       
-            $this->_systemCodes->id          = $this->_data['SystemCodes']['id'];
-            $this->_systemCodes->type        = $this->_data['SystemCodes']['type'];
-            $this->_systemCodes->code        = $this->_data['SystemCodes']['code'];
-            $this->_systemCodes->description = $this->_data['SystemCodes']['description'];
+            $this->_systemCodes->id             = $this->_data['SystemCodes']['id'];
+            $this->_systemCodes->type           = $this->_data['SystemCodes']['type'];
+            $this->_systemCodes->code           = $this->_data['SystemCodes']['code'];
+            $this->_systemCodes->code_str       = $this->_data['SystemCodes']['code_str'];
+            $this->_systemCodes->description    = $this->_data['SystemCodes']['description'];
    
             $exitEarly = false;
-
-            if (!isset($this->_systemCodes->type) || empty($this->_systemCodes->type)) {
-                $this->_data['errors']['Save System Code'] =
-                [
-                    'value'     => "was unsuccessful",
-                    'htmlTag'   => 'h4',
-                    'class'     => 'alert alert-danger',
-                ];
-
-                /**
-                   Unsure what kind of error will be caught here; TBD
-                 **/
-             
-                $this->_data['errors']['type'] =
-                [
-                    'value' => "is invalid",
-                ];
             
-                $exitEarly = true;
-            }
-         
-            if (!isset($this->_systemCodes->code) || empty($this->_systemCodes->code)) {
-                $this->_data['errors']['Save System Code'] =
+            if (!isset($this->_systemCodes->code_str) || empty($this->_systemCodes->code_str)) {
+                $this->_data['errors'][$msgHeader] =
                 [
                     'value'     => "was unsuccessful",
                     'htmlTag'   => 'h4',
                     'class'     => 'alert alert-danger',
                 ];
    
-                $this->_data['errors']['code'] =
+                $this->_data['errors']['code_str'] =
                 [
                     'value' => "is blank",
                 ];
@@ -610,7 +689,7 @@ class CodesController extends BaseController
             }
          
             if (!isset($this->_systemCodes->description) || empty($this->_systemCodes->description)) {
-                $this->_data['errors']['Save System Code'] =
+                $this->_data['errors'][$msgHeader] =
                 [
                    'value'     => "was unsuccessful",
                    'htmlTag'   => 'h4',
@@ -643,15 +722,30 @@ class CodesController extends BaseController
       
             $updateModel                = SystemCodes::findOne($this->_systemCodes->id);
             $updateModel->scenario      = SystemCodes::SCENARIO_UPDATE;
- 
-            $updateModel->code          = $this->_data['SystemCodes']['code'];
+
+            /*
+                        self::debug( "Old Value: " . $updateModel->code . " : " . gettype( $updateModel->code ), false );
+                        self::debug( "New Value: " . $this->_data['SystemCodes']['code'] . " : " . gettype( $this->_data['SystemCodes']['code'] ), false );
+
+                        if( $updateModel->code == $this->_data['SystemCodes']['code'] )
+                            self::debug( "Same value", false );
+                        else
+                            self::debug( "different values", false );
+             */
+            
+            if ($this->_data['SystemCodes']['code'] != intval($updateModel->code)) {
+                $updateModel->code          = $this->_data['SystemCodes']['code'];
+                
+//                self::debug( "Updated ->code", false );
+            }
+            $updateModel->code_str      = $this->_data['SystemCodes']['code_str'];
             $updateModel->description   = $this->_data['SystemCodes']['description'];
 
-            //$updateColumns = $updateModel->getDirtyAttributes();
+//            $updateColumnsTest = $updateModel->getDirtyAttributes();
 
             $updateModel->type          = $this->_data['SystemCodes']['type'];
-            $updateModel->is_active      = $this->_data['SystemCodes']['is_active'];
-            $updateModel->is_visible      = $this->_data['SystemCodes']['is_visible'];
+            $updateModel->is_active     = $this->_data['SystemCodes']['is_active'];
+            $updateModel->is_visible    = $this->_data['SystemCodes']['is_visible'];
 
             $this->_data['SystemCodes']['update'] = $updateModel->save();
          
@@ -659,56 +753,58 @@ class CodesController extends BaseController
 
             if ($this->_data['SystemCodes']['update'] && is_array($updateColumns)) {
                 if (count($updateColumns) > 0) {
-                    $this->_data['success']['Save System Code'] =
-                    [
-                        'value'     => "was successful",
-                        'bValue'    => true,
-                        'htmlTag'   => 'h4',
-                        'class'     => 'alert alert-success',
-                    ];
+                    if (!isset($this->_data['success'][$msgHeader])) {
+                        $this->_data['success']['useSession'] = true;
+                    
+                        $this->_data['success'][$msgHeader] =
+                        [
+                           'value'      => "was successful",
+                           'bValue'     => true,
+                           'htmlTag'    => 'h4',
+                           'class'      => 'alert alert-success',
+                        ];
+                    }
                
                     foreach ($updateColumns as $key => $val) {
                         $keyIndex = ucwords(strtolower(str_replace("_", " ", $key)));
-               
+
                         if ($key !== "updated_at" && $key !== "deleted_at") {
+                            if ($val == $this->_data['SystemCodes'][$key]) {
+                                // For some reason, afterSave() is stating that the value for this key has updated
+                                continue;
+                            }
+                            
                             $lookupNew = $this->keyLookup($key, $val);
                             $lookupOld = $this->keyLookup($key, $this->_data['SystemCodes'][$key]);
-                  
-                            $this->_data['success'][$keyIndex] =
+                            
+//                            self::debug( $lookupNew . " vs. " . $lookupOld, false );
+                            
+                            $labels = $this->_codesModel->attributeLabels();
+                            
+//                            self::debug( $labels );
+                   
+                            $this->_data['success'][$labels[$key]] =
                             [
-                                'value'     => "was updated",
+                                'value'     => "was updated ( <strong>" . $val . "</strong> -> <strong>" . $this->_data['SystemCodes'][$key] . "</strong> )",
                                 'bValue'    => true,
                             ];
-                     
+                            
                             if (strpos($lookupNew, "Unknown") !== 0) {
-                                $this->_data['success'][$keyIndex] =
+                                $this->_data['success'][$labels[$key]] =
                                 [
-                                    'value'  => "was updated ( " . $lookupNew . " -> " . $lookupOld . " )",
+                                    'value'  => "was updated ( <strong>" . $lookupNew . "</strong> -> <strong>" . $lookupOld . "</strong> )",
                                 ];
                             }
                         }
                     }
+                    
+//                    self::debug( $this->_data['success'] );
                 }
             }
         }
 
-        $this->_codesModel      = $this->_codesModel->findOne($this->_data['id']);
-      
-        $this->_tagsModel       = SystemCodes::findAllTagsById($this->_data['id']);
-        $this->_codeChildModel  = $this->getCodeChildModel($this->_data['id'], $this->_codesModel->code);
-
-        return $this->render(
-            'codes-view',
-            [
-                'data'         => $this->_data,
-                'dataProvider' => $this->_dataProvider,
-                'model'        => $this->_codesModel,
-                'tags'         => $this->_tagsModel,
-                'allTags'      => $this->_codeChildModel,
-            ]
-        );
+        return $this->redirect(['codes/view', 'id' => $this->_data['id'] ]);
     }
-
    
     /**
      * TBD
@@ -719,13 +815,16 @@ class CodesController extends BaseController
     {
         $codeType   = self::getDropDownOpts('type');
         
-        $isActive   = FormFields::getSelectOptions(-1, 'is_active', true);
-        $isVisible  = FormFields::getSelectOptions(-1, 'is_visible', true);
+        $isActive   = FormFields::getSelectOptions(-1, CodesController::IS_ACTIVE_TYPE_STR, true);
+        $isVisible  = FormFields::getSelectOptions(-1, CodesController::IS_VISIBLE_TYPE_STR, true);
+        $isBanner   = FormFields::getSelectOptions(-1, CodesController::IS_BANNER_DATA_TYPE_STR, true);
       
         if ($key == 'is_active'  && array_key_exists($value, $isActive)) {
-            return $isActive[ $value ];
+            return $isActive[$value ];
         } elseif ($key == 'is_visible' && array_key_exists($value, $isVisible)) {
-            return $isVisible[ strval($value)];
+            return $isVisible[$value];
+        } elseif ($key == 'is_banner_data' && array_key_exists($value, $isBanner)) {
+            return $isBanner[$value];
         } elseif ($key === "type") {
             if (isset($codeType[$value]) && !empty($codeType[$value])) {
                 return $codeType[$value];
@@ -743,16 +842,46 @@ class CodesController extends BaseController
      *
      * @return (TBD)
      */
+    private function FormFieldskeyLookup($key, $value)
+    {
+        $formField      = FormFields::getFormFieldOptions(-1, 'Form-Field', false);
+        $typeField      = FormFields::getDistinctGroupings();
+        $isActive       = FormFields::getSelectOptions(-1, 'Is-Active', true);
+        $isVisible      = FormFields::getSelectOptions(-1, 'Is-Visible', true);
+
+        if ($key == 'form_field'  && array_key_exists($value, $formField)) {
+            return $formField[ $value ];
+        } elseif ($key == 'type_str'  && array_key_exists($value, $typeField)) {
+            return $typeField[ $value ];
+        } elseif ($key == 'is_active'  && array_key_exists($value, $isActive)) {
+            return $isActive[ $value ];
+        } elseif ($key == 'is_visible' && array_key_exists($value, $isVisible)) {
+            return $isVisible[ strval($value)];
+        }
+        
+        return "Unknown key : " . $key . " :: " . $value;
+    }
+
+
+    /**
+     * TBD
+     *
+     * @return (TBD)
+     */
     public static function getDropDownOpts($key = "", $prompt = false)
     {
         $dropDownOpts     = self::dropDownOpts;
    
         if (!isset($key) || empty($key)) {
             return $dropDownOpts;
-        } elseif ($key == 'is_active') {
-            return FormFields::getSelectOptions(-1, 'is_active', $prompt);
-        } elseif ($key == 'is_visible') {
-            return FormFields::getSelectOptions(-1, 'is_visible', $prompt);
+        } elseif ($key == CodesController::IS_ACTIVE_TYPE_STR) {
+            return FormFields::getSelectOptions(-1, CodesController::IS_ACTIVE_TYPE_STR, $prompt);
+        } elseif ($key == CodesController::IS_VISIBLE_TYPE_STR) {
+            return FormFields::getSelectOptions(-1, CodesController::IS_VISIBLE_TYPE_STR, $prompt);
+        } elseif ($key == CodesController::IS_BANNER_DATA_TYPE_STR) {
+            return FormFields::getSelectOptions(-1, CodesController::IS_BANNER_DATA_TYPE_STR, $prompt);
+        } elseif ($key == 'type') {
+            return SystemCodes::getDistinctTypes($prompt);
         }
       
         if (!$prompt) {
@@ -760,7 +889,7 @@ class CodesController extends BaseController
                 unset($dropDownOpts[$key][-1]);
             }
         }
-
+        
         return $dropDownOpts[$key];
     }
 
