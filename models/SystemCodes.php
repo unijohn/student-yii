@@ -119,8 +119,8 @@ class SystemCodes extends BaseModel
     public function scenarios()
     {
         $scenarios = parent::scenarios();
-        $scenarios[self::SCENARIO_INSERT] = [ 'type', 'code', 'description', 'is_active', 'is_visible' ];
-        $scenarios[self::SCENARIO_UPDATE] = [ 'type', 'code', 'description', 'is_active', 'is_visible' ];
+        $scenarios[self::SCENARIO_INSERT] = [ 'type', 'type_str', 'code', 'code_str', 'description', 'is_active', 'is_visible', 'is_banner_data' ];
+        $scenarios[self::SCENARIO_UPDATE] = [ 'type', 'type_str', 'code', 'code_str', 'description', 'is_active', 'is_visible' ];
         $scenarios[self::SCENARIO_MOVE]   = [ 'order_by', 'updated_at', ];
    
         return $scenarios;
@@ -162,19 +162,15 @@ class SystemCodes extends BaseModel
             ],            
             
             [
-                'description', 'string', 'length' => [0, 64], 
-            ], 
-            [
-                'code_str', 'string', 'length' => [0, 64], 
-            ],    
-            [
-                'type_str', 'string', 'length' => [0, 64], 
-            ],                    
-            
-            [
-                ['type_str', 'code_str', 'description'], 'trim'
+                'type_str',    'string', 'max' => 64
             ],
-            
+            [
+                'description', 'string', 'max' => 64
+            ],
+            [
+                'code_str',    'string', 'max' => 64
+            ],                        
+
             [
                 [
                     'type', 'type_str', 'code', 'code_str', 'description', 'is_active', 'is_visible', 'updated_at'

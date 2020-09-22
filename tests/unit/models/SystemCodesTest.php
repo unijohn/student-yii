@@ -64,27 +64,75 @@ class SystemCodesTest extends \Codeception\Test\Unit
        
         // description is too long
         $systemCode->description = $this->tooLong;
-        expect($saveResult = $systemCode->save())->equals(false);
+        expect($saveResult       = $systemCode->save())->equals(false);
 
         // description is just right
         $systemCode->description = $this->justRight;
-        expect($saveResult = $systemCode->save())->equals(true);      
-        
-        // code_str is too long
-        $systemCode->code_str = $this->tooLong;
-        expect($saveResult = $systemCode->save())->equals(false);
-
-        // code_str is just right
-        $systemCode->code_str = $this->justRight;
-        expect($saveResult = $systemCode->save())->equals(true);   
-        
+        expect($saveResult       = $systemCode->save())->equals(true);      
+                
         // type_str is too long
-        $systemCode->type_str = $this->tooLong;
-        expect($saveResult = $systemCode->save())->equals(false);
+        $systemCode->type_str   = $this->tooLong;
+        expect($saveResult      = $systemCode->save())->equals(false);
 
         // type_str is just right
-        $systemCode->type_str = $this->justRight;
-        expect($saveResult = $systemCode->save())->equals(true);              
+        $systemCode->type_str   = $this->justRight;
+        expect($saveResult      = $systemCode->save())->equals(true);   
+        
+        // code_str is too long
+        $systemCode->code_str   = $this->tooLong;
+        expect($saveResult      = $systemCode->save())->equals(false);
+
+        // code_str is just right
+        $systemCode->code_str   = $this->justRight;
+        expect($saveResult      = $systemCode->save())->equals(true);    
+        
+        // is_active is below MIN
+        $systemCode->is_active  = SystemCodes::STATUS_VISIBLE_MIN - 100;
+        expect($saveResult      = $systemCode->save())->equals(false);
+        
+        // is_active is above MAX
+        $systemCode->is_active  = SystemCodes::STATUS_ACTIVE_MAX + 100;
+        expect($saveResult      = $systemCode->save())->equals(false);
+
+        // is_active is wrong kind of data
+        $systemCode->is_active  = $this->tooLong;
+        expect($saveResult      = $systemCode->save())->equals(false);
+        
+        // is_active is just right
+        $systemCode->is_active  = SystemCodes::STATUS_ACTIVE;
+        expect($saveResult      = $systemCode->save())->equals(true); 
+        
+        // is_visible is below MIN
+        $systemCode->is_visible = SystemCodes::STATUS_VISIBLE_MIN + 100;
+        expect($saveResult      = $systemCode->save())->equals(false);
+        
+        // is_visible is above MAX
+        $systemCode->is_visible = SystemCodes::STATUS_VISIBLE_MAX + 100;
+        expect($saveResult      = $systemCode->save())->equals(false);
+
+        // is_active is wrong kind of data
+        $systemCode->is_visible = $this->tooLong;
+        expect($saveResult      = $systemCode->save())->equals(false);
+
+        // is_visible is just right
+        $systemCode->is_visible = SystemCodes::STATUS_HIDDEN;
+        expect($saveResult      = $systemCode->save())->equals(true);   
+        
+        // is_banner_data is below MIN
+        $systemCode->is_banner_data = SystemCodes::STATUS_BANNER_MIN + 100;
+        expect($saveResult          = $systemCode->save())->equals(false);
+        
+        // is_banner_data is above MAX
+        $systemCode->is_banner_data = SystemCodes::STATUS_BANNER_MAX + 100;
+        expect($saveResult          = $systemCode->save())->equals(false);
+
+        // is_banner_data is wrong kind of data
+        $systemCode->is_banner_data = $this->tooLong;
+        expect($saveResult          = $systemCode->save())->equals(false);
+
+        // is_banner_data is just right
+        $systemCode->is_banner_data = SystemCodes::STATUS_BANNER_DATA;
+        expect($saveResult          = $systemCode->save())->equals(true);                            
     }
 
 /*

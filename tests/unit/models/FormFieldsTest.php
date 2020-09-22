@@ -95,11 +95,11 @@ class FormFieldsTest extends \Codeception\Test\Unit
         expect($saveResult      = $formField->save());
         
         // is_visible is below MIN
-        $formField->is_visible  = FormFields::STATUS_ACTIVE_MIN + 100;
+        $formField->is_visible  = FormFields::STATUS_VISIBLE_MIN + 100;
         expect_not($saveResult  = $formField->save());
         
         // is_visible is above MAX
-        $formField->is_visible  = FormFields::STATUS_ACTIVE_MAX + 100;
+        $formField->is_visible  = FormFields::STATUS_VISIBLE_MAX + 100;
         expect_not($saveResult  = $formField->save());
 
         // is_active is wrong kind of data
