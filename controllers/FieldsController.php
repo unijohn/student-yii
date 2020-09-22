@@ -253,48 +253,7 @@ class FieldsController extends BaseController
      **/
     private function renderListing()
     {
-        /**
-                $results = FormFields::find()
-                ->where(['grouping' => 5  ])
-                ->all();
-
-                $count = 1;
-
-                print( "<pre>" );
-                print( "        \$fieldRows = " . PHP_EOL );
-                print( "        [ " . PHP_EOL );
-                print( "            [ " . PHP_EOL );
-                print( "                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_YEAR_FOUR, 'calendar_year_four', 'Select Year', '', -1, self::STATUS_ACTIVE, self::STATUS_VISIBLE, $count, \$created_at,  " . PHP_EOL );
-                print( "            ], " . PHP_EOL );
-
-                for( $i = 2030; $i >= 1930; $i-- ) {
-
-                    $count++;
-
-                    if( $i >= 2021 ){
-                        $isActive  = "self::STATUS_INACTIVE";
-                        $isVisible = "self::STATUS_HIDDEN";
-                    }
-                    else {
-                        $isActive  = "self::STATUS_ACTIVE";
-                        $isVisible = "self::STATUS_VISIBLE";
-                    }
-
-                    print( "            [" . PHP_EOL );
-                    print( "                self::TYPE_FIELD_SELECT, self::TYPE_ITEM_YEAR_FOUR, 'calendar_year_four', '$i', '$i', $i, $isActive, $isVisible, $count, \$created_at," . PHP_EOL );
-                    print( "            ]," . PHP_EOL );
-
-        //            $count++;
-                }
-
-                print( "        ];" . PHP_EOL );
-
-                die();
-        **/
-    
         $this->_dataProvider = $this->getFieldsGridView();
-
-        //self::debug( $this->_data );
 
         return $this->render(
             'fields-listing',
