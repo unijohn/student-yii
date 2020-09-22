@@ -67,6 +67,10 @@ class FormFields extends BaseModel
             
             'is_active'     => Yii::t('app', 'Is Active'),
             'is_visible'    => Yii::t('app', 'Is Visible'),
+            
+            'created_at'    => Yii::t('app', 'Created' ),
+            'updated_at'    => Yii::t('app', 'Updated' ),
+            'deleted_at'    => Yii::t('app', 'Deleted' ),
         ];
     }
 
@@ -399,7 +403,7 @@ class FormFields extends BaseModel
      */
     public static function getFormFieldOptions($type = -1, $type_str = "", $prompt = false)
     {
-        $results = FormFields::getFieldOptions(FormFields::TYPE_FIELD_NOT_SET, $type, $type_str, $prompt);
+        $results = FormFields::getFieldOptions(FormFields::TYPE_FIELD_HTML_OPTS, $type, $type_str, $prompt);
         
         $dropDown = [];
         

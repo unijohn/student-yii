@@ -78,27 +78,20 @@
             'value' => function ($data) {
                 $strValue = "";
                 if ($data['form_field'] == "0") {
-                    $strValue = "Fields";
-                }                
-                elseif ($data['form_field'] == "1") {
-                    $strValue = "Select";
+                    $strValue = "Not Set";
+                } elseif ($data['form_field'] == "1") {
+                    $strValue = "HTML Opts";
                 } elseif ($data['form_field'] == "2") {
-                    $strValue = "Checkbox";
+                    $strValue = "Select";
                 } elseif ($data['form_field'] == "3") {
+                    $strValue = "Checkbox";
+                } elseif ($data['form_field'] == "4") {
                     $strValue = "Radio";
                 } else {
                     $strValue = $data['form_field'] ;
                 }
                
                 return HTML::a($strValue, Url::toRoute(['fields/view', 'id' => $data['id'] ], true));
-            },
-         ],
-         [
-            'attribute' => 'type_str',
-            'label' => 'Grouping',
-            'format' => 'raw',
-            'value' => function ($data) {
-                return HTML::a($data['type_str'], Url::toRoute(['fields/view', 'id' => $data['id']  ], true));
             },
          ],
          [

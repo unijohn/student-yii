@@ -49,16 +49,19 @@ class m200821_143444_tbl_FormFields extends BaseMigration
         [
             // form_field
             [
-                self::TYPE_FIELD_NOT_SET, self::TYPE_ITEM_FORM_FIELD, 'Form-Field', 'Select Form Field Type', '', self::TYPE_PROMPT_DEFAULT, self::STATUS_ACTIVE, self::STATUS_VISIBLE, 1, $created_at,
+                self::TYPE_FIELD_HTML_OPTS, self::TYPE_ITEM_FORM_FIELD, 'Form-Field', 'Select Form Field Type', '', self::TYPE_PROMPT_DEFAULT, self::STATUS_ACTIVE, self::STATUS_VISIBLE, 1, $created_at,
             ],
             [
-                self::TYPE_FIELD_NOT_SET, self::TYPE_ITEM_FORM_FIELD, 'Form-Field', 'Select / Dropdown',      '', self::TYPE_FIELD_SELECT,   self::STATUS_ACTIVE, self::STATUS_VISIBLE, 2, $created_at,
+                self::TYPE_FIELD_HTML_OPTS, self::TYPE_ITEM_FORM_FIELD, 'Form-Field', 'HTML Option [Special]',  '', self::TYPE_FIELD_HTML_OPTS, self::STATUS_ACTIVE, self::STATUS_VISIBLE, 2, $created_at,
+            ],            
+            [
+                self::TYPE_FIELD_HTML_OPTS, self::TYPE_ITEM_FORM_FIELD, 'Form-Field', 'Select / Dropdown',      '', self::TYPE_FIELD_SELECT,    self::STATUS_ACTIVE, self::STATUS_VISIBLE, 3, $created_at,
             ],
             [
-                self::TYPE_FIELD_NOT_SET, self::TYPE_ITEM_FORM_FIELD, 'Form-Field', 'Checkbox',               '', self::TYPE_FIELD_CHECKBOX, self::STATUS_ACTIVE, self::STATUS_VISIBLE, 3, $created_at,
+                self::TYPE_FIELD_HTML_OPTS, self::TYPE_ITEM_FORM_FIELD, 'Form-Field', 'Checkbox',               '', self::TYPE_FIELD_CHECKBOX,  self::STATUS_ACTIVE, self::STATUS_VISIBLE, 4, $created_at,
             ],
             [
-                self::TYPE_FIELD_NOT_SET, self::TYPE_ITEM_FORM_FIELD, 'Form-Field', 'Radio',                  '', self::TYPE_FIELD_RADIO,    self::STATUS_ACTIVE, self::STATUS_VISIBLE, 4, $created_at,
+                self::TYPE_FIELD_HTML_OPTS, self::TYPE_ITEM_FORM_FIELD, 'Form-Field', 'Radio',                  '', self::TYPE_FIELD_RADIO,     self::STATUS_ACTIVE, self::STATUS_VISIBLE, 5, $created_at,
             ],
         
             // is_active

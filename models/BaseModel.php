@@ -144,10 +144,11 @@ class BaseModel extends ActiveRecord
     const FIELD_FORM_MIN            = self::FIELD_FORM;
     const FIELD_FORM_MAX            = self::FIELD_DOCUMENT_TYPE;
 
-    const TYPE_FIELD_NOT_SET   = 0;
-    const TYPE_FIELD_SELECT    = 1;
-    const TYPE_FIELD_CHECKBOX  = 2;
-    const TYPE_FIELD_RADIO     = 3;
+    const TYPE_FIELD_NOT_SET    = 0;
+    const TYPE_FIELD_HTML_OPTS  = 1;
+    const TYPE_FIELD_SELECT     = 2;
+    const TYPE_FIELD_CHECKBOX   = 3;
+    const TYPE_FIELD_RADIO      = 4;
     const TYPE_FIELD_MIN       = self::TYPE_FIELD_NOT_SET;
     const TYPE_FIELD_MAX       = self::TYPE_FIELD_RADIO;
 

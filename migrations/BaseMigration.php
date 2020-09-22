@@ -107,9 +107,10 @@ class BaseMigration extends Migration
     const TYPE_MASTERS_OMBA         = 7;
 
     const TYPE_FIELD_NOT_SET    = 0;
-    const TYPE_FIELD_SELECT     = 1;
-    const TYPE_FIELD_CHECKBOX   = 2;
-    const TYPE_FIELD_RADIO      = 3;
+    const TYPE_FIELD_HTML_OPTS  = 1;
+    const TYPE_FIELD_SELECT     = 2;
+    const TYPE_FIELD_CHECKBOX   = 3;
+    const TYPE_FIELD_RADIO      = 4;
     
     const TERM_NOT_SET          = 0;
     const TERM_SPRING           = 1;
