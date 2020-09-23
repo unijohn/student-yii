@@ -284,6 +284,31 @@ class SystemCodesTest extends \Codeception\Test\Unit
         // Valid positioning
         expect($row->moveToPosition(4))->equals(true);
     }
+    
+    public function testFindPermitTags()
+    {
+        $systemCode             = new SystemCodes();    
+    
+        // If permits are tagged, this test will fail
+        $this->assertFalse( SystemCodes::findAllPermitTags(), "If permits are tagged, this test will fail");
+        
+        $row = SystemCodes::find()
+            ->where([ 'id' => 6 ])
+            ->limit(1)
+            ->one();
+        
+        /*
+         * public static function findPermitTagsById($id = -1)
+         */
+        // $id is wrong kind of data    
+        $this->assertFalse( SystemCodes::findPermitTagsById("Masters"), "'Masters' != [numeric] id");
+
+        // $id is wrong value
+        expect(SystemCodes::findPermitTagsById(-1))->equals(false);
+
+        // $id is valid
+        expect( SystemCodes::findPermitTagsById(4) );
+    }
 
     /*
         public function testExistsSystemCode()

@@ -348,7 +348,7 @@ class SystemCodes extends BaseModel
      */
     public static function findAllPermitTags()
     {
-        $tbl_systemsCodes       = $this->tableName();
+        $tbl_systemsCodes       = self::tableName();
         $tbl_SystemCodesChild   = SystemCodesChild::tableName();
    
         $query_codes = ( new \yii\db\Query() )
@@ -356,15 +356,16 @@ class SystemCodes extends BaseModel
          ->from($tbl_systemsCodes . ' sc')
          ->innerJoin($tbl_SystemCodesChild, $tbl_SystemCodesChild . '.parent = sc.id')
          ->innerJoin($tbl_systemsCodes . ' sc2', $tbl_SystemCodesChild . '.child = sc2.id')
-         ->where(['sc.type =:sc_type AND sc.is_active =:sc_is_active AND sc2.is_active =:sc2_is_active' ])
-            ->addParams([
-               ':sc_type'        => self::TYPE_PERMIT,
-               ':sc_is_active'   => self::STATUS_ACTIVE,
-               ':sc2_is_active'  => self::STATUS_ACTIVE,
-            ])
-         ->all();
+         ->where(['=', 'sc.type', self::TYPE_PERMIT ])
+         ->andWhere([ '=', 'sc.is_active', self::STATUS_ACTIVE ])
+         ->andWhere([  '=', 'sc2.is_active',self::STATUS_ACTIVE ]);         
+         
 
-        return $query_codes;
+        if( $query_codes->count() == 0 ){            
+            return false;
+        }
+
+        return $query_codes->all();
     }
    
    
@@ -376,7 +377,7 @@ class SystemCodes extends BaseModel
      */
     public static function findPermitTagsById($id = -1)
     {
-        if ($id < 0 || strval($id) === 0) {
+        if ($id < 0 || strval($id) === 0 || gettype($id) != 'integer') {
             return false;
         }
    
@@ -389,12 +390,15 @@ class SystemCodes extends BaseModel
          ->innerJoin($tbl_SystemCodesChild, $tbl_SystemCodesChild . '.parent = sc.id')
          ->innerJoin($tbl_SystemsCodes . ' sc2', $tbl_SystemCodesChild . '.child = sc2.id')
          ->where(['sc.id' => $id ])
-         ->andWhere([ 'sc.type'        => self::TYPE_PERMIT ])
+         ->andWhere([ 'sc.type'        => self::TYPE_PERMIT ]);
 //         ->andWhere([ 'sc.is_active'   => self::STATUS_ACTIVE ])
 //         ->andWhere([ 'sc2.is_active'  => self::STATUS_ACTIVE ])
-         ->all();
 
-        return $query_codes;
+        if( $query_codes->count() == 0 ){            
+            return false;
+        }
+
+        return $query_codes->all();
     }
 
 
