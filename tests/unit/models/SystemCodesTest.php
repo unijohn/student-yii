@@ -208,6 +208,7 @@ class SystemCodesTest extends \Codeception\Test\Unit
         expect($saveResult      = $systemCode->save())->equals(true);
     }
     
+    
     public function testFindByMethods()
     {
         /*
@@ -238,7 +239,9 @@ class SystemCodesTest extends \Codeception\Test\Unit
         expect(SystemCodes::findbyEmployeeClass());
         expect(SystemCodes::findbySchoolDept());
         expect(SystemCodes::findbyUniversityDept());
+        expect(SystemCodes::findPermitTagOptions());
     }
+    
     
     public function testGetDistinctTypes()
     {
@@ -285,6 +288,7 @@ class SystemCodesTest extends \Codeception\Test\Unit
         expect($row->moveToPosition(4))->equals(true);
     }
     
+    
     public function testFindPermitTags()
     {
         $systemCode             = new SystemCodes();    
@@ -301,14 +305,63 @@ class SystemCodesTest extends \Codeception\Test\Unit
          * public static function findPermitTagsById($id = -1)
          */
         // $id is wrong kind of data    
-        $this->assertFalse( SystemCodes::findPermitTagsById("Masters"), "'Masters' != [numeric] id");
+        $this->assertFalse( SystemCodes::findPermitTagsById("Masters"), "Should Fail:  'Masters' != [numeric] id");
 
         // $id is wrong value
         expect(SystemCodes::findPermitTagsById(-1))->equals(false);
+        expect(SystemCodes::findPermitTagsById(10000000))->equals(false);        
 
         // $id is valid
         expect( SystemCodes::findPermitTagsById(4) );
+        
+        /*
+         * public static function findAllTagsById($id = -1)
+         */
+        // $id is wrong kind of data    
+        $this->assertFalse( SystemCodes::findAllTagsById("Masters"), "Should Fail:  'Masters' != [numeric] id");
+
+        // $id is wrong value
+        expect(SystemCodes::findAllTagsById(-1))->equals(false);
+        expect(SystemCodes::findAllTagsById(10000000))->equals(false);        
+
+        // $id is valid
+        expect( SystemCodes::findAllTagsById(4) );        
     }
+    
+/*    
+    public function testExistsSystemCode()
+    {
+        *
+         *  public static function existsSystemCode($type = -1, $code = "")
+         *
+    
+        // $type is right
+        expect(SystemCodes::findbyType(SystemCodes::TYPE_MASTERS));
+
+        // $type is wrong kind of data
+        expect(SystemCodes::findbyType($this->tooLong))->equals(false);
+
+        *
+         * public static function findbyTypeStr( $type_str = "" )
+         *
+        // $type is right
+        expect(SystemCodes::findbyTypeStr("Masters"));
+
+        // $type is wrong kind of data
+        expect(SystemCodes::findbyTypeStr(10101010))->equals(false);
+    
+        // Calling the wrapper methods
+        expect(SystemCodes::findbyPermit());
+        expect(SystemCodes::findbyDepartment());
+        expect(SystemCodes::findbyCareerLevel());
+        expect(SystemCodes::findbyMasters());
+        expect(SystemCodes::findbyFacultyRank());
+        expect(SystemCodes::findbyEmployeeClass());
+        expect(SystemCodes::findbySchoolDept());
+        expect(SystemCodes::findbyUniversityDept());
+        expect(SystemCodes::findPermitTagOptions());
+    } 
+ */       
 
     /*
         public function testExistsSystemCode()

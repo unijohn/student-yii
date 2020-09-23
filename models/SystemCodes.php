@@ -416,7 +416,7 @@ class SystemCodes extends BaseModel
      */
     public static function findAllTagsById($id = -1)
     {
-        if ($id < 0 || strval($id) === 0) {
+        if ($id < 0 || strval($id) === 0 || gettype($id) != 'integer') {
             return false;
         }
    
@@ -428,12 +428,16 @@ class SystemCodes extends BaseModel
          ->from($tbl_SystemsCodes . ' sc')
          ->innerJoin($tbl_SystemCodesChild, $tbl_SystemCodesChild . '.parent = sc.id')
          ->innerJoin($tbl_SystemsCodes . ' sc2', $tbl_SystemCodesChild . '.child = sc2.id')
-         ->where(['sc.id' => $id ])
+         ->where(['sc.id' => $id ]);
          //->andWhere([ 'sc.is_active'   => self::STATUS_ACTIVE ])
          //->andWhere([ 'sc2.is_active'  => self::STATUS_ACTIVE ])
-         ->all();
 
-        return $query_codes;
+        if( $query_codes->count() == 0 ){            
+            return false;
+        }         
+
+        return $query_codes->all();
+         
     }
 
 
@@ -598,7 +602,8 @@ class SystemCodes extends BaseModel
     {
         return self::existsSystemCode(self::TYPE_PERMIT, $code);
     }
-   
+
+
     /**
      * Determines if this department already exists in the system
      *
@@ -608,6 +613,73 @@ class SystemCodes extends BaseModel
     {
         return self::existsSystemCode(self::TYPE_DEPARTMENT, $code);
     }
+
+
+    /**
+     * Determines if this careel level already exists in the system
+     *
+     * @return (TBD)
+     */
+    public static function existsCareelLevel($code)
+    {
+        return self::existsSystemCode(self::TYPE_CAREERLEVEL, $code);
+    }
+    
+    
+    /**
+     * Determines if this masters already exists in the system
+     *
+     * @return (TBD)
+     */
+    public static function existsMasters($code)
+    {
+        return self::existsSystemCode(self::TYPE_MASTERS, $code);
+    }
+    
+    
+    /**
+     * Determines if this faculty rank already exists in the system
+     *
+     * @return (TBD)
+     */
+    public static function existsFacultyRank($code)
+    {
+        return self::existsSystemCode(self::TYPE_FACULTY_RANK, $code);
+    }
+    
+    
+    /**
+     * Determines if this employee class already exists in the system
+     *
+     * @return (TBD)
+     */
+    public static function existsEmployeeClass($code)
+    {
+        return self::existsSystemCode(self::TYPE_EMPLOYEE_CLASS, $code);
+    }
+   
+   
+    /**
+     * Determines if this school department already exists in the system
+     *
+     * @return (TBD)
+     */
+    public static function existsSchoolDepartment($code)
+    {
+        return self::existsSystemCode(self::TYPE_SCHOOL_DEPT, $code);
+    }
+    
+    
+    /**
+     * Determines if this school department already exists in the system
+     *
+     * @return (TBD)
+     */
+    public static function existsUniversityDepartment($code)
+    {
+        return self::existsSystemCode(self::TYPE_UNIVERSITY_DEPT, $code);
+    }
+   
    
    
     /**
