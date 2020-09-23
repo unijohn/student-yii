@@ -121,7 +121,7 @@ class FormFieldsTest extends \Codeception\Test\Unit
         $formField = FormFields::find()
             ->where(['id' => 7 ])
             ->limit(1)
-            ->one();        
+            ->one();
 
         // Everything correct
         $formField->form_field  = FormFields::TYPE_FIELD_SELECT;

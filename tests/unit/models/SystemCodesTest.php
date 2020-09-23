@@ -245,7 +245,7 @@ class SystemCodesTest extends \Codeception\Test\Unit
         // public static function getDistinctTypes($prompt = false)
         
         expect(SystemCodes::getDistinctTypes(true));
-        expect(SystemCodes::getDistinctTypes(false));     
+        expect(SystemCodes::getDistinctTypes(false));
     }
  
  
@@ -267,22 +267,22 @@ class SystemCodesTest extends \Codeception\Test\Unit
         expect($row->movePrev())->equals(false);
         
         expect($row->getIsLast())->equals(false);
-        expect($row->getIsFirst())->equals(true);        
+        expect($row->getIsFirst())->equals(true);
 
-        for( $i = 1; $i <= 7; $i++ ){
+        for ($i = 1; $i <= 7; $i++) {
             expect($row->moveNext())->equals(true);
         }
         
-        expect($row->moveNext())->equals(false);        
+        expect($row->moveNext())->equals(false);
 
         // Too far; invalid positioning
-        expect($row->moveToPosition(3000))->equals(false);  
+        expect($row->moveToPosition(3000))->equals(false);
         
         // Too far; invalid positioning
-        expect($row->moveToPosition(-1))->equals(false); 
+        expect($row->moveToPosition(-1))->equals(false);
         
         // Valid positioning
-        expect($row->moveToPosition(4))->equals(true);                
+        expect($row->moveToPosition(4))->equals(true);
     }
 
     /*
