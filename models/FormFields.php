@@ -168,10 +168,7 @@ class FormFields extends BaseModel
                 'tooBig' => 'Select a valid option', 'tooSmall' => 'Select a valid option',
             ],
             [
-                'value', 'default', 'value' => ''
-            ],
-            [
-                'value_int', 'default', 'value' => 0
+                'value', 'default', 'value' => 0
             ],
             [
                 'is_active', 'default', 'value' => self::STATUS_ACTIVE
@@ -192,7 +189,7 @@ class FormFields extends BaseModel
 
             [
                 [
-                   'form_field', 'type', 'type_str', 'description', 'is_active', 'order_by', 'is_visible', 'updated_at'
+                   'form_field', 'type', 'type_str', 'value', 'value_str', 'description', 'is_active', 'is_visible', 'updated_at'
                 ],
                 'required', 'on' => self::SCENARIO_UPDATE
             ],

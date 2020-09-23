@@ -119,8 +119,8 @@ class SystemCodes extends BaseModel
     public function scenarios()
     {
         $scenarios = parent::scenarios();
-        $scenarios[self::SCENARIO_INSERT] = [ 'type', 'type_str', 'code', 'code_str', 'description', 'is_active', 'is_visible', 'is_banner_data' ];
-        $scenarios[self::SCENARIO_UPDATE] = [ 'type', 'type_str', 'code', 'code_str', 'description', 'is_active', 'is_visible' ];
+        $scenarios[self::SCENARIO_INSERT] = [ 'type', 'type_str', 'code', 'code_str', 'description', 'value', 'value_str', 'is_active', 'is_visible', 'is_banner_data' ];
+        $scenarios[self::SCENARIO_UPDATE] = [ 'type', 'type_str', 'code', 'code_str', 'description', 'value', 'value_str', 'is_active', 'is_visible' ];
         $scenarios[self::SCENARIO_MOVE]   = [ 'order_by', 'updated_at', ];
    
         return $scenarios;
@@ -150,7 +150,7 @@ class SystemCodes extends BaseModel
                 'type', 'number', 'min' => self::TYPE_MIN, 'max' => self::TYPE_MAX,
                 'tooBig' => 'Select a valid option', 'tooSmall' => 'Select a valid option',
             ],
-            
+
             [
                 'is_active', 'default', 'value' => self::STATUS_ACTIVE
             ],
@@ -160,17 +160,17 @@ class SystemCodes extends BaseModel
             [
                 'is_banner_data', 'default', 'value' => self::STATUS_BANNER_MIN
             ],
-            
-            [
-                'type_str',    'string', 'max' => 64
-            ],
-            [
-                'description', 'string', 'max' => 64
-            ],
-            [
-                'code_str',    'string', 'max' => 64
-            ],
 
+            [
+                'type_str',     'string', 'max' => 64
+            ],
+            [
+                'description',  'string', 'max' => 64
+            ],
+            [
+                'code_str',     'string', 'max' => 64
+            ],
+            
             [
                 [
                     'type', 'type_str', 'code', 'code_str', 'description', 'is_active', 'is_visible', 'updated_at'
@@ -341,6 +341,8 @@ class SystemCodes extends BaseModel
 
     /**
      * TBD
+     *
+     * SystemCodesTest:  Start here vvv
      *
      * @returns model filtered by TYPE_PERMIT
      */

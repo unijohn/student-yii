@@ -115,6 +115,99 @@ class SystemCodesTest extends \Codeception\Test\Unit
         expect($saveResult          = $systemCode->save())->equals(true);
     }
     
+    
+    public function testUpdateSystemCode()
+    {
+        $systemCode = SystemCodes::find()
+            ->where(['id' => 6 ])
+            ->limit(1)
+            ->one();
+        
+        $systemCode->scenario   = SystemCodes::SCENARIO_UPDATE;
+        
+        // Everything correct
+        $systemCode->type           = SystemCodes::TYPE_PERMIT;
+        $systemCode->type_str       = $this->justRight;
+
+        $systemCode->code           = 0;
+        $systemCode->code_str       = $this->justRight;
+        
+        $systemCode->description    = $this->justRight;
+        
+        $systemCode->is_active      = SystemCodes::STATUS_ACTIVE;
+        $systemCode->is_visible     = SystemCodes::STATUS_VISIBLE;
+        
+        expect($saveResult = $systemCode->save())->equals(true);
+        
+        // Type is below MIN
+        $systemCode->type  = SystemCodes::TYPE_MIN - 100;
+        expect($saveResult = $systemCode->save())->equals(false);
+
+        // Type is above MAX
+        $systemCode->type  = SystemCodes::TYPE_MAX + 100;
+        expect($saveResult = $systemCode->save())->equals(false);
+
+        // Type is just right
+        $systemCode->type  = SystemCodes::TYPE_MASTERS;
+        expect($saveResult = $systemCode->save())->equals(true);
+       
+        // description is too long
+        $systemCode->description = $this->tooLong;
+        expect($saveResult       = $systemCode->save())->equals(false);
+
+        // description is just right
+        $systemCode->description = $this->justRight;
+        expect($saveResult       = $systemCode->save())->equals(true);
+                
+        // type_str is too long
+        $systemCode->type_str   = $this->tooLong;
+        expect($saveResult      = $systemCode->save())->equals(false);
+
+        // type_str is just right
+        $systemCode->type_str   = $this->justRight;
+        expect($saveResult      = $systemCode->save())->equals(true);
+        
+        // code_str is too long
+        $systemCode->code_str   = $this->tooLong;
+        expect($saveResult      = $systemCode->save())->equals(false);
+
+        // code_str is just right
+        $systemCode->code_str   = $this->justRight;
+        expect($saveResult      = $systemCode->save())->equals(true);
+        
+        // is_active is below MIN
+        $systemCode->is_active  = SystemCodes::STATUS_VISIBLE_MIN - 100;
+        expect($saveResult      = $systemCode->save())->equals(false);
+        
+        // is_active is above MAX
+        $systemCode->is_active  = SystemCodes::STATUS_ACTIVE_MAX + 100;
+        expect($saveResult      = $systemCode->save())->equals(false);
+
+        // is_active is wrong kind of data
+        $systemCode->is_active  = $this->tooLong;
+        expect($saveResult      = $systemCode->save())->equals(false);
+        
+        // is_active is just right
+        $systemCode->is_active  = SystemCodes::STATUS_ACTIVE;
+        expect($saveResult      = $systemCode->save())->equals(true);
+        
+        // is_visible is below MIN
+        $systemCode->is_visible = SystemCodes::STATUS_VISIBLE_MIN + 100;
+        expect($saveResult      = $systemCode->save())->equals(false);
+        
+        // is_visible is above MAX
+        $systemCode->is_visible = SystemCodes::STATUS_VISIBLE_MAX + 100;
+        expect($saveResult      = $systemCode->save())->equals(false);
+
+        // is_active is wrong kind of data
+        $systemCode->is_visible = $this->tooLong;
+        expect($saveResult      = $systemCode->save())->equals(false);
+
+        // is_visible is just right
+        $systemCode->is_visible = SystemCodes::STATUS_HIDDEN;
+        expect($saveResult      = $systemCode->save())->equals(true);
+    }
+    
     public function testFindByMethods()
     {
         /*
@@ -152,9 +245,45 @@ class SystemCodesTest extends \Codeception\Test\Unit
         // public static function getDistinctTypes($prompt = false)
         
         expect(SystemCodes::getDistinctTypes(true));
-        expect(SystemCodes::getDistinctTypes(false));
+        expect(SystemCodes::getDistinctTypes(false));     
     }
  
+ 
+    public function testMoveSystemCodes()
+    {
+        $row = SystemCodes::find()
+            ->where(['id' => 6 ])
+            ->limit(1)
+            ->one();
+        
+        // Starting position: id: 6
+        // Departments, DEPT-NA, Dept Not Set
+        //
+        // Start position: 2
+        // Min position: 1
+        // Max position: 8
+
+        expect($row->movePrev())->equals(true);
+        expect($row->movePrev())->equals(false);
+        
+        expect($row->getIsLast())->equals(false);
+        expect($row->getIsFirst())->equals(true);        
+
+        for( $i = 1; $i <= 7; $i++ ){
+            expect($row->moveNext())->equals(true);
+        }
+        
+        expect($row->moveNext())->equals(false);        
+
+        // Too far; invalid positioning
+        expect($row->moveToPosition(3000))->equals(false);  
+        
+        // Too far; invalid positioning
+        expect($row->moveToPosition(-1))->equals(false); 
+        
+        // Valid positioning
+        expect($row->moveToPosition(4))->equals(true);                
+    }
 
     /*
         public function testExistsSystemCode()

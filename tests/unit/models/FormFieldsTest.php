@@ -111,6 +111,114 @@ class FormFieldsTest extends \Codeception\Test\Unit
         expect($saveResult      = $formField->save());
     }
     
+    
+    public function testUpdateFormField()
+    {
+        $formField = new FormFields();
+       
+        $formField->scenario     = FormFields::SCENARIO_UPDATE;
+        
+        $formField = FormFields::find()
+            ->where(['id' => 7 ])
+            ->limit(1)
+            ->one();        
+
+        // Everything correct
+        $formField->form_field  = FormFields::TYPE_FIELD_SELECT;
+        $formField->type        = FormFields::FIELD_ACTIVE;
+        $formField->type_str    = "Is-Active";
+        $formField->description = $this->justRight;
+        $formField->value       = 2;
+        $formField->value_str   = "";
+        
+        $formField->is_active   = FormFields::STATUS_ACTIVE;
+        $formField->is_visible  = FormFields::STATUS_VISIBLE;
+
+        expect_that($saveResult = $formField->save());
+        
+        // Type is below MIN
+        $formField->type        = FormFields::FIELD_FORM_MIN - 100;
+        expect_not($saveResult  = $formField->save());
+    
+        // Type is above MAX
+        $formField->type        = FormFields::FIELD_FORM_MAX + 100;
+        expect_not($saveResult  = $formField->save());
+
+        // Type is just right
+        $formField->type        = FormFields::FIELD_TERM;
+        expect($saveResult      = $formField->save());
+        
+        // Form_Field is below MIN
+        $formField->form_field  = FormFields::TYPE_FIELD_MIN - 100;
+        expect_not($saveResult  = $formField->save());
+
+        // Form_Field is above MAX
+        $formField->type        = FormFields::FIELD_VISIBLE;
+        $formField->form_field  = FormFields::TYPE_FIELD_MAX + 100;
+        expect_not($saveResult  = $formField->save());
+        
+        // Form_Field is just right
+        $formField->form_field  = FormFields::TYPE_FIELD_SELECT;
+        expect($saveResult      = $formField->save());
+
+        // type_str is too long
+        $formField->type_str = $this->tooLong;
+        expect_not($saveResult  = $formField->save());
+        
+        // type_str is just right
+        $formField->type_str = $this->justRight;
+        expect($saveResult      = $formField->save());
+
+        // value_str is too long
+        $formField->value_str = $this->tooLong;
+        expect_not($saveResult  = $formField->save());
+        
+        // type_str is just right
+        $formField->value_str = $this->justRight;
+        expect($saveResult      = $formField->save());
+        
+        // Description is too long
+        $formField->description = $this->tooLong;
+        expect_not($saveResult  = $formField->save());
+        
+        // Description is just right
+        $formField->description = $this->justRight;
+        expect($saveResult      = $formField->save());
+        
+        // is_active is below MIN
+        $formField->is_active   = FormFields::STATUS_VISIBLE_MIN - 100;
+        expect_not($saveResult  = $formField->save());
+        
+        // is_active is above MAX
+        $formField->is_active   = FormFields::STATUS_ACTIVE_MAX + 100;
+        expect_not($saveResult  = $formField->save());
+
+        // is_active is wrong kind of data
+        $formField->is_active   = $this->tooLong;
+        expect_not($saveResult  = $formField->save());
+        
+        // is_active is just right
+        $formField->is_active   = FormFields::STATUS_ACTIVE;
+        expect($saveResult      = $formField->save());
+        
+        // is_visible is below MIN
+        $formField->is_visible  = FormFields::STATUS_VISIBLE_MIN + 100;
+        expect_not($saveResult  = $formField->save());
+        
+        // is_visible is above MAX
+        $formField->is_visible  = FormFields::STATUS_VISIBLE_MAX + 100;
+        expect_not($saveResult  = $formField->save());
+
+        // is_active is wrong kind of data
+        $formField->is_visible   = $this->tooLong;
+        expect_not($saveResult  = $formField->save());
+
+        // is_visible is just right
+        $formField->is_visible  = FormFields::STATUS_HIDDEN;
+        expect($saveResult      = $formField->save());
+    }
+
+    
     public function testExistsFieldByProperties()
     {
         //public static function existsFieldByProperties($form_field = -1, $type = -1, $type_str = '', $description = '', $value_str = '', $value = -1)
@@ -225,6 +333,7 @@ class FormFieldsTest extends \Codeception\Test\Unit
     {
         $row = FormFields::find()
             ->where(['id' => 7 ])
+            ->limit(1)
             ->one();
         
         // Starting position: id: 7
