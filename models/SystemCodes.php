@@ -659,10 +659,9 @@ class SystemCodes extends BaseModel
          ->select([  'sc.id', 'sc.type', 'sc.code', 'sc.description', 'sc.is_active' ])
          ->from($tbl_SystemCodes       . ' sc')
          ->where('id NOT IN ( SELECT child from ' . $tbl_CoursesCodesChild .' WHERE parent = :id ) AND sc.is_active =:is_active AND sc.type !=:type')
-            ->addParams([ ':id' => $id, 'is_active' => self::STATUS_ACTIVE, 'type' => self::TYPE_PERMIT ])
-         ->all();
+            ->addParams([ ':id' => $id, 'is_active' => self::STATUS_ACTIVE, 'type' => self::TYPE_PERMIT ]);
 
-        return $query_codes;
+        return $query_codes->all();
     }
 
 
@@ -673,6 +672,12 @@ class SystemCodes extends BaseModel
      */
     public static function existsSystemCode($type = -1, $code = "")
     {
+        if ($type < 0 || strval($type) === 0 || gettype($type) != 'integer') {
+            return false;
+        } elseif ($code < 0 || strval($code) === 0 || gettype($code) != 'integer') {
+            return false;
+        }
+    
         $query_codes = (new \yii\db\Query())
          ->select([ 'id', 'type', 'code', 'description', 'created_at', 'updated_at' ])
          ->from(self::tableName())
@@ -687,7 +692,7 @@ class SystemCodes extends BaseModel
             return new static($code_row);
         }
  
-        return null;
+        return false;
     }
 
 
@@ -777,8 +782,7 @@ class SystemCodes extends BaseModel
     {
         return self::existsSystemCode(self::TYPE_UNIVERSITY_DEPT, $code);
     }
-   
-   
+
    
     /**
      *
