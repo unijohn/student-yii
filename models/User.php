@@ -248,6 +248,7 @@ class User extends BaseModel implements IdentityInterface
         $newUser->is_active             = self::STATUS_ACTIVE;
         $newUser->is_active_employee    = self::STATUS_ACTIVE;
         $newUser->is_active_student     = self::STATUS_ACTIVE;
+        $newUser->is_test_account       = self::STATUS_INACTIVE;        
         $newUser->generateAuthKey();
         $newUser->generateAccessToken();
     
