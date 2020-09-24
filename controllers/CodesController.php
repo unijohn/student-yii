@@ -739,49 +739,67 @@ class CodesController extends BaseController
             
             if ($this->_data['SystemCodes']['code'] != intval($updateModel->code)) {
                 $updateModel->code          = $this->_data['SystemCodes']['code'];
-                
-//                self::debug( "Updated ->code", false );
             }
             $updateModel->code_str      = $this->_data['SystemCodes']['code_str'];
             $updateModel->description   = $this->_data['SystemCodes']['description'];
-
-//            $updateColumnsTest = $updateModel->getDirtyAttributes();
 
             $updateModel->type          = $this->_data['SystemCodes']['type'];
             $updateModel->is_active     = $this->_data['SystemCodes']['is_active'];
             $updateModel->is_visible    = $this->_data['SystemCodes']['is_visible'];
 
+            if (!$updateModel->validate()) {
+                $this->_data['errors'][$msgHeader] =
+                [
+                   'value'     => "was unsuccessful",
+                   'htmlTag'   => 'h4',
+                   'class'     => 'alert alert-danger',
+                ];
+   
+                $this->_data['errors']['description'] =
+                [
+                    'value' => $updateModel->errors,
+                ];
+   
+                $this->_data['errors']['useSession'] = true;
+                
+                self::debug($updateModel->errors);
+            }
+
             $this->_data['SystemCodes']['update'] = $updateModel->save();
          
             $updateColumns = $updateModel->afterSave(false, $this->_data['SystemCodes']['update']);
 
+//self::debug( $updateColumns );
+
             if ($this->_data['SystemCodes']['update'] && is_array($updateColumns)) {
                 if (count($updateColumns) > 0) {
-                    if (!isset($this->_data['success'][$msgHeader])) {
-                        $this->_data['success']['useSession'] = true;
-                    
-                        $this->_data['success'][$msgHeader] =
-                        [
-                           'value'      => "was successful",
-                           'bValue'     => true,
-                           'htmlTag'    => 'h4',
-                           'class'      => 'alert alert-success',
-                        ];
-                    }
-               
                     foreach ($updateColumns as $key => $val) {
                         $keyIndex = ucwords(strtolower(str_replace("_", " ", $key)));
-
+                
                         if ($key !== "updated_at" && $key !== "deleted_at") {
                             if ($val == $this->_data['SystemCodes'][$key]) {
                                 // For some reason, afterSave() is stating that the value for this key has updated
+                                // e.g. is_active, is_visible :: Basically any "-1" == -1 situation
                                 continue;
+                            } else {
+                                // Avoid setting this success header multiple times
+                                if (!isset($this->_data['success'][$msgHeader])) {
+                                    $this->_data['success']['useSession'] = true;
+                                
+                                    $this->_data['success'][$msgHeader] =
+                                    [
+                                       'value'      => "was successful",
+                                       'bValue'     => true,
+                                       'htmlTag'    => 'h4',
+                                       'class'      => 'alert alert-success',
+                                    ];
+                                }
                             }
                             
                             $lookupNew = $this->keyLookup($key, $val);
                             $lookupOld = $this->keyLookup($key, $this->_data['SystemCodes'][$key]);
                             
-//                            self::debug( $lookupNew . " vs. " . $lookupOld, false );
+//                            self::debug( $lookupNew . " vs. " . $lookupOld, true );
                             
                             $labels = $this->_codesModel->attributeLabels();
                             
@@ -792,7 +810,7 @@ class CodesController extends BaseController
                                 'value'     => "was updated ( <strong>" . $val . "</strong> -> <strong>" . $this->_data['SystemCodes'][$key] . "</strong> )",
                                 'bValue'    => true,
                             ];
-                            
+
                             if (strpos($lookupNew, "Unknown") !== 0) {
                                 $this->_data['success'][$labels[$key]] =
                                 [
@@ -800,7 +818,7 @@ class CodesController extends BaseController
                                 ];
                             }
                         }
-                    }
+                    }                
                     
 //                    self::debug( $this->_data['success'] );
                 }
