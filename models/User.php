@@ -179,10 +179,10 @@ class User extends BaseModel implements IdentityInterface
             ],
             
             [
-                'auth_key', 'string', 'min' => 32, 'max' => 32,
+                'auth_key', 'string', 'min' => 48, 'max' => 48,
             ],
             [
-                'access_token', 'string', 'min' => 32, 'max' => 32,
+                'access_token', 'string', 'min' => 48, 'max' => 48,
             ],
             [
                 [
@@ -228,7 +228,7 @@ class User extends BaseModel implements IdentityInterface
      */
     public function generateAccessToken()
     {
-        $this->access_token = Yii::$app->security->generateRandomString(32);
+        $this->access_token = Yii::$app->security->generateRandomString(48);
     }
 
 

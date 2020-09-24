@@ -45,13 +45,13 @@ class m200625_162031_tbl_Users extends BaseMigration
         if ($this->_db->getTableSchema(self::getTblUserName(), true) === null) {
             $this->createTable(self::getTblUserName(), [
             'id'                    => $this->primaryKey(),
-            'uuid'                  => $this->string(16)->notNull(),
+            'uuid'                  => $this->string(10)->notNull(),
             'is_active'             => $this->integer()->notNull(),
             'is_active_employee'    => $this->integer()->notNull(),
             'is_active_student'     => $this->integer()->notNull(),
             'is_test_account'       => $this->integer()->notNull(),
-            'auth_key'              => $this->string(32)->notNull(),
-            'access_token'          => $this->string(32)->notNull(),
+            'auth_key'              => $this->string(48)->notNull(),
+            'access_token'          => $this->string(48)->notNull(),
             
             'created_at'            => $this->datetime()->notNull(),
             'updated_at'            => $this->datetime(),
