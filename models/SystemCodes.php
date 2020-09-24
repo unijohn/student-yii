@@ -152,7 +152,7 @@ class SystemCodes extends BaseModel
             ],
             [
                 'order_by',   'number',
-            ],                  
+            ],
 
             [
                 'is_active', 'default', 'value' => self::STATUS_ACTIVE
@@ -176,13 +176,13 @@ class SystemCodes extends BaseModel
             
             [
                 [
-                    'type', 'type_str', 'code', 'code_str', 'description', 'is_active', 'is_visible', 
+                    'type', 'type_str', 'code', 'code_str', 'description', 'is_active', 'is_visible',
                 ],
                 'required', 'on' => self::SCENARIO_UPDATE
             ],
             [
                 [
-                    'order_by', 
+                    'order_by',
                 ],
                 'required', 'on' => self::SCENARIO_MOVE
             ],
@@ -361,10 +361,10 @@ class SystemCodes extends BaseModel
          ->innerJoin($tbl_systemsCodes . ' sc2', $tbl_SystemCodesChild . '.child = sc2.id')
          ->where(['=', 'sc.type', self::TYPE_PERMIT ])
          ->andWhere([ '=', 'sc.is_active', self::STATUS_ACTIVE ])
-         ->andWhere([  '=', 'sc2.is_active',self::STATUS_ACTIVE ]);         
+         ->andWhere([  '=', 'sc2.is_active',self::STATUS_ACTIVE ]);
          
 
-        if( $query_codes->count() == 0 ){            
+        if ($query_codes->count() == 0) {
             return false;
         }
 
@@ -397,7 +397,7 @@ class SystemCodes extends BaseModel
 //         ->andWhere([ 'sc.is_active'   => self::STATUS_ACTIVE ])
 //         ->andWhere([ 'sc2.is_active'  => self::STATUS_ACTIVE ])
 
-        if( $query_codes->count() == 0 ){            
+        if ($query_codes->count() == 0) {
             return false;
         }
 
@@ -432,15 +432,14 @@ class SystemCodes extends BaseModel
          ->innerJoin($tbl_SystemCodesChild, $tbl_SystemCodesChild . '.parent = sc.id')
          ->innerJoin($tbl_SystemsCodes . ' sc2', $tbl_SystemCodesChild . '.child = sc2.id')
          ->where(['sc.id' => $id ]);
-         //->andWhere([ 'sc.is_active'   => self::STATUS_ACTIVE ])
-         //->andWhere([ 'sc2.is_active'  => self::STATUS_ACTIVE ])
+        //->andWhere([ 'sc.is_active'   => self::STATUS_ACTIVE ])
+        //->andWhere([ 'sc2.is_active'  => self::STATUS_ACTIVE ])
 
-        if( $query_codes->count() == 0 ){            
+        if ($query_codes->count() == 0) {
             return false;
-        }         
+        }
 
         return $query_codes->all();
-         
     }
 
 
@@ -504,9 +503,9 @@ class SystemCodes extends BaseModel
             ]);
         }
         
-        if( $query_codes->count() == 0 ){            
+        if ($query_codes->count() == 0) {
             return false;
-        }              
+        }
 
         return $query_codes->all();
     }
@@ -621,7 +620,7 @@ class SystemCodes extends BaseModel
         }
       
         return self::findUnassignedTagOptions($id, -1, self::TYPE_SCHOOL_DEPT);
-    }  
+    }
     
     
     /**
@@ -637,7 +636,7 @@ class SystemCodes extends BaseModel
         }
       
         return self::findUnassignedTagOptions($id, -1, self::TYPE_UNIVERSITY_DEPT);
-    }    
+    }
      
 
     /**

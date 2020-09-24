@@ -169,7 +169,7 @@ class FormFields extends BaseModel
             ],
             [
                 'order_by',   'number',
-            ],            
+            ],
             [
                 'value', 'default', 'value' => 0
             ],
@@ -192,13 +192,13 @@ class FormFields extends BaseModel
 
             [
                 [
-                   'form_field', 'type', 'type_str', 'value', 'value_str', 'description', 'is_active', 'is_visible', 
+                   'form_field', 'type', 'type_str', 'value', 'value_str', 'description', 'is_active', 'is_visible',
                 ],
                 'required', 'on' => self::SCENARIO_UPDATE
             ],
             [
                 [
-                   'order_by', 
+                   'order_by',
                 ],
                 'required', 'on' => self::SCENARIO_MOVE
             ],

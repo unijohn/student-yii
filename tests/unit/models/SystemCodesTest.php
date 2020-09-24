@@ -137,8 +137,9 @@ class SystemCodesTest extends \Codeception\Test\Unit
         $systemCode->is_active      = SystemCodes::STATUS_ACTIVE;
         $systemCode->is_visible     = SystemCodes::STATUS_VISIBLE;
 
-        if( !$systemCode->validate() )
-            SystemCodes::debug( $systemCode->errors, true );
+        if (!$systemCode->validate()) {
+            SystemCodes::debug($systemCode->errors, true);
+        }
         
         expect($saveResult = $systemCode->save())->equals(true);
         
@@ -294,12 +295,12 @@ class SystemCodesTest extends \Codeception\Test\Unit
     
     public function testFindPermitTags()
     {
-        $systemCode             = new SystemCodes();    
+        $systemCode             = new SystemCodes();
     
         // If permits are tagged, this test will fail
-        $this->assertFalse( SystemCodes::findAllPermitTags(), "If permits are tagged, this test will fail");
+        $this->assertFalse(SystemCodes::findAllPermitTags(), "If permits are tagged, this test will fail");
 
-        expect( SystemCodes::findPermitTagOptions() );        
+        expect(SystemCodes::findPermitTagOptions());
 
         $row = SystemCodes::find()
             ->where([ 'id' => 6 ])
@@ -309,115 +310,115 @@ class SystemCodesTest extends \Codeception\Test\Unit
         /*
          * public static function findPermitTagsById($id = -1)
          */
-        // $id is wrong kind of data    
-        $this->assertFalse( SystemCodes::findPermitTagsById("Masters"), "Should Fail:  'Masters' != [numeric] id");
+        // $id is wrong kind of data
+        $this->assertFalse(SystemCodes::findPermitTagsById("Masters"), "Should Fail:  'Masters' != [numeric] id");
 
         // $id is wrong value
         expect(SystemCodes::findPermitTagsById(-1))->equals(false);
-        expect(SystemCodes::findPermitTagsById(10000000))->equals(false);        
+        expect(SystemCodes::findPermitTagsById(10000000))->equals(false);
 
         // $id is valid
-        expect( SystemCodes::findPermitTagsById(4) );
+        expect(SystemCodes::findPermitTagsById(4));
         
         /*
          * public static function findAllTagsById($id = -1)
          */
-        // $id is wrong kind of data    
-        $this->assertFalse( SystemCodes::findAllTagsById("Masters"), "Should Fail:  'Masters' != [numeric] id");
+        // $id is wrong kind of data
+        $this->assertFalse(SystemCodes::findAllTagsById("Masters"), "Should Fail:  'Masters' != [numeric] id");
 
         // $id is wrong value
         expect(SystemCodes::findAllTagsById(-1))->equals(false);
-        expect(SystemCodes::findAllTagsById(10000000))->equals(false);        
+        expect(SystemCodes::findAllTagsById(10000000))->equals(false);
 
         // $id is valid
-        expect( SystemCodes::findAllTagsById(4) );        
+        expect(SystemCodes::findAllTagsById(4));
         
         /*
          * public static function findUnassignedTagOptions($id = -1, $selectType = -1, $omitType = -1, $isActive = self::STATUS_ACTIVE)
-         */        
-        // $id is wrong kind of data    
-        $this->assertFalse( SystemCodes::findUnassignedTagOptions("Masters", "Booyah", "DONT WORK", "FAILME"), "Should Fail:  All int parameters being passed strings");
+         */
+        // $id is wrong kind of data
+        $this->assertFalse(SystemCodes::findUnassignedTagOptions("Masters", "Booyah", "DONT WORK", "FAILME"), "Should Fail:  All int parameters being passed strings");
 
         // $id, $selectType, $omitType is wrong value
         expect(SystemCodes::findUnassignedTagOptions(-1, -1, -1, SystemCodes::STATUS_ACTIVE))->equals(false);
         
         // $id is wrong value
-        expect(SystemCodes::findUnassignedTagOptions(-1, 1000000, 1000000, SystemCodes::STATUS_ACTIVE))->equals(false);        
+        expect(SystemCodes::findUnassignedTagOptions(-1, 1000000, 1000000, SystemCodes::STATUS_ACTIVE))->equals(false);
         
         // $isActive is wrong value
-        expect(SystemCodes::findUnassignedTagOptions(-1, 1000000, 1000000, -1000))->equals(false);             
+        expect(SystemCodes::findUnassignedTagOptions(-1, 1000000, 1000000, -1000))->equals(false);
 
         // $selectType, $omitType is wrong value :: Should work
         expect(SystemCodes::findUnassignedTagOptions(1000000, -1, -1, SystemCodes::STATUS_ACTIVE));
         
         // $selectType is wrong value :: Should work
-        expect(SystemCodes::findUnassignedTagOptions(1000000, 1000000, -1, SystemCodes::STATUS_ACTIVE));        
+        expect(SystemCodes::findUnassignedTagOptions(1000000, 1000000, -1, SystemCodes::STATUS_ACTIVE));
         
         // $omitType is wrong value ::should work
-        expect(SystemCodes::findUnassignedTagOptions(1000000, -1, 1000000, SystemCodes::STATUS_ACTIVE));                
+        expect(SystemCodes::findUnassignedTagOptions(1000000, -1, 1000000, SystemCodes::STATUS_ACTIVE));
 
         // $id, $selectType, $omitType, $isActive are valid
-        expect( SystemCodes::findUnassignedPermitTagOptions(4, -1, SystemCodes::TYPE_DEPARTMENT, SystemCodes::STATUS_ACTIVE) );           
+        expect(SystemCodes::findUnassignedPermitTagOptions(4, -1, SystemCodes::TYPE_DEPARTMENT, SystemCodes::STATUS_ACTIVE));
         
         // $id, $selectType, $omitType, $isActive are valid
-        expect( SystemCodes::findUnassignedPermitTagOptions(4, SystemCodes::TYPE_DEPARTMENT, -1, SystemCodes::STATUS_ACTIVE) );                  
+        expect(SystemCodes::findUnassignedPermitTagOptions(4, SystemCodes::TYPE_DEPARTMENT, -1, SystemCodes::STATUS_ACTIVE));
         
 
         // Wrapper methods :: No $id given
-        expect( SystemCodes::findUnassignedPermitTagOptions() )->equals(false);        
-        expect( SystemCodes::findUnassignedDepartmentTagOptions() )->equals(false);        
-        expect( SystemCodes::findUnassignedCareerLevelTagOptions() )->equals(false);        
-        expect( SystemCodes::findUnassignedMasterTagOptions() )->equals(false);       
-        expect( SystemCodes::findUnassignedFacultyRankTagOptions() )->equals(false);       
-        expect( SystemCodes::findUnassignedEmployeeClassTagOptions() )->equals(false);        
-        expect( SystemCodes::findUnassignedSchoolDepartmentTagOptions() )->equals(false);        
-        expect( SystemCodes::findUnassignedUniversityDepartmentTagOptions() )->equals(false);      
+        expect(SystemCodes::findUnassignedPermitTagOptions())->equals(false);
+        expect(SystemCodes::findUnassignedDepartmentTagOptions())->equals(false);
+        expect(SystemCodes::findUnassignedCareerLevelTagOptions())->equals(false);
+        expect(SystemCodes::findUnassignedMasterTagOptions())->equals(false);
+        expect(SystemCodes::findUnassignedFacultyRankTagOptions())->equals(false);
+        expect(SystemCodes::findUnassignedEmployeeClassTagOptions())->equals(false);
+        expect(SystemCodes::findUnassignedSchoolDepartmentTagOptions())->equals(false);
+        expect(SystemCodes::findUnassignedUniversityDepartmentTagOptions())->equals(false);
         
         // Wrapper methods :: $id given; array() returned
-        expect( SystemCodes::findUnassignedPermitTagOptions(2) );        
-        expect( SystemCodes::findUnassignedDepartmentTagOptions(2) );        
-        expect( SystemCodes::findUnassignedCareerLevelTagOptions(2) );        
-        expect( SystemCodes::findUnassignedMasterTagOptions(2) );       
-        expect( SystemCodes::findUnassignedFacultyRankTagOptions(2) );       
-        expect( SystemCodes::findUnassignedEmployeeClassTagOptions(2) );        
-        expect( SystemCodes::findUnassignedSchoolDepartmentTagOptions(2) );        
-        expect( SystemCodes::findUnassignedUniversityDepartmentTagOptions(2) );                                                                              
+        expect(SystemCodes::findUnassignedPermitTagOptions(2));
+        expect(SystemCodes::findUnassignedDepartmentTagOptions(2));
+        expect(SystemCodes::findUnassignedCareerLevelTagOptions(2));
+        expect(SystemCodes::findUnassignedMasterTagOptions(2));
+        expect(SystemCodes::findUnassignedFacultyRankTagOptions(2));
+        expect(SystemCodes::findUnassignedEmployeeClassTagOptions(2));
+        expect(SystemCodes::findUnassignedSchoolDepartmentTagOptions(2));
+        expect(SystemCodes::findUnassignedUniversityDepartmentTagOptions(2));
     }
     
-/*    
-    public function testExistsSystemCode()
-    {
-        *
-         *  public static function existsSystemCode($type = -1, $code = "")
-         *
-    
-        // $type is right
-        expect(SystemCodes::findbyType(SystemCodes::TYPE_MASTERS));
+    /*
+        public function testExistsSystemCode()
+        {
+            *
+             *  public static function existsSystemCode($type = -1, $code = "")
+             *
 
-        // $type is wrong kind of data
-        expect(SystemCodes::findbyType($this->tooLong))->equals(false);
+            // $type is right
+            expect(SystemCodes::findbyType(SystemCodes::TYPE_MASTERS));
 
-        *
-         * public static function findbyTypeStr( $type_str = "" )
-         *
-        // $type is right
-        expect(SystemCodes::findbyTypeStr("Masters"));
+            // $type is wrong kind of data
+            expect(SystemCodes::findbyType($this->tooLong))->equals(false);
 
-        // $type is wrong kind of data
-        expect(SystemCodes::findbyTypeStr(10101010))->equals(false);
-    
-        // Calling the wrapper methods
-        expect(SystemCodes::findbyPermit());
-        expect(SystemCodes::findbyDepartment());
-        expect(SystemCodes::findbyCareerLevel());
-        expect(SystemCodes::findbyMasters());
-        expect(SystemCodes::findbyFacultyRank());
-        expect(SystemCodes::findbyEmployeeClass());
-        expect(SystemCodes::findbySchoolDept());
-        expect(SystemCodes::findbyUniversityDept());
-        expect(SystemCodes::findPermitTagOptions());
-    } 
- */       
+            *
+             * public static function findbyTypeStr( $type_str = "" )
+             *
+            // $type is right
+            expect(SystemCodes::findbyTypeStr("Masters"));
+
+            // $type is wrong kind of data
+            expect(SystemCodes::findbyTypeStr(10101010))->equals(false);
+
+            // Calling the wrapper methods
+            expect(SystemCodes::findbyPermit());
+            expect(SystemCodes::findbyDepartment());
+            expect(SystemCodes::findbyCareerLevel());
+            expect(SystemCodes::findbyMasters());
+            expect(SystemCodes::findbyFacultyRank());
+            expect(SystemCodes::findbyEmployeeClass());
+            expect(SystemCodes::findbySchoolDept());
+            expect(SystemCodes::findbyUniversityDept());
+            expect(SystemCodes::findPermitTagOptions());
+        }
+     */
 
     /*
         public function testExistsSystemCode()
