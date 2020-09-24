@@ -119,9 +119,9 @@ class SystemCodes extends BaseModel
     public function scenarios()
     {
         $scenarios = parent::scenarios();
-        $scenarios[self::SCENARIO_INSERT] = [ 'type', 'type_str', 'code', 'code_str', 'description', 'value', 'value_str', 'is_active', 'is_visible', 'is_banner_data' ];
-        $scenarios[self::SCENARIO_UPDATE] = [ 'type', 'type_str', 'code', 'code_str', 'description', 'value', 'value_str', 'is_active', 'is_visible' ];
-        $scenarios[self::SCENARIO_MOVE]   = [ 'order_by', 'updated_at', ];
+        $scenarios[self::SCENARIO_INSERT] = [ 'type', 'type_str', 'code', 'code_str', 'description', 'value', 'value_str', 'is_active', 'is_visible', 'is_banner_data', ];
+        $scenarios[self::SCENARIO_UPDATE] = [ 'type', 'type_str', 'code', 'code_str', 'description', 'value', 'value_str', 'is_active', 'is_visible', ];
+        $scenarios[self::SCENARIO_MOVE]   = [ 'order_by', ];
    
         return $scenarios;
     }
@@ -150,6 +150,9 @@ class SystemCodes extends BaseModel
                 'type', 'number', 'min' => self::TYPE_MIN, 'max' => self::TYPE_MAX,
                 'tooBig' => 'Select a valid option', 'tooSmall' => 'Select a valid option',
             ],
+            [
+                'order_by',   'number',
+            ],                  
 
             [
                 'is_active', 'default', 'value' => self::STATUS_ACTIVE
@@ -173,13 +176,13 @@ class SystemCodes extends BaseModel
             
             [
                 [
-                    'type', 'type_str', 'code', 'code_str', 'description', 'is_active', 'is_visible', 'updated_at'
+                    'type', 'type_str', 'code', 'code_str', 'description', 'is_active', 'is_visible', 
                 ],
                 'required', 'on' => self::SCENARIO_UPDATE
             ],
             [
                 [
-                    'order_by', 'updated_at'
+                    'order_by', 
                 ],
                 'required', 'on' => self::SCENARIO_MOVE
             ],
@@ -458,45 +461,11 @@ class SystemCodes extends BaseModel
      * TBD
      *
      * @param integer Row $id value for code entry
-     * @returns model filtered by TYPE_PERMIT || false if $id is invalid
-     */
-    public static function findUnassignedPermitTagOptions($id = -1)
-    {
-        if ($id < 0 || strval($id) === 0) {
-            return false;
-        }
-      
-        // $id, SelectType, OmitType [self::TYPE_PERMIT]
-        return self::findUnassignedTagOptions($id, -1, self::TYPE_PERMIT);
-    }
-   
-   
-    /**
-     * TBD
-     *
-     * @param integer Row $id value for code entry
-     * @returns model filtered by TYPE_PERMIT || false if $id is invalid
-     */
-    public static function findUnassignedDepartmentTagOptions($id = -1)
-    {
-        if ($id < 0 || strval($id) === 0) {
-            return false;
-        }
-      
-        // $id, SelectType, OmitType [self::TYPE_PERMIT]
-        return self::findUnassignedTagOptions($id, -1, self::TYPE_DEPARTMENT);
-    }
-
-
-    /**
-     * TBD
-     *
-     * @param integer Row $id value for code entry
      * @returns model || false if $id is invalid
      */
     public static function findUnassignedTagOptions($id = -1, $selectType = -1, $omitType = -1, $isActive = self::STATUS_ACTIVE)
     {
-        if ($id < 0 || !is_numeric($id)) {
+        if ($id < 0 || strval($id) === 0 || gettype($id) != 'integer') {
             return false;
         }
    
@@ -519,28 +488,158 @@ class SystemCodes extends BaseModel
                ':type'        => $selectType,
                ':is_active'   => $isActive,
                ':id'          => $id
-            ])
-         ->all();
+            ]);
         } elseif ($omitType > 0 && is_numeric($omitType)) {
             $query_codes = $query_codes->where('sc.type !=:type AND sc.is_active =:is_active AND sc.id NOT IN ( SELECT child from ' . $tbl_SystemCodesChild .' WHERE parent = :id )')
             ->addParams([
                ':type'        => $omitType,
                ':is_active'   => $isActive,
                ':id'          => $id
-            ])
-         ->all();
+            ]);
         } else {
             $query_codes = $query_codes->where('sc.is_active =:is_active AND sc.id NOT IN ( SELECT child from ' . $tbl_SystemCodesChild .' WHERE parent = :id )')
             ->addParams([
                ':is_active'   => $isActive,
                ':id'          => $id
-            ])
-         ->all();
+            ]);
         }
+        
+        if( $query_codes->count() == 0 ){            
+            return false;
+        }              
 
-        return $query_codes;
+        return $query_codes->all();
+    }
+
+
+    /**
+     * TBD
+     *
+     * @param integer Row $id value for code entry
+     * @returns model filtered by TYPE_PERMIT || false if $id is invalid
+     */
+    public static function findUnassignedPermitTagOptions($id = -1)
+    {
+        if ($id < 0 || strval($id) === 0 || gettype($id) != 'integer') {
+            return false;
+        }
+      
+        return self::findUnassignedTagOptions($id, -1, self::TYPE_PERMIT);
     }
    
+   
+    /**
+     * TBD
+     *
+     * @param integer Row $id value for code entry
+     * @returns model filtered by TYPE_DEPARTMENT || false if $id is invalid
+     */
+    public static function findUnassignedDepartmentTagOptions($id = -1)
+    {
+        if ($id < 0 || strval($id) === 0 || gettype($id) != 'integer') {
+            return false;
+        }
+      
+        return self::findUnassignedTagOptions($id, -1, self::TYPE_DEPARTMENT);
+    }
+
+
+    /**
+     * TBD
+     *
+     * @param integer Row $id value for code entry
+     * @returns model filtered by TYPE_CAREERLEVEL || false if $id is invalid
+     */
+    public static function findUnassignedCareerLevelTagOptions($id = -1)
+    {
+        if ($id < 0 || strval($id) === 0 || gettype($id) != 'integer') {
+            return false;
+        }
+      
+        return self::findUnassignedTagOptions($id, -1, self::TYPE_CAREERLEVEL);
+    }
+    
+    
+    /**
+     * TBD
+     *
+     * @param integer Row $id value for code entry
+     * @returns model filtered by TYPE_MASTERS || false if $id is invalid
+     */
+    public static function findUnassignedMasterTagOptions($id = -1)
+    {
+        if ($id < 0 || strval($id) === 0 || gettype($id) != 'integer') {
+            return false;
+        }
+      
+        return self::findUnassignedTagOptions($id, -1, self::TYPE_MASTERS);
+    }
+    
+    
+    /**
+     * TBD
+     *
+     * @param integer Row $id value for code entry
+     * @returns model filtered by TYPE_FACULTY_RANK || false if $id is invalid
+     */
+    public static function findUnassignedFacultyRankTagOptions($id = -1)
+    {
+        if ($id < 0 || strval($id) === 0 || gettype($id) != 'integer') {
+            return false;
+        }
+      
+        return self::findUnassignedTagOptions($id, -1, self::TYPE_FACULTY_RANK);
+    }
+    
+    
+    /**
+     * TBD
+     *
+     * @param integer Row $id value for code entry
+     * @returns model filtered by TYPE_EMPLOYEE_CLASS || false if $id is invalid
+     */
+    public static function findUnassignedEmployeeClassTagOptions($id = -1)
+    {
+        if ($id < 0 || strval($id) === 0 || gettype($id) != 'integer') {
+            return false;
+        }
+      
+        return self::findUnassignedTagOptions($id, -1, self::TYPE_EMPLOYEE_CLASS);
+    }
+    
+    
+    /**
+     * TBD
+     *
+     * @param integer Row $id value for code entry
+     * @returns model filtered by TYPE_SCHOOL_DEPT || false if $id is invalid
+     */
+    public static function findUnassignedSchoolDepartmentTagOptions($id = -1)
+    {
+        if ($id < 0 || strval($id) === 0 || gettype($id) != 'integer') {
+            return false;
+        }
+      
+        return self::findUnassignedTagOptions($id, -1, self::TYPE_SCHOOL_DEPT);
+    }  
+    
+    
+    /**
+     * TBD
+     *
+     * @param integer Row $id value for code entry
+     * @returns model filtered by TYPE_UNIVERSITY_DEPT || false if $id is invalid
+     */
+    public static function findUnassignedUniversityDepartmentTagOptions($id = -1)
+    {
+        if ($id < 0 || strval($id) === 0 || gettype($id) != 'integer') {
+            return false;
+        }
+      
+        return self::findUnassignedTagOptions($id, -1, self::TYPE_UNIVERSITY_DEPT);
+    }    
+     
+
     /**
      * TBD
      *

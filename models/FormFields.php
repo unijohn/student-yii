@@ -136,9 +136,9 @@ class FormFields extends BaseModel
     public function scenarios()
     {
         $scenarios = parent::scenarios();
-        $scenarios[self::SCENARIO_INSERT] = [ 'form_field', 'type', 'type_str', 'description', 'value', 'value_str', 'is_active', 'is_visible', 'order_by', 'created_at', ];
-        $scenarios[self::SCENARIO_UPDATE] = [ 'form_field', 'type', 'type_str', 'description', 'value', 'value_str', 'is_active', 'is_visible', 'order_by', ];
-        $scenarios[self::SCENARIO_MOVE]   = [ 'order_by', 'updated_at', ];
+        $scenarios[self::SCENARIO_INSERT] = [ 'form_field', 'type', 'type_str', 'description', 'value', 'value_str', 'is_active', 'is_visible',  ];
+        $scenarios[self::SCENARIO_UPDATE] = [ 'form_field', 'type', 'type_str', 'description', 'value', 'value_str', 'is_active', 'is_visible',  ];
+        $scenarios[self::SCENARIO_MOVE]   = [ 'order_by', ];
    
         return $scenarios;
     }
@@ -168,6 +168,9 @@ class FormFields extends BaseModel
                 'tooBig' => 'Select a valid option', 'tooSmall' => 'Select a valid option',
             ],
             [
+                'order_by',   'number',
+            ],            
+            [
                 'value', 'default', 'value' => 0
             ],
             [
@@ -189,13 +192,13 @@ class FormFields extends BaseModel
 
             [
                 [
-                   'form_field', 'type', 'type_str', 'value', 'value_str', 'description', 'is_active', 'is_visible', 'updated_at'
+                   'form_field', 'type', 'type_str', 'value', 'value_str', 'description', 'is_active', 'is_visible', 
                 ],
                 'required', 'on' => self::SCENARIO_UPDATE
             ],
             [
                 [
-                   'order_by', 'updated_at'
+                   'order_by', 
                 ],
                 'required', 'on' => self::SCENARIO_MOVE
             ],
