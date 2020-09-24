@@ -417,12 +417,12 @@ class SystemCodes extends BaseModel
      */
     public static function findAllTagsById($id = -1)
     {
-        if ( $id < 0 || strval($id) === 0 || !is_numeric($id) ) {
+        if ($id < 0 || strval($id) === 0 || !is_numeric($id)) {
      
         /*
-            self::debug( "id < 0: " . ( $id < 0 ? 'true' : 'false'), false );           
-            self::debug( "strval($id) === 0: " . ( strval($id) === 0 ? 'true' : 'false'), false );              
-            self::debug( "is_numeric($id) : " . ( is_numeric($id) ? 'true' : 'false'), false );             
+            self::debug( "id < 0: " . ( $id < 0 ? 'true' : 'false'), false );
+            self::debug( "strval($id) === 0: " . ( strval($id) === 0 ? 'true' : 'false'), false );
+            self::debug( "is_numeric($id) : " . ( is_numeric($id) ? 'true' : 'false'), false );
          */
         
             return false;
@@ -469,12 +469,12 @@ class SystemCodes extends BaseModel
      */
     public static function findUnassignedTagOptions($id = -1, $selectType = -1, $omitType = -1, $isActive = self::STATUS_ACTIVE, $getSql = false)
     {
-        if ( $id < 0 || strval($id) === 0 || !is_numeric($id) ) {
+        if ($id < 0 || strval($id) === 0 || !is_numeric($id)) {
      
         /*
-            self::debug( "id < 0: " . ( $id < 0 ? 'true' : 'false'), false );           
-            self::debug( "strval($id) === 0: " . ( strval($id) === 0 ? 'true' : 'false'), false );              
-            self::debug( "is_numeric($id) : " . ( is_numeric($id) ? 'true' : 'false'), false );             
+            self::debug( "id < 0: " . ( $id < 0 ? 'true' : 'false'), false );
+            self::debug( "strval($id) === 0: " . ( strval($id) === 0 ? 'true' : 'false'), false );
+            self::debug( "is_numeric($id) : " . ( is_numeric($id) ? 'true' : 'false'), false );
          */
         
             return false;
@@ -517,9 +517,9 @@ class SystemCodes extends BaseModel
         // No prompt options
         $query_codes = $query_codes->andWhere([ '!=', 'sc.code', -1 ]);
         
-        if( $getSql ){
-            self::debug( "SystemCodes (518-ish)", false );
-            self::debug( $query_codes->createCommand()->getRawSql() );
+        if ($getSql) {
+            self::debug("SystemCodes (518-ish)", false);
+            self::debug($query_codes->createCommand()->getRawSql());
         } elseif ($query_codes->count() == 0) {
             return false;
         }
@@ -663,7 +663,7 @@ class SystemCodes extends BaseModel
             return false;
         }
         
-        //self::debug( "683: : " . $code_str . " :: " . $type);        
+        //self::debug( "683: : " . $code_str . " :: " . $type);
     
         $query_codes = (new \yii\db\Query())
          ->select([ 'id', 'type', 'code', 'code_str', 'description', 'created_at', 'updated_at' ])
@@ -674,12 +674,12 @@ class SystemCodes extends BaseModel
                ':type' => $type,
             ]);
          
-        if( $getSql ) {
-            self::debug( "SystemCodes (695-ish)", false );
-            self::debug( $query_codes->createCommand()->getRawSql() );
+        if ($getSql) {
+            self::debug("SystemCodes (695-ish)", false);
+            self::debug($query_codes->createCommand()->getRawSql());
         }
 
-        return ( $query_codes->count() ? true : false );
+        return ($query_codes->count() ? true : false);
     }
 
 

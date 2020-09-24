@@ -265,16 +265,16 @@ class CodesController extends BaseController
      **/
     private function renderView()
     {
-        if( strlen($this->_data['id']) === 0 ||  $this->_data['id'] === "" ){
-            return $this->redirect(['codes/index' ]);        
-        }    
+        if (strlen($this->_data['id']) === 0 ||  $this->_data['id'] === "") {
+            return $this->redirect(['codes/index' ]);
+        }
 
-/*    
-        $this->_codesModel      = $this->_codesModel->findOne($this->_data['id']);
-      
-        $this->_tagsModel       = SystemCodes::findAllTagsById($this->_data['id']);
-        $this->_codeChildModel  = $this->getCodeChildModel($this->_data['id'], $this->_codesModel->code);    
- */
+        /*
+                $this->_codesModel      = $this->_codesModel->findOne($this->_data['id']);
+
+                $this->_tagsModel       = SystemCodes::findAllTagsById($this->_data['id']);
+                $this->_codeChildModel  = $this->getCodeChildModel($this->_data['id'], $this->_codesModel->code);
+         */
     
         return $this->render(
             'codes-view',
@@ -307,11 +307,11 @@ class CodesController extends BaseController
      */
     public function actionView()
     {
-/*
-        $this->_codesModel = SystemCodes::find()
-            ->where(['id' => $this->_data['id'] ])
-            ->limit(1)->one();
- */
+        /*
+                $this->_codesModel = SystemCodes::find()
+                    ->where(['id' => $this->_data['id'] ])
+                    ->limit(1)->one();
+         */
     
         return $this->renderView();
     }
@@ -410,7 +410,7 @@ class CodesController extends BaseController
 
         if (isset($this->_data['SystemCodes']['insert']) && !empty($this->_data['SystemCodes']['insert'])) {
             if ($this->_data['SystemCodes']['type'] < 1) {
-                $this->_data['errors']['useSession'] = true;            
+                $this->_data['errors']['useSession'] = true;
                 $this->_data['errors']['Add System Code'] =
                 [
                    'value'     => "was unsuccessful",
@@ -427,7 +427,7 @@ class CodesController extends BaseController
             }
 
             if (empty($this->_data['SystemCodes']['code'])) {
-                $this->_data['errors']['useSession'] = true;                    
+                $this->_data['errors']['useSession'] = true;
                 $this->_data['errors']['Add System Code'] =
                 [
                    'value'     => "was unsuccessful",
@@ -444,7 +444,7 @@ class CodesController extends BaseController
             }
       
             if (empty($this->_data['SystemCodes']['description'])) {
-                $this->_data['errors']['useSession'] = true;                    
+                $this->_data['errors']['useSession'] = true;
                 $this->_data['errors']['Add System Code'] =
                 [
                    'value'     => "was unsuccessful",
@@ -473,7 +473,7 @@ class CodesController extends BaseController
 
         if ($idExists) {
             if (isset($this->_data['SystemCodes']['insert']) && !empty($this->_data['SystemCodes']['insert'])) {
-                $this->_data['errors']['useSession'] = true;                    
+                $this->_data['errors']['useSession'] = true;
                 $this->_data['errors']['Add System Code'] =
                 [
                     'value'     => "was unsuccessful",
@@ -510,7 +510,7 @@ class CodesController extends BaseController
 //      $updateColumns = $updateModel->afterSave( false, $this->_data['addSystemCode']);
 
         if (!$this->_data['SystemCodes']['insert']) {
-            $this->_data['errors']['useSession'] = true;            
+            $this->_data['errors']['useSession'] = true;
             $this->_data['errors']['Add System Code'] =
             [
                 'value'     => "was unsuccessful",
@@ -523,7 +523,7 @@ class CodesController extends BaseController
                 'value'     => "was not saved",
             ];
         } else {
-            $this->_data['success']['useSession'] = true;            
+            $this->_data['success']['useSession'] = true;
             $this->_data['success']['Add System Code'] =
             [
                 'value'     => "was successful",
@@ -572,7 +572,7 @@ class CodesController extends BaseController
  
         if (strlen($this->_data['addTag']) > 0) {
             if (!is_null($tagRelationExists)) {
-                $this->_data['errors']['useSession'] = true;                        
+                $this->_data['errors']['useSession'] = true;
                 $this->_data['errors'][$msgAddTagHeader] =
                 [
                    'value'     => "was unsuccessful",
@@ -598,7 +598,7 @@ class CodesController extends BaseController
                         ->limit(1)
                         ->one();
 
-                    $this->_data['success']['useSession'] = true;                   
+                    $this->_data['success']['useSession'] = true;
                     $this->_data['success'][$msgAddTagHeader] =
                     [
                         'value'        => "was successful",
@@ -612,7 +612,7 @@ class CodesController extends BaseController
                         'value' => "was added",
                     ];
                 } else {
-                    $this->_data['errors']['useSession'] = true;       
+                    $this->_data['errors']['useSession'] = true;
                     $this->_data['errors'][$msgAddTagHeader] =
                     [
                         'value'     => "was unsuccessful",
@@ -631,7 +631,7 @@ class CodesController extends BaseController
             }
         }
         
-        if( $exitEarly ){
+        if ($exitEarly) {
             return $this->redirect(['codes/view', 'id' => $this->_data['id'] ]);
         }
 
@@ -639,7 +639,7 @@ class CodesController extends BaseController
             $result = $this->removePermitTag($this->_data['id'], $this->_data['tagid']);
       
             if ($result > 0) {
-                $this->_data['success']['useSession'] = true;                               
+                $this->_data['success']['useSession'] = true;
                 $this->_data['success'][$msgRemoveTagHeader] =
                 [
                     'value'        => "was successful",
@@ -653,7 +653,7 @@ class CodesController extends BaseController
                     'value' => "was removed",
                 ];
             } else {
-                $this->_data['errors']['useSession'] = true;                               
+                $this->_data['errors']['useSession'] = true;
                 $this->_data['errors'][$msgRemoveTagHeader] =
                 [
                     'value'     => "was unsuccessful",
@@ -671,9 +671,9 @@ class CodesController extends BaseController
             $exitEarly = true;
         }
         
-        if( $exitEarly ){
+        if ($exitEarly) {
             return $this->redirect(['codes/view', 'id' => $this->_data['id'] ]);
-        }        
+        }
 
         if (isset($this->_data['SystemCodes']['update']) && !empty($this->_data['SystemCodes']['update'])) {
             $this->_systemCodes              = new SystemCodes();
@@ -687,7 +687,7 @@ class CodesController extends BaseController
             $exitEarly = false;
             
             if (!isset($this->_systemCodes->code_str) || empty($this->_systemCodes->code_str)) {
-                $this->_data['errors']['useSession'] = true;               
+                $this->_data['errors']['useSession'] = true;
                 $this->_data['errors'][$msgHeader] =
                 [
                     'value'     => "was unsuccessful",
@@ -704,7 +704,7 @@ class CodesController extends BaseController
             }
          
             if (!isset($this->_systemCodes->description) || empty($this->_systemCodes->description)) {
-                $this->_data['errors']['useSession'] = true;               
+                $this->_data['errors']['useSession'] = true;
                 $this->_data['errors'][$msgHeader] =
                 [
                    'value'     => "was unsuccessful",
@@ -904,9 +904,9 @@ class CodesController extends BaseController
      * @return (TBD)
      */
     private function getCodeChildModel($id = -1, $code = "")
-    {        
-        if (SystemCodes::existsPermit($code)) {      
-            //self::debug( "$id :: $code" );        
+    {
+        if (SystemCodes::existsPermit($code)) {
+            //self::debug( "$id :: $code" );
         
             return SystemCodes::findUnassignedPermitTagOptions($id);
         } elseif (SystemCodes::existsDepartment($code)) {
