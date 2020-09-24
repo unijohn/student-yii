@@ -769,7 +769,7 @@ class CodesController extends BaseController
          
             $updateColumns = $updateModel->afterSave(false, $this->_data['SystemCodes']['update']);
 
-//self::debug( $updateColumns );
+            //self::debug( $updateColumns );
 
             if ($this->_data['SystemCodes']['update'] && is_array($updateColumns)) {
                 if (count($updateColumns) > 0) {
@@ -818,7 +818,7 @@ class CodesController extends BaseController
                                 ];
                             }
                         }
-                    }                
+                    }
                     
 //                    self::debug( $this->_data['success'] );
                 }
