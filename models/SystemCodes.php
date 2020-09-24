@@ -345,8 +345,6 @@ class SystemCodes extends BaseModel
     /**
      * TBD
      *
-     * SystemCodesTest:  Start here vvv
-     *
      * @returns model filtered by TYPE_PERMIT
      */
     public static function findAllPermitTags()
@@ -419,7 +417,14 @@ class SystemCodes extends BaseModel
      */
     public static function findAllTagsById($id = -1)
     {
-        if ($id < 0 || strval($id) === 0 || gettype($id) != 'integer') {
+        if ( $id < 0 || strval($id) === 0 || !is_numeric($id) ) {
+     
+        /*
+            self::debug( "id < 0: " . ( $id < 0 ? 'true' : 'false'), false );           
+            self::debug( "strval($id) === 0: " . ( strval($id) === 0 ? 'true' : 'false'), false );              
+            self::debug( "is_numeric($id) : " . ( is_numeric($id) ? 'true' : 'false'), false );             
+         */
+        
             return false;
         }
    
@@ -427,7 +432,7 @@ class SystemCodes extends BaseModel
         $tbl_SystemCodesChild   = SystemCodesChild::tableName();
    
         $query_codes = ( new \yii\db\Query() )
-         ->select([  'sc2.id', 'sc2.type', 'sc2.code', 'sc2.description', 'sc2.is_active', 'sc2.is_visible' ])
+         ->select([  'sc2.id', 'sc2.type', 'sc2.code', 'sc2.code_str', 'sc2.description', 'sc2.is_active', 'sc2.is_visible' ])
          ->from($tbl_SystemsCodes . ' sc')
          ->innerJoin($tbl_SystemCodesChild, $tbl_SystemCodesChild . '.parent = sc.id')
          ->innerJoin($tbl_SystemsCodes . ' sc2', $tbl_SystemCodesChild . '.child = sc2.id')
@@ -462,12 +467,19 @@ class SystemCodes extends BaseModel
      * @param integer Row $id value for code entry
      * @returns model || false if $id is invalid
      */
-    public static function findUnassignedTagOptions($id = -1, $selectType = -1, $omitType = -1, $isActive = self::STATUS_ACTIVE)
+    public static function findUnassignedTagOptions($id = -1, $selectType = -1, $omitType = -1, $isActive = self::STATUS_ACTIVE, $getSql = false)
     {
-        if ($id < 0 || strval($id) === 0 || gettype($id) != 'integer') {
+        if ( $id < 0 || strval($id) === 0 || !is_numeric($id) ) {
+     
+        /*
+            self::debug( "id < 0: " . ( $id < 0 ? 'true' : 'false'), false );           
+            self::debug( "strval($id) === 0: " . ( strval($id) === 0 ? 'true' : 'false'), false );              
+            self::debug( "is_numeric($id) : " . ( is_numeric($id) ? 'true' : 'false'), false );             
+         */
+        
             return false;
         }
-   
+
         $tbl_SystemsCodes       = self::tableName();
         $tbl_SystemCodesChild   = SystemCodesChild::tableName();
    
@@ -477,10 +489,9 @@ class SystemCodes extends BaseModel
          ->one();
 
         $query_codes = ( new \yii\db\Query() )
-         ->select([  'sc.id', 'sc.type', 'sc.code', 'sc.description', 'sc.is_active' ])
+         ->select([  'sc.id', 'sc.type', 'sc.code', 'sc.code_str', 'sc.description', 'sc.is_active', 'sc.is_visible', 'sc.is_banner_data' ])
          ->from($tbl_SystemsCodes       . ' sc');
-            
-       
+                   
         if ($selectType > 0 && is_numeric($selectType)) {
             $query_codes = $query_codes->where('sc.type =:type AND sc.is_active =:is_active AND sc.id NOT IN ( SELECT child from ' . $tbl_SystemCodesChild .' WHERE parent = :id )')
             ->addParams([
@@ -503,7 +514,13 @@ class SystemCodes extends BaseModel
             ]);
         }
         
-        if ($query_codes->count() == 0) {
+        // No prompt options
+        $query_codes = $query_codes->andWhere([ '!=', 'sc.code', -1 ]);
+        
+        if( $getSql ){
+            self::debug( "SystemCodes (518-ish)", false );
+            self::debug( $query_codes->createCommand()->getRawSql() );
+        } elseif ($query_codes->count() == 0) {
             return false;
         }
 
@@ -519,11 +536,7 @@ class SystemCodes extends BaseModel
      */
     public static function findUnassignedPermitTagOptions($id = -1)
     {
-        if ($id < 0 || strval($id) === 0 || gettype($id) != 'integer') {
-            return false;
-        }
-      
-        return self::findUnassignedTagOptions($id, -1, self::TYPE_PERMIT);
+        return self::findUnassignedTagOptions($id, -1, self::TYPE_PERMIT, self::STATUS_ACTIVE, false);
     }
    
    
@@ -535,10 +548,6 @@ class SystemCodes extends BaseModel
      */
     public static function findUnassignedDepartmentTagOptions($id = -1)
     {
-        if ($id < 0 || strval($id) === 0 || gettype($id) != 'integer') {
-            return false;
-        }
-      
         return self::findUnassignedTagOptions($id, -1, self::TYPE_DEPARTMENT);
     }
 
@@ -551,10 +560,6 @@ class SystemCodes extends BaseModel
      */
     public static function findUnassignedCareerLevelTagOptions($id = -1)
     {
-        if ($id < 0 || strval($id) === 0 || gettype($id) != 'integer') {
-            return false;
-        }
-      
         return self::findUnassignedTagOptions($id, -1, self::TYPE_CAREERLEVEL);
     }
     
@@ -567,10 +572,6 @@ class SystemCodes extends BaseModel
      */
     public static function findUnassignedMasterTagOptions($id = -1)
     {
-        if ($id < 0 || strval($id) === 0 || gettype($id) != 'integer') {
-            return false;
-        }
-      
         return self::findUnassignedTagOptions($id, -1, self::TYPE_MASTERS);
     }
     
@@ -583,10 +584,6 @@ class SystemCodes extends BaseModel
      */
     public static function findUnassignedFacultyRankTagOptions($id = -1)
     {
-        if ($id < 0 || strval($id) === 0 || gettype($id) != 'integer') {
-            return false;
-        }
-      
         return self::findUnassignedTagOptions($id, -1, self::TYPE_FACULTY_RANK);
     }
     
@@ -599,10 +596,6 @@ class SystemCodes extends BaseModel
      */
     public static function findUnassignedEmployeeClassTagOptions($id = -1)
     {
-        if ($id < 0 || strval($id) === 0 || gettype($id) != 'integer') {
-            return false;
-        }
-      
         return self::findUnassignedTagOptions($id, -1, self::TYPE_EMPLOYEE_CLASS);
     }
     
@@ -615,10 +608,6 @@ class SystemCodes extends BaseModel
      */
     public static function findUnassignedSchoolDepartmentTagOptions($id = -1)
     {
-        if ($id < 0 || strval($id) === 0 || gettype($id) != 'integer') {
-            return false;
-        }
-      
         return self::findUnassignedTagOptions($id, -1, self::TYPE_SCHOOL_DEPT);
     }
     
@@ -631,10 +620,6 @@ class SystemCodes extends BaseModel
      */
     public static function findUnassignedUniversityDepartmentTagOptions($id = -1)
     {
-        if ($id < 0 || strval($id) === 0 || gettype($id) != 'integer') {
-            return false;
-        }
-      
         return self::findUnassignedTagOptions($id, -1, self::TYPE_UNIVERSITY_DEPT);
     }
      
@@ -670,29 +655,31 @@ class SystemCodes extends BaseModel
      *
      * @return (TBD)
      */
-    public static function existsSystemCode($type = -1, $code = "")
+    public static function existsSystemCode($type = -1, $code_str = "", $getSql = false)
     {
         if ($type < 0 || strval($type) === 0 || gettype($type) != 'integer') {
             return false;
-        } elseif ($code < 0 || strval($code) === 0 || gettype($code) != 'integer') {
+        } elseif ($code_str === "" || strval($code_str) === 0 || gettype($code_str) != 'string') {
             return false;
         }
+        
+        //self::debug( "683: : " . $code_str . " :: " . $type);        
     
         $query_codes = (new \yii\db\Query())
-         ->select([ 'id', 'type', 'code', 'description', 'created_at', 'updated_at' ])
+         ->select([ 'id', 'type', 'code', 'code_str', 'description', 'created_at', 'updated_at' ])
          ->from(self::tableName())
-         ->where('code=:code AND type =:type ')
+         ->where('code_str=:code_str AND type =:type ')
             ->addParams([
-               ':code' => $code,
+               ':code_str' => $code_str,
                ':type' => $type,
-            ])
-         ->limit(1);
-
-        foreach ($query_codes->each() as $code_row) {
-            return new static($code_row);
+            ]);
+         
+        if( $getSql ) {
+            self::debug( "SystemCodes (695-ish)", false );
+            self::debug( $query_codes->createCommand()->getRawSql() );
         }
- 
-        return false;
+
+        return ( $query_codes->count() ? true : false );
     }
 
 
@@ -701,9 +688,10 @@ class SystemCodes extends BaseModel
      *
      * @return (TBD)
      */
-    public static function existsPermit($code)
+    public static function existsPermit($code_str)
     {
-        return self::existsSystemCode(self::TYPE_PERMIT, $code);
+//        self::debug( self::TYPE_PERMIT . " :: " . $code_str );
+        return self::existsSystemCode(self::TYPE_PERMIT, $code_str);
     }
 
 

@@ -1,12 +1,12 @@
 <?php
 
-   use yii\helpers\Html;
-   use yii\helpers\HtmlPurifier;
-   use yii\helpers\Url;
-   
-   use yii\widgets\ActiveForm;
-   
-   use app\models\BaseModel;
+    use yii\helpers\Html;
+    use yii\helpers\HtmlPurifier;
+    use yii\helpers\Url;
+    
+    use yii\widgets\ActiveForm;
+    
+    use app\models\BaseModel;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\PostSearch */
@@ -15,44 +15,46 @@
 
 <div id="codes-tags-remove-div" name="codes_tags-remove-div" style="margin-bottom: 12px;min-height: 45px; ">
 <?php
-   foreach ($model as $tag) {
-       $form = ActiveForm::begin([
-            'action' => ['save'],
-            'method' => 'post',
-        ]);
-         
-       if ($tag['is_active'] == BaseModel::STATUS_ACTIVE && $tag['is_hidden'] == BaseModel::STATUS_VISIBLE) {
-           $options =
+    if( $model ) {
+        foreach ($model as $tag) {
+            $form = ActiveForm::begin([
+                'action' => ['save'],
+                'method' => 'post',
+            ]);
+            
+            if ($tag['is_active'] == BaseModel::STATUS_ACTIVE && $tag['is_visible'] == BaseModel::STATUS_VISIBLE) {
+            $options =
             [
                 'class'     => 'btn btn-primary',
                 'value'     => $tag['id'],
                 'title'     => 'Click this button to remove the ' . $tag['description'] . ' tag'
             ];
-       } elseif ($tag['is_active'] == BaseModel::STATUS_INACTIVE) {
-           $options =
+            } elseif ($tag['is_active'] == BaseModel::STATUS_INACTIVE) {
+            $options =
             [
                 'class'     => 'btn btn-light',
                 'value'     => $tag['id'],
                 'disabled'  => 'disabled',
                 'title'     => 'This code is currently inactive'
             ];
-       } elseif ($tag['is_hidden'] == BaseModel::STATUS_HIDDEN) {
-           $options =
+            } elseif ($tag['is_visible'] == BaseModel::STATUS_HIDDEN) {
+            $options =
             [
                 'class'     => 'btn btn-warning',
                 'value'     => $tag['id'],
                 'title'     => 'This code is currently hidden from users',
                 'style'     => 'color: black;'
             ];
-       } else {
-           $options =
+            } else {
+            $options =
             [
                 'class'     => 'btn btn-light',
                 'value'     => $tag['id'],
                 'disabled'  => 'disabled',
                 'title'     => 'This code is currently inactive'
             ];
-       } ?>
+        } 
+ ?>
       
       
     <?= Html::hiddenInput('id', $data['id']) ?>
@@ -67,8 +69,9 @@
     </div>
     
 <?php
-        ActiveForm::end();
-   }
+            ActiveForm::end();
+       }
+    }
 ?>
 </div>
 

@@ -1,17 +1,21 @@
 <?php
 
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+    use yii\helpers\Html;
+    use yii\widgets\ActiveForm;
+
+    use app\models\BaseModel;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\PostSearch */
 /* @var $form yii\widgets\ActiveForm */
 
-
-   $tags = [];
-   foreach ($model as $tag) {
-       $tags[$tag['id']] = $tag['code'] . ' : ' . $tag['description'];
-   }
+    $tags = [];
+   
+    if( $model ){
+        foreach ($model as $tag) {
+            $tags[$tag['id']] = $tag['code_str'] . ' : ' . $tag['description'];
+        }
+    }        
 ?>
 
 <div id="codes-tags-add-div" name="codes-tags-add-div">
