@@ -109,7 +109,8 @@ class SiteController extends BaseController
             if (!isset($user) || empty($user)) {
                 if (!$userModel->addUser($uuid)) {
                     print("User: $uuid"  . PHP_EOL);
-                    die("Gotta figure this logic out");
+                    print("Issue where addUser [WD side] fails; most likely related to failed validation");
+		    die( "To be documented / unit tested further" );
                 } else {
                     $userPersonal = $userPersonalModel->existsPersonal($uuid);
                     self::debug($userPersonal . ": Before userPersonalModel->addPersonal($uuid)", false);
