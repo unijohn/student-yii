@@ -389,41 +389,41 @@ class SystemCodesTest extends \Codeception\Test\Unit
     public function testExistsSystemCode()
     {
         /*
-         *  public static function existsSystemCode($type = -1, $code = "")
+         *  public static function existsSystemCode($type = -1, $code_str = "")
          */
-        // $type, $code are wrong kind of data
-        $this->assertFalse(SystemCodes::existsSystemCode("Masters", "FAIL"), "Should Fail:  'Masters' != [numeric] type && 'FAIL' != [numeric] code");
+        // $type, $code_str are wrong kind of data
+        $this->assertFalse(SystemCodes::existsSystemCode("Masters", dechex(1000)), "Should Fail:  'Masters' != [numeric] type && dechex(1000) != [string] code_str");
 
-        // $code are wrong kind of data
-        $this->assertFalse(SystemCodes::existsSystemCode(2, "FAIL"), "Should Fail:   'FAIL' != [numeric] code");
+        // $code_str are wrong kind of data
+        $this->assertFalse(SystemCodes::existsSystemCode(2, dechex(10000)), "Should Fail:  dechex(1000) != [string] code_str");
         
         // $type are wrong kind of data
-        $this->assertFalse(SystemCodes::existsSystemCode("FAIL", 2), "Should Fail:  'FAIL' != [numeric] type");
+        $this->assertFalse(SystemCodes::existsSystemCode("FAIL", 'PERMIT-OPEN'), "Should Fail:  'FAIL' != [numeric] type");
         
         // $type, $code are valid
         expect(SystemCodes::existsSystemCode(2, 2));
         
         // Wrapper methods :: invalid values given
         
-        // $code is invald
-        expect(SystemCodes::existsPermit(-1))->equals(false);
-        expect(SystemCodes::existsDepartment(-1))->equals(false);
-        expect(SystemCodes::existsCareelLevel(-1))->equals(false);
-        expect(SystemCodes::existsMasters(-1))->equals(false);
-        expect(SystemCodes::existsFacultyRank(-1))->equals(false);
-        expect(SystemCodes::existsEmployeeClass(-1))->equals(false);
-        expect(SystemCodes::existsSchoolDepartment(-1))->equals(false);
-        expect(SystemCodes::existsUniversityDepartment(-1))->equals(false);
+        // $code_str is wrong
+        expect(SystemCodes::existsPermit('Open Permit Request'))->equals(false);
+        expect(SystemCodes::existsDepartment('Economics'))->equals(false);
+        expect(SystemCodes::existsCareelLevel('Undergraduate'))->equals(false);
+        expect(SystemCodes::existsMasters('MA_ECON'))->equals(false);
+        expect(SystemCodes::existsFacultyRank('Professor [Banner]'))->equals(false);
+        expect(SystemCodes::existsEmployeeClass('Administrative Executive [Banner]'))->equals(false);
+        expect(SystemCodes::existsSchoolDepartment('Economics [Banner]'))->equals(false);
+        expect(SystemCodes::existsUniversityDepartment('Academic Affairs [Banner]'))->equals(false);
         
-        // $code is vald
-        expect(SystemCodes::existsPermit(1));
-        expect(SystemCodes::existsDepartment(1));
-        expect(SystemCodes::existsCareelLevel(1));
-        expect(SystemCodes::existsMasters(1));
-        expect(SystemCodes::existsFacultyRank(1));
-        expect(SystemCodes::existsEmployeeClass(1));
-        expect(SystemCodes::existsSchoolDepartment(1));
-        expect(SystemCodes::existsUniversityDepartment(1));
+        // $code_str is vald
+        expect(SystemCodes::existsPermit('PERMIT-OPEN'))->equals(true);
+        expect(SystemCodes::existsDepartment('ECON'))->equals(true);
+        expect(SystemCodes::existsCareelLevel('UGAD'))->equals(true);
+        expect(SystemCodes::existsMasters('MAECON'))->equals(true);
+        expect(SystemCodes::existsFacultyRank('01'))->equals(true);
+        expect(SystemCodes::existsEmployeeClass('AE'))->equals(true);
+        expect(SystemCodes::existsSchoolDepartment('DEPT-CIOITS'))->equals(true);
+        expect(SystemCodes::existsUniversityDepartment('UDEPT-ITS'))->equals(true);
     }
     
     

@@ -700,9 +700,9 @@ class SystemCodes extends BaseModel
      *
      * @return (TBD)
      */
-    public static function existsDepartment($code)
+    public static function existsDepartment($code_str)
     {
-        return self::existsSystemCode(self::TYPE_DEPARTMENT, $code);
+        return self::existsSystemCode(self::TYPE_DEPARTMENT, $code_str);
     }
 
 
@@ -711,9 +711,9 @@ class SystemCodes extends BaseModel
      *
      * @return (TBD)
      */
-    public static function existsCareelLevel($code)
+    public static function existsCareelLevel($code_str)
     {
-        return self::existsSystemCode(self::TYPE_CAREERLEVEL, $code);
+        return self::existsSystemCode(self::TYPE_CAREERLEVEL, $code_str);
     }
     
     
@@ -722,9 +722,9 @@ class SystemCodes extends BaseModel
      *
      * @return (TBD)
      */
-    public static function existsMasters($code)
+    public static function existsMasters($code_str)
     {
-        return self::existsSystemCode(self::TYPE_MASTERS, $code);
+        return self::existsSystemCode(self::TYPE_MASTERS, $code_str);
     }
     
     
@@ -733,9 +733,9 @@ class SystemCodes extends BaseModel
      *
      * @return (TBD)
      */
-    public static function existsFacultyRank($code)
+    public static function existsFacultyRank($code_str)
     {
-        return self::existsSystemCode(self::TYPE_FACULTY_RANK, $code);
+        return self::existsSystemCode(self::TYPE_FACULTY_RANK, $code_str);
     }
     
     
@@ -744,9 +744,9 @@ class SystemCodes extends BaseModel
      *
      * @return (TBD)
      */
-    public static function existsEmployeeClass($code)
+    public static function existsEmployeeClass($code_str)
     {
-        return self::existsSystemCode(self::TYPE_EMPLOYEE_CLASS, $code);
+        return self::existsSystemCode(self::TYPE_EMPLOYEE_CLASS, $code_str);
     }
    
    
@@ -755,9 +755,9 @@ class SystemCodes extends BaseModel
      *
      * @return (TBD)
      */
-    public static function existsSchoolDepartment($code)
+    public static function existsSchoolDepartment($code_str)
     {
-        return self::existsSystemCode(self::TYPE_SCHOOL_DEPT, $code);
+        return self::existsSystemCode(self::TYPE_SCHOOL_DEPT, $code_str);
     }
     
     
@@ -766,9 +766,9 @@ class SystemCodes extends BaseModel
      *
      * @return (TBD)
      */
-    public static function existsUniversityDepartment($code)
+    public static function existsUniversityDepartment($code_str)
     {
-        return self::existsSystemCode(self::TYPE_UNIVERSITY_DEPT, $code);
+        return self::existsSystemCode(self::TYPE_UNIVERSITY_DEPT, $code_str);
     }
 
    
