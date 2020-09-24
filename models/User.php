@@ -251,6 +251,10 @@ class User extends BaseModel implements IdentityInterface
         $newUser->is_test_account       = self::STATUS_INACTIVE;        
         $newUser->generateAuthKey();
         $newUser->generateAccessToken();
+
+        if( !$newUser->validate() ){
+            self::debug( $newUser->errors );
+        }
     
         return $newUser->save();
     }
