@@ -211,12 +211,12 @@ class FormFields extends BaseModel
      *
      * @returns (TBD)
      */
-    public static function findFieldByProperties($type = -1, $value_str = '', $value = '', $limit_one = true)
+    public static function findFieldByProperties($type = -1, $value_str = '', $value = '', $limit_one = true, $getSql = false)
     {
         $tbl_formFields = FormFields::tableName();
    
         $query_fields = ( new \yii\db\Query() )
-         ->select([  'ff.id', 'ff.form_field', 'ff.type', 'ff.type_str', 'ff.value', 'ff.value_int', 'ff.is_active', 'ff.is_visible' ])
+         ->select([  'ff.id', 'ff.form_field', 'ff.type', 'ff.type_str', 'ff.value', 'ff.value_str', 'ff.is_active', 'ff.is_visible' ])
          ->from($tbl_formFields . ' ff')
          ->where('( ff.value_str =:value_str OR ff.value =:value) AND ff.type =:type')
             ->addParams([
@@ -224,8 +224,11 @@ class FormFields extends BaseModel
                 'value'     => $value,
                 'type'      => $type
             ]);
-            
-        if ($limit_one) {
+
+        if ($getSql) {
+            self::debug("FormFields (229-ish)", false);
+            self::debug($query_fields->createCommand()->getRawSql());
+        } elseif ($limit_one) {
             $query_fields = $query_fields->limit(1)->one();
         }
 
@@ -238,7 +241,7 @@ class FormFields extends BaseModel
      *
      * @return (TBD)
      */
-    public static function existsFieldByProperties($form_field = -1, $type = -1, $type_str = '', $description = '', $value_str = '', $value = -1)
+    public static function existsFieldByProperties($form_field = -1, $type = -1, $type_str = '', $description = '', $value_str = '', $value = -1, $getSql = false)
     {
         $params = [];
         $tbl_formFields = FormFields::tableName();
@@ -299,15 +302,11 @@ class FormFields extends BaseModel
             $params
         )->queryScalar();
 
-        /*
-                self::debug( Yii::$app->db->createCommand(
-                    $countSQL,
-                    $params
-                )->getRawSql() );
-         */
-        
-        //self::debug( $countSQL, false );
-        //self::debug( $count, true );
+        if ($getSql) {
+            self::debug("FormFields (229-ish)", false);
+            self::debug($count, false);
+            self::debug(Yii::$app->db->createCommand($countSQL, $params)->createCommand()->getRawSql());
+        } 
         
         return ($count == 1 ? true : false);
     }
@@ -318,7 +317,7 @@ class FormFields extends BaseModel
      *
      * @return (TBD)
      */
-    public static function getFieldOptions($form_field = -1, $type = -1, $type_str = "", $prompt = false)
+    public static function getFieldOptions($form_field = -1, $type = -1, $type_str = "", $prompt = false, $getSql = false)
     {
         $tbl_formFields = FormFields::tableName();
    
@@ -339,7 +338,10 @@ class FormFields extends BaseModel
 
         $query_fields->orderBy('ff.order_by');
 
-//        self::debug( $query_fields->createCommand()->getRawSql(), false );
+        if ($getSql) {
+            self::debug("FormFields (343-ish)", false);
+            self::debug($query_fields->createCommand()->getRawSql());
+        } 
 
         return $query_fields->all();
     }

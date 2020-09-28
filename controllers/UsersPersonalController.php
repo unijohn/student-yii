@@ -61,44 +61,23 @@ class UsersPersonalController extends BaseController
         $this->_data['UserPersonal']['firstNm']             = ArrayHelper::getValue($this->_request->post(), 'UsersPersonal.firstNm', '');
         $this->_data['UserPersonal']['middleNm']            = ArrayHelper::getValue($this->_request->post(), 'UsersPersonal.middleNm', '');
         $this->_data['UserPersonal']['lastNm']              = ArrayHelper::getValue($this->_request->post(), 'UsersPersonal.lastNm', '');
-        $this->_data['UserPersonal']['us_citizen']          = ArrayHelper::getValue($this->_request->post(), 'UsersPersonal.us_citizen', '');
+        $this->_data['UserPersonal']['us_citizen']          = ArrayHelper::getValue($this->_request->post(), 'UsersPersonal.us_citizen',    BaseModel::CITIZEN_US_YES);
         $this->_data['UserPersonal']['citizen_other']       = ArrayHelper::getValue($this->_request->post(), 'UsersPersonal.citizen_other', BaseModel::CITIZEN_OTHER_NO);
-        $this->_data['UserPersonal']['visa_type']           = ArrayHelper::getValue($this->_request->post(), 'UsersPersonal.visa_type', BaseModel::VISA_NO);
+        $this->_data['UserPersonal']['visa_type']           = ArrayHelper::getValue($this->_request->post(), 'UsersPersonal.visa_type',     BaseModel::VISA_NO);
         $this->_data['UserPersonal']['saveUserPersonal']    = ArrayHelper::getValue($this->_request->post(), 'UsersPersonal.saveUserPersonal', '');
+
 
         if (empty($this->_data['UserPersonal']['citizen_other'])) {
             $citizenOther = FormFields::findFieldByProperties(
                 BaseModel::TYPE_ITEM_CITIZEN_OTHER,
                 '',
-                BaseModel::CITIZEN_OTHER_NO
+                BaseModel::CITIZEN_OTHER_NO,
+                true, 
+                false // $getSQL => debugging info
             );
             
             $this->_data['UserPersonal']['citizen_other'] = $citizenOther['value'];
         }
-
-        /**
-                $this->_data['filterForm']['uuid']              = ArrayHelper::getValue($this->_request->get(), 'User.uuid', '');
-                $this->_data['filterForm']['is_active']         = ArrayHelper::getValue($this->_request->get(), 'User.is_active', -1);
-                $this->_data['filterForm']['paginationCount']   = ArrayHelper::getValue($this->_request->get(), 'User.pagination_count', 10);
-
-                $this->_data['post']['addRole']        = $this->_request->post('addRole', '');
-                $this->_data['post']['dropRole']       = $this->_request->post('dropRole', '');
-                $this->_data['post']['authitem']       = $this->_request->post('authitem', '');
-                $this->_data['post']['authassignment'] = $this->_request->post('authassignment', '');
-
-                $this->_data['User']['is_active']      = ArrayHelper::getValue($this->_request->post(), 'User.is_active', -1);
-                $this->_data['User']['access_token']   = ArrayHelper::getValue($this->_request->post(), 'User.access_token', -1);
-                $this->_data['User']['saveUser']       = ArrayHelper::getValue($this->_request->post(), 'User.saveUser', -1);
-
-                $this->_data['addRole']          = $this->_request->post('addRole', '');
-                $this->_data['dropRole']         = $this->_request->post('dropRole', '');
-                $this->_data['authitem']         = $this->_request->post('authitem', '');
-                $this->_data['authassignment']   = $this->_request->post('authassignment', '');
-
-                $this->_data['addUser']          = ArrayHelper::getValue($this->_request->post(), 'User.addUser', '');
-                $this->_data['lookupUser']       = ArrayHelper::getValue($this->_request->post(), 'User.lookupUser', '');
-                $this->_data['saveUser']         = false;
-         **/
     }
 
 
@@ -239,19 +218,19 @@ class UsersPersonalController extends BaseController
                             $labels = $this->_userPersonalModel->attributeLabels();
                             
 //                            self::debug( $labels );
-                   
+                            
                             $this->_data['success'][$labels[$key]] =
                             [
-                                'value'     => "was updated",
+                                'value'     => "was updated ( <strong>" . $val . "</strong> -> <strong>" . $this->_data['UserPersonal'][$key] . "</strong> )",
                                 'bValue'    => true,
                             ];
-
+        
                             if (strpos($lookupNew, "Unknown") !== 0) {
                                 $this->_data['success'][$labels[$key]] =
                                 [
-                                    'value'  => "was updated ( " . $lookupNew . " -> " . $lookupOld . " )",
+                                    'value'  => "was updated ( <strong>" . $lookupNew . "</strong> -> <strong>" . $lookupOld . "</strong> )",
                                 ];
-                            }
+                            }                            
                         }
                     }
                 }
@@ -268,38 +247,18 @@ class UsersPersonalController extends BaseController
      * @return (TBD)
      */
     private function keyLookup($key, $value)
-    {
-        $usCitizen      = UsersController::getDropDownOpts('us_citizen');
-        $citizenOther   = UsersController::getDropDownOpts('citizen_other');
-        $visaType       = UsersController::getDropDownOpts('visa_type');
-//        $countryList    = UsersController::getDropDownOpts('country_list');
+    {       
+        $usCitizen      = FormFields::getSelectOptions(-1, 'US-Citizen',    false);           
+        $citizenOther   = FormFields::getSelectOptions(-1, 'Citizen-Other', false);              
+        $visaType       = FormFields::getSelectOptions(-1, 'Visa-Type',     false);               
 
-//        self::debug("KeyLookUp == START : " . $key . " => " . $value, false);
-      
         if ($key === "us_citizen") {
             if (isset($usCitizen[$value]) && !empty($usCitizen[$value])) {
                 return $usCitizen[$value];
             } else {
                 return "Unknown value : " . $key . " :: " . $value;
             }
-            /**
-                    } elseif ($key === "citizen_other") {
-                        foreach( $citizenOther as $continent ){
-                            //self::debug( $continent, false );
 
-                            foreach( $continent as $cKey => $country ){
-            //                    self::debug( $value . " >> " . $cKey . " => " . $country, false );
-
-                                if ( strcmp ($value, $cKey) === 0 ) {
-            //                        self::debug( "YES:: " . $cKey . " => " . $country, true );
-                                    return $country;
-                                }
-                            }
-                        }
-
-                        return "Unknown value : " . $key . " == " . $value;
-                    } elseif ($key === "visa_type") {
-            **/
         } elseif ($key === "citizen_other") {
             if (isset($citizenOther[$value]) && !empty($citizenOther[$value])) {
                 return $citizenOther[$value];

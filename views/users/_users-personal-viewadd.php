@@ -7,13 +7,15 @@
     use yii\bootstrap\ActiveForm;
     
     use app\controllers\UsersController;
+    
     use app\models\BaseModel;
+    use app\models\FormFields;    
 
    $formatter = \Yii::$app->formatter;
 
-   $usCitizen       = UsersController::getDropDownOpts('us_citizen', false);
-   $citizenOther    = UsersController::getDropDownOpts('citizen_other', false);
-   $visaType        = UsersController::getDropDownOpts('visa_type', false);
+    $usCitizen      = FormFields::getSelectOptions(-1, 'US-Citizen',    false);           
+    $citizenOther   = FormFields::getSelectOptions(-1, 'Citizen-Other', false);              
+    $visaType       = FormFields::getSelectOptions(-1, 'Visa-Type',     false);           
 
     $class = 'form-control col-lg-4';
     $style = 'width: 80%;float:right;';
