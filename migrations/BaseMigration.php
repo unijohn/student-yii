@@ -207,9 +207,9 @@ class BaseMigration extends Migration
     const TYPE_UNIVERSITY_DEPT_ITS          = 2;
     const TYPE_UNIVERSITY_DEPT_COL_FCBE     = 3;
     
-    const TYPE_YES_NO_NOT_SET               = 0;
-    const TYPE_YES_NO_YES                   = 1;    
-    const TYPE_YES_NO_NO                    = 2;        
+    const TYPE_YES_NO_NOT_SET               = -1;
+    const TYPE_YES_NO_NO                    = 0;
+    const TYPE_YES_NO_YES                   = 1;            
 
     const tbl_YiiNames  = [
       'auth_assignment',
