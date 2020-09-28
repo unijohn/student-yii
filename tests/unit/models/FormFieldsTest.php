@@ -221,7 +221,7 @@ class FormFieldsTest extends \Codeception\Test\Unit
     
     public function testExistsFieldByProperties()
     {
-        //public static function existsFieldByProperties($form_field = -1, $type = -1, $type_str = '', $description = '', $value_str = '', $value = -1)
+        //public static function existsFieldByProperties($form_field = -1, $type = -1, $type_str = '', $description = '', $value_str = '', $value = -1, $getSql = false)
     
         /** Valid: expect_that **/
         // All valid values
@@ -231,7 +231,7 @@ class FormFieldsTest extends \Codeception\Test\Unit
         expect_that($formField = FormFields::existsFieldByProperties(1, 1, 'Form-Field', 'Radio'));
         
         // Valid values except $type_str, $value
-        $this->assertTrue($formField = FormFields::existsFieldByProperties(2, 2, '', 'Active'));
+        $this->assertTrue($formField = FormFields::existsFieldByProperties(2, 2, '', 'Active', '', -1, false));
         
         /** NOT Valid: expect_not **/
         // No values

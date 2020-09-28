@@ -4,6 +4,8 @@ namespace tests\unit\models;
 
 use app\models\SystemCodes;
 
+use app\modules\Consts;
+
 class SystemCodesTest extends \Codeception\Test\Unit
 {
     public $justRight   = "Just Right Enough";
@@ -13,10 +15,10 @@ class SystemCodesTest extends \Codeception\Test\Unit
     {
         $systemCode             = new SystemCodes();
         
-        $systemCode->scenario   = SystemCodes::SCENARIO_INSERT;
+        $systemCode->scenario   = Consts::SCENARIO_INSERT;
         
         // Everything correct
-        $systemCode->type           = SystemCodes::TYPE_PERMIT;
+        $systemCode->type           = Consts::CODE_ITEM_PERMITS;
         $systemCode->type_str       = $this->justRight;
 
         $systemCode->code           = 0;
@@ -24,22 +26,22 @@ class SystemCodesTest extends \Codeception\Test\Unit
         
         $systemCode->description    = $this->justRight;
         
-        $systemCode->is_active      = SystemCodes::STATUS_ACTIVE;
-        $systemCode->is_visible     = SystemCodes::STATUS_VISIBLE;
-        $systemCode->is_banner_data = SystemCodes::STATUS_BANNER_DATA;
+        $systemCode->is_active      = Consts::TYPE_ITEM_STATUS_ACTIVE;
+        $systemCode->is_visible     = Consts::TYPE_ITEM_STATUS_VISIBLE;
+        $systemCode->is_banner_data = Consts::TYPE_ITEM_SOURCE_BANNER_DATA;
         
         expect($saveResult = $systemCode->save())->equals(true);
         
         // Type is below MIN
-        $systemCode->type  = SystemCodes::TYPE_MIN - 100;
+        $systemCode->type  = Consts::TYPE_ITEM_MIN - 100;
         expect($saveResult = $systemCode->save())->equals(false);
 
         // Type is above MAX
-        $systemCode->type  = SystemCodes::TYPE_MAX + 100;
+        $systemCode->type  = Consts::TYPE_ITEM_MAX + 100;
         expect($saveResult = $systemCode->save())->equals(false);
 
         // Type is just right
-        $systemCode->type  = SystemCodes::TYPE_MASTERS;
+        $systemCode->type  = Consts::CODE_ITEM_MASTERS;
         expect($saveResult = $systemCode->save())->equals(true);
        
         // description is too long
@@ -67,11 +69,11 @@ class SystemCodesTest extends \Codeception\Test\Unit
         expect($saveResult      = $systemCode->save())->equals(true);
         
         // is_active is below MIN
-        $systemCode->is_active  = SystemCodes::STATUS_VISIBLE_MIN - 100;
+        $systemCode->is_active  = Consts::TYPE_ITEM_STATUS_VISIBLE_MIN - 100;
         expect($saveResult      = $systemCode->save())->equals(false);
         
         // is_active is above MAX
-        $systemCode->is_active  = SystemCodes::STATUS_ACTIVE_MAX + 100;
+        $systemCode->is_active  = Consts::TYPE_ITEM_STATUS_ACTIVE_MAX + 100;
         expect($saveResult      = $systemCode->save())->equals(false);
 
         // is_active is wrong kind of data
@@ -79,15 +81,15 @@ class SystemCodesTest extends \Codeception\Test\Unit
         expect($saveResult      = $systemCode->save())->equals(false);
         
         // is_active is just right
-        $systemCode->is_active  = SystemCodes::STATUS_ACTIVE;
+        $systemCode->is_active  = Consts::TYPE_ITEM_STATUS_ACTIVE;
         expect($saveResult      = $systemCode->save())->equals(true);
         
         // is_visible is below MIN
-        $systemCode->is_visible = SystemCodes::STATUS_VISIBLE_MIN + 100;
+        $systemCode->is_visible = Consts::TYPE_ITEM_STATUS_VISIBLE_MIN + 100;
         expect($saveResult      = $systemCode->save())->equals(false);
         
         // is_visible is above MAX
-        $systemCode->is_visible = SystemCodes::STATUS_VISIBLE_MAX + 100;
+        $systemCode->is_visible = Consts::TYPE_ITEM_STATUS_VISIBLE_MAX + 100;
         expect($saveResult      = $systemCode->save())->equals(false);
 
         // is_active is wrong kind of data
@@ -95,15 +97,15 @@ class SystemCodesTest extends \Codeception\Test\Unit
         expect($saveResult      = $systemCode->save())->equals(false);
 
         // is_visible is just right
-        $systemCode->is_visible = SystemCodes::STATUS_HIDDEN;
+        $systemCode->is_visible = Consts::TYPE_ITEM_STATUS_HIDDEN;
         expect($saveResult      = $systemCode->save())->equals(true);
         
         // is_banner_data is below MIN
-        $systemCode->is_banner_data = SystemCodes::STATUS_BANNER_MIN + 100;
+        $systemCode->is_banner_data = Consts::TYPE_ITEM_SOURCE_MIN - 1;
         expect($saveResult          = $systemCode->save())->equals(false);
         
         // is_banner_data is above MAX
-        $systemCode->is_banner_data = SystemCodes::STATUS_BANNER_MAX + 100;
+        $systemCode->is_banner_data = Consts::TYPE_ITEM_SOURCE_MAX + 1;
         expect($saveResult          = $systemCode->save())->equals(false);
 
         // is_banner_data is wrong kind of data
@@ -111,7 +113,7 @@ class SystemCodesTest extends \Codeception\Test\Unit
         expect($saveResult          = $systemCode->save())->equals(false);
 
         // is_banner_data is just right
-        $systemCode->is_banner_data = SystemCodes::STATUS_BANNER_DATA;
+        $systemCode->is_banner_data = Consts::TYPE_ITEM_SOURCE_BANNER_DATA;
         expect($saveResult          = $systemCode->save())->equals(true);
     }
     
@@ -123,10 +125,10 @@ class SystemCodesTest extends \Codeception\Test\Unit
             ->limit(1)
             ->one();
         
-        $systemCode->scenario   = SystemCodes::SCENARIO_UPDATE;
+        $systemCode->scenario   = Consts::SCENARIO_UPDATE;
         
         // Everything correct
-        $systemCode->type           = SystemCodes::TYPE_PERMIT;
+        $systemCode->type           = Consts::CODE_ITEM_PERMITS;
         $systemCode->type_str       = $this->justRight;
 
         $systemCode->code           = 0;
@@ -134,8 +136,8 @@ class SystemCodesTest extends \Codeception\Test\Unit
         
         $systemCode->description    = $this->justRight;
         
-        $systemCode->is_active      = SystemCodes::STATUS_ACTIVE;
-        $systemCode->is_visible     = SystemCodes::STATUS_VISIBLE;
+        $systemCode->is_active      = Consts::TYPE_ITEM_STATUS_ACTIVE;
+        $systemCode->is_visible     = Consts::TYPE_ITEM_STATUS_VISIBLE;
 
         if (!$systemCode->validate()) {
             SystemCodes::debug($systemCode->errors, true);
@@ -144,15 +146,15 @@ class SystemCodesTest extends \Codeception\Test\Unit
         expect($saveResult = $systemCode->save())->equals(true);
         
         // Type is below MIN
-        $systemCode->type  = SystemCodes::TYPE_MIN - 100;
+        $systemCode->type  = Consts::TYPE_ITEM_MIN - 100;
         expect($saveResult = $systemCode->save())->equals(false);
 
         // Type is above MAX
-        $systemCode->type  = SystemCodes::TYPE_MAX + 100;
+        $systemCode->type  = Consts::TYPE_ITEM_MAX + 100;
         expect($saveResult = $systemCode->save())->equals(false);
 
         // Type is just right
-        $systemCode->type  = SystemCodes::TYPE_MASTERS;
+        $systemCode->type  = Consts::CODE_ITEM_MASTERS;
         expect($saveResult = $systemCode->save())->equals(true);
        
         // description is too long
@@ -180,11 +182,11 @@ class SystemCodesTest extends \Codeception\Test\Unit
         expect($saveResult      = $systemCode->save())->equals(true);
         
         // is_active is below MIN
-        $systemCode->is_active  = SystemCodes::STATUS_VISIBLE_MIN - 100;
+        $systemCode->is_active  = Consts::TYPE_ITEM_STATUS_VISIBLE_MIN - 100;
         expect($saveResult      = $systemCode->save())->equals(false);
         
         // is_active is above MAX
-        $systemCode->is_active  = SystemCodes::STATUS_ACTIVE_MAX + 100;
+        $systemCode->is_active  = Consts::TYPE_ITEM_STATUS_ACTIVE_MAX + 100;
         expect($saveResult      = $systemCode->save())->equals(false);
 
         // is_active is wrong kind of data
@@ -192,15 +194,15 @@ class SystemCodesTest extends \Codeception\Test\Unit
         expect($saveResult      = $systemCode->save())->equals(false);
         
         // is_active is just right
-        $systemCode->is_active  = SystemCodes::STATUS_ACTIVE;
+        $systemCode->is_active  = Consts::TYPE_ITEM_STATUS_ACTIVE;
         expect($saveResult      = $systemCode->save())->equals(true);
         
         // is_visible is below MIN
-        $systemCode->is_visible = SystemCodes::STATUS_VISIBLE_MIN + 100;
+        $systemCode->is_visible = Consts::TYPE_ITEM_STATUS_VISIBLE_MIN + 100;
         expect($saveResult      = $systemCode->save())->equals(false);
         
         // is_visible is above MAX
-        $systemCode->is_visible = SystemCodes::STATUS_VISIBLE_MAX + 100;
+        $systemCode->is_visible = Consts::TYPE_ITEM_STATUS_VISIBLE_MAX + 100;
         expect($saveResult      = $systemCode->save())->equals(false);
 
         // is_active is wrong kind of data
@@ -208,7 +210,7 @@ class SystemCodesTest extends \Codeception\Test\Unit
         expect($saveResult      = $systemCode->save())->equals(false);
 
         // is_visible is just right
-        $systemCode->is_visible = SystemCodes::STATUS_HIDDEN;
+        $systemCode->is_visible = Consts::TYPE_ITEM_STATUS_HIDDEN;
         expect($saveResult      = $systemCode->save())->equals(true);
     }
     
@@ -220,7 +222,7 @@ class SystemCodesTest extends \Codeception\Test\Unit
          */
     
         // $type is right
-        expect(SystemCodes::findbyType(SystemCodes::TYPE_MASTERS));
+        expect(SystemCodes::findbyType(Consts::CODE_ITEM_MASTERS));
 
         // $type is wrong kind of data
         expect(SystemCodes::findbyType($this->tooLong))->equals(false);
@@ -259,24 +261,25 @@ class SystemCodesTest extends \Codeception\Test\Unit
     public function testMoveSystemCodes()
     {
         $row = SystemCodes::find()
-            ->where(['id' => 6 ])
+            ->where(['id' => 7 ])
             ->limit(1)
             ->one();
         
-        // Starting position: id: 6
-        // Departments, DEPT-NA, Dept Not Set
+        // Starting position: id: y
+        // Career-Levels, UGAD, Undergraduate
         //
-        // Start position: 2
+        // Start position: 3
         // Min position: 1
-        // Max position: 8
+        // Max position: 5
 
+        expect($row->movePrev())->equals(true);
         expect($row->movePrev())->equals(true);
         expect($row->movePrev())->equals(false);
         
         expect($row->getIsLast())->equals(false);
         expect($row->getIsFirst())->equals(true);
 
-        for ($i = 1; $i <= 7; $i++) {
+        for ($i = 1; $i <= 4; $i++) {
             expect($row->moveNext())->equals(true);
         }
         
@@ -340,33 +343,34 @@ class SystemCodesTest extends \Codeception\Test\Unit
         $this->assertFalse(SystemCodes::findUnassignedTagOptions("Masters", "Booyah", "DONT WORK", "FAILME"), "Should Fail:  All int parameters being passed strings");
 
         // $id, $selectType, $omitType is wrong value
-        expect(SystemCodes::findUnassignedTagOptions(-1, -1, -1, SystemCodes::STATUS_ACTIVE))->equals(false);
+        expect(SystemCodes::findUnassignedTagOptions(-1, -1, -1, Consts::TYPE_ITEM_STATUS_ACTIVE))->equals(false);
         
         // $id is wrong value
-        expect(SystemCodes::findUnassignedTagOptions(-1, 1000000, 1000000, SystemCodes::STATUS_ACTIVE))->equals(false);
+        expect(SystemCodes::findUnassignedTagOptions(-1, 1000000, 1000000, Consts::TYPE_ITEM_STATUS_ACTIVE))->equals(false);
         
         // $isActive is wrong value
         expect(SystemCodes::findUnassignedTagOptions(-1, 1000000, 1000000, -1000))->equals(false);
 
         // $selectType, $omitType is wrong value :: Should work
-        expect(SystemCodes::findUnassignedTagOptions(1000000, -1, -1, SystemCodes::STATUS_ACTIVE));
+        expect(SystemCodes::findUnassignedTagOptions(1000000, -1, -1, Consts::TYPE_ITEM_STATUS_ACTIVE));
         
         // $selectType is wrong value :: Should work
-        expect(SystemCodes::findUnassignedTagOptions(1000000, 1000000, -1, SystemCodes::STATUS_ACTIVE));
+        expect(SystemCodes::findUnassignedTagOptions(1000000, 1000000, -1, Consts::TYPE_ITEM_STATUS_ACTIVE));
         
         // $omitType is wrong value ::should work
-        expect(SystemCodes::findUnassignedTagOptions(1000000, -1, 1000000, SystemCodes::STATUS_ACTIVE));
+        expect(SystemCodes::findUnassignedTagOptions(1000000, -1, 1000000, Consts::TYPE_ITEM_STATUS_ACTIVE));
 
+        // vv- To be revisited during next refactoring -vv
         // $id, $selectType, $omitType, $isActive are valid
-        expect(SystemCodes::findUnassignedPermitTagOptions(4, -1, SystemCodes::TYPE_DEPARTMENT, SystemCodes::STATUS_ACTIVE));
+        //expect(SystemCodes::findUnassignedPermitTagOptions(4, -1, SystemCodes::TYPE_DEPARTMENT, Consts::TYPE_ITEM_STATUS_ACTIVE));
         
         // $id, $selectType, $omitType, $isActive are valid
-        expect(SystemCodes::findUnassignedPermitTagOptions(4, SystemCodes::TYPE_DEPARTMENT, -1, SystemCodes::STATUS_ACTIVE));
+        //expect(SystemCodes::findUnassignedPermitTagOptions(4, SystemCodes::TYPE_DEPARTMENT, -1, Consts::TYPE_ITEM_STATUS_ACTIVE));
         
 
         // Wrapper methods :: No $id given
         expect(SystemCodes::findUnassignedPermitTagOptions())->equals(false);
-        expect(SystemCodes::findUnassignedDepartmentTagOptions())->equals(false);
+        //expect(SystemCodes::findUnassignedDepartmentTagOptions())->equals(false);
         expect(SystemCodes::findUnassignedCareerLevelTagOptions())->equals(false);
         expect(SystemCodes::findUnassignedMasterTagOptions())->equals(false);
         expect(SystemCodes::findUnassignedFacultyRankTagOptions())->equals(false);
@@ -376,7 +380,7 @@ class SystemCodesTest extends \Codeception\Test\Unit
         
         // Wrapper methods :: $id given; array() returned
         expect(SystemCodes::findUnassignedPermitTagOptions(2));
-        expect(SystemCodes::findUnassignedDepartmentTagOptions(2));
+        //expect(SystemCodes::findUnassignedDepartmentTagOptions(2));
         expect(SystemCodes::findUnassignedCareerLevelTagOptions(2));
         expect(SystemCodes::findUnassignedMasterTagOptions(2));
         expect(SystemCodes::findUnassignedFacultyRankTagOptions(2));
@@ -407,7 +411,7 @@ class SystemCodesTest extends \Codeception\Test\Unit
         
         // $code_str is wrong
         expect(SystemCodes::existsPermit('Open Permit Request'))->equals(false);
-        expect(SystemCodes::existsDepartment('Economics'))->equals(false);
+//        expect(SystemCodes::existsDepartment('Economics'))->equals(false);    // Replaced with School & University Department values
         expect(SystemCodes::existsCareelLevel('Undergraduate'))->equals(false);
         expect(SystemCodes::existsMasters('MA_ECON'))->equals(false);
         expect(SystemCodes::existsFacultyRank('Professor [Banner]'))->equals(false);
@@ -417,7 +421,7 @@ class SystemCodesTest extends \Codeception\Test\Unit
         
         // $code_str is vald
         expect(SystemCodes::existsPermit('PERMIT-OPEN'))->equals(true);
-        expect(SystemCodes::existsDepartment('ECON'))->equals(true);
+//        expect(SystemCodes::existsDepartment('ECON'))->equals(true);          // Replaced with School & University Department values
         expect(SystemCodes::existsCareelLevel('UGAD'))->equals(true);
         expect(SystemCodes::existsMasters('MAECON'))->equals(true);
         expect(SystemCodes::existsFacultyRank('01'))->equals(true);
@@ -451,10 +455,10 @@ class SystemCodesTest extends \Codeception\Test\Unit
     /*
         public function testExistsSystemCode()
         {
-            $permitType    = SystemCodes::TYPE_PERMIT;
+            $permitType    = Consts::CODE_ITEM_PERMITS;
             $deptType      = SystemCodes::TYPE_DEPARTMENT;
             $careerType    = SystemCodes::TYPE_CAREERLEVEL;
-            $mastersType   = SystemCodes::TYPE_MASTERS;
+            $mastersType   = Consts::CODE_ITEM_MASTERS;
 
             expect_that($code = SystemCodes::existsSystemCode($permitType, "A"));
             expect($code->description)->equals('ISSUED');
