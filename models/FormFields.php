@@ -305,7 +305,7 @@ class FormFields extends BaseModel
         if ($getSql) {
             self::debug("FormFields (229-ish)", false);
             self::debug($count, false);
-            self::debug(Yii::$app->db->createCommand($countSQL, $params)->createCommand()->getRawSql());
+            self::debug(Yii::$app->db->createCommand($countSQL, $params)->getRawSql());
         }
         
         return ($count == 1 ? true : false);

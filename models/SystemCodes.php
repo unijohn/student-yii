@@ -7,9 +7,10 @@ use yii\base\model;
 use yii\behaviors\TimestampBehavior;
 use yii2tech\ar\position\PositionBehavior;  // https://github.com/yii2tech/ar-position
 
-use app\models\BaseModel;
 use app\models\CoursesCodesChild;
 use app\models\SystemCodesChild;
+
+use app\modules\Consts;
 
 class SystemCodes extends BaseModel
 {
@@ -135,15 +136,15 @@ class SystemCodes extends BaseModel
         return
         [
             [
-                'is_active',  'number', 'min' => self::STATUS_ACTIVE_MIN,  'max' => self::STATUS_ACTIVE_MAX,
+                'is_active',  'number', 'min' => Consts::TYPE_ITEM_STATUS_ACTIVE_MIN,  'max' => Consts::TYPE_ITEM_STATUS_ACTIVE_MAX,
                 'tooBig' => 'Select a valid option', 'tooSmall' => 'Select a valid option',
             ],
             [
-                'is_visible', 'number', 'min' => self::STATUS_VISIBLE_MIN, 'max' => self::STATUS_VISIBLE_MAX,
+                'is_visible', 'number', 'min' => Consts::TYPE_ITEM_STATUS_VISIBLE_MIN, 'max' => Consts::TYPE_ITEM_STATUS_VISIBLE_MAX,
                 'tooBig' => 'Select a valid option', 'tooSmall' => 'Select a valid option',
             ],
             [
-                'is_banner_data', 'number', 'min' => self::STATUS_BANNER_MIN, 'max' => self::STATUS_BANNER_MAX,
+                'is_banner_data', 'number', 'min' => Consts::TYPE_ITEM_SOURCE_MIN, 'max' => Consts::TYPE_ITEM_SOURCE_MAX,
                 'tooBig' => 'Select a valid option', 'tooSmall' => 'Select a valid option',
             ],
             [
@@ -155,13 +156,13 @@ class SystemCodes extends BaseModel
             ],
 
             [
-                'is_active', 'default', 'value' => self::STATUS_ACTIVE
+                'is_active', 'default', 'value' => Consts::TYPE_ITEM_STATUS_ACTIVE
             ],
             [
-                'is_visible', 'default', 'value' => self::STATUS_VISIBLE
+                'is_visible', 'default', 'value' => Consts::TYPE_ITEM_STATUS_VISIBLE
             ],
             [
-                'is_banner_data', 'default', 'value' => self::STATUS_BANNER_MIN
+                'is_banner_data', 'default', 'value' => Consts::TYPE_ITEM_SOURCE_MIN
             ],
 
             [
@@ -178,13 +179,13 @@ class SystemCodes extends BaseModel
                 [
                     'type', 'type_str', 'code', 'code_str', 'description', 'is_active', 'is_visible',
                 ],
-                'required', 'on' => self::SCENARIO_UPDATE
+                'required', 'on' => Consts::SCENARIO_UPDATE
             ],
             [
                 [
                     'order_by',
                 ],
-                'required', 'on' => self::SCENARIO_MOVE
+                'required', 'on' => Consts::SCENARIO_MOVE
             ],
         ];
     }
@@ -231,9 +232,9 @@ class SystemCodes extends BaseModel
      */
     public static function findbyPermit()
     {
-        return SystemCodes::findbyType(self::TYPE_PERMIT);
+        return SystemCodes::findbyType(Consts::CODE_ITEM_PERMITS);
     }
-    
+         
     
     /**
      * TBD
@@ -253,7 +254,7 @@ class SystemCodes extends BaseModel
      */
     public static function findbyCareerLevel()
     {
-        return SystemCodes::findbyType(self::TYPE_CAREERLEVEL);
+        return SystemCodes::findbyType(Consts::CODE_ITEM_CAREERLEVELS);
     }
 
 
@@ -264,7 +265,7 @@ class SystemCodes extends BaseModel
      */
     public static function findbyMasters()
     {
-        return SystemCodes::findbyType(self::TYPE_MASTERS);
+        return SystemCodes::findbyType(Consts::CODE_ITEM_MASTERS);
     }
     
 
@@ -275,9 +276,9 @@ class SystemCodes extends BaseModel
       */
     public static function findbyFacultyRank()
     {
-        return SystemCodes::findbyType(self::TYPE_FACULTY_RANK);
+        return SystemCodes::findbyType(Consts::CODE_ITEM_FACULTYRANK);
     }
-    
+
     
     /**
       * TBD
@@ -286,7 +287,7 @@ class SystemCodes extends BaseModel
       */
     public static function findbyEmployeeClass()
     {
-        return SystemCodes::findbyType(self::TYPE_EMPLOYEE_CLASS);
+        return SystemCodes::findbyType(Consts::CODE_ITEM_EMPLOYEECLASS);
     }
 
 
@@ -297,7 +298,7 @@ class SystemCodes extends BaseModel
       */
     public static function findbySchoolDept()
     {
-        return SystemCodes::findbyType(self::TYPE_SCHOOL_DEPT);
+        return SystemCodes::findbyType(Consts::CODE_ITEM_DEPT_SCHOOL);
     }
     
     
@@ -308,7 +309,7 @@ class SystemCodes extends BaseModel
       */
     public static function findbyUniversityDept()
     {
-        return SystemCodes::findbyType(self::TYPE_UNIVERSITY_DEPT);
+        return SystemCodes::findbyType(Consts::CODE_ITEM_DEPT_UNIVERSITY);
     }
         
 
@@ -357,9 +358,9 @@ class SystemCodes extends BaseModel
          ->from($tbl_systemsCodes . ' sc')
          ->innerJoin($tbl_SystemCodesChild, $tbl_SystemCodesChild . '.parent = sc.id')
          ->innerJoin($tbl_systemsCodes . ' sc2', $tbl_SystemCodesChild . '.child = sc2.id')
-         ->where(['=', 'sc.type', self::TYPE_PERMIT ])
-         ->andWhere([ '=', 'sc.is_active', self::STATUS_ACTIVE ])
-         ->andWhere([  '=', 'sc2.is_active',self::STATUS_ACTIVE ]);
+         ->where(['=', 'sc.type', Consts::CODE_ITEM_PERMITS ])
+         ->andWhere([ '=', 'sc.is_active', Consts::TYPE_ITEM_STATUS_ACTIVE ])
+         ->andWhere([  '=', 'sc2.is_active',Consts::TYPE_ITEM_STATUS_ACTIVE ]);
          
 
         if ($query_codes->count() == 0) {
@@ -391,9 +392,9 @@ class SystemCodes extends BaseModel
          ->innerJoin($tbl_SystemCodesChild, $tbl_SystemCodesChild . '.parent = sc.id')
          ->innerJoin($tbl_SystemsCodes . ' sc2', $tbl_SystemCodesChild . '.child = sc2.id')
          ->where(['sc.id' => $id ])
-         ->andWhere([ 'sc.type'        => self::TYPE_PERMIT ]);
-//         ->andWhere([ 'sc.is_active'   => self::STATUS_ACTIVE ])
-//         ->andWhere([ 'sc2.is_active'  => self::STATUS_ACTIVE ])
+         ->andWhere([ 'sc.type'        => Consts::CODE_ITEM_PERMITS ]);
+//         ->andWhere([ 'sc.is_active'   => Consts::TYPE_ITEM_STATUS_ACTIVE ])
+//         ->andWhere([ 'sc2.is_active'  => Consts::TYPE_ITEM_STATUS_ACTIVE ])
 
         if ($query_codes->count() == 0) {
             return false;
@@ -437,8 +438,8 @@ class SystemCodes extends BaseModel
          ->innerJoin($tbl_SystemCodesChild, $tbl_SystemCodesChild . '.parent = sc.id')
          ->innerJoin($tbl_SystemsCodes . ' sc2', $tbl_SystemCodesChild . '.child = sc2.id')
          ->where(['sc.id' => $id ]);
-        //->andWhere([ 'sc.is_active'   => self::STATUS_ACTIVE ])
-        //->andWhere([ 'sc2.is_active'  => self::STATUS_ACTIVE ])
+        //->andWhere([ 'sc.is_active'   => Consts::TYPE_ITEM_STATUS_ACTIVE ])
+        //->andWhere([ 'sc2.is_active'  => Consts::TYPE_ITEM_STATUS_ACTIVE ])
 
         if ($query_codes->count() == 0) {
             return false;
@@ -456,7 +457,7 @@ class SystemCodes extends BaseModel
     public static function findPermitTagOptions()
     {
         return SystemCodes::find()
-         ->where([ '!=', 'type',  self::TYPE_PERMIT ])
+         ->where([ '!=', 'type',  Consts::CODE_ITEM_PERMITS ])
          ->all();
     }
 
@@ -467,7 +468,7 @@ class SystemCodes extends BaseModel
      * @param integer Row $id value for code entry
      * @returns model || false if $id is invalid
      */
-    public static function findUnassignedTagOptions($id = -1, $selectType = -1, $omitType = -1, $isActive = self::STATUS_ACTIVE, $getSql = false)
+    public static function findUnassignedTagOptions($id = -1, $selectType = -1, $omitType = -1, $isActive = Consts::TYPE_ITEM_STATUS_ACTIVE, $getSql = false)
     {
         if ($id < 0 || strval($id) === 0 || !is_numeric($id)) {
      
@@ -536,9 +537,9 @@ class SystemCodes extends BaseModel
      */
     public static function findUnassignedPermitTagOptions($id = -1)
     {
-        return self::findUnassignedTagOptions($id, -1, self::TYPE_PERMIT, self::STATUS_ACTIVE, false);
+        return self::findUnassignedTagOptions($id, -1, Consts::CODE_ITEM_PERMITS, Consts::TYPE_ITEM_STATUS_ACTIVE, false);
     }
-   
+
    
     /**
      * TBD
@@ -548,7 +549,8 @@ class SystemCodes extends BaseModel
      */
     public static function findUnassignedDepartmentTagOptions($id = -1)
     {
-        return self::findUnassignedTagOptions($id, -1, self::TYPE_DEPARTMENT);
+//        return self::findUnassignedTagOptions($id, -1, self::TYPE_DEPARTMENT);
+        return false;
     }
 
 
@@ -560,7 +562,7 @@ class SystemCodes extends BaseModel
      */
     public static function findUnassignedCareerLevelTagOptions($id = -1)
     {
-        return self::findUnassignedTagOptions($id, -1, self::TYPE_CAREERLEVEL);
+        return self::findUnassignedTagOptions($id, -1, Consts::CODE_ITEM_CAREERLEVELS);
     }
     
     
@@ -572,7 +574,7 @@ class SystemCodes extends BaseModel
      */
     public static function findUnassignedMasterTagOptions($id = -1)
     {
-        return self::findUnassignedTagOptions($id, -1, self::TYPE_MASTERS);
+        return self::findUnassignedTagOptions($id, -1, Consts::CODE_ITEM_MASTERS);
     }
     
     
@@ -584,7 +586,7 @@ class SystemCodes extends BaseModel
      */
     public static function findUnassignedFacultyRankTagOptions($id = -1)
     {
-        return self::findUnassignedTagOptions($id, -1, self::TYPE_FACULTY_RANK);
+        return self::findUnassignedTagOptions($id, -1, Consts::CODE_ITEM_FACULTYRANK);
     }
     
     
@@ -596,7 +598,7 @@ class SystemCodes extends BaseModel
      */
     public static function findUnassignedEmployeeClassTagOptions($id = -1)
     {
-        return self::findUnassignedTagOptions($id, -1, self::TYPE_EMPLOYEE_CLASS);
+        return self::findUnassignedTagOptions($id, -1, Consts::CODE_ITEM_EMPLOYEECLASS);
     }
     
     
@@ -608,7 +610,7 @@ class SystemCodes extends BaseModel
      */
     public static function findUnassignedSchoolDepartmentTagOptions($id = -1)
     {
-        return self::findUnassignedTagOptions($id, -1, self::TYPE_SCHOOL_DEPT);
+        return self::findUnassignedTagOptions($id, -1, Consts::CODE_ITEM_DEPT_SCHOOL);
     }
     
     
@@ -620,7 +622,7 @@ class SystemCodes extends BaseModel
      */
     public static function findUnassignedUniversityDepartmentTagOptions($id = -1)
     {
-        return self::findUnassignedTagOptions($id, -1, self::TYPE_UNIVERSITY_DEPT);
+        return self::findUnassignedTagOptions($id, -1, Consts::CODE_ITEM_DEPT_UNIVERSITY);
     }
      
 
@@ -630,7 +632,7 @@ class SystemCodes extends BaseModel
      * @param integer Row $id value for course entry
      * @returns model || false if $id is invalid
      */
-    public static function findUnassignedTagOptionsForCourses($id = "", $isActive = self::STATUS_ACTIVE, $getSql = false)
+    public static function findUnassignedTagOptionsForCourses($id = "", $isActive = Consts::TYPE_ITEM_STATUS_ACTIVE, $getSql = false)
     {
         if (empty($id) || !is_string($id)) {
             return false;
@@ -644,12 +646,12 @@ class SystemCodes extends BaseModel
          ->select([  'sc.id', 'sc.type', 'sc.code', 'sc.code_str', 'sc.description', 'sc.is_active', 'sc.is_visible', 'sc.is_banner_data' ])
          ->from($tbl_SystemCodes       . ' sc')
          ->where('id NOT IN ( SELECT child from ' . $tbl_CoursesCodesChild .' WHERE parent = :id ) AND sc.is_active =:is_active AND sc.type !=:type AND sc.code != -1')
-            ->addParams([ ':id' => $id, 'is_active' => $isActive, 'type' => self::TYPE_PERMIT, ]);
+            ->addParams([ ':id' => $id, 'is_active' => $isActive, 'type' => Consts::CODE_ITEM_PERMITS, ]);
 
         if ($getSql) {
             self::debug("SystemCodes (650-ish)", false);
             self::debug($query_codes->createCommand()->getRawSql());
-        } 
+        }
 
         return $query_codes->all();
     }
@@ -695,8 +697,8 @@ class SystemCodes extends BaseModel
      */
     public static function existsPermit($code_str)
     {
-//        self::debug( self::TYPE_PERMIT . " :: " . $code_str );
-        return self::existsSystemCode(self::TYPE_PERMIT, $code_str);
+//        self::debug( Consts::CODE_ITEM_PERMITS . " :: " . $code_str );
+        return self::existsSystemCode(Consts::CODE_ITEM_PERMITS, $code_str);
     }
 
 
@@ -718,7 +720,7 @@ class SystemCodes extends BaseModel
      */
     public static function existsCareelLevel($code_str)
     {
-        return self::existsSystemCode(self::TYPE_CAREERLEVEL, $code_str);
+        return self::existsSystemCode(Consts::CODE_ITEM_CAREERLEVELS, $code_str);
     }
     
     
@@ -729,7 +731,7 @@ class SystemCodes extends BaseModel
      */
     public static function existsMasters($code_str)
     {
-        return self::existsSystemCode(self::TYPE_MASTERS, $code_str);
+        return self::existsSystemCode(Consts::CODE_ITEM_MASTERS, $code_str);
     }
     
     
@@ -740,7 +742,7 @@ class SystemCodes extends BaseModel
      */
     public static function existsFacultyRank($code_str)
     {
-        return self::existsSystemCode(self::TYPE_FACULTY_RANK, $code_str);
+        return self::existsSystemCode(Consts::CODE_ITEM_FACULTYRANK, $code_str);
     }
     
     
@@ -751,7 +753,7 @@ class SystemCodes extends BaseModel
      */
     public static function existsEmployeeClass($code_str)
     {
-        return self::existsSystemCode(self::TYPE_EMPLOYEE_CLASS, $code_str);
+        return self::existsSystemCode(Consts::CODE_ITEM_EMPLOYEECLASS, $code_str);
     }
    
    
@@ -762,7 +764,7 @@ class SystemCodes extends BaseModel
      */
     public static function existsSchoolDepartment($code_str)
     {
-        return self::existsSystemCode(self::TYPE_SCHOOL_DEPT, $code_str);
+        return self::existsSystemCode(Consts::CODE_ITEM_DEPT_SCHOOL, $code_str);
     }
     
     
@@ -773,7 +775,7 @@ class SystemCodes extends BaseModel
      */
     public static function existsUniversityDepartment($code_str)
     {
-        return self::existsSystemCode(self::TYPE_UNIVERSITY_DEPT, $code_str);
+        return self::existsSystemCode(Consts::CODE_ITEM_DEPT_UNIVERSITY, $code_str);
     }
 
    
