@@ -61,9 +61,9 @@ class UsersPersonalController extends BaseController
         $this->_data['UserPersonal']['firstNm']             = ArrayHelper::getValue($this->_request->post(), 'UsersPersonal.firstNm', '');
         $this->_data['UserPersonal']['middleNm']            = ArrayHelper::getValue($this->_request->post(), 'UsersPersonal.middleNm', '');
         $this->_data['UserPersonal']['lastNm']              = ArrayHelper::getValue($this->_request->post(), 'UsersPersonal.lastNm', '');
-        $this->_data['UserPersonal']['us_citizen']          = ArrayHelper::getValue($this->_request->post(), 'UsersPersonal.us_citizen',    BaseModel::CITIZEN_US_YES);
+        $this->_data['UserPersonal']['us_citizen']          = ArrayHelper::getValue($this->_request->post(), 'UsersPersonal.us_citizen', BaseModel::CITIZEN_US_YES);
         $this->_data['UserPersonal']['citizen_other']       = ArrayHelper::getValue($this->_request->post(), 'UsersPersonal.citizen_other', BaseModel::CITIZEN_OTHER_NO);
-        $this->_data['UserPersonal']['visa_type']           = ArrayHelper::getValue($this->_request->post(), 'UsersPersonal.visa_type',     BaseModel::VISA_NO);
+        $this->_data['UserPersonal']['visa_type']           = ArrayHelper::getValue($this->_request->post(), 'UsersPersonal.visa_type', BaseModel::VISA_NO);
         $this->_data['UserPersonal']['saveUserPersonal']    = ArrayHelper::getValue($this->_request->post(), 'UsersPersonal.saveUserPersonal', '');
 
 
@@ -72,7 +72,7 @@ class UsersPersonalController extends BaseController
                 BaseModel::TYPE_ITEM_CITIZEN_OTHER,
                 '',
                 BaseModel::CITIZEN_OTHER_NO,
-                true, 
+                true,
                 false // $getSQL => debugging info
             );
             
@@ -230,7 +230,7 @@ class UsersPersonalController extends BaseController
                                 [
                                     'value'  => "was updated ( <strong>" . $lookupNew . "</strong> -> <strong>" . $lookupOld . "</strong> )",
                                 ];
-                            }                            
+                            }
                         }
                     }
                 }
@@ -247,10 +247,10 @@ class UsersPersonalController extends BaseController
      * @return (TBD)
      */
     private function keyLookup($key, $value)
-    {       
-        $usCitizen      = FormFields::getSelectOptions(-1, 'US-Citizen',    false);           
-        $citizenOther   = FormFields::getSelectOptions(-1, 'Citizen-Other', false);              
-        $visaType       = FormFields::getSelectOptions(-1, 'Visa-Type',     false);               
+    {
+        $usCitizen      = FormFields::getSelectOptions(-1, 'US-Citizen', false);
+        $citizenOther   = FormFields::getSelectOptions(-1, 'Citizen-Other', false);
+        $visaType       = FormFields::getSelectOptions(-1, 'Visa-Type', false);
 
         if ($key === "us_citizen") {
             if (isset($usCitizen[$value]) && !empty($usCitizen[$value])) {
@@ -258,7 +258,6 @@ class UsersPersonalController extends BaseController
             } else {
                 return "Unknown value : " . $key . " :: " . $value;
             }
-
         } elseif ($key === "citizen_other") {
             if (isset($citizenOther[$value]) && !empty($citizenOther[$value])) {
                 return $citizenOther[$value];
