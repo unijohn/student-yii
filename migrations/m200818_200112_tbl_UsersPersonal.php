@@ -2,6 +2,8 @@
 
 namespace app\migrations;
 
+use app\modules\Consts;
+
 /**
  * Class M200818200112TblUsersPersonal
  */
@@ -48,48 +50,32 @@ class m200818_200112_tbl_UsersPersonal extends BaseMigration
       
         $coursePersonal = [
          [
-            'ugadstdt', 'U12345678', 'Ugad', 'I.', 'Student', 'Mr.', self::CITIZEN_US_YES,
-            self::CITIZEN_OTHER_NO, self::VISA_NO, $created_at,
+            'ugadstdt', 'U12345678', 'Ugad', 'I.', 'Student', 'Mr.', Consts::TYPE_ITEM_CITIZEN_US_YES,
+            Consts::TYPE_ITEM_CITIZEN_OTHER_NA, Consts::TYPE_ITEM_VISA_NO, $created_at,
          ],
          [
-            'gradstdt', 'U12345679', 'Grad', 'I.', 'Student', 'Mrs.', self::CITIZEN_US_YES,
-            self::CITIZEN_OTHER_NO, self::VISA_NO, $created_at,
+            'gradstdt', 'U12345679', 'Grad', 'I.', 'Student', 'Mrs.', Consts::TYPE_ITEM_CITIZEN_US_YES,
+            Consts::TYPE_ITEM_CITIZEN_OTHER_NA, Consts::TYPE_ITEM_VISA_NO, $created_at,
          ],
          [
-            'ugadadvr', 'U00123456', 'Ugad', '', 'Advisor', 'Mrs.', self::CITIZEN_US_YES,
-            self::CITIZEN_OTHER_NO, self::VISA_NO, $created_at,
+            'ugadadvr', 'U00123456', 'Ugad', '', 'Advisor', 'Mrs.', Consts::TYPE_ITEM_CITIZEN_US_YES,
+            Consts::TYPE_ITEM_CITIZEN_OTHER_NA, Consts::TYPE_ITEM_VISA_NO, $created_at,
          ],
          [
-            'gradadvr', 'U00123457', 'Grad', '', 'Advisor', 'Mrs.', self::CITIZEN_US_YES,
-            self::CITIZEN_OTHER_NO, self::VISA_NO, $created_at,
+            'gradadvr', 'U00123457', 'Grad', '', 'Advisor', 'Mrs.', Consts::TYPE_ITEM_CITIZEN_US_YES,
+            Consts::TYPE_ITEM_CITIZEN_OTHER_NA, Consts::TYPE_ITEM_VISA_NO, $created_at,
          ],
          [
-            'ugadadmn', 'U00001234', 'Ugad', 'S.', 'Administrator', 'Mrs.', self::CITIZEN_US_YES,
-            self::CITIZEN_OTHER_NO, self::VISA_NO, $created_at,
+            'ugadadmn', 'U00001234', 'Ugad', 'S.', 'Administrator', 'Mrs.', Consts::TYPE_ITEM_CITIZEN_US_YES,
+            Consts::TYPE_ITEM_CITIZEN_OTHER_NA, Consts::TYPE_ITEM_VISA_NO, $created_at,
          ],
          [
-            'gradadmn', 'U00001235', 'Grad', 'S.', 'Administrator', 'Mr.', self::CITIZEN_US_YES,
-            self::CITIZEN_OTHER_NO, self::VISA_NO, $created_at,
+            'gradadmn', 'U00001235', 'Grad', 'S.', 'Administrator', 'Mr.', Consts::TYPE_ITEM_CITIZEN_US_YES,
+            Consts::TYPE_ITEM_CITIZEN_OTHER_NA, Consts::TYPE_ITEM_VISA_NO, $created_at,
          ],
          [
-            'adminusr', 'U00000012', 'Admin', 'S.', 'User', 'Mr.', self::CITIZEN_US_YES,
-            self::CITIZEN_OTHER_NO, self::VISA_NO, $created_at,
-         ],
-         [
-            'gridview_01', 'U12000001', 'Grid01', '', 'View', 'Mr.', self::CITIZEN_US_NO,
-            self::CITIZEN_OTHER_YES, self::VISA_F1, $created_at,
-         ],
-         [
-            'gridview_02', 'U12000002', 'Grid02', '', 'View', 'Mr.', self::CITIZEN_US_NO,
-            self::CITIZEN_OTHER_YES, self::VISA_F2, $created_at,
-         ],
-         [
-            'gridview_03', 'U12000003', 'Grid03', '', 'View', 'Mr.', self::CITIZEN_US_NO,
-            self::CITIZEN_OTHER_YES, self::VISA_F3, $created_at,
-         ],
-         [
-            'gridview_04', 'U12000004', 'Grid04', '', 'View', 'Mr.', self::CITIZEN_US_NO,
-            self::CITIZEN_OTHER_YES, self::VISA_F1, $created_at,
+            'adminusr', 'U00000012', 'Admin', 'S.', 'User', 'Mr.', Consts::TYPE_ITEM_CITIZEN_US_YES,
+            Consts::TYPE_ITEM_CITIZEN_OTHER_NA, Consts::TYPE_ITEM_VISA_NO, $created_at,
          ],
       ];
       

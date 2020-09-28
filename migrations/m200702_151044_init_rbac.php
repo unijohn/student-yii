@@ -2,6 +2,8 @@
 
 namespace app\migrations;
 
+use app\modules\Consts;
+
 /**
  * Class m200702_151044_init_rbac
  */
@@ -50,23 +52,23 @@ class m200702_151044_init_rbac extends BaseMigration
       
         $careerLevelAccess =
         [
-            self::CL_UGADID =>
+            Consts::CODE_ITEM_CAREERLEVEL_UGAD =>
             [
-                'id'           => self::CL_UGADID,
+                'id'           => Consts::CODE_ITEM_CAREERLEVEL_UGAD,
                 'name'         => '[UGAD]',
                 'key'          => '[UGAD]',
                 'description'  => 'Undergraduate Career Level',
             ],
-            self::CL_GRADID =>
+            Consts::CODE_ITEM_CAREERLEVEL_GRAD =>
             [
-                'id'           => self::CL_GRADID,
+                'id'           => Consts::CODE_ITEM_CAREERLEVEL_GRAD,
                 'name'         => '[GRAD]',
                 'key'          => '[GRAD]',
                 'description'  => 'Graduate Career Level',
             ],
-            self::CL_PHDID =>
+            Consts::CODE_ITEM_CAREERLEVEL_PHD =>
             [
-                'id'           => self::CL_PHDID,
+                'id'           => Consts::CODE_ITEM_CAREERLEVEL_PHD,
                 'name'         => '[PHD]',
                 'key'          => '[PHD]',
                 'description'  => 'Doctorate Career Level',
@@ -75,44 +77,44 @@ class m200702_151044_init_rbac extends BaseMigration
 
         $departmentAccess =
         [
-            self::DEPT_ACCT =>
+            Consts::CODE_ITEM_DEPT_SCHOOL_ACCT =>
             [
-                'id'              => self::DEPT_ACCT,
+                'id'              => Consts::CODE_ITEM_DEPT_SCHOOL_ACCT,
                 'key'             => '[ACCT]',
                 'name'            => '[ACCT]',
                 'description'     => 'Accounting Department',
             ],
-            self::DEPT_ECON =>
+            Consts::CODE_ITEM_DEPT_SCHOOL_ECON =>
             [
-                'id'              => self::DEPT_ECON,
+                'id'              => Consts::CODE_ITEM_DEPT_SCHOOL_ECON,
                 'key'             => '[ECON]',
                 'name'            => '[ECON]',
                 'description'     => 'Economics Department',
             ],
-            self::DEPT_FIN =>
+            Consts::CODE_ITEM_DEPT_SCHOOL_FIR =>
             [
-                'id'              => self::DEPT_FIN,
+                'id'              => Consts::CODE_ITEM_DEPT_SCHOOL_FIR,
                 'key'             => '[FIN]',
                 'name'            => '[FIN]',
                 'description'     => 'Finance Department',
             ],
-            self::DEPT_BIT =>
+            Consts::CODE_ITEM_DEPT_SCHOOL_BITM =>
             [
-                'id'              => self::DEPT_BIT,
+                'id'              => Consts::CODE_ITEM_DEPT_SCHOOL_BITM,
                 'key'             => '[BIT]',
                 'name'            => '[BIT]',
                 'description'     => 'BIT Department',
             ],
-            self::DEPT_MGMT =>
+            Consts::CODE_ITEM_DEPT_SCHOOL_MGMT =>
             [
-                'id'              => self::DEPT_MGMT,
+                'id'              => Consts::CODE_ITEM_DEPT_SCHOOL_MGMT,
                 'key'             => '[MGMT]',
                 'name'            => '[MGMT]',
                 'description'     => 'Management Department',
             ],
-            self::DEPT_MCSM =>
+            Consts::CODE_ITEM_DEPT_SCHOOL_MSCM =>
             [
-                'id'              => self::DEPT_MCSM,
+                'id'              => Consts::CODE_ITEM_DEPT_SCHOOL_MSCM,
                 'key'             => '[MCSM]',
                 'name'            => '[MCSM]',
                 'description'     => 'MCSM Department',
@@ -379,7 +381,7 @@ class m200702_151044_init_rbac extends BaseMigration
                     $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_ACCESS]['key'] . $featureAccess[self::FEATURE_PERMIT]['key'],
     
                     //    2:  Student Self Serve                . 1: Access                         . 1:  UGAD
-                    $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_ACCESS]['key'] . $careerLevelAccess[self::CL_UGADID]['key'],
+                    $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_ACCESS]['key'] . $careerLevelAccess[Consts::CODE_ITEM_CAREERLEVEL_UGAD]['key'],
                 ],
             ],
             self::ROLE_GRAD_STUDENT =>
@@ -394,7 +396,7 @@ class m200702_151044_init_rbac extends BaseMigration
                     $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_ACCESS]['key'] . $featureAccess[self::FEATURE_PERMIT]['key'],
                     
                     //    2:  Student Self Serve                . 1: Access                         . 2:  GRAD
-                    $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_ACCESS]['key'] . $careerLevelAccess[self::CL_GRADID]['key'],
+                    $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_ACCESS]['key'] . $careerLevelAccess[Consts::CODE_ITEM_CAREERLEVEL_GRAD]['key'],
                 ],
             ],
             self::ROLE_PHD_STUDENT =>
@@ -409,7 +411,7 @@ class m200702_151044_init_rbac extends BaseMigration
                     $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_ACCESS]['key'] . $featureAccess[self::FEATURE_PERMIT]['key'],
                     
                     //    2:  Student Self Serve                . 1: Access                         . 3:  PHD
-                    $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_ACCESS]['key'] . $careerLevelAccess[self::CL_PHDID]['key'],
+                    $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_ACCESS]['key'] . $careerLevelAccess[Consts::CODE_ITEM_CAREERLEVEL_PHD]['key'],
                 ],
             ],
          self::ROLE_UGAD_ADVISOR => [
@@ -422,13 +424,13 @@ class m200702_151044_init_rbac extends BaseMigration
                $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_ACCESS]['key'] . $featureAccess[self::FEATURE_PERMIT]['key'],
 
          //    2:  Student Self Serve                . 1: Access                         . 1:  UGAD
-               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_ACCESS]['key'] . $careerLevelAccess[self::CL_UGADID]['key'],
+               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_ACCESS]['key'] . $careerLevelAccess[Consts::CODE_ITEM_CAREERLEVEL_UGAD]['key'],
                       
          //    2:  Student Self Serve                . 2: Create                         . 1:  UGAD
-               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_CREATE]['key'] . $careerLevelAccess[self::CL_UGADID]['key'],
+               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_CREATE]['key'] . $careerLevelAccess[Consts::CODE_ITEM_CAREERLEVEL_UGAD]['key'],
                
          //    2:  Student Self Serve                . 4: Update                         . 1:  UGAD
-               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_UPDATE]['key'] . $careerLevelAccess[self::CL_UGADID]['key'],
+               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_UPDATE]['key'] . $careerLevelAccess[Consts::CODE_ITEM_CAREERLEVEL_UGAD]['key'],
             ],
          ],
          self::ROLE_GRAD_ADVISOR => [
@@ -441,13 +443,13 @@ class m200702_151044_init_rbac extends BaseMigration
                $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_ACCESS]['key'] . $featureAccess[self::FEATURE_PERMIT]['key'],
        
          //    2:  Student Self Serve                . 1:  Access                        . 2:  GRAD
-               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_ACCESS]['key'] . $careerLevelAccess[self::CL_GRADID]['key'],
+               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_ACCESS]['key'] . $careerLevelAccess[Consts::CODE_ITEM_CAREERLEVEL_GRAD]['key'],
                
          //    2:  Student Self Serve                . 2: Create                         . 2:  GRAD
-               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_CREATE]['key'] . $careerLevelAccess[self::CL_GRADID]['key'],
+               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_CREATE]['key'] . $careerLevelAccess[Consts::CODE_ITEM_CAREERLEVEL_GRAD]['key'],
                
          //    2:  Student Self Serve                . 4: Update                         . 2:  GRAD
-               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_UPDATE]['key'] . $careerLevelAccess[self::CL_GRADID]['key'],
+               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_UPDATE]['key'] . $careerLevelAccess[Consts::CODE_ITEM_CAREERLEVEL_GRAD]['key'],
             ],
          ],
          self::ROLE_PHD_ADVISOR => [
@@ -460,13 +462,13 @@ class m200702_151044_init_rbac extends BaseMigration
                $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_ACCESS]['key'] . $featureAccess[self::FEATURE_PERMIT]['key'],
        
          //    2:  Student Self Serve                . 1:  Access                        . 3:  PHD
-               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_ACCESS]['key'] . $careerLevelAccess[self::CL_PHDID]['key'],
+               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_ACCESS]['key'] . $careerLevelAccess[Consts::CODE_ITEM_CAREERLEVEL_PHD]['key'],
                
          //    2:  Student Self Serve                . 2: Create                         . 3:  PHD
-               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_CREATE]['key'] . $careerLevelAccess[self::CL_PHDID]['key'],
+               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_CREATE]['key'] . $careerLevelAccess[Consts::CODE_ITEM_CAREERLEVEL_PHD]['key'],
                
          //    2:  Student Self Serve                . 4: Update                         . 3:  PHD
-               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_UPDATE]['key'] . $careerLevelAccess[self::CL_PHDID]['key'],
+               $systemsAccess[self::SYS_STUDENTID]['key'] . $actionAccess[self::ACTION_UPDATE]['key'] . $careerLevelAccess[Consts::CODE_ITEM_CAREERLEVEL_PHD]['key'],
             ],
          ],
       ];

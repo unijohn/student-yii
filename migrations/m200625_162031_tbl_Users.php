@@ -2,6 +2,8 @@
 
 namespace app\migrations;
 
+use app\modules\Consts;
+
 /**
  * Class m200625_162031_tbl_Users
  *
@@ -63,49 +65,49 @@ class m200625_162031_tbl_Users extends BaseMigration
         $rows = [
          [
             'ugadstdt',
-            self::STATUS_ACTIVE, self::STATUS_ACTIVE, self::STATUS_ACTIVE, self::STATUS_ACTIVE,
+            Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48),
             \Yii::$app->security->generateRandomString(32),
             $created_at,
          ],
          [
             'gradstdt',
-            self::STATUS_ACTIVE, self::STATUS_ACTIVE, self::STATUS_ACTIVE, self::STATUS_ACTIVE,
+            Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48),
             \Yii::$app->security->generateRandomString(32),
             $created_at,
          ],
          [
             'ugadadvr',
-            self::STATUS_ACTIVE, self::STATUS_ACTIVE, self::STATUS_ACTIVE, self::STATUS_ACTIVE,
+            Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48),
             \Yii::$app->security->generateRandomString(32),
             $created_at,
          ],
          [
             'ugadadmn',
-            self::STATUS_ACTIVE, self::STATUS_ACTIVE, self::STATUS_ACTIVE, self::STATUS_ACTIVE,
+            Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48),
             \Yii::$app->security->generateRandomString(32),
             $created_at,
          ],
          [
             'gradadvr',
-            self::STATUS_ACTIVE, self::STATUS_ACTIVE, self::STATUS_ACTIVE, self::STATUS_ACTIVE,
+            Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48),
             \Yii::$app->security->generateRandomString(32),
             $created_at,
          ],
          [
             'gradadmn',
-            self::STATUS_ACTIVE, self::STATUS_ACTIVE, self::STATUS_ACTIVE, self::STATUS_ACTIVE,
+            Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48),
             \Yii::$app->security->generateRandomString(32),
             $created_at,
          ],
          [
             'adminusr',
-            self::STATUS_ACTIVE, self::STATUS_ACTIVE, self::STATUS_ACTIVE, self::STATUS_ACTIVE,
+            Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_ACTIVE,
             \Yii::$app->security->generateRandomString(48),
             \Yii::$app->security->generateRandomString(32),
             $created_at,

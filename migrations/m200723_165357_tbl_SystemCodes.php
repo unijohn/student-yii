@@ -2,6 +2,8 @@
 
 namespace app\migrations;
 
+use app\modules\Consts;
+
 /**
  * Class m200723_165357_tbl_PermitCodes
  */
@@ -77,121 +79,115 @@ class m200723_165357_tbl_SystemCodes extends BaseMigration
         $permitRows =
         [
              [
-                self::TYPE_PERMIT, 'Permits', self::TYPE_PROMPT_DEFAULT,    'PERMIT-PROMPT',    'Select Permit Response',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_WORKDESK_DATA,
+                Consts::CODE_ITEM_PERMITS, 'Permits', Consts::TYPE_PROMPT_DEFAULT,    'PERMIT-PROMPT',    'Select Permit Response',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_WORKDESK_DATA,
                 1,
                 $created_at,
              ],
              [
-                self::TYPE_PERMIT, 'Permits', self::TYPE_PERMIT_OPEN_REQ,   'PERMIT-OPEN',      'Open Permit Request',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_WORKDESK_DATA,
+                Consts::CODE_ITEM_PERMITS, 'Permits', Consts::CODE_ITEM_PERMIT_OPEN_REQ,   'PERMIT-OPEN',      'Open Permit Request',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_WORKDESK_DATA,
                 2,
                 $created_at,
              ],
              [
-                self::TYPE_PERMIT, 'Permits', self::TYPE_PERMIT_ISSUED,     'PERMIT-ISSUED',    'Closed: Issued Permit',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_WORKDESK_DATA,
+                Consts::CODE_ITEM_PERMITS, 'Permits', Consts::CODE_ITEM_PERMIT_ISSUED,     'PERMIT-ISSUED',    'Closed: Issued Permit',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_WORKDESK_DATA,
                 3,
                 $created_at,
              ],
              [
-                self::TYPE_PERMIT, 'Permits', self::TYPE_PERMIT_DUPLICATE, 'PERMIT-DUP-REQ',    'Closed: Duplicate Request',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_WORKDESK_DATA,
+                Consts::CODE_ITEM_PERMITS, 'Permits', Consts::CODE_ITEM_PERMIT_DUPLICATE, 'PERMIT-DUP-REQ',    'Closed: Duplicate Request',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_WORKDESK_DATA,
                 4,
                 $created_at,
              ],
         ];
   
-      
-        $departmentRows =
-        [
-             [
-                self::TYPE_DEPARTMENT, 'Departments',   self::TYPE_PROMPT_DEFAULT,    'DEPT-PROMPT',    'Select Department',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_WORKDESK_DATA,
-                1,
-                $created_at,
-             ],
-             [
-                self::TYPE_DEPARTMENT, 'Departments',   self::TYPE_DEPARTMENT_NOT_SET,  'DEPT-NA',  'Dept Not Set',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_WORKDESK_DATA,
-                2,
-                $created_at,
-             ],
-             [
-                self::TYPE_DEPARTMENT, 'Departments',   self::TYPE_DEPARTMENT_ACCT,     'ACCT',     'Accounting',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_WORKDESK_DATA,
-                3,
-                $created_at,
-             ],
-             [
-                self::TYPE_DEPARTMENT, 'Departments',   self::TYPE_DEPARTMENT_BITM,     'BITM',     'Bit_Info_Tech',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_WORKDESK_DATA,
-                4,
-                $created_at,
-             ],
-             [
-                self::TYPE_DEPARTMENT, 'Departments',   self::TYPE_DEPARTMENT_ECON,     'ECON',     'Economics',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_WORKDESK_DATA,
-                5,
-                $created_at,
-             ],
-             [
-                self::TYPE_DEPARTMENT, 'Departments',   self::TYPE_DEPARTMENT_FIR,      'FIR',      'Finance',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_WORKDESK_DATA,
-                6,
-                $created_at,
-             ],
-             [
-                self::TYPE_DEPARTMENT, 'Departments',   self::TYPE_DEPARTMENT_MSCM,     'MCSM',     'Mktg_Supply_Chain',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_WORKDESK_DATA,
-                7,
-                $created_at,
-             ],
-             [
-                self::TYPE_DEPARTMENT, 'Departments', self::TYPE_DEPARTMENT_MGMT,       'MGMT',     'Management',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_WORKDESK_DATA,
-                8,
-                $created_at,
-             ],
-        ];
-
+        /*
+                $departmentRows =
+                [
+                     [
+                        self::TYPE_DEPARTMENT, 'Departments',   Consts::TYPE_PROMPT_DEFAULT,    'DEPT-PROMPT',    'Select Department',
+                        Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_WORKDESK_DATA,
+                        1,
+                        $created_at,
+                     ],
+                     [
+                        self::TYPE_DEPARTMENT, 'Departments',   self::TYPE_DEPARTMENT_NOT_SET,  'DEPT-NA',  'Dept Not Set',
+                        Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_WORKDESK_DATA,
+                        2,
+                        $created_at,
+                     ],
+                     [
+                        self::TYPE_DEPARTMENT, 'Departments',   self::TYPE_DEPARTMENT_ACCT,     'ACCT',     'Accounting',
+                        Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_WORKDESK_DATA,
+                        3,
+                        $created_at,
+                     ],
+                     [
+                        self::TYPE_DEPARTMENT, 'Departments',   self::TYPE_DEPARTMENT_BITM,     'BITM',     'Bit_Info_Tech',
+                        Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_WORKDESK_DATA,
+                        4,
+                        $created_at,
+                     ],
+                     [
+                        self::TYPE_DEPARTMENT, 'Departments',   self::TYPE_DEPARTMENT_ECON,     'ECON',     'Economics',
+                        Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_WORKDESK_DATA,
+                        5,
+                        $created_at,
+                     ],
+                     [
+                        self::TYPE_DEPARTMENT, 'Departments',   self::TYPE_DEPARTMENT_FIR,      'FIR',      'Finance',
+                        Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_WORKDESK_DATA,
+                        6,
+                        $created_at,
+                     ],
+                     [
+                        self::TYPE_DEPARTMENT, 'Departments',   self::TYPE_DEPARTMENT_MSCM,     'MCSM',     'Mktg_Supply_Chain',
+                        Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_WORKDESK_DATA,
+                        7,
+                        $created_at,
+                     ],
+                     [
+                        self::TYPE_DEPARTMENT, 'Departments', self::TYPE_DEPARTMENT_MGMT,       'MGMT',     'Management',
+                        Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_WORKDESK_DATA,
+                        8,
+                        $created_at,
+                     ],
+                ];
+         */
 
         $careerLevelRows =
         [
              [
-                self::TYPE_CAREERLEVEL, 'Career-Levels',   self::TYPE_PROMPT_DEFAULT,       'CL-PROMPT',    'Select Department',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_WORKDESK_DATA,
+                Consts::CODE_ITEM_CAREERLEVELS, 'Career-Levels',    Consts::TYPE_PROMPT_DEFAULT,            'CL-PROMPT',    'Select Department',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE,      Consts::TYPE_ITEM_SOURCE_WORKDESK_DATA,
                 1,
                 $created_at,
              ],
              [
-                self::TYPE_CAREERLEVEL, 'Career-Levels',    self::TYPE_CAREERLEVEL_NOT_SET, 'CL-NA',        'Career Level Not Set',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_WORKDESK_DATA,
+                Consts::CODE_ITEM_CAREERLEVELS, 'Career-Levels',    Consts::CODE_ITEM_CAREERLEVEL_NOT_SET,  'CL-NA',        'Career Level Not Set',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE,      Consts::TYPE_ITEM_SOURCE_WORKDESK_DATA,
                 2,
                 $created_at,
              ],
              [
-                self::TYPE_CAREERLEVEL, 'Career-Levels',    self::TYPE_CAREERLEVEL_UGAD,    'UGAD',         'Undergraduate',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_WORKDESK_DATA,
+                Consts::CODE_ITEM_CAREERLEVELS, 'Career-Levels',    Consts::CODE_ITEM_CAREERLEVEL_UGAD,     'UGAD',         'Undergraduate',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE,      Consts::TYPE_ITEM_SOURCE_WORKDESK_DATA,
                 3,
                 $created_at,
              ],
              [
-                self::TYPE_CAREERLEVEL, 'Career-Levels',    self::TYPE_CAREERLEVEL_GRAD,    'GRAD',         'Graduate',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_WORKDESK_DATA,
+                Consts::CODE_ITEM_CAREERLEVELS, 'Career-Levels',    Consts::CODE_ITEM_CAREERLEVEL_GRAD,     'GRAD',         'Graduate',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE,      Consts::TYPE_ITEM_SOURCE_WORKDESK_DATA,
                 4,
                 $created_at,
              ],
              [
-                self::TYPE_CAREERLEVEL, 'Career-Levels',    self::TYPE_CAREERLEVEL_PHD,     'PHD',          'Doctorate',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_WORKDESK_DATA,
+                Consts::CODE_ITEM_CAREERLEVELS, 'Career-Levels',    Consts::CODE_ITEM_CAREERLEVEL_PHD,       'PHD',         'Doctorate',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE,      Consts::TYPE_ITEM_SOURCE_WORKDESK_DATA,
                 5,
-                $created_at,
-             ],
-             [
-                self::TYPE_CAREERLEVEL, 'Career-Levels',    self::TYPE_CAREERLEVEL_CERT,    'CERT',         'Certificate',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_WORKDESK_DATA,
-                6,
                 $created_at,
              ],
         ];
@@ -200,56 +196,56 @@ class m200723_165357_tbl_SystemCodes extends BaseMigration
         $mastersRows =
         [
              [
-                self::TYPE_MASTERS, 'Masters',   self::TYPE_PROMPT_DEFAULT, 'MSTR-PROMPT',    'Select Masters',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_WORKDESK_DATA,
+                Consts::CODE_ITEM_MASTERS, 'Masters',   Consts::TYPE_PROMPT_DEFAULT,        'MSTR-PROMPT',  'Select Masters',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_WORKDESK_DATA,
                 1,
                 $created_at,
              ],
              [
-                self::TYPE_MASTERS, 'Masters', self::TYPE_MASTERS_NOT_SET,  'MSTR-NA',  'Masters Not Set',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_WORKDESK_DATA,
+                Consts::CODE_ITEM_MASTERS, 'Masters',   Consts::CODE_ITEM_MASTERS_NOT_SET,  'MSTR-NA',      'Masters Not Set',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_WORKDESK_DATA,
                 2,
                 $created_at,
              ],
              [
-                self::TYPE_MASTERS, 'Masters', self::TYPE_MASTERS_MA_ECON,  'MAECON',   'MA_ECON',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_WORKDESK_DATA,
+                Consts::CODE_ITEM_MASTERS, 'Masters',   Consts::CODE_ITEM_MASTERS_MA_ECON,  'MAECON',       'MA_ECON',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_WORKDESK_DATA,
                 3,
                 $created_at,
              ],
              [
-                self::TYPE_MASTERS, 'Masters', self::TYPE_MASTERS_MS_ACCT,  'MSACCT',   'MS_ACCT',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_WORKDESK_DATA,
+                Consts::CODE_ITEM_MASTERS, 'Masters',   Consts::CODE_ITEM_MASTERS_MS_ACCT,  'MSACCT',       'MS_ACCT',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_WORKDESK_DATA,
                 4,
                 $created_at,
              ],
              [
-                self::TYPE_MASTERS, 'Masters', self::TYPE_MASTERS_MS_IS,    'MSIS',     'MS_IS',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_WORKDESK_DATA,
+                Consts::CODE_ITEM_MASTERS, 'Masters',   Consts::CODE_ITEM_MASTERS_MS_IS,    'MSIS',         'MS_IS',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_WORKDESK_DATA,
                 5,
                 $created_at,
              ],
              [
-                self::TYPE_MASTERS, 'Masters', self::TYPE_MASTERS_MSBA_FIR, 'MSBAFIR',  'MSBA_FIR',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_WORKDESK_DATA,
+                Consts::CODE_ITEM_MASTERS, 'Masters',   Consts::CODE_ITEM_MASTERS_MSBA_FIR, 'MSBAFIR',      'MSBA_FIR',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_WORKDESK_DATA,
                 6,
                 $created_at,
              ],
              [
-                self::TYPE_MASTERS, 'Masters', self::TYPE_MASTERS_EMBA, 'EMBA',         'EXEC_MBA',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_WORKDESK_DATA,
+                Consts::CODE_ITEM_MASTERS, 'Masters',   Consts::CODE_ITEM_MASTERS_EMBA,     'EMBA',         'EXEC_MBA',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_WORKDESK_DATA,
                 7,
                 $created_at,
              ],
              [
-                self::TYPE_MASTERS, 'Masters', self::TYPE_MASTERS_PMBA, 'PMBA',         'PROF_MBA',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_WORKDESK_DATA,
+                Consts::CODE_ITEM_MASTERS, 'Masters', Consts::CODE_ITEM_MASTERS_PMBA,       'PMBA',         'PROF_MBA',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_WORKDESK_DATA,
                 8,
                 $created_at,
              ],
              [
-                self::TYPE_MASTERS, 'Masters', self::TYPE_MASTERS_OMBA, 'OMBA',         'ONLINE_MBA',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_WORKDESK_DATA,
+                Consts::CODE_ITEM_MASTERS, 'Masters', Consts::CODE_ITEM_MASTERS_OMBA,       'OMBA',         'ONLINE_MBA',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_WORKDESK_DATA,
                 9,
                 $created_at,
              ],
@@ -259,44 +255,44 @@ class m200723_165357_tbl_SystemCodes extends BaseMigration
         $facultyRankRows =
         [
              [
-                self::TYPE_FACULTY_RANK, 'Faculty-Rank', self::TYPE_PROMPT_DEFAULT,         'FACRANK-PROMPT',   'Select Faculty Rank',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_WORKDESK_DATA,
+                Consts::CODE_ITEM_FACULTYRANK, 'Faculty-Rank', Consts::TYPE_PROMPT_DEFAULT,             'FACRANK-PROMPT',   'Select Faculty Rank',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_WORKDESK_DATA,
                 1,
                 $created_at,
              ],
              [
-                self::TYPE_FACULTY_RANK, 'Faculty-Rank', self::TYPE_FACULTY_RANK_NOT_SET,   'FACRANK-NA',       'Faculty Rank Not Set',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_WORKDESK_DATA,
+                Consts::CODE_ITEM_FACULTYRANK, 'Faculty-Rank', Consts::CODE_ITEM_FACULTY_RANK_NOT_SET, 'FACRANK-NA',       'Faculty Rank Not Set',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_WORKDESK_DATA,
                 2,
                 $created_at,
              ],
              [
-                self::TYPE_FACULTY_RANK, 'Faculty-Rank', self::TYPE_FACULTY_RANK_01,        '01',               'Professor [Banner]',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_BANNER_DATA,
+                Consts::CODE_ITEM_FACULTYRANK, 'Faculty-Rank', Consts::CODE_ITEM_FACULTY_RANK_01,      '01',               'Professor [Banner]',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_BANNER_DATA,
                 3,
                 $created_at,
              ],
              [
-                self::TYPE_FACULTY_RANK, 'Faculty-Rank', self::TYPE_FACULTY_RANK_02,        '02',               'Associate Professor [Banner]',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_BANNER_DATA,
+                Consts::CODE_ITEM_FACULTYRANK, 'Faculty-Rank', Consts::CODE_ITEM_FACULTY_RANK_02,      '02',               'Associate Professor [Banner]',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_BANNER_DATA,
                 4,
                 $created_at,
              ],
              [
-                self::TYPE_FACULTY_RANK, 'Faculty-Rank', self::TYPE_FACULTY_RANK_03,        '03',               'Assistant Professor [Banner]',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_BANNER_DATA,
+                Consts::CODE_ITEM_FACULTYRANK, 'Faculty-Rank', Consts::CODE_ITEM_FACULTY_RANK_03,      '03',               'Assistant Professor [Banner]',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_BANNER_DATA,
                 5,
                 $created_at,
              ],
              [
-                self::TYPE_FACULTY_RANK, 'Faculty-Rank', self::TYPE_FACULTY_RANK_NOT_SET,   'UA',               'Unavailable [Banner]',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_BANNER_DATA,
+                Consts::CODE_ITEM_FACULTYRANK, 'Faculty-Rank', Consts::CODE_ITEM_FACULTY_RANK_NOT_SET, 'UA',               'Unavailable [Banner]',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_BANNER_DATA,
                 6,
                 $created_at,
              ],
              [
-                self::TYPE_FACULTY_RANK, 'Faculty-Rank', self::TYPE_FACULTY_RANK_09,        '09',               'Non-standard academic ranking [Banner]',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_BANNER_DATA,
+                Consts::CODE_ITEM_FACULTYRANK, 'Faculty-Rank', Consts::CODE_ITEM_FACULTY_RANK_09,      '09',               'Non-standard academic ranking [Banner]',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_BANNER_DATA,
                 7,
                 $created_at,
              ],
@@ -306,44 +302,44 @@ class m200723_165357_tbl_SystemCodes extends BaseMigration
         $employeeClassRows =
         [
              [
-                self::TYPE_EMPLOYEE_CLASS, 'Employee-Class', self::TYPE_PROMPT_DEFAULT,         'EMPCLASS-PROMPT',  'Select Employee Class',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_WORKDESK_DATA,
+                Consts::CODE_ITEM_EMPLOYEECLASS, 'Employee-Class', Consts::TYPE_PROMPT_DEFAULT,             'EMPCLASS-PROMPT',  'Select Employee Class',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_WORKDESK_DATA,
                 1,
                 $created_at,
              ],
              [
-                self::TYPE_EMPLOYEE_CLASS, 'Employee-Class', self::TYPE_EMPLOYEE_CLASS_NOT_SET, 'EMPCLASS-NA',      'Employee Class Not Set',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_WORKDESK_DATA,
+                Consts::CODE_ITEM_EMPLOYEECLASS, 'Employee-Class', Consts::CODE_ITEM_EMPLOYEE_CLASS_NOT_SET, 'EMPCLASS-NA',     'Employee Class Not Set',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_WORKDESK_DATA,
                 2,
                 $created_at,
              ],
              [
-                self::TYPE_EMPLOYEE_CLASS, 'Employee-Class', self::TYPE_EMPLOYEE_CLASS_AE,      'AE',   'Administrative Executive [Banner]',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_BANNER_DATA,
+                Consts::CODE_ITEM_EMPLOYEECLASS, 'Employee-Class', Consts::CODE_ITEM_EMPLOYEE_CLASS_AE,      'AE',   'Administrative Executive [Banner]',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_BANNER_DATA,
                 3,
                 $created_at,
              ],
              [
-                self::TYPE_EMPLOYEE_CLASS, 'Employee-Class', self::TYPE_EMPLOYEE_CLASS_AD,      'AD',   'Administrative Professional [Banner]',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_BANNER_DATA,
+                Consts::CODE_ITEM_EMPLOYEECLASS, 'Employee-Class', Consts::CODE_ITEM_EMPLOYEE_CLASS_AD,      'AD',   'Administrative Professional [Banner]',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_BANNER_DATA,
                 4,
                 $created_at,
              ],
              [
-                self::TYPE_EMPLOYEE_CLASS, 'Employee-Class', self::TYPE_EMPLOYEE_CLASS_F9,      'F9',   '9/10 Month Faculty [Banner]',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_BANNER_DATA,
+                Consts::CODE_ITEM_EMPLOYEECLASS, 'Employee-Class', Consts::CODE_ITEM_EMPLOYEE_CLASS_F9,      'F9',   '9/10 Month Faculty [Banner]',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_BANNER_DATA,
                 5,
                 $created_at,
              ],
              [
-                self::TYPE_EMPLOYEE_CLASS, 'Employee-Class', self::TYPE_EMPLOYEE_CLASS_FA,      'FA',   'Faculty 12 Month [Banner]',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_BANNER_DATA,
+                Consts::CODE_ITEM_EMPLOYEECLASS, 'Employee-Class', Consts::CODE_ITEM_EMPLOYEE_CLASS_FA,      'FA',   'Faculty 12 Month [Banner]',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_BANNER_DATA,
                 6,
                 $created_at,
              ],
              [
-                self::TYPE_EMPLOYEE_CLASS, 'Employee-Class', self::TYPE_EMPLOYEE_CLASS_CL,      'CL',   'Clerical / Support Staff [Banner]',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_BANNER_DATA,
+                Consts::CODE_ITEM_EMPLOYEECLASS, 'Employee-Class', Consts::CODE_ITEM_EMPLOYEE_CLASS_CL,      'CL',   'Clerical / Support Staff [Banner]',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_BANNER_DATA,
                 7,
                 $created_at,
              ],
@@ -353,80 +349,80 @@ class m200723_165357_tbl_SystemCodes extends BaseMigration
         $schoolDeptLevelRows =
         [
              [
-                self::TYPE_SCHOOL_DEPT, 'Departments-School', self::TYPE_PROMPT_DEFAULT,                'SCHDEPT-PROMPT',   'Select School Department',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_WORKDESK_DATA,
+                Consts::CODE_ITEM_DEPT_SCHOOL, 'Departments-School', Consts::TYPE_PROMPT_DEFAULT,                   'SCHDEPT-PROMPT',   'Select School Department',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_WORKDESK_DATA,
                 1,
                 $created_at,
              ],
              [
-                self::TYPE_SCHOOL_DEPT, 'Departments-School',  self::TYPE_SCHOOL_DEPT_NOT_SET,          'SCHDEPT-NA',       'School Dept Not Set',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_WORKDESK_DATA,
+                Consts::CODE_ITEM_DEPT_SCHOOL, 'Departments-School',  Consts::CODE_ITEM_DEPT_SCHOOL_NOT_SET,        'SCHDEPT-NA',       'School Dept Not Set',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_WORKDESK_DATA,
                 2,
                 $created_at,
              ],
              [
-                self::TYPE_SCHOOL_DEPT, 'Departments-School', self::TYPE_SCHOOL_DEPT_PROVOST,           'DEPT-PROVOST',     'Provost Office [Banner]',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_BANNER_DATA,
+                Consts::CODE_ITEM_DEPT_SCHOOL, 'Departments-School', Consts::CODE_ITEM_DEPT_SCHOOL_PROVOST,         'DEPT-PROVOST',     'Provost Office [Banner]',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_BANNER_DATA,
                 3,
                 $created_at,
              ],
              [
-                self::TYPE_SCHOOL_DEPT, 'Departments-School', self::TYPE_SCHOOL_DEPT_FCBE_ACAD_PROG,    'DEPT-FCBEPROG',   'FCBE Academic Program [Banner]',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_BANNER_DATA,
+                Consts::CODE_ITEM_DEPT_SCHOOL, 'Departments-School', Consts::CODE_ITEM_DEPT_SCHOOL_FCBE_ACAD_PROG,  'DEPT-FCBEPROG',   'FCBE Academic Program [Banner]',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_BANNER_DATA,
                 4,
                 $created_at,
              ],
              [
-                self::TYPE_SCHOOL_DEPT, 'Departments-School', self::TYPE_SCHOOL_DEPT_COL_FCBE,          'DEPT-COLFCBE',     'College of Business Economics [Banner]',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_BANNER_DATA,
+                Consts::CODE_ITEM_DEPT_SCHOOL, 'Departments-School', Consts::CODE_ITEM_DEPT_SCHOOL_COL_FCBE,        'DEPT-COLFCBE',     'College of Business Economics [Banner]',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_BANNER_DATA,
                 5,
                 $created_at,
              ],
              [
-                self::TYPE_SCHOOL_DEPT, 'Departments-School', self::TYPE_SCHOOL_DEPT_CIO_ITS,           'DEPT-CIOITS',      'CIO Information Technology Services [Banner]',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_BANNER_DATA,
+                Consts::CODE_ITEM_DEPT_SCHOOL, 'Departments-School', Consts::CODE_ITEM_DEPT_SCHOOL_CIO_ITS,         'DEPT-CIOITS',      'CIO Information Technology Services [Banner]',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_BANNER_DATA,
                 6,
                 $created_at,
              ],
              [
-                self::TYPE_SCHOOL_DEPT, 'Departments-School', self::TYPE_SCHOOL_DEPT_FCBE_ACAD_ADMIN,   'DEPT-FCBEADM',     'FCBE Academic Administration [Banner]',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_BANNER_DATA,
+                Consts::CODE_ITEM_DEPT_SCHOOL, 'Departments-School', Consts::CODE_ITEM_DEPT_SCHOOL_FCBE_ACAD_ADMIN, 'DEPT-FCBEADM',     'FCBE Academic Administration [Banner]',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_BANNER_DATA,
                 7,
                 $created_at,
              ],
              [
-                self::TYPE_SCHOOL_DEPT, 'Departments-School', self::TYPE_SCHOOL_DEPT_MSCM,              'DEPT-FCBEMSCM',    'Marketing Supply Management [Banner]',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_BANNER_DATA,
+                Consts::CODE_ITEM_DEPT_SCHOOL, 'Departments-School', Consts::CODE_ITEM_DEPT_SCHOOL_MSCM,            'DEPT-FCBEMSCM',    'Marketing Supply Management [Banner]',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_BANNER_DATA,
                 8,
                 $created_at,
              ],
              [
-                self::TYPE_SCHOOL_DEPT, 'Departments-School', self::TYPE_SCHOOL_DEPT_ECON,              'DEPT-FCBEECON',    'Economics [Banner]',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_BANNER_DATA,
+                Consts::CODE_ITEM_DEPT_SCHOOL, 'Departments-School', Consts::CODE_ITEM_DEPT_SCHOOL_ECON,            'DEPT-FCBEECON',    'Economics [Banner]',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_BANNER_DATA,
                 9,
                 $created_at,
              ],
              [
-                self::TYPE_SCHOOL_DEPT, 'Departments-School', self::TYPE_SCHOOL_DEPT_FIR,               'DEPT-FCBEFIR',     'Finance Insurance Real Estate [Banner]',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_BANNER_DATA,
+                Consts::CODE_ITEM_DEPT_SCHOOL, 'Departments-School', Consts::CODE_ITEM_DEPT_SCHOOL_FIR,             'DEPT-FCBEFIR',     'Finance Insurance Real Estate [Banner]',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_BANNER_DATA,
                 10,
                 $created_at,
              ],
              [
-                self::TYPE_SCHOOL_DEPT, 'Departments-School', self::TYPE_SCHOOL_DEPT_BITM,              'DEPT-FCBEBITM',    'Business Information and Technology [Banner]',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_BANNER_DATA,
+                Consts::CODE_ITEM_DEPT_SCHOOL, 'Departments-School', Consts::CODE_ITEM_DEPT_SCHOOL_BITM,            'DEPT-FCBEBITM',    'Business Information and Technology [Banner]',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_BANNER_DATA,
                 11,
                 $created_at,
              ],
              [
-                self::TYPE_SCHOOL_DEPT, 'Departments-School', self::TYPE_SCHOOL_DEPT_MGMT,              'DEPT-FCBEMGMT',    'Management [Banner]',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_BANNER_DATA,
+                Consts::CODE_ITEM_DEPT_SCHOOL, 'Departments-School', Consts::CODE_ITEM_DEPT_SCHOOL_MGMT,            'DEPT-FCBEMGMT',    'Management [Banner]',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_BANNER_DATA,
                 12,
                 $created_at,
              ],
              [
-                self::TYPE_SCHOOL_DEPT, 'Departments-School', self::TYPE_SCHOOL_DEPT_ACCT,              'DEPT-FCBEACCT',    'School of Accountancy [Banner]',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_BANNER_DATA,
+                Consts::CODE_ITEM_DEPT_SCHOOL, 'Departments-School', Consts::CODE_ITEM_DEPT_SCHOOL_ACCT,            'DEPT-FCBEACCT',    'School of Accountancy [Banner]',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_BANNER_DATA,
                 13,
                 $created_at,
              ],
@@ -436,32 +432,32 @@ class m200723_165357_tbl_SystemCodes extends BaseMigration
         $universityDeptLevelRows =
         [
              [
-                self::TYPE_UNIVERSITY_DEPT, 'Departments-University', self::TYPE_PROMPT_DEFAULT,                'UNIDEPT-PROMPT',   'Select University Department',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_WORKDESK_DATA,
+                Consts::CODE_ITEM_DEPT_UNIVERSITY, 'Departments-University', Consts::TYPE_PROMPT_DEFAULT,                   'UNIDEPT-PROMPT',   'Select University Department',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_WORKDESK_DATA,
                 1,
                 $created_at,
              ],
              [
-                self::TYPE_UNIVERSITY_DEPT, 'Departments-University', self::TYPE_UNIVERSITY_DEPT_NOT_SET,       'UNIDEPT-NA',       'University Dept Not Set',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_WORKDESK_DATA,
+                Consts::CODE_ITEM_DEPT_UNIVERSITY, 'Departments-University', Consts::CODE_ITEM_DEPT_UNIVERSITY_NOT_SET,     'UNIDEPT-NA',       'University Dept Not Set',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_WORKDESK_DATA,
                 2,
                 $created_at,
              ],
              [
-                self::TYPE_UNIVERSITY_DEPT, 'Departments-University', self::TYPE_UNIVERSITY_DEPT_ACAD_AFFAIR,   'UDEPT-ACADAFF',    'Academic Affairs [Banner]',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_BANNER_DATA,
+                Consts::CODE_ITEM_DEPT_UNIVERSITY, 'Departments-University', Consts::CODE_ITEM_DEPT_UNIVERSITY_ACAD_AFFAIR, 'UDEPT-ACADAFF',    'Academic Affairs [Banner]',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_BANNER_DATA,
                 3,
                 $created_at,
              ],
              [
-                self::TYPE_UNIVERSITY_DEPT, 'Departments-University', self::TYPE_UNIVERSITY_DEPT_ITS,           'UDEPT-ITS',        'Information Technology Services [Banner]',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_BANNER_DATA,
+                Consts::CODE_ITEM_DEPT_UNIVERSITY, 'Departments-University', Consts::CODE_ITEM_DEPT_UNIVERSITY_ITS,         'UDEPT-ITS',        'Information Technology Services [Banner]',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_BANNER_DATA,
                 4,
                 $created_at,
              ],
              [
-                self::TYPE_UNIVERSITY_DEPT, 'Departments-University', self::TYPE_UNIVERSITY_DEPT_COL_FCBE,      'UDEPT-COLFCBE',    'College of Business Economics [Banner]',
-                self::STATUS_ACTIVE, self::STATUS_VISIBLE, self::STATUS_BANNER_DATA,
+                Consts::CODE_ITEM_DEPT_UNIVERSITY, 'Departments-University', Consts::CODE_ITEM_DEPT_UNIVERSITY_COL_FCBE,    'UDEPT-COLFCBE',    'College of Business Economics [Banner]',
+                Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, Consts::TYPE_ITEM_SOURCE_BANNER_DATA,
                 5,
                 $created_at,
              ],
@@ -469,7 +465,7 @@ class m200723_165357_tbl_SystemCodes extends BaseMigration
 
 
         $this->batchInsert(self::getTblSystemCodesName(), $codeColumns, $permitRows);
-        $this->batchInsert(self::getTblSystemCodesName(), $codeColumns, $departmentRows);
+//        $this->batchInsert(self::getTblSystemCodesName(), $codeColumns, $departmentRows);
         $this->batchInsert(self::getTblSystemCodesName(), $codeColumns, $careerLevelRows);
         $this->batchInsert(self::getTblSystemCodesName(), $codeColumns, $mastersRows);
         $this->batchInsert(self::getTblSystemCodesName(), $codeColumns, $facultyRankRows);
