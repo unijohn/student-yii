@@ -13,7 +13,7 @@ use yii\rbac\DbManager;
 use yii\web\Controller;
 use yii\web\Response;
 
-use app\controllers\BaseController;
+//use app\controllers\BaseController;
 
 use app\models\BaseModel;
 use app\models\Courses;
@@ -67,10 +67,7 @@ class CoursesController extends BaseController
             ->limit(1)->one();
             
             $this->_tagsModel          = CoursesCodesChild::findTagsById($this->_data['id']);
-            $this->_coursesChildModel  = SystemCodes::findUnassignedTagOptionsForCourses($this->_data['id']);
-         
-//         $this->debug( $this->_tagsModel, false );
-//         $this->debug( $this->_coursesChildModel, true );
+            $this->_coursesChildModel  = SystemCodes::findUnassignedTagOptionsForCourses($this->_data['id'], true, false);
         }
 
         $this->_data['filterForm']['subject_area']      = ArrayHelper::getValue($this->_request->get(), 'Courses.subject_area', '');
@@ -157,9 +154,6 @@ class CoursesController extends BaseController
         $tableNm = Courses::tableName();
       
         $params  = [];
-      
-//      $params[':table_name']  = Courses::tableName();
-//      $params[':id']          = 1;
 
         $sql  = "SELECT  id, subject_area, course_number, section_number, is_active, is_visible, created_at, updated_at " ;
         $sql .= "FROM " . $tableNm . " WHERE length(id) > 0 ";
@@ -259,11 +253,11 @@ class CoursesController extends BaseController
 
 
     /**
-     * Displays listing of all users in the system.
+     *  Centralized render('courses-listing') call
      *
-     * @return string
-     */
-    public function actionIndex()
+     *  returns void
+     **/
+    private function renderListing()
     {
         $this->_dataProvider = $this->getCoursesGridView();
 
@@ -274,22 +268,48 @@ class CoursesController extends BaseController
             'modelSubjects'  => Courses::getAllSubjectAreas()
       ]);
     }
-   
+    
 
     /**
-     * Displays selected Permit ( 1 record ).
+     * Displays listing of all courses in the system.
      *
      * @return string
      */
-    public function actionView()
+    public function actionIndex()
     {
+        return $this->renderListing();
+    }
+
+
+    /**
+     *  Centralized render('course-view') call
+     *
+     *  returns void
+     **/
+    private function renderView()
+    {
+        if (strlen($this->_data['id']) === 0 ||  $this->_data['id'] === "") {
+            return $this->redirect(['courses/index' ]);
+        }
+
         return $this->render('course-view', [
             'data'         => $this->_data,
             'dataProvider' => $this->_dataProvider,
             'model'        => $this->_coursesModel,
             'tags'         => $this->_tagsModel,
             'allTags'      => $this->_coursesChildModel,
-      ]);
+        ]);
+    }
+   
+
+    /**
+     * Displays selected Course ( 1 record ).
+     *
+     * @return string
+     */
+    public function actionView()
+    {
+        return $this->renderView();
     }
 
 
@@ -357,12 +377,7 @@ class CoursesController extends BaseController
         }
 
         if ($exitEarly) {
-            return $this->render('courses-listing', [
-               'data'            => $this->_data,
-               'dataProvider'    => $this->_dataProvider,
-               'model'           => $this->_coursesModel,
-               'modelSubjects'   => Courses::getAllSubjectAreas(),
-         ]);
+            return $this->renderListing();
         }
 
         $idChecking = $this->_coursesModel->subject_area . $this->_coursesModel->course_number . $this->_coursesModel->section_number;
@@ -381,8 +396,8 @@ class CoursesController extends BaseController
          ];
         } else {
             $this->_coursesModel->id         = $idChecking;
-            $this->_coursesModel->is_active  = Courses::STATUS_ACTIVE;
-            $this->_coursesModel->is_hidden  = Courses::STATUS_VISIBLE;
+            $this->_coursesModel->is_active  = Consts::TYPE_ITEM_STATUS_ACTIVE;
+            $this->_coursesModel->is_visible = Consts::TYPE_ITEM_STATUS_VISIBLE;
         }
       
         if (!$idExists) {
@@ -419,12 +434,7 @@ class CoursesController extends BaseController
       
         $this->_dataProvider = $this->getCoursesGridView();
 
-        return $this->render('courses-listing', [
-            'data'            => $this->_data,
-            'dataProvider'    => $this->_dataProvider,
-            'model'           => $this->_coursesModel,
-            'modelSubjects'   => Courses::getAllSubjectAreas(),
-      ]);
+        return $this->renderListing();
     }
    
    
@@ -621,21 +631,6 @@ class CoursesController extends BaseController
        
         if ($exitEarly) {
             return $this->redirect(['courses/view', 'id' => $this->_data['id'] ]);
-
-            /*
-                        $this->_coursesModel       = $this->_coursesModel->findOne($this->_data['id']);
-
-                        $this->_tagsModel          = CoursesCodesChild::findTagsById($this->_data['id']);
-                        $this->_coursesChildModel  = SystemCodes::findUnassignedTagOptionsForCourses($this->_data['id']);
-
-                        return $this->render('course-view', [
-                           'data'         => $this->_data,
-                           'dataProvider' => $this->_dataProvider,
-                           'model'        => $this->_coursesModel,
-                           'tags'         => $this->_tagsModel,
-                           'allTags'      => $this->_coursesChildModel,
-                     ]);
-             */
         }
          
         $updateModel      = Courses::findOne($this->_coursesModel->id);
@@ -703,7 +698,7 @@ class CoursesController extends BaseController
                         
 //                            self::debug( $lookupNew . " vs. " . $lookupOld, true );
                         
-                        $labels = $this->_codesModel->attributeLabels();
+                        $labels = $this->_coursesModel->attributeLabels();
                         
 //                            self::debug( $labels );
                
