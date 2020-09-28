@@ -68,24 +68,24 @@ class m200821_143444_tbl_FormFields extends BaseMigration
         
             // is_active
             [
-                Consts::TYPE_FIELD_SELECT, Consts::TYPE_ITEM_STATUS_ACTIVE, 'Is-Active', 'Select Status', '', Consts::TYPE_PROMPT_DEFAULT,         Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, 1, $created_at,
+                Consts::TYPE_FIELD_SELECT, Consts::TYPE_ITEM_ACTIVE, 'Is-Active', 'Select Status', '', Consts::TYPE_PROMPT_DEFAULT,         Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, 1, $created_at,
             ],
             [
-                Consts::TYPE_FIELD_SELECT, Consts::TYPE_ITEM_STATUS_ACTIVE, 'Is-Active', 'Active',        '', Consts::TYPE_ITEM_STATUS_ACTIVE,     Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, 2, $created_at,
+                Consts::TYPE_FIELD_SELECT, Consts::TYPE_ITEM_ACTIVE, 'Is-Active', 'Active',        '', Consts::TYPE_ITEM_STATUS_ACTIVE,     Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, 2, $created_at,
             ],
             [
-                Consts::TYPE_FIELD_SELECT, Consts::TYPE_ITEM_STATUS_ACTIVE, 'Is-Active', 'Inactive',      '', Consts::TYPE_ITEM_STATUS_INACTIVE,   Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, 3, $created_at,
+                Consts::TYPE_FIELD_SELECT, Consts::TYPE_ITEM_ACTIVE, 'Is-Active', 'Inactive',      '', Consts::TYPE_ITEM_STATUS_INACTIVE,   Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, 3, $created_at,
             ],
             
             // is_hidden
             [
-                Consts::TYPE_FIELD_SELECT, Consts::TYPE_ITEM_STATUS_VISIBLE, 'Is-Visible', 'Select Status', '', Consts::TYPE_PROMPT_DEFAULT,       Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, 1, $created_at,
+                Consts::TYPE_FIELD_SELECT, Consts::TYPE_ITEM_VISIBLE, 'Is-Visible', 'Select Status', '', Consts::TYPE_PROMPT_DEFAULT,       Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, 1, $created_at,
             ],
             [
-                Consts::TYPE_FIELD_SELECT, Consts::TYPE_ITEM_STATUS_VISIBLE, 'Is-Visible', 'Visible',       '', Consts::TYPE_ITEM_STATUS_VISIBLE,  Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, 2, $created_at,
+                Consts::TYPE_FIELD_SELECT, Consts::TYPE_ITEM_VISIBLE, 'Is-Visible', 'Visible',       '', Consts::TYPE_ITEM_STATUS_VISIBLE,  Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, 2, $created_at,
             ],
             [
-                Consts::TYPE_FIELD_SELECT, Consts::TYPE_ITEM_STATUS_VISIBLE, 'Is-Visible', 'Hidden',        '', Consts::TYPE_ITEM_STATUS_HIDDEN,   Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, 3, $created_at,
+                Consts::TYPE_FIELD_SELECT, Consts::TYPE_ITEM_VISIBLE, 'Is-Visible', 'Hidden',        '', Consts::TYPE_ITEM_STATUS_HIDDEN,   Consts::TYPE_ITEM_STATUS_ACTIVE, Consts::TYPE_ITEM_STATUS_VISIBLE, 3, $created_at,
             ],
             
             // is_banner_data
