@@ -630,7 +630,7 @@ class SystemCodes extends BaseModel
      * @param integer Row $id value for course entry
      * @returns model || false if $id is invalid
      */
-    public static function findUnassignedTagOptionsForCourses($id = "")
+    public static function findUnassignedTagOptionsForCourses($id = "", $isActive = self::STATUS_ACTIVE, $getSql = false)
     {
         if (empty($id) || !is_string($id)) {
             return false;
@@ -641,10 +641,15 @@ class SystemCodes extends BaseModel
    
 
         $query_codes = ( new \yii\db\Query() )
-         ->select([  'sc.id', 'sc.type', 'sc.code', 'sc.description', 'sc.is_active' ])
+         ->select([  'sc.id', 'sc.type', 'sc.code', 'sc.code_str', 'sc.description', 'sc.is_active', 'sc.is_visible', 'sc.is_banner_data' ])
          ->from($tbl_SystemCodes       . ' sc')
-         ->where('id NOT IN ( SELECT child from ' . $tbl_CoursesCodesChild .' WHERE parent = :id ) AND sc.is_active =:is_active AND sc.type !=:type')
-            ->addParams([ ':id' => $id, 'is_active' => self::STATUS_ACTIVE, 'type' => self::TYPE_PERMIT ]);
+         ->where('id NOT IN ( SELECT child from ' . $tbl_CoursesCodesChild .' WHERE parent = :id ) AND sc.is_active =:is_active AND sc.type !=:type AND sc.code != -1')
+            ->addParams([ ':id' => $id, 'is_active' => $isActive, 'type' => self::TYPE_PERMIT, ]);
+
+        if ($getSql) {
+            self::debug("SystemCodes (650-ish)", false);
+            self::debug($query_codes->createCommand()->getRawSql());
+        } 
 
         return $query_codes->all();
     }

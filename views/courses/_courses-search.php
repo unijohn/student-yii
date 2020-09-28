@@ -5,6 +5,8 @@ use yii\widgets\ActiveForm;
 
 use app\models\FormFields;
 
+use app\modules\Consts;
+
 /* @var $this yii\web\View */
 /* @var $model app\models\PostSearch */
 /* @var $form yii\widgets\ActiveForm */
@@ -14,8 +16,8 @@ use app\models\FormFields;
    $pageCount['100'] = 100;
    $pageCount['200'] = 200;
    
-   $isActive    = FormFields::getSelectOptions(-1, 'is_active',  false);
-   $isVisible   = FormFields::getSelectOptions(-1, 'is_visible', false);   
+   $isActive    = FormFields::getSelectOptions(-1, Consts::IS_ACTIVE_TYPE_STR,  true);
+   $isVisible   = FormFields::getSelectOptions(-1, Consts::IS_VISIBLE_TYPE_STR, true);   
 
    $subjectArea['ZZZZ']   = 'Select Subject';
    foreach ($model_subjects as $area) {

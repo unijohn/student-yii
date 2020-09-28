@@ -24,8 +24,8 @@ class m200821_143444_tbl_FormFields extends BaseMigration
                 [
                     'id'            => $this->primaryKey(),
                     'form_field'    => $this->integer()->notNull(),     // select, checkbox, radio
-                    'type'          => $this->integer()->notNull(),     // TYPE_ITEM_ACTIVE, TYPE_ITEM_HIDDEN
-                    'type_str'      => $this->string(64)->notNull(),    // is_active, is_hidden
+                    'type'          => $this->integer()->notNull(),     // TYPE_ITEM_STATUS_ACTIVE, TYPE_ITEM_STATUS_VISIBLE
+                    'type_str'      => $this->string(64)->notNull(),    // Is-Active, Is-Hidden
                     'description'   => $this->string(64)->notNull(),    // 'Active', 'Inactive', 'Visible', 'Hidden'
                     'value'         => $this->integer(),
                     'value_str'     => $this->string(64)->notNull(),

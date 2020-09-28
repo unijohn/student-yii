@@ -2,15 +2,18 @@
 
 /* @var $this yii\web\View */
 
-   use yii\grid\GridView;
-
-   use yii\helpers\Html;
-   use yii\helpers\HtmlPurifier;
-   use yii\helpers\Url;
-
-   use yii\widgets\ActiveForm;
-   
-   use app\models\FormFields;
+    use yii\grid\GridView;
+    
+    use yii\helpers\Html;
+    use yii\helpers\HtmlPurifier;
+    use yii\helpers\Url;
+    
+    use yii\widgets\ActiveForm;
+    
+    use app\models\FormFields;
+    
+    use app\modules\Consts;   
+    
    
    $this->title = 'Framework | Courses | View | Update';
 
@@ -18,8 +21,8 @@
    
    $formatter = \Yii::$app->formatter;
    
-   $isActive    = FormFields::getSelectOptions(-1, 'is_active',  false);
-   $isVisible   = FormFields::getSelectOptions(-1, 'is_visible', false);      
+   $isActive    = FormFields::getSelectOptions(-1, Consts::IS_ACTIVE_TYPE_STR,  true);
+   $isVisible   = FormFields::getSelectOptions(-1, Consts::IS_VISIBLE_TYPE_STR, true);     
 ?>
 
    <div class="site-about">

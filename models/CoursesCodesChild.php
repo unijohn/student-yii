@@ -116,7 +116,7 @@ class CoursesCodesChild extends BaseModel
         $tbl_SystemCodes        = SystemCodes::tableName();
    
         $query_codes = ( new \yii\db\Query() )
-            ->select([  'sc.id', 'sc.type', 'sc.code', 'sc.description', 'sc.is_active', 'sc.is_hidden' ])
+            ->select([  'sc.id', 'sc.type', 'sc.code', 'sc.code_str', 'sc.description', 'sc.is_active', 'sc.is_visible', 'sc.is_banner_data' ])
             ->from($tbl_SystemCodes . ' sc')
             ->innerJoin($tbl_CoursesCodesChild . ' ccc', 'sc.id = ccc.child ')
             ->where('ccc.parent =:id ')
