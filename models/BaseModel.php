@@ -227,8 +227,9 @@ class BaseModel extends ActiveRecord
     const TYPE_ITEM_SKILL_STRENGTH  = 11;
     const TYPE_ITEM_PREFERENCE_RANK = 12;
     const TYPE_ITEM_DOCUMENT        = 13;
+    const TYPE_YES_NO               = 14;        
     const TYPE_ITEM_MIN             = self::TYPE_ITEM_FORM_FIELD;
-    const TYPE_ITEM_MAX             = self::TYPE_ITEM_DOCUMENT;
+    const TYPE_ITEM_MAX             = self::TYPE_YES_NO;
     
     const TYPE_FACULTY_RANK_NOT_SET = 0;
     const TYPE_FACULTY_RANK_01      = 1;
@@ -269,6 +270,10 @@ class BaseModel extends ActiveRecord
     const TYPE_UNIVERSITY_DEPT_COL_FCBE         = 3;
     const TYPE_UNIVERSITY_MIN                   = self::TYPE_UNIVERSITY_DEPT_NOT_SET;
     const TYPE_UNIVERSITY_MAX                   = self::TYPE_UNIVERSITY_DEPT_ACAD_AFFAIR;
+    
+    const TYPE_YES_NO_NOT_SET               = 0;
+    const TYPE_YES_NO_YES                   = 1;    
+    const TYPE_YES_NO_NO                    = 2;         
 
     const SCENARIO_INSERT   = 'insert';
     const SCENARIO_UPDATE   = 'update';
