@@ -8,6 +8,14 @@ use yii\base\Module;
 class Consts extends Module
 {
     /****
+     *  Scenarios
+     ********/
+    const SCENARIO_INSERT   = 'insert';
+    const SCENARIO_UPDATE   = 'update';
+    const SCENARIO_DELETE   = 'delete';
+    const SCENARIO_MOVE     = 'move';
+
+    /****
      *  FormFields Related
      ********/
 
@@ -68,8 +76,8 @@ class Consts extends Module
     const TYPE_ITEM_SOURCE_UNKNOWN          = 0;
     const TYPE_ITEM_SOURCE_WORKDESK_DATA    = 1;
     const TYPE_ITEM_SOURCE_BANNER_DATA      = 2;
-    const TYPE_ITEM_SOURCE_MIN              = self::SOURCE_UNKNOWN;
-    const TYPE_ITEM_SOURCE_MAX              = self::SOURCE_BANNER_DATA;
+    const TYPE_ITEM_SOURCE_MIN              = self::TYPE_ITEM_SOURCE_UNKNOWN;
+    const TYPE_ITEM_SOURCE_MAX              = self::TYPE_ITEM_SOURCE_BANNER_DATA;
     
     // TYPE_ITEM_YES_NO             = 5
     const TYPE_ITEM_YES_NO_NO       = 0;
