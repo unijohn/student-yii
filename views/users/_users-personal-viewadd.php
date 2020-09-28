@@ -1,13 +1,13 @@
 <?php
 
-   use yii\helpers\Html;
-   use yii\helpers\HtmlPurifier;
-   use yii\helpers\Url;
-   
-   use yii\bootstrap\ActiveForm;
-
-use app\controllers\UsersController;
-use app\models\BaseModel;
+    use yii\helpers\Html;
+    use yii\helpers\HtmlPurifier;
+    use yii\helpers\Url;
+    
+    use yii\bootstrap\ActiveForm;
+    
+    use app\controllers\UsersController;
+    use app\models\BaseModel;
 
    $formatter = \Yii::$app->formatter;
 

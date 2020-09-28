@@ -169,7 +169,7 @@ class BaseMigration extends Migration
     const TYPE_ITEM_SKILL_STRENGTH  = 11;
     const TYPE_ITEM_PREFERENCE_RANK = 12;
     const TYPE_ITEM_DOCUMENT        = 13;
-    const TYPE_YES_NO               = 14;    
+    const TYPE_YES_NO               = 14;
     
     const TYPE_PERMIT_OPEN_REQ      = 0;
     const TYPE_PERMIT_ISSUED        = 1;
@@ -209,7 +209,7 @@ class BaseMigration extends Migration
     
     const TYPE_YES_NO_NOT_SET               = -1;
     const TYPE_YES_NO_NO                    = 0;
-    const TYPE_YES_NO_YES                   = 1;            
+    const TYPE_YES_NO_YES                   = 1;
 
     const tbl_YiiNames  = [
       'auth_assignment',

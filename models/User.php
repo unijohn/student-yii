@@ -73,10 +73,10 @@ class User extends BaseModel implements IdentityInterface
             'is_active'             => Yii::t('app', 'Is Active'),
             'is_active_employee'    => Yii::t('app', 'UofM Employee'),
             'is_active_student'     => Yii::t('app', 'UofM Student'),
-            'is_test_account'       => Yii::t('app', 'Is Test Account'),            
+            'is_test_account'       => Yii::t('app', 'Is Test Account'),
             
-            'access_token'      => Yii::t('app', 'Access Token' ),
-            'auth_key'          => Yii::t('app', 'Authorization Key' ),
+            'access_token'      => Yii::t('app', 'Access Token'),
+            'auth_key'          => Yii::t('app', 'Authorization Key'),
             
             'created_at'        => Yii::t('app', 'Created'),
             'updated_at'        => Yii::t('app', 'Updated'),
@@ -173,7 +173,7 @@ class User extends BaseModel implements IdentityInterface
             [
                 'is_test_account',  'number', 'min' => self::TYPE_YES_NO_MIN,  'max' => self::TYPE_YES_NO_NO,
                 'tooBig' => 'Select a valid option', 'tooSmall' => 'Is this account for testing purposes?',
-            ],            
+            ],
             
             [
                 'auth_key', 'string', 'min' => 48, 'max' => 48,
@@ -189,10 +189,10 @@ class User extends BaseModel implements IdentityInterface
             ],
             [
                 [
-                   'uuid', 'is_active', 'is_active_employee', 'is_active_student', 'is_test_account', 
+                   'uuid', 'is_active', 'is_active_employee', 'is_active_student', 'is_test_account',
                 ],
                 'required', 'on' => self::SCENARIO_UPDATE
-            ],            
+            ],
         ];
     }
 
@@ -251,12 +251,12 @@ class User extends BaseModel implements IdentityInterface
         $newUser->is_active             = self::STATUS_ACTIVE;
         $newUser->is_active_employee    = self::TYPE_YES_NO_NO;
         $newUser->is_active_student     = self::TYPE_YES_NO_NO;
-        $newUser->is_test_account       = self::TYPE_YES_NO_NO;        
+        $newUser->is_test_account       = self::TYPE_YES_NO_NO;
         $newUser->generateAuthKey();
         $newUser->generateAccessToken();
 
-        if( !$newUser->validate() ){
-            self::debug( $newUser->errors );
+        if (!$newUser->validate()) {
+            self::debug($newUser->errors);
         }
     
         return $newUser->save();

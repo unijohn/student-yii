@@ -370,7 +370,7 @@ class UsersController extends BaseController
         $this->_data['User']['is_active']           = ArrayHelper::getValue($this->_request->post(), 'User.is_active', -1);
         $this->_data['User']['is_active_employee']  = ArrayHelper::getValue($this->_request->post(), 'User.is_active_employee', -1);
         $this->_data['User']['is_active_student']   = ArrayHelper::getValue($this->_request->post(), 'User.is_active_student', -1);
-        $this->_data['User']['is_test_account']     = ArrayHelper::getValue($this->_request->post(), 'User.is_test_account', -1);        
+        $this->_data['User']['is_test_account']     = ArrayHelper::getValue($this->_request->post(), 'User.is_test_account', -1);
         $this->_data['User']['access_token']        = ArrayHelper::getValue($this->_request->post(), 'User.access_token', -1);
         $this->_data['User']['saveUser']            = ArrayHelper::getValue($this->_request->post(), 'User.saveUser', -1);
       
@@ -641,7 +641,7 @@ class UsersController extends BaseController
         
         $msgAddTagHeader    = "Add Role";
         $msgRemoveTagHeader = "Remove Role";
-        $msgHeader          = "Save User";        
+        $msgHeader          = "Save User";
 
         $this->_userModel = User::find()
          ->where(['uuid' => $this->_data['uuid'] ])
@@ -789,7 +789,7 @@ class UsersController extends BaseController
         $updateModel->is_active             = $this->_data['User']['is_active'];
         $updateModel->is_active_employee    = $this->_data['User']['is_active_employee'];
         $updateModel->is_active_student     = $this->_data['User']['is_active_student'];
-        $updateModel->is_test_account       = $this->_data['User']['is_test_account'];                
+        $updateModel->is_test_account       = $this->_data['User']['is_test_account'];
         
         $updateModel->access_token  = $this->_data['User']['access_token'];
         
@@ -843,11 +843,11 @@ class UsersController extends BaseController
                         $lookupNew = $this->keyLookup($key, $val);
                         $lookupOld = $this->keyLookup($key, $this->_data['User'][$key]);
                         
-    //                            self::debug( $lookupNew . " vs. " . $lookupOld, true );
+                        //                            self::debug( $lookupNew . " vs. " . $lookupOld, true );
                         
                         $labels = $this->_userModel->attributeLabels();
                         
-    //                            self::debug( $labels );
+                        //                            self::debug( $labels );
                
                         $this->_data['success'][$labels[$key]] =
                         [
@@ -864,7 +864,7 @@ class UsersController extends BaseController
                     }
                 }
                 
-    //                    self::debug( $this->_data['success'] );
+                //                    self::debug( $this->_data['success'] );
             }
         }
 
@@ -872,13 +872,13 @@ class UsersController extends BaseController
     }
    
    
-   /**
-     * TBD
-     *
-     * @return (TBD)
-     */
+    /**
+      * TBD
+      *
+      * @return (TBD)
+      */
     private function keyLookup($key, $value)
-    {   
+    {
         $isActive       = FormFields::getSelectOptions(-1, CodesController::IS_ACTIVE_TYPE_STR, true);
         $isEmployee     = FormFields::getSelectOptions(-1, CodesController::IS_YES_NO_TYPE_STR, true);
         $isStudent      = FormFields::getSelectOptions(-1, CodesController::IS_YES_NO_TYPE_STR, true);
@@ -891,8 +891,8 @@ class UsersController extends BaseController
         } elseif ($key == 'is_active_student' && array_key_exists($value, $isStudent)) {
             return $isStudent[$value];
         } elseif ($key == 'is_test_account' && array_key_exists($value, $isTestAccount)) {
-            return $isTestAccount[$value];            
-        } 
+            return $isTestAccount[$value];
+        }
    
         return "Unknown key : " . $key . " :: " . $value;
     }
