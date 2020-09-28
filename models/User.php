@@ -69,15 +69,17 @@ class User extends BaseModel implements IdentityInterface
         return [
             'id'        => Yii::t('app', 'System ID'),
             'uuid'      => Yii::t('app', 'UUID'),
-            'is_active' => Yii::t('app', 'Workdesk Account Status'),
-            'is_active_employee'    => Yii::t('app', 'UofM Employee Status'),
-            'is_active_student'     => Yii::t('app', 'UofM Student Status'),
             
-//            'auth_key' => Yii::t('app', 'Published'),
-//            'access_token' => Yii::t('app', 'Title'),
-//            'Description' => Yii::t('app', 'Description'),
-//            'Content' => Yii::t('app', 'Content'),
-//            'Format' => Yii::t('app', 'Format'),
+            'is_active'             => Yii::t('app', 'Is Active'),
+            'is_active_employee'    => Yii::t('app', 'UofM Employee'),
+            'is_active_student'     => Yii::t('app', 'UofM Student'),
+            'is_test_account'       => Yii::t('app', 'UofM Student'),            
+            
+            'access_token'      => Yii::t('app', 'Access Token' ),
+            'auth_key'          => Yii::t('app', 'Authorization Key' ),
+            
+            'created_at'        => Yii::t('app', 'Created'),
+            'updated_at'        => Yii::t('app', 'Updated'),
         ];
     }
 

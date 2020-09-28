@@ -10,8 +10,6 @@
 
    use yii\widgets\ActiveForm;
    
-//   use app\controllers\CodesController;   
-   
    use app\models\FormFields;
    
    $this->title = 'Framework | Courses | View | Update';

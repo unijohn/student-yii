@@ -8,7 +8,7 @@
    
    use yii\widgets\ActiveForm;
 
-   use app\controllers\CodesController;   
+   use app\models\FormFields;
 
    $this->title = 'Framework | User | View | Update';
    
@@ -17,7 +17,10 @@
    
    $formatter = \Yii::$app->formatter;
    
-   $isActive   = CodesController::getDropDownOpts('is_active');
+   $isActive        = FormFields::getSelectOptions(-1, 'Is-Active',  false);
+   $isEmployee      = FormFields::getSelectOptions(-1, 'Is-Yes-No',  false);   
+   $isStudent       = FormFields::getSelectOptions(-1, 'Is-Yes-No',  false);      
+   $isTestAccount   = FormFields::getSelectOptions(-1, 'Is-Yes-No',  false);         
 ?>
 
    <div class="site-about">
@@ -59,7 +62,7 @@
          <?= Html::hiddenInput('User[uuid]', $model->uuid) ?>
 
          <div class="form-group field-code">
-            <label class="control-label" for="User[access_token]">Access Token</label>
+            <label class="control-label" for="User[access_token]"><?php print( $model->getAttributeLabel('access_token') ); ?></label>
             <?= Html::input(
                 'text', 
                 'User[access_token]', 
@@ -82,7 +85,7 @@
  -->
 
          <div class="form-group field-is_active">
-         <label class="control-label" for="is_active">Is Active</label>
+         <label class="control-label" for="is_active"><?php print( $model->getAttributeLabel('is_active') ); ?></label>
             <?= Html::dropDownList(
                 'User[is_active]',
                 $model->is_active,
@@ -96,12 +99,57 @@
             <div class="help-block"></div>
          </div>
          
+         <div class="form-group field-is_active_employee">
+         <label class="control-label" for="is_active_employee"><?php print( $model->getAttributeLabel('is_active_employee') ); ?></label>
+            <?= Html::dropDownList(
+                'User[is_active_employee]',
+                $model->is_active_employee,
+                $isEmployee,
+                [
+                    'id'     => 'is_active_employee',
+                    'class'  => 'form-control',
+                    'style' => 'width: 80%;float:right;'
+               ]
+            ) ?>
+            <div class="help-block"></div>
+         </div>
+         
+         <div class="form-group field-is_active">
+         <label class="control-label" for="is_active_student"><?php print( $model->getAttributeLabel('is_active_student') ); ?></label>
+            <?= Html::dropDownList(
+                'User[is_active_student]',
+                $model->is_active_student,
+                $isStudent,
+                [
+                    'id'     => 'is_active_student',
+                    'class'  => 'form-control',
+                    'style' => 'width: 80%;float:right;'
+               ]
+            ) ?>
+            <div class="help-block"></div>
+         </div>
+         
+         <div class="form-group field-is_active">
+         <label class="control-label" for="is_test_account"><?php print( $model->getAttributeLabel('is_test_account') ); ?></label>
+            <?= Html::dropDownList(
+                'User[is_test_account]',
+                $model->is_test_account,
+                $isTestAccount,
+                [
+                    'id'     => 'is_test_account',
+                    'class'  => 'form-control',
+                    'style' => 'width: 80%;float:right;'
+               ]
+            ) ?>
+            <div class="help-block"></div>
+         </div>                           
+         
          <div class="form-group field-dates">
             <div>
-               <?php echo("created_at: "  . $formatter->asDate($model->created_at, 'MM-dd-yyyy HH:mm:ss')); ?>
+               <?php echo($model->getAttributeLabel('created_at') . ": "  . $formatter->asDate($model->created_at, 'MM-dd-yyyy HH:mm:ss')); ?>
             </div>
             <div>
-               <?php echo("updated_at: "  . $formatter->asDate($model->updated_at, 'MM-dd-yyyy HH:mm:ss')); ?>
+               <?php echo($model->getAttributeLabel('updated_at') . ": "  . $formatter->asDate($model->updated_at, 'MM-dd-yyyy HH:mm:ss')); ?>            
             </div>
          </div>
     
