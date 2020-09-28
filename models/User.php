@@ -73,7 +73,7 @@ class User extends BaseModel implements IdentityInterface
             'is_active'             => Yii::t('app', 'Is Active'),
             'is_active_employee'    => Yii::t('app', 'UofM Employee'),
             'is_active_student'     => Yii::t('app', 'UofM Student'),
-            'is_test_account'       => Yii::t('app', 'UofM Student'),            
+            'is_test_account'       => Yii::t('app', 'Is Test Account'),            
             
             'access_token'      => Yii::t('app', 'Access Token' ),
             'auth_key'          => Yii::t('app', 'Authorization Key' ),
