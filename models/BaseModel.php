@@ -15,6 +15,7 @@ class BaseModel extends ActiveRecord
     const IS_ACTIVE_TYPE_STR        = 'Is-Active';
     const IS_VISIBLE_TYPE_STR       = 'Is-Visible';
     const IS_BANNER_DATA_TYPE_STR   = 'Is-Banner-Data';
+    const IS_YES_NO_TYPE_STR        = 'Is-Yes-No';        
 
     const STATUS_INACTIVE      = 0;
     const STATUS_ACTIVE        = 1;
@@ -271,9 +272,10 @@ class BaseModel extends ActiveRecord
     const TYPE_UNIVERSITY_MIN                   = self::TYPE_UNIVERSITY_DEPT_NOT_SET;
     const TYPE_UNIVERSITY_MAX                   = self::TYPE_UNIVERSITY_DEPT_ACAD_AFFAIR;
     
-    const TYPE_YES_NO_NOT_SET               = 0;
+    const TYPE_YES_NO_NO                    = 0;    
     const TYPE_YES_NO_YES                   = 1;    
-    const TYPE_YES_NO_NO                    = 2;         
+    const TYPE_YES_NO_MIN                   = self::TYPE_YES_NO_NO;
+    const TYPE_YES_NO_MAX                   = self::TYPE_YES_NO_YES;     
 
     const SCENARIO_INSERT   = 'insert';
     const SCENARIO_UPDATE   = 'update';

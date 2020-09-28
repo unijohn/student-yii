@@ -130,15 +130,6 @@ class User extends BaseModel implements IdentityInterface
             // mutate native `delete()` method
             'replaceRegularDelete' => false
          ],
-
-         'positionBehavior' => [
-            'class' => PositionBehavior::className(),
-            'positionAttribute' => 'position',
-             'groupAttributes' =>
-             [
-                 'categoryId' // multiple lists varying by 'categoryId'
-             ],
-         ],
  **/
       ];
     }
@@ -150,8 +141,8 @@ class User extends BaseModel implements IdentityInterface
     public function scenarios()
     {
         $scenarios = parent::scenarios();
-        $scenarios[self::SCENARIO_INSERT] = [ 'uuid', 'is_active', 'is_active_employee', 'is_active_student', 'auth_key', 'access_token' ];
-        $scenarios[self::SCENARIO_UPDATE] = [ 'is_active', 'is_active_employee', 'is_active_student', 'access_token' ];
+        $scenarios[self::SCENARIO_INSERT] = [ 'uuid', 'is_active', 'is_active_employee', 'is_active_student', 'is_test_account', 'auth_key', 'access_token', ];
+        $scenarios[self::SCENARIO_UPDATE] = [ 'is_active', 'is_active_employee', 'is_active_student', 'is_test_account', ];
    
         return $scenarios;
     }
@@ -179,6 +170,10 @@ class User extends BaseModel implements IdentityInterface
                 'is_active_student',  'number', 'min' => self::STATUS_ACTIVE_MIN,  'max' => self::STATUS_ACTIVE_MAX,
                 'tooBig' => 'Select a valid option', 'tooSmall' => 'Is user an current student of UofM?',
             ],
+            [
+                'is_test_account',  'number', 'min' => self::TYPE_YES_NO_MIN,  'max' => self::TYPE_YES_NO_NO,
+                'tooBig' => 'Select a valid option', 'tooSmall' => 'Is this account for testing purposes?',
+            ],            
             
             [
                 'auth_key', 'string', 'min' => 48, 'max' => 48,
@@ -188,10 +183,16 @@ class User extends BaseModel implements IdentityInterface
             ],
             [
                 [
-                   'uuid', 'is_active', 'is_active_employee', 'is_active_student', 'auth_key', 'access_token',
+                   'uuid', 'is_active', 'is_active_employee', 'is_active_student', 'is_test_account', 'auth_key', 'access_token',
                 ],
                 'required', 'on' => self::SCENARIO_INSERT
             ],
+            [
+                [
+                   'uuid', 'is_active', 'is_active_employee', 'is_active_student', 'is_test_account', 
+                ],
+                'required', 'on' => self::SCENARIO_UPDATE
+            ],            
         ];
     }
 
@@ -248,9 +249,9 @@ class User extends BaseModel implements IdentityInterface
         
         $newUser->uuid                  = $uuid;
         $newUser->is_active             = self::STATUS_ACTIVE;
-        $newUser->is_active_employee    = self::STATUS_ACTIVE;
-        $newUser->is_active_student     = self::STATUS_ACTIVE;
-        $newUser->is_test_account       = self::STATUS_INACTIVE;        
+        $newUser->is_active_employee    = self::TYPE_YES_NO_NO;
+        $newUser->is_active_student     = self::TYPE_YES_NO_NO;
+        $newUser->is_test_account       = self::TYPE_YES_NO_NO;        
         $newUser->generateAuthKey();
         $newUser->generateAccessToken();
 

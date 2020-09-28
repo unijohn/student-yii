@@ -367,9 +367,12 @@ class UsersController extends BaseController
         $this->_data['post']['authitem']       = $this->_request->post('authitem', '');
         $this->_data['post']['authassignment'] = $this->_request->post('authassignment', '');
       
-        $this->_data['User']['is_active']      = ArrayHelper::getValue($this->_request->post(), 'User.is_active', -1);
-        $this->_data['User']['access_token']   = ArrayHelper::getValue($this->_request->post(), 'User.access_token', -1);
-        $this->_data['User']['saveUser']       = ArrayHelper::getValue($this->_request->post(), 'User.saveUser', -1);
+        $this->_data['User']['is_active']           = ArrayHelper::getValue($this->_request->post(), 'User.is_active', -1);
+        $this->_data['User']['is_active_employee']  = ArrayHelper::getValue($this->_request->post(), 'User.is_active_employee', -1);
+        $this->_data['User']['is_active_student']   = ArrayHelper::getValue($this->_request->post(), 'User.is_active_student', -1);
+        $this->_data['User']['is_test_account']     = ArrayHelper::getValue($this->_request->post(), 'User.is_test_account', -1);        
+        $this->_data['User']['access_token']        = ArrayHelper::getValue($this->_request->post(), 'User.access_token', -1);
+        $this->_data['User']['saveUser']            = ArrayHelper::getValue($this->_request->post(), 'User.saveUser', -1);
       
         $this->_data['addRole']          = $this->_request->post('addRole', '');
         $this->_data['dropRole']         = $this->_request->post('dropRole', '');
@@ -560,8 +563,6 @@ class UsersController extends BaseController
     {
         $this->_dataProvider = $this->getUserGridView();
    
-        // Testing GH Workflow
-   
         $this->_userModel->uuid          = ArrayHelper::getValue($this->_request->post(), 'User.uuid', '');
       
         $uuidExists = User::existsUUID($this->_userModel->uuid);
@@ -637,6 +638,10 @@ class UsersController extends BaseController
     public function actionSave()
     {
         $exitEarly = false;
+        
+        $msgAddTagHeader    = "Add Role";
+        $msgRemoveTagHeader = "Remove Role";
+        $msgHeader          = "Save User";        
 
         $this->_userModel = User::find()
          ->where(['uuid' => $this->_data['uuid'] ])
@@ -652,7 +657,7 @@ class UsersController extends BaseController
 
         if (strlen($this->_data['addRole']) > 0) {
             if (AuthAssignment::existsRoleAssigned($this->_userModel->id, $roleTag)) {
-                $this->_data['errors']['Add Role'] =
+                $this->_data['errors'][$msgAddTagHeader] =
                 [
                    'value'     => "was unsuccessful",
                    'bValue'    => false,
@@ -665,7 +670,7 @@ class UsersController extends BaseController
                     'value' => "is already assigned this role ( " . $roleTag. " )",
                 ];
             } elseif ($this->_auth->assign($this->_auth->getRole($roleTag), $this->_userModel->id)) {
-                $this->_data['success']['Add Role'] =
+                $this->_data['success'][$msgAddTagHeader] =
                 [
                    'value'        => "was successful",
                    'bValue'       => true,
@@ -678,7 +683,7 @@ class UsersController extends BaseController
                     'value' => "was added",
                 ];
             } else {
-                $this->_data['errors']['Add Role'] =
+                $this->_data['errors'][$msgAddTagHeader] =
                 [
                    'value'     => "was unsuccessful",
                    'bValue'    => false,
@@ -697,7 +702,7 @@ class UsersController extends BaseController
 
         if (strlen($this->_data['dropRole']) > 0) {
             if ($this->_auth->revoke($this->_auth->getRole($roleTag), $this->_userModel->id)) {
-                $this->_data['success']['Remove Role'] =
+                $this->_data['success'][$msgRemoveTagHeader] =
                 [
                    'value'        => "was successful",
                    'bValue'       => true,
@@ -710,7 +715,7 @@ class UsersController extends BaseController
                     'value' => "was removed",
                 ];
             } else {
-                $this->_data['errors']['Remove Role'] =
+                $this->_data['errors'][$msgRemoveTagHeader] =
                 [
                    'value'     => "was unsuccessful",
                    'bValue'    => false,
@@ -752,7 +757,7 @@ class UsersController extends BaseController
       
         if (!$uuidExists) {
             if (isset($this->_data['saveUser']) && !empty($this->_data['saveUser'])) {
-                $this->_data['errors']['Save User'] =
+                $this->_data['errors'][$msgHeader] =
                 [
                    'value'     => "was unsuccessful",
                    'htmlTag'   => 'h4',
@@ -781,8 +786,30 @@ class UsersController extends BaseController
       
         $updateModel->scenario  = User::SCENARIO_UPDATE;
 
-        $updateModel->is_active     = $this->_data['User']['is_active'];
+        $updateModel->is_active             = $this->_data['User']['is_active'];
+        $updateModel->is_active_employee    = $this->_data['User']['is_active_employee'];
+        $updateModel->is_active_student     = $this->_data['User']['is_active_student'];
+        $updateModel->is_test_account       = $this->_data['User']['is_test_account'];                
+        
         $updateModel->access_token  = $this->_data['User']['access_token'];
+        
+        if (!$updateModel->validate()) {
+            $this->_data['errors'][$msgHeader] =
+            [
+               'value'     => "was unsuccessful",
+               'htmlTag'   => 'h4',
+               'class'     => 'alert alert-danger',
+            ];
+
+            $this->_data['errors']['description'] =
+            [
+                'value' => $updateModel->errors,
+            ];
+
+            $this->_data['errors']['useSession'] = true;
+            
+            self::debug($updateModel->errors);
+        }
 
         $this->_data['User']['Update']   = $updateModel->save();
       
@@ -790,69 +817,86 @@ class UsersController extends BaseController
       
         if ($this->_data['User']['Update'] && is_array($updateColumns)) {
             if (count($updateColumns) > 0) {
-                $this->_data['success']['Save User'] =
-                [
-                   'value'     => "was successful",
-                   'bValue'    => true,
-                   'htmlTag'   => 'h4',
-                   'class'     => 'alert alert-success',
-                ];
-            
                 foreach ($updateColumns as $key => $val) {
                     $keyIndex = ucwords(strtolower(str_replace("_", " ", $key)));
             
                     if ($key !== "updated_at" && $key !== "deleted_at") {
+                        if ($val == $this->_data['User'][$key]) {
+                            // For some reason, afterSave() is stating that the value for this key has updated
+                            // e.g. is_active, is_visible :: Basically any "-1" == -1 situation
+                            continue;
+                        } else {
+                            // Avoid setting this success header multiple times
+                            if (!isset($this->_data['success'][$msgHeader])) {
+                                $this->_data['success']['useSession'] = true;
+                            
+                                $this->_data['success'][$msgHeader] =
+                                [
+                                   'value'      => "was successful",
+                                   'bValue'     => true,
+                                   'htmlTag'    => 'h4',
+                                   'class'      => 'alert alert-success',
+                                ];
+                            }
+                        }
+                        
                         $lookupNew = $this->keyLookup($key, $val);
                         $lookupOld = $this->keyLookup($key, $this->_data['User'][$key]);
+                        
+    //                            self::debug( $lookupNew . " vs. " . $lookupOld, true );
+                        
+                        $labels = $this->_userModel->attributeLabels();
+                        
+    //                            self::debug( $labels );
                
-                        $this->_data['success'][$keyIndex] =
+                        $this->_data['success'][$labels[$key]] =
                         [
-                            'value'     => "was updated",
+                            'value'     => "was updated ( <strong>" . $val . "</strong> -> <strong>" . $this->_data['User'][$key] . "</strong> )",
                             'bValue'    => true,
                         ];
-                  
+    
                         if (strpos($lookupNew, "Unknown") !== 0) {
-                            $this->_data['success'][$keyIndex] =
+                            $this->_data['success'][$labels[$key]] =
                             [
-                                'value'  => "was updated ( " . $lookupNew . " -> " . $lookupOld . " )",
+                                'value'  => "was updated ( <strong>" . $lookupNew . "</strong> -> <strong>" . $lookupOld . "</strong> )",
                             ];
                         }
                     }
                 }
+                
+    //                    self::debug( $this->_data['success'] );
             }
         }
 
-        $roleModel  = AuthAssignment::find();
-      
-        $assignedRoles = [];
-        foreach ($this->_userModel->roles as $role) {
-            $assignedRoles[] = $role->item_name;
-        }
-      
-        $this->_authItemModel   = AuthItem::findbyUnassignedRoles($assignedRoles);
-
-        return $this->renderView();
+        return $this->redirect(['users/view', 'uuid' => $this->_data['uuid'] ]);
     }
    
-    /**
+   
+   /**
      * TBD
      *
      * @return (TBD)
      */
     private function keyLookup($key, $value)
-    {
-        $isActive   = self::getDropDownOpts('is_active');
+    {   
+        $isActive       = FormFields::getSelectOptions(-1, CodesController::IS_ACTIVE_TYPE_STR, true);
+        $isEmployee     = FormFields::getSelectOptions(-1, CodesController::IS_YES_NO_TYPE_STR, true);
+        $isStudent      = FormFields::getSelectOptions(-1, CodesController::IS_YES_NO_TYPE_STR, true);
+        $isTestAccount  = FormFields::getSelectOptions(-1, CodesController::IS_YES_NO_TYPE_STR, true);
       
-        if ($key === "is_active") {
-            if (isset($isActive[$value]) && !empty($isActive[$value])) {
-                return $isActive[$value];
-            } else {
-                return "Unknown value : " . $key . " :: " . $value;
-            }
-        }
+        if ($key == 'is_active'  && array_key_exists($value, $isActive)) {
+            return $isActive[$value ];
+        } elseif ($key == 'is_active_employee' && array_key_exists($value, $isEmployee)) {
+            return $isEmployee[$value];
+        } elseif ($key == 'is_active_student' && array_key_exists($value, $isStudent)) {
+            return $isStudent[$value];
+        } elseif ($key == 'is_test_account' && array_key_exists($value, $isTestAccount)) {
+            return $isTestAccount[$value];            
+        } 
    
         return "Unknown key : " . $key . " :: " . $value;
     }
+       
    
     /**
      * TBD

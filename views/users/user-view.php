@@ -114,7 +114,7 @@
             <div class="help-block"></div>
          </div>
          
-         <div class="form-group field-is_active">
+         <div class="form-group field-is_active_student">
          <label class="control-label" for="is_active_student"><?php print( $model->getAttributeLabel('is_active_student') ); ?></label>
             <?= Html::dropDownList(
                 'User[is_active_student]',
@@ -129,7 +129,7 @@
             <div class="help-block"></div>
          </div>
          
-         <div class="form-group field-is_active">
+         <div class="form-group field-is_test_account">
          <label class="control-label" for="is_test_account"><?php print( $model->getAttributeLabel('is_test_account') ); ?></label>
             <?= Html::dropDownList(
                 'User[is_test_account]',
